@@ -10,7 +10,8 @@ import { initialRubricState } from './reducer'
 import type { RubricState } from './types'
 import { DEMO_CASES } from '@/data/demo-cases'
 
-const KEY = 'sleepfm-eval-v1'
+// Neutral localStorage key (no brand token; visible in a screen-shared devtools session).
+const KEY = 'clinician-eval-session'
 
 interface Envelope {
   version: number
@@ -48,6 +49,7 @@ export function load(): SessionState | null {
         submitted: !!c?.submitted,
         submittedAt: typeof c?.submittedAt === 'string' ? c.submittedAt : null,
         durationSeconds: typeof c?.durationSeconds === 'number' ? c.durationSeconds : null,
+        revealed: !!c?.revealed,
       }
     })
     return {

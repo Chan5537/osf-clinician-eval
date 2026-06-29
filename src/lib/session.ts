@@ -10,8 +10,8 @@ import { initialRubricState, rubricReducer } from './reducer'
 import { DEMO_CASES } from '@/data/demo-cases'
 
 // Bump whenever the case CONTENT or stored shape changes, so stale localStorage
-// is discarded rather than mis-hydrated.
-export const SCHEMA_VERSION = 1
+// is discarded rather than mis-hydrated. v2 = N-response shape + SensorFM Likert rubric.
+export const SCHEMA_VERSION = 2
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
@@ -20,6 +20,7 @@ export interface CaseRubric {
   submitted: boolean
   submittedAt: string | null // ISO 8601 (UTC) -> export submitted_at; null until submitted
   durationSeconds: number | null
+  revealed: boolean // streaming reveal already played for this case (skip re-stream on revisit)
 }
 
 export interface SessionState {
@@ -35,6 +36,7 @@ const blankCase = (): CaseRubric => ({
   submitted: false,
   submittedAt: null,
   durationSeconds: null,
+  revealed: false,
 })
 
 export function initialSessionState(): SessionState {
@@ -67,6 +69,7 @@ export type SessionAction =
   | { type: 'FINISH' }
   | { type: 'RESET_ALL' }
   | { type: 'ENTER_CASE'; at: number } // stamps caseEnteredAt = Date.now()
+  | { type: 'REVEAL_CASE'; caseIndex: number } // mark streaming reveal as played (once)
 
 function patchCase(s: SessionState, i: number, patch: Partial<CaseRubric>): SessionState {
   return { ...s, cases: s.cases.map((c, idx) => (idx === i ? { ...c, ...patch } : c)) }
@@ -111,6 +114,8 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
       return initialSessionState()
     case 'ENTER_CASE':
       return { ...s, caseEnteredAt: a.at }
+    case 'REVEAL_CASE':
+      return patchCase(s, a.caseIndex, { revealed: true })
     default:
       return s
   }

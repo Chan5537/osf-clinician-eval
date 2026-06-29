@@ -1,45 +1,33 @@
 // Client-side export of the session's ratings to JSON and CSV.
 //
-// Columns mirror the deferred SQLite `reviews` schema (context doc §10.5) so the
-// download ports directly into the lab's analysis pipeline. One row per case
-// that the clinician has touched. The export carries the un-blinding key
-// (a_is_agent) and is therefore offered ONLY on the completion screen.
+// SensorFM-aligned schema: one row per touched case, carrying the 15 Likert scores
+// (5 dimensions × 3 responses) + their optional notes, plus the un-blinding ARM MAP
+// (a_arm/b_arm/c_arm = which source arm each displayed Response A/B/C actually was).
+// The export carries the un-blinding key and is therefore offered ONLY on the
+// completion screen.
 
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
-import { pickCount } from './reducer'
+import { pickCount, scoreKey, noteKey } from './reducer'
+import { RUBRIC_DIMENSIONS } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
+import type { ResponseSlot, ArmId } from './types'
 
-export interface ReviewRow {
-  reviewer: string
-  case_id: string
-  query_id: string
-  a_is_agent: boolean
-  comprehensiveness_pick: string | null
-  comprehensiveness_note: string
-  trustworthiness_pick: string | null
-  trustworthiness_note: string
-  specificity_pick: string | null
-  specificity_note: string
-  a_factuality: string | null
-  a_factuality_note: string
-  a_reference_interp: string | null
-  a_reference_note: string
-  a_safety: string | null
-  a_safety_note: string
-  a_grounding: string | null
-  a_grounding_note: string
-  b_factuality: string | null
-  b_factuality_note: string
-  b_reference_interp: string | null
-  b_reference_note: string
-  b_safety: string | null
-  b_safety_note: string
-  b_grounding: string | null
-  b_grounding_note: string
-  submitted_at: string | null
-  duration_seconds: number | null
-}
+const SLOTS: ResponseSlot[] = ['a', 'b', 'c']
+
+// Fixed metadata columns + arm map, then the dimension×slot score/note columns.
+const META_COLUMNS = ['reviewer', 'case_id', 'query_id', 'a_arm', 'b_arm', 'c_arm'] as const
+const TAIL_COLUMNS = ['submitted_at', 'duration_seconds'] as const
+
+// Programmatic score/note column list, grouped BY DIMENSION (matches the rating order:
+// all responses for one dimension before the next): context_a, context_a_note, context_b, ...
+const SCORE_NOTE_COLUMNS: string[] = RUBRIC_DIMENSIONS.flatMap((d) =>
+  SLOTS.flatMap((s) => [scoreKey(d.key, s), noteKey(d.key, s)]),
+)
+
+const COLUMNS: string[] = [...META_COLUMNS, ...SCORE_NOTE_COLUMNS, ...TAIL_COLUMNS]
+
+export type ReviewRow = Record<string, string | number | boolean | null>
 
 export function buildRows(session: SessionState): ReviewRow[] {
   const rows: ReviewRow[] = []
@@ -48,36 +36,32 @@ export function buildRows(session: SessionState): ReviewRow[] {
     if (!touched) return
     const dc = DEMO_CASES[i]
     const s = c.state
-    rows.push({
+
+    // Arm map: which source arm each displayed slot (a/b/c) actually was. responses[]
+    // is in display order (A,B[,C]); index 0->a, 1->b, 2->c. This is the unblinding key.
+    const armBySlot: Record<ResponseSlot, ArmId | null> = { a: null, b: null, c: null }
+    dc.responses.forEach((r, idx) => {
+      const slot = SLOTS[idx]
+      if (slot) armBySlot[slot] = r.arm
+    })
+
+    const row: ReviewRow = {
       reviewer: session.reviewer,
       case_id: dc.case_id,
       query_id: dc.query_id,
-      a_is_agent: dc.left_is_agent, // un-blinding key — copy, never negate (A === left)
-      comprehensiveness_pick: s.comprehensiveness,
-      comprehensiveness_note: s.comprehensiveness_note,
-      trustworthiness_pick: s.trustworthiness,
-      trustworthiness_note: s.trustworthiness_note,
-      specificity_pick: s.specificity,
-      specificity_note: s.specificity_note,
-      a_factuality: s.a_factuality,
-      a_factuality_note: s.a_factuality_note,
-      a_reference_interp: s.a_reference_interp,
-      a_reference_note: s.a_reference_note, // NOTE: a_reference_note, not a_reference_interp_note
-      a_safety: s.a_safety,
-      a_safety_note: s.a_safety_note,
-      a_grounding: s.a_grounding,
-      a_grounding_note: s.a_grounding_note,
-      b_factuality: s.b_factuality,
-      b_factuality_note: s.b_factuality_note,
-      b_reference_interp: s.b_reference_interp,
-      b_reference_note: s.b_reference_note,
-      b_safety: s.b_safety,
-      b_safety_note: s.b_safety_note,
-      b_grounding: s.b_grounding,
-      b_grounding_note: s.b_grounding_note,
+      a_arm: armBySlot.a,
+      b_arm: armBySlot.b,
+      c_arm: armBySlot.c,
       submitted_at: c.submittedAt, // recorded at Submit, never synthesized at export
       duration_seconds: c.durationSeconds,
-    })
+    }
+    for (const d of RUBRIC_DIMENSIONS) {
+      for (const slot of SLOTS) {
+        row[scoreKey(d.key, slot)] = s[scoreKey(d.key, slot)]
+        row[noteKey(d.key, slot)] = s[noteKey(d.key, slot)]
+      }
+    }
+    rows.push(row)
   })
   return rows
 }
@@ -94,37 +78,6 @@ export function toJSON(session: SessionState): string {
     2,
   )
 }
-
-const COLUMNS: Array<keyof ReviewRow> = [
-  'reviewer',
-  'case_id',
-  'query_id',
-  'a_is_agent',
-  'comprehensiveness_pick',
-  'comprehensiveness_note',
-  'trustworthiness_pick',
-  'trustworthiness_note',
-  'specificity_pick',
-  'specificity_note',
-  'a_factuality',
-  'a_factuality_note',
-  'a_reference_interp',
-  'a_reference_note',
-  'a_safety',
-  'a_safety_note',
-  'a_grounding',
-  'a_grounding_note',
-  'b_factuality',
-  'b_factuality_note',
-  'b_reference_interp',
-  'b_reference_note',
-  'b_safety',
-  'b_safety_note',
-  'b_grounding',
-  'b_grounding_note',
-  'submitted_at',
-  'duration_seconds',
-]
 
 // RFC-4180: quote any field containing , " CR or LF; double embedded quotes.
 // Excel CSV-injection guard: prefix a leading = + - @ with a single quote.
