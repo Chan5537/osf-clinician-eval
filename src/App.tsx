@@ -17,8 +17,7 @@ import { AppFooter } from '@/components/AppFooter'
 import { CaseContextPanel } from '@/components/CaseContextPanel'
 import { QueryBubble } from '@/components/QueryBubble'
 import { ResponsePair } from '@/components/ResponsePair'
-import { SideBySideRubric } from '@/components/SideBySideRubric'
-import { AbsoluteRubric } from '@/components/AbsoluteRubric'
+import { LikertRubric } from '@/components/LikertRubric'
 import { SubmitBar } from '@/components/SubmitBar'
 
 // Lazy initializer: hydrate from localStorage exactly once at render-init.
@@ -151,7 +150,7 @@ function App() {
 
       <main
         key={i}
-        className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-6 animate-in fade-in duration-300"
+        className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-6 animate-in fade-in duration-300"
       >
         <CaseContextPanel
           demographics={demoCase.demographics}
@@ -159,11 +158,15 @@ function App() {
         />
         <QueryBubble queryText={demoCase.query_text} />
         <ResponsePair
-          responseLeft={demoCase.response_left}
-          responseRight={demoCase.response_right}
+          responses={demoCase.responses}
+          streamEnabled={!caseRubric.revealed}
+          onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
         />
-        <SideBySideRubric state={caseRubric.state} dispatch={caseDispatch} />
-        <AbsoluteRubric state={caseRubric.state} dispatch={caseDispatch} />
+        <LikertRubric
+          state={caseRubric.state}
+          dispatch={caseDispatch}
+          labels={demoCase.responses.map((r) => r.label)}
+        />
       </main>
 
       <SubmitBar

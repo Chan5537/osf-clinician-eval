@@ -1,10 +1,26 @@
-// Type system for the SleepFM v2 clinician evaluation mockup.
+// Type system for the SleepFM v2 clinician evaluation.
 //
-// The 11-pick rubric: 3 side-by-side A/B preferences + 4 absolute-accuracy
-// axes judged on BOTH responses (= 8 binary Yes/No). Notes are optional.
+// SensorFM-aligned rubric (Survey ED.1): 5 dimensions
+// (Context, Personalization, Justifiability, Relevance, Harm), each scored on a
+// 5-point Likert for EVERY response (A/B/C), grouped by dimension. = 15 picks.
+//
+// A case carries an ORDERED, pre-blinded, pre-shuffled array of responses, so the
+// UI never assumes a fixed number of arms (2 or 3) and never sees source identity.
 
-export type RubricPick = 'A' | 'B' | null
-export type BinaryJudgment = 'Yes' | 'No' | null
+export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
+
+// Blinded display letter the clinician sees; assigned by the exporter after shuffle.
+export type ResponseLabel = 'A' | 'B' | 'C'
+// Source arm — the UNBLINDING KEY. Carried in data + export only; NEVER rendered.
+export type ArmId = 'A' | 'B' | 'C'
+// Lowercase rubric slot, positionally derived from display label (A->a, B->b, C->c).
+export type ResponseSlot = 'a' | 'b' | 'c'
+
+export interface ResponseEntry {
+  label: ResponseLabel // blinded display letter (A/B/C)
+  markdown: string // the rendered patient-facing letter
+  arm: ArmId // source arm — unblinding key, never surfaced in the UI
+}
 
 export interface Demographics {
   age: number
@@ -19,43 +35,30 @@ export interface DemoCase {
   ehr_history: string[] // e.g. "Essential hypertension (I10)"
   query_id: string
   query_text: string
-  response_left: string // markdown — renders as Response A
-  response_right: string // markdown — renders as Response B
-  left_is_agent: boolean // un-blinding key; NEVER surfaced in the UI
+  responses: ResponseEntry[] // ordered by display label A,B[,C]; length 2 or 3
 }
 
-export interface RubricState {
-  // 3 side-by-side picks + optional notes
-  comprehensiveness: RubricPick
-  comprehensiveness_note: string
-  trustworthiness: RubricPick
-  trustworthiness_note: string
-  specificity: RubricPick
-  specificity_note: string
-  // 8 absolute judgments + optional notes (4 axes x {A, B})
-  a_factuality: BinaryJudgment
-  a_factuality_note: string
-  a_reference_interp: BinaryJudgment
-  a_reference_note: string
-  a_safety: BinaryJudgment
-  a_safety_note: string
-  a_grounding: BinaryJudgment
-  a_grounding_note: string
-  b_factuality: BinaryJudgment
-  b_factuality_note: string
-  b_reference_interp: BinaryJudgment
-  b_reference_note: string
-  b_safety: BinaryJudgment
-  b_safety_note: string
-  b_grounding: BinaryJudgment
-  b_grounding_note: string
+export type RubricDimension =
+  | 'context'
+  | 'personalization'
+  | 'justifiability'
+  | 'relevance'
+  | 'harm'
+
+// RubricState is a flat grid: one Likert score + one optional note per
+// (dimension, slot). Keys are `${dim}_${slot}` and `${dim}_${slot}_note`, e.g.
+// `context_a`, `context_a_note`, ... `harm_c`, `harm_c_note`. Flat keying keeps
+// the existing SET_PICK/SET_NOTE reducer and the storage sanitizer working.
+export type RubricScoreKey = `${RubricDimension}_${ResponseSlot}`
+export type RubricNoteKey = `${RubricScoreKey}_note`
+
+export type RubricState = {
+  [K in RubricScoreKey]: LikertScore
+} & {
+  [K in RubricNoteKey]: string
 }
 
 export type RubricAction =
-  | { type: 'SET_PICK'; axis: keyof RubricState; value: RubricPick | BinaryJudgment }
-  | { type: 'SET_NOTE'; axis: keyof RubricState; value: string }
+  | { type: 'SET_PICK'; axis: RubricScoreKey; value: LikertScore }
+  | { type: 'SET_NOTE'; axis: RubricNoteKey; value: string }
   | { type: 'RESET' }
-
-export type SideBySideAxisKey = 'comprehensiveness' | 'trustworthiness' | 'specificity'
-export type AbsoluteAxisKey = 'factuality' | 'reference_interp' | 'safety' | 'grounding'
-export type ResponseSlot = 'a' | 'b'

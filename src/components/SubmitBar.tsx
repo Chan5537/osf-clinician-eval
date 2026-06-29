@@ -1,6 +1,6 @@
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { isComplete, pickCount } from '@/lib/reducer'
+import { isComplete, pickCount, PICK_KEYS } from '@/lib/reducer'
 import type { RubricState } from '@/lib/types'
 
 interface Props {
@@ -11,11 +11,11 @@ interface Props {
   isLast: boolean
 }
 
-const TOTAL_PICKS = 11
+const TOTAL_PICKS = PICK_KEYS.length
 
-// Sticky bottom bar. Back returns to the previous pair (answers are preserved
-// per pair, so reviewers can revise). Submit stays disabled until all 11 picks
-// are made; its label reflects whether more pairs remain.
+// Sticky bottom bar. Back returns to the previous case (answers are preserved
+// per case, so reviewers can revise). Submit stays disabled until all required
+// Likert picks are made; its label reflects whether more cases remain.
 export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast }: Props) {
   const done = pickCount(state)
   const complete = isComplete(state)
