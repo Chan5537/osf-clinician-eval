@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
-import { PICK_KEYS } from '@/lib/reducer'
+import { pickKeysFor } from '@/lib/reducer'
 import { GUIDELINE_DOC_URL, RUBRIC_DOC_URL } from '@/lib/links'
 import { DEMO_CASES } from '@/data/demo-cases'
 
@@ -23,7 +23,7 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
   const total = DEMO_CASES.length
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
-  const totalRatings = PICK_KEYS.length
+  const totalRatings = pickKeysFor(nResponses).length
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 py-10">

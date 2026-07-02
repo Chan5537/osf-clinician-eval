@@ -7,15 +7,14 @@ import type {
   ResponseSlot,
 } from './types'
 
-// The 5 SensorFM dimensions × 3 response slots = 15 Likert scores (the gating picks),
+// The 4 SensorFM dimensions × 3 response slots = 12 Likert scores (the gating picks),
 // each with a paired optional note. Built programmatically so the key set stays in sync
-// with the type and never drifts.
+// with the type and never drifts. (Harm dropped — see rubric-config.ts header.)
 const DIMENSIONS: RubricDimension[] = [
   'context',
   'personalization',
   'justifiability',
   'relevance',
-  'harm',
 ]
 const SLOTS: ResponseSlot[] = ['a', 'b', 'c']
 
@@ -26,10 +25,19 @@ export function noteKey(dim: RubricDimension, slot: ResponseSlot): RubricNoteKey
   return `${dim}_${slot}_note`
 }
 
-// The 15 pick keys that gate submission (one Likert per dimension per response). Notes excluded.
-export const PICK_KEYS: RubricScoreKey[] = DIMENSIONS.flatMap((d) =>
-  SLOTS.map((s) => scoreKey(d, s)),
-)
+// The pick keys that gate submission for a case with `nResponses` responses: one Likert per
+// dimension per PRESENT response (slots a,b[,c]). A 2-arm case has 4×2 = 8 required picks; a
+// 3-arm case has 4×3 = 12. The rubric state always allocates all 3 slots (initialRubricState),
+// but only the slots that exist in the current case are REQUIRED — otherwise a 2-response case
+// could never satisfy the `_c` picks and the clinician could never submit.
+export function pickKeysFor(nResponses: number): RubricScoreKey[] {
+  const slots = SLOTS.slice(0, Math.max(0, Math.min(SLOTS.length, nResponses)))
+  return DIMENSIONS.flatMap((d) => slots.map((s) => scoreKey(d, s)))
+}
+
+// Back-compat default (full 3-slot key set). Prefer pickKeysFor(nResponses) at call sites that
+// know the current case's response count.
+export const PICK_KEYS: RubricScoreKey[] = pickKeysFor(SLOTS.length)
 
 export const initialRubricState: RubricState = (() => {
   const state = {} as Record<string, unknown>
@@ -55,12 +63,12 @@ export function rubricReducer(state: RubricState, action: RubricAction): RubricS
   }
 }
 
-/** Number of the 15 required Likert picks that have been made. */
-export function pickCount(state: RubricState): number {
-  return PICK_KEYS.reduce((n, key) => (state[key] !== null ? n + 1 : n), 0)
+/** Number of required Likert picks made, for a case with `nResponses` responses (default 3). */
+export function pickCount(state: RubricState, nResponses: number = SLOTS.length): number {
+  return pickKeysFor(nResponses).reduce((n, key) => (state[key] !== null ? n + 1 : n), 0)
 }
 
-/** True iff all 15 Likert picks are non-null. Notes remain optional. */
-export function isComplete(state: RubricState): boolean {
-  return PICK_KEYS.every((key) => state[key] !== null)
+/** True iff every required Likert pick (per present response) is non-null. Notes stay optional. */
+export function isComplete(state: RubricState, nResponses: number = SLOTS.length): boolean {
+  return pickKeysFor(nResponses).every((key) => state[key] !== null)
 }

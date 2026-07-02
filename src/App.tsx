@@ -175,6 +175,7 @@ function App() {
         onBack={() => dispatch({ type: 'GOTO_CASE', caseIndex: i - 1 })}
         canGoBack={i > 0}
         isLast={i === DEMO_CASES.length - 1}
+        nResponses={demoCase.responses.length}
       />
       <AppFooter />
     </div>

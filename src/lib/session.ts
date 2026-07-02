@@ -11,7 +11,8 @@ import { DEMO_CASES } from '@/data/demo-cases'
 
 // Bump whenever the case CONTENT or stored shape changes, so stale localStorage
 // is discarded rather than mis-hydrated. v2 = N-response shape + SensorFM Likert rubric.
-export const SCHEMA_VERSION = 2
+// v3 = organ-system redesign (sleep-vitals figure, 4-criteria rubric [Harm dropped]).
+export const SCHEMA_VERSION = 3
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
