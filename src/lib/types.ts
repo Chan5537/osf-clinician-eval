@@ -1,8 +1,8 @@
 // Type system for the SleepFM v2 clinician evaluation.
 //
-// SensorFM-aligned rubric (Survey ED.1): 5 dimensions
-// (Context, Personalization, Justifiability, Relevance, Harm), each scored on a
-// 5-point Likert for EVERY response (A/B/C), grouped by dimension. = 15 picks.
+// SensorFM-aligned rubric (Survey ED.1): 4 dimensions
+// (Context, Personalization, Justifiability, Relevance — Harm dropped), each scored on a
+// 5-point Likert for EVERY response (A/B/C), grouped by dimension. = 12 picks.
 //
 // A case carries an ORDERED, pre-blinded, pre-shuffled array of responses, so the
 // UI never assumes a fixed number of arms (2 or 3) and never sees source identity.
@@ -27,6 +27,7 @@ export interface Demographics {
   sex: 'F' | 'M'
   bmi: number
   race: string
+  bp?: string // blood pressure "systolic/diastolic" mmHg; present only when recorded
 }
 
 export interface DemoCase {
@@ -43,11 +44,10 @@ export type RubricDimension =
   | 'personalization'
   | 'justifiability'
   | 'relevance'
-  | 'harm'
 
 // RubricState is a flat grid: one Likert score + one optional note per
 // (dimension, slot). Keys are `${dim}_${slot}` and `${dim}_${slot}_note`, e.g.
-// `context_a`, `context_a_note`, ... `harm_c`, `harm_c_note`. Flat keying keeps
+// `context_a`, `context_a_note`, ... `relevance_c`, `relevance_c_note`. Flat keying keeps
 // the existing SET_PICK/SET_NOTE reducer and the storage sanitizer working.
 export type RubricScoreKey = `${RubricDimension}_${ResponseSlot}`
 export type RubricNoteKey = `${RubricScoreKey}_note`

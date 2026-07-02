@@ -1,7 +1,7 @@
 // Client-side export of the session's ratings to JSON and CSV.
 //
-// SensorFM-aligned schema: one row per touched case, carrying the 15 Likert scores
-// (5 dimensions × 3 responses) + their optional notes, plus the un-blinding ARM MAP
+// SensorFM-aligned schema: one row per touched case, carrying the 12 Likert scores
+// (4 dimensions × 3 responses) + their optional notes, plus the un-blinding ARM MAP
 // (a_arm/b_arm/c_arm = which source arm each displayed Response A/B/C actually was).
 // The export carries the un-blinding key and is therefore offered ONLY on the
 // completion screen.
