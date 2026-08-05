@@ -20,6 +20,7 @@ export interface RubricAtom {
   axis: string // reporting axis: 'sleep_index' | 'incremental_value' | 'disease' | 'safety'
   question: string // the rater-facing Yes/No question
   weight: number // signed weight (+1 positive, -1 defect, 0 for padding)
+  element?: string // the data element this atom is about (slot label / disease name) — UI highlights it
   placeholder?: boolean // true = a blinding-pad atom (locked N/A, never scored)
 }
 
