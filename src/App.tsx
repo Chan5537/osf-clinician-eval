@@ -150,7 +150,7 @@ function App() {
 
       <main
         key={i}
-        className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-6 animate-in fade-in duration-300"
+        className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 pt-6 pb-28 animate-in fade-in duration-300"
       >
         <CaseContextPanel
           demographics={demoCase.demographics}

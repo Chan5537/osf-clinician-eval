@@ -6,62 +6,57 @@ import { cn } from '@/lib/utils'
 import type { RubricState, RubricAction, AtomScore, ResponseEntry, RubricAtom } from '@/lib/types'
 
 // Render an atom question with two emphases so it's fast to scan:
-//   • ALL-CAPS emphasis words (CONNECTS, NONRELEVANT, OVER-TREAT, SPECIFIC, DO NOT ...) -> bold
-//   • data mentions — a parenthetical listing measurement acronyms, e.g. "(AHI, SpO2)" or
-//     "(N1, N2, N3, REM)" -> highlighted chip. Prose parentheticals ("(if a calibrated risk is
-//     shown)") are left plain — only parentheticals whose contents are mostly acronym/number tokens.
+//   • the DATA ELEMENT the question is about (the sleep-slot label "overnight breathing (AHI, SpO2)",
+//     "sleep stage (N1, N2, N3, REM)", "sleep continuity (TST, ...)", or a disease name like
+//     "Essential hypertension") -> highlighted chip. This is the exact `element` string from the data,
+//     so it matches whatever is actually in the question — no guessing.
+//   • ALL-CAPS emphasis words (CONNECTS, NONRELEVANT, OVER-TREAT, SPECIFIC, NOT RELEVANT ...) -> bold.
 const CAPS_RUN = /\b([A-Z][A-Z]+(?:[-\s]+[A-Z][A-Z]+)*)\b/g // 2+ consecutive all-caps words
-const DATA_PAREN = /\(([^)]*)\)/g
 
-function looksLikeData(inner: string): boolean {
-  const tokens = inner
-    .split(/[,\s/]+/)
-    .map((t) => t.trim())
-    .filter(Boolean)
-  if (tokens.length === 0) return false
-  // a data mention: most tokens are short acronym/number-ish (e.g. AHI, SpO2, N1, ODI, REM, TST)
-  const dataish = tokens.filter((t) => /^[A-Za-z]{1,5}\d*$/.test(t) && /[A-Z0-9]/.test(t)).length
-  return dataish >= Math.ceil(tokens.length / 2) && dataish >= 1
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function renderQuestion(text: string): ReactNode[] {
-  // First split out data-parentheticals, then bold caps-runs within the plain segments.
+// Bold every ALL-CAPS emphasis run inside a plain text segment.
+function boldCaps(segment: string, kb: string): ReactNode[] {
+  const out: ReactNode[] = []
+  let li = 0
+  let m: RegExpExecArray | null
+  CAPS_RUN.lastIndex = 0
+  while ((m = CAPS_RUN.exec(segment)) !== null) {
+    if (m.index > li) out.push(segment.slice(li, m.index))
+    out.push(
+      <strong key={`b${kb}-${m.index}`} className="font-semibold">
+        {m[0]}
+      </strong>,
+    )
+    li = m.index + m[0].length
+  }
+  if (li < segment.length) out.push(segment.slice(li))
+  return out
+}
+
+function renderQuestion(text: string, element?: string): ReactNode[] {
+  // Highlight EVERY occurrence of the known data element; bold caps-runs in the segments between.
+  if (!element || !element.trim()) return boldCaps(text, 'q')
+  const re = new RegExp(escapeRegExp(element.trim()), 'gi')
   const nodes: ReactNode[] = []
   let last = 0
-  const boldCaps = (segment: string, kb: number): ReactNode[] => {
-    const out: ReactNode[] = []
-    let li = 0
-    let m: RegExpExecArray | null
-    CAPS_RUN.lastIndex = 0
-    while ((m = CAPS_RUN.exec(segment)) !== null) {
-      if (m.index > li) out.push(segment.slice(li, m.index))
-      out.push(
-        <strong key={`b${kb}-${m.index}`} className="font-semibold">
-          {m[0]}
-        </strong>,
-      )
-      li = m.index + m[0].length
-    }
-    if (li < segment.length) out.push(segment.slice(li))
-    return out
-  }
-  let dm: RegExpExecArray | null
-  DATA_PAREN.lastIndex = 0
-  while ((dm = DATA_PAREN.exec(text)) !== null) {
-    const inner = dm[1]
-    if (!looksLikeData(inner)) continue // leave prose parentheticals to the caps-bolding pass
-    if (dm.index > last) nodes.push(...boldCaps(text.slice(last, dm.index), last))
+  let m: RegExpExecArray | null
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) nodes.push(...boldCaps(text.slice(last, m.index), String(last)))
     nodes.push(
       <span
-        key={`d${dm.index}`}
-        className="rounded bg-primary/10 px-1 font-medium text-primary"
+        key={`el${m.index}`}
+        className="rounded bg-primary/10 px-1 font-semibold text-primary"
       >
-        {dm[0]}
+        {m[0]}
       </span>,
     )
-    last = dm.index + dm[0].length
+    last = m.index + m[0].length
+    if (m.index === re.lastIndex) re.lastIndex++ // guard against zero-width matches
   }
-  if (last < text.length) nodes.push(...boldCaps(text.slice(last), last))
+  if (last < text.length) nodes.push(...boldCaps(text.slice(last), String(last)))
   return nodes
 }
 
@@ -137,7 +132,7 @@ function AtomRow({
   return (
     <div className="flex items-start justify-between gap-4 border-t py-2.5 first:border-t-0">
       <div className="min-w-0">
-        <p className="text-sm leading-snug">{renderQuestion(atom.question)}</p>
+        <p className="text-sm leading-snug">{renderQuestion(atom.question, atom.element)}</p>
         <span
           className={cn(
             'mt-1 inline-block rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
