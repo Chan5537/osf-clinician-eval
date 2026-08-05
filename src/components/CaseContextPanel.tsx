@@ -66,7 +66,7 @@ export function CaseContextPanel({ demographics, ehrHistory }: Props) {
           </div>
           <div className="space-y-2">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              EHR history
+              Medical history
             </span>
             <div className="flex flex-wrap items-center gap-2">
               {shownHistory.map((dx) => (
