@@ -5,14 +5,15 @@
 // RubricAction to the targeted case via the RUBRIC action. No router; the
 // `view` field drives which screen App renders.
 
-import type { RubricState, RubricAction } from './types'
-import { initialRubricState, rubricReducer } from './reducer'
+import type { RubricState, RubricAction, DemoCase } from './types'
+import { buildInitialRubricState, rubricReducer } from './reducer'
 import { DEMO_CASES } from '@/data/demo-cases'
 
 // Bump whenever the case CONTENT or stored shape changes, so stale localStorage
 // is discarded rather than mis-hydrated. v2 = N-response shape + SensorFM Likert rubric.
 // v3 = organ-system redesign (sleep-vitals figure, 4-criteria rubric [Harm dropped]).
-export const SCHEMA_VERSION = 3
+// v4 = weighted-boolean rubric (per-response Yes/No/NA atom checklist; open data-driven key scheme).
+export const SCHEMA_VERSION = 4
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
@@ -32,8 +33,8 @@ export interface SessionState {
   caseEnteredAt: number | null // Date.now() epoch ms — NOT performance.now()
 }
 
-const blankCase = (): CaseRubric => ({
-  state: { ...initialRubricState },
+const blankCase = (demoCase: DemoCase): CaseRubric => ({
+  state: buildInitialRubricState(demoCase),
   submitted: false,
   submittedAt: null,
   durationSeconds: null,
@@ -44,7 +45,7 @@ export function initialSessionState(): SessionState {
   return {
     view: 'landing',
     currentCaseIndex: 0,
-    cases: DEMO_CASES.map(blankCase),
+    cases: DEMO_CASES.map((dc) => blankCase(dc)),
     reviewer: '',
     caseEnteredAt: null,
   }
@@ -88,7 +89,7 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
     case 'RUBRIC': {
       const c = s.cases[a.caseIndex]
       // Editing re-opens a submitted case so a later re-submit re-stamps honestly.
-      const nextState = rubricReducer(c.state, a.action)
+      const nextState = rubricReducer(c.state, a.action, DEMO_CASES[a.caseIndex])
       return patchCase(s, a.caseIndex, {
         state: nextState,
         submitted: false,

@@ -1,7 +1,7 @@
 import { ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { isComplete, pickCount, pickKeysFor } from '@/lib/reducer'
-import type { RubricState } from '@/lib/types'
+import { isComplete, pickCount, requiredCount } from '@/lib/reducer'
+import type { RubricState, DemoCase } from '@/lib/types'
 
 interface Props {
   state: RubricState
@@ -9,17 +9,17 @@ interface Props {
   onBack: () => void
   canGoBack: boolean
   isLast: boolean
-  // Number of responses in the current case (2 or 3) — sets how many picks are required.
-  nResponses: number
+  // The current case — sets how many atoms must be answered before submit.
+  demoCase: DemoCase
 }
 
 // Sticky bottom bar. Back returns to the previous case (answers are preserved
-// per case, so reviewers can revise). Submit stays disabled until all required
-// Likert picks are made; its label reflects whether more cases remain.
-export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast, nResponses }: Props) {
-  const totalPicks = pickKeysFor(nResponses).length
-  const done = pickCount(state, nResponses)
-  const complete = isComplete(state, nResponses)
+// per case, so reviewers can revise). Submit stays disabled until every required
+// atom is answered (Yes/No/N/A); its label reflects whether more cases remain.
+export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast, demoCase }: Props) {
+  const total = requiredCount(demoCase)
+  const done = pickCount(state, demoCase)
+  const complete = isComplete(state, demoCase)
 
   return (
     <div className="sticky bottom-0 z-10 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -36,10 +36,10 @@ export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast, nRespons
         </Button>
         <span className="text-sm text-muted-foreground">
           {complete ? (
-            <span className="font-medium text-foreground">All picks complete</span>
+            <span className="font-medium text-foreground">All items answered</span>
           ) : (
             <>
-              {done} of {totalPicks} picks complete
+              {done} of {total} items answered
             </>
           )}
         </span>

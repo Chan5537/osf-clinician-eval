@@ -6,8 +6,8 @@
 
 import type { SessionState, CaseRubric } from './session'
 import { SCHEMA_VERSION, initialSessionState } from './session'
-import { initialRubricState } from './reducer'
-import type { RubricState } from './types'
+import { buildInitialRubricState } from './reducer'
+import type { RubricState, DemoCase } from './types'
 import { DEMO_CASES } from '@/data/demo-cases'
 
 // Neutral localStorage key (no brand token; visible in a screen-shared devtools session).
@@ -18,15 +18,16 @@ interface Envelope {
   session: SessionState
 }
 
-// Rebuild a clean RubricState, copying only known keys from `stored`. Renamed
-// or partial keys vanish, so the reducer never receives a malformed object.
-function sanitizeRubric(stored: unknown): RubricState {
-  const base: RubricState = { ...initialRubricState }
-  const target = base as unknown as Record<string, unknown>
+// Rebuild a clean RubricState for a specific case, copying only that case's known atom keys from
+// `stored`. Renamed/removed/foreign keys vanish, so the reducer never receives a malformed object.
+// Placeholder atoms are re-seeded to 'NA' by buildInitialRubricState and left untouched.
+function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
+  const base: RubricState = buildInitialRubricState(demoCase)
   if (stored && typeof stored === 'object') {
     const src = stored as Record<string, unknown>
     for (const k of Object.keys(base)) {
-      if (src[k] !== undefined) target[k] = src[k]
+      const v = src[k]
+      if (v === 0 || v === 1 || v === 'NA' || v === null) base[k] = v as RubricState[string]
     }
   }
   return base
@@ -42,10 +43,10 @@ export function load(): SessionState | null {
     // Index-alignment guard: array length must match the current case set.
     if (!Array.isArray(s.cases) || s.cases.length !== DEMO_CASES.length) return null
     const fresh = initialSessionState()
-    const cases: CaseRubric[] = DEMO_CASES.map((_dc, i) => {
+    const cases: CaseRubric[] = DEMO_CASES.map((dc, i) => {
       const c = s.cases[i] ?? fresh.cases[i]
       return {
-        state: sanitizeRubric(c?.state),
+        state: sanitizeRubric(c?.state, dc),
         submitted: !!c?.submitted,
         submittedAt: typeof c?.submittedAt === 'string' ? c.submittedAt : null,
         durationSeconds: typeof c?.durationSeconds === 'number' ? c.durationSeconds : null,

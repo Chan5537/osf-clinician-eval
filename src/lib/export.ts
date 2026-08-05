@@ -1,67 +1,68 @@
 // Client-side export of the session's ratings to JSON and CSV.
 //
-// SensorFM-aligned schema: one row per touched case, carrying the 12 Likert scores
-// (4 dimensions × 3 responses) + their optional notes, plus the un-blinding ARM MAP
-// (a_arm/b_arm/c_arm = which source arm each displayed Response A/B/C actually was).
-// The export carries the un-blinding key and is therefore offered ONLY on the
-// completion screen.
+// WEIGHTED-BOOLEAN schema (LONG / TIDY format): one row per (case, response, atom). Because the
+// atom set is per-response and per-case-varying, a fixed wide grid no longer fits — long format is
+// the natural shape and the arm map collapses to a single per-row `arm` (the UNBLINDING KEY, carried
+// only in the export, never rendered). The export carries the un-blinding key and is therefore
+// offered ONLY on the completion screen.
 
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
-import { pickCount, scoreKey, noteKey } from './reducer'
-import { RUBRIC_DIMENSIONS } from './rubric-config'
+import { pickCount } from './reducer'
 import { DEMO_CASES } from '@/data/demo-cases'
-import type { ResponseSlot, ArmId } from './types'
+import { atomKey } from './types'
+import type { AtomScore } from './types'
 
-const SLOTS: ResponseSlot[] = ['a', 'b', 'c']
-
-// Fixed metadata columns + arm map, then the dimension×slot score/note columns.
-const META_COLUMNS = ['reviewer', 'case_id', 'query_id', 'a_arm', 'b_arm', 'c_arm'] as const
-const TAIL_COLUMNS = ['submitted_at', 'duration_seconds'] as const
-
-// Programmatic score/note column list, grouped BY DIMENSION (matches the rating order:
-// all responses for one dimension before the next): context_a, context_a_note, context_b, ...
-const SCORE_NOTE_COLUMNS: string[] = RUBRIC_DIMENSIONS.flatMap((d) =>
-  SLOTS.flatMap((s) => [scoreKey(d.key, s), noteKey(d.key, s)]),
-)
-
-const COLUMNS: string[] = [...META_COLUMNS, ...SCORE_NOTE_COLUMNS, ...TAIL_COLUMNS]
+// One row per (case, response, atom). `value` is the clinician's answer; `arm` is the unblinding key.
+const COLUMNS: string[] = [
+  'reviewer',
+  'case_id',
+  'query_id',
+  'response_label', // blinded A/B/C the clinician saw
+  'arm', // UNBLINDING KEY — source arm for this response
+  'atom_id',
+  'criterion',
+  'axis',
+  'weight',
+  'value', // 1 (Yes) / 0 (No) / NA / '' (unanswered)
+  'submitted_at',
+  'duration_seconds',
+]
 
 export type ReviewRow = Record<string, string | number | boolean | null>
+
+function valueCell(v: AtomScore): string | number {
+  if (v === 'NA') return 'NA'
+  if (v === 0 || v === 1) return v
+  return '' // null / unanswered
+}
 
 export function buildRows(session: SessionState): ReviewRow[] {
   const rows: ReviewRow[] = []
   session.cases.forEach((c, i) => {
-    const touched = pickCount(c.state) > 0 || c.submitted
-    if (!touched) return
     const dc = DEMO_CASES[i]
+    const touched = pickCount(c.state, dc) > 0 || c.submitted
+    if (!touched) return
     const s = c.state
-
-    // Arm map: which source arm each displayed slot (a/b/c) actually was. responses[]
-    // is in display order (A,B[,C]); index 0->a, 1->b, 2->c. This is the unblinding key.
-    const armBySlot: Record<ResponseSlot, ArmId | null> = { a: null, b: null, c: null }
-    dc.responses.forEach((r, idx) => {
-      const slot = SLOTS[idx]
-      if (slot) armBySlot[slot] = r.arm
-    })
-
-    const row: ReviewRow = {
-      reviewer: session.reviewer,
-      case_id: dc.case_id,
-      query_id: dc.query_id,
-      a_arm: armBySlot.a,
-      b_arm: armBySlot.b,
-      c_arm: armBySlot.c,
-      submitted_at: c.submittedAt, // recorded at Submit, never synthesized at export
-      duration_seconds: c.durationSeconds,
-    }
-    for (const d of RUBRIC_DIMENSIONS) {
-      for (const slot of SLOTS) {
-        row[scoreKey(d.key, slot)] = s[scoreKey(d.key, slot)]
-        row[noteKey(d.key, slot)] = s[noteKey(d.key, slot)]
+    for (const r of dc.responses) {
+      for (const a of r.atoms) {
+        if (a.placeholder) continue // padding rows are not scored — omit from the export
+        rows.push({
+          reviewer: session.reviewer,
+          case_id: dc.case_id,
+          query_id: dc.query_id,
+          response_label: r.label,
+          arm: r.arm, // unblinding key
+          atom_id: a.id,
+          criterion: a.criterion,
+          axis: a.axis,
+          weight: a.weight,
+          value: valueCell(s[atomKey(r.label, a.id)] ?? null),
+          submitted_at: c.submittedAt,
+          duration_seconds: c.durationSeconds,
+        })
       }
     }
-    rows.push(row)
   })
   return rows
 }
