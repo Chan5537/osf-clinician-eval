@@ -17,7 +17,7 @@ import { AppFooter } from '@/components/AppFooter'
 import { CaseContextPanel } from '@/components/CaseContextPanel'
 import { QueryBubble } from '@/components/QueryBubble'
 import { ResponsePair } from '@/components/ResponsePair'
-import { LikertRubric } from '@/components/LikertRubric'
+import { ChecklistRubric } from '@/components/ChecklistRubric'
 import { SubmitBar } from '@/components/SubmitBar'
 
 // Lazy initializer: hydrate from localStorage exactly once at render-init.
@@ -162,10 +162,10 @@ function App() {
           streamEnabled={!caseRubric.revealed}
           onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
         />
-        <LikertRubric
+        <ChecklistRubric
           state={caseRubric.state}
           dispatch={caseDispatch}
-          labels={demoCase.responses.map((r) => r.label)}
+          responses={demoCase.responses}
         />
       </main>
 
@@ -175,7 +175,7 @@ function App() {
         onBack={() => dispatch({ type: 'GOTO_CASE', caseIndex: i - 1 })}
         canGoBack={i > 0}
         isLast={i === DEMO_CASES.length - 1}
-        nResponses={demoCase.responses.length}
+        demoCase={demoCase}
       />
       <AppFooter />
     </div>

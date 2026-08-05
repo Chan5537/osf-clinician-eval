@@ -1,74 +1,76 @@
-import type {
-  RubricState,
-  RubricAction,
-  RubricDimension,
-  RubricScoreKey,
-  RubricNoteKey,
-  ResponseSlot,
-} from './types'
+import type { RubricState, RubricAction, DemoCase, CheckKey } from './types'
+import { atomKey } from './types'
 
-// The 4 SensorFM dimensions × 3 response slots = 12 Likert scores (the gating picks),
-// each with a paired optional note. Built programmatically so the key set stays in sync
-// with the type and never drifts. (Harm dropped — see rubric-config.ts header.)
-const DIMENSIONS: RubricDimension[] = [
-  'context',
-  'personalization',
-  'justifiability',
-  'relevance',
-]
-const SLOTS: ResponseSlot[] = ['a', 'b', 'c']
+// Weighted-boolean rubric state machine. The rubric is DATA-DRIVEN: each case's key set is built
+// from its responses' atoms (responses[i].atoms), NOT a fixed compile-time grid. A key is
+// `${responseLabel}__${atomId}`; a value is an AtomScore (1 = Yes, 0 = No, 'NA', or null = unanswered).
+//
+// Placeholder atoms (blinding padding, `placeholder: true`) are pre-set to 'NA', are NOT required for
+// completion, and are never presented as answerable — they exist only so every response shows the same
+// atom count.
 
-export function scoreKey(dim: RubricDimension, slot: ResponseSlot): RubricScoreKey {
-  return `${dim}_${slot}`
-}
-export function noteKey(dim: RubricDimension, slot: ResponseSlot): RubricNoteKey {
-  return `${dim}_${slot}_note`
+/** Every (label, atomId) key for a case — including placeholders. */
+export function allKeysFor(demoCase: DemoCase): CheckKey[] {
+  const keys: CheckKey[] = []
+  for (const r of demoCase.responses) {
+    for (const a of r.atoms) keys.push(atomKey(r.label, a.id))
+  }
+  return keys
 }
 
-// The pick keys that gate submission for a case with `nResponses` responses: one Likert per
-// dimension per PRESENT response (slots a,b[,c]). A 2-arm case has 4×2 = 8 required picks; a
-// 3-arm case has 4×3 = 12. The rubric state always allocates all 3 slots (initialRubricState),
-// but only the slots that exist in the current case are REQUIRED — otherwise a 2-response case
-// could never satisfy the `_c` picks and the clinician could never submit.
-export function pickKeysFor(nResponses: number): RubricScoreKey[] {
-  const slots = SLOTS.slice(0, Math.max(0, Math.min(SLOTS.length, nResponses)))
-  return DIMENSIONS.flatMap((d) => slots.map((s) => scoreKey(d, s)))
-}
-
-// Back-compat default (full 3-slot key set). Prefer pickKeysFor(nResponses) at call sites that
-// know the current case's response count.
-export const PICK_KEYS: RubricScoreKey[] = pickKeysFor(SLOTS.length)
-
-export const initialRubricState: RubricState = (() => {
-  const state = {} as Record<string, unknown>
-  for (const d of DIMENSIONS) {
-    for (const s of SLOTS) {
-      state[scoreKey(d, s)] = null
-      state[noteKey(d, s)] = ''
+/** The keys that GATE submission: every real (non-placeholder) atom on every response. */
+export function requiredKeysFor(demoCase: DemoCase): CheckKey[] {
+  const keys: CheckKey[] = []
+  for (const r of demoCase.responses) {
+    for (const a of r.atoms) {
+      if (!a.placeholder) keys.push(atomKey(r.label, a.id))
     }
   }
-  return state as RubricState
-})()
+  return keys
+}
 
-export function rubricReducer(state: RubricState, action: RubricAction): RubricState {
+/** Blank state for a case: every real atom -> null (unanswered); every placeholder -> 'NA' (locked). */
+export function buildInitialRubricState(demoCase: DemoCase): RubricState {
+  const state: RubricState = {}
+  for (const r of demoCase.responses) {
+    for (const a of r.atoms) {
+      state[atomKey(r.label, a.id)] = a.placeholder ? 'NA' : null
+    }
+  }
+  return state
+}
+
+export function rubricReducer(
+  state: RubricState,
+  action: RubricAction,
+  demoCase?: DemoCase,
+): RubricState {
   switch (action.type) {
-    case 'SET_PICK':
-      return { ...state, [action.axis]: action.value }
-    case 'SET_NOTE':
-      return { ...state, [action.axis]: action.value }
+    case 'SET_ATOM':
+      return { ...state, [action.key]: action.value }
     case 'RESET':
-      return { ...initialRubricState }
+      return demoCase ? buildInitialRubricState(demoCase) : {}
     default:
       return state
   }
 }
 
-/** Number of required Likert picks made, for a case with `nResponses` responses (default 3). */
-export function pickCount(state: RubricState, nResponses: number = SLOTS.length): number {
-  return pickKeysFor(nResponses).reduce((n, key) => (state[key] !== null ? n + 1 : n), 0)
+/** An atom counts as answered when it holds a concrete AtomScore (1, 0, or 'NA') — not null. */
+function answered(v: RubricState[string]): boolean {
+  return v === 1 || v === 0 || v === 'NA'
 }
 
-/** True iff every required Likert pick (per present response) is non-null. Notes stay optional. */
-export function isComplete(state: RubricState, nResponses: number = SLOTS.length): boolean {
-  return pickKeysFor(nResponses).every((key) => state[key] !== null)
+/** Number of required atoms answered for this case. */
+export function pickCount(state: RubricState, demoCase: DemoCase): number {
+  return requiredKeysFor(demoCase).reduce((n, key) => (answered(state[key]) ? n + 1 : n), 0)
+}
+
+/** Total number of required atoms for this case. */
+export function requiredCount(demoCase: DemoCase): number {
+  return requiredKeysFor(demoCase).length
+}
+
+/** True iff every required atom has been answered (Yes/No/NA). */
+export function isComplete(state: RubricState, demoCase: DemoCase): boolean {
+  return requiredKeysFor(demoCase).every((key) => answered(state[key]))
 }

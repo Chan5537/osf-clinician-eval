@@ -5,10 +5,12 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
-import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
-import { pickKeysFor } from '@/lib/reducer'
+import { requiredCount } from '@/lib/reducer'
 import { GUIDELINE_DOC_URL, RUBRIC_DOC_URL } from '@/lib/links'
 import { DEMO_CASES } from '@/data/demo-cases'
+
+// The rubric categories shown on the landing screen (weighted-boolean checklist).
+const RUBRIC_CATEGORIES = ['Sleep-data interpretation', 'Future-disease risk', 'Safety']
 
 interface Props {
   reviewer: string
@@ -23,7 +25,10 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
   const total = DEMO_CASES.length
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
-  const totalRatings = pickKeysFor(nResponses).length
+  // items-per-case for the first case (each case has the same per-response count by design)
+  const itemsPerResponse = DEMO_CASES[0]
+    ? Math.round(requiredCount(DEMO_CASES[0]) / (DEMO_CASES[0].responses.length || 1))
+    : 0
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 py-10">
@@ -44,21 +49,20 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
 
             <div className="space-y-2">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                For each case you will rate <strong>every response on each of five clinical
-                dimensions</strong> using a 1–5 scale (1 = lowest, 5 = highest) —{' '}
-                <strong>{totalRatings} ratings in total</strong>. Score all responses for one
-                dimension before moving to the next. Optional comments are welcome. The whole
-                study takes about <strong>10–15 minutes</strong>.
+                For each response you will answer a short <strong>Yes / No / N&#47;A checklist</strong>{' '}
+                (about <strong>{itemsPerResponse} items per response</strong>), grouped by category.
+                Mark an item <strong>N&#47;A</strong> when it does not apply to that response. The
+                whole study takes about <strong>15–20 minutes</strong>.
               </p>
             </div>
 
             <div className="space-y-1.5">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Clinical quality dimensions
+                Rubric categories
               </p>
               <ul className="grid grid-cols-1 gap-1 text-sm sm:grid-cols-2">
-                {RUBRIC_DIMENSIONS.map((d) => (
-                  <li key={d.key}>{d.label}</li>
+                {RUBRIC_CATEGORIES.map((c) => (
+                  <li key={c}>{c}</li>
                 ))}
               </ul>
             </div>

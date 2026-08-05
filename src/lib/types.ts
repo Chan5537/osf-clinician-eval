@@ -1,25 +1,33 @@
 // Type system for the SleepFM v2 clinician evaluation.
 //
-// SensorFM-aligned rubric (Survey ED.1): 4 dimensions
-// (Context, Personalization, Justifiability, Relevance — Harm dropped), each scored on a
-// 5-point Likert for EVERY response (A/B/C), grouped by dimension. = 12 picks.
+// WEIGHTED-BOOLEAN rubric: each response is scored on its OWN per-response checklist of atoms
+// (Yes / No / N/A), grouped by category (sleep-index, disease, safety). The atoms differ per
+// response (per-response-mentioned diseases) and are supplied by the data (responses[i].atoms),
+// not hardcoded — so the rubric is data-driven and stays in sync with the scoring sheet.
 //
-// A case carries an ORDERED, pre-blinded, pre-shuffled array of responses, so the
-// UI never assumes a fixed number of arms (2 or 3) and never sees source identity.
-
-export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
+// A case carries an ORDERED, pre-blinded, pre-shuffled array of responses, so the UI never assumes
+// a fixed number of arms (2 or 3) and never sees source identity.
 
 // Blinded display letter the clinician sees; assigned by the exporter after shuffle.
 export type ResponseLabel = 'A' | 'B' | 'C'
 // Source arm — the UNBLINDING KEY. Carried in data + export only; NEVER rendered.
 export type ArmId = 'A' | 'B' | 'C'
-// Lowercase rubric slot, positionally derived from display label (A->a, B->b, C->c).
-export type ResponseSlot = 'a' | 'b' | 'c'
+
+// A single weighted-boolean rubric atom (one Yes/No/NA question about a response).
+export interface RubricAtom {
+  id: string // stable per-response id, e.g. "A2__overnight_breathing_ahi_spo2" or "S1"
+  criterion: string // atom family: A2/A5 (sleep-index), D2/D3/D5/D6 (disease), S1/S2/S3 (safety), PAD
+  axis: string // reporting axis: 'sleep_index' | 'incremental_value' | 'disease' | 'safety'
+  question: string // the rater-facing Yes/No question
+  weight: number // signed weight (+1 positive, -1 defect, 0 for padding)
+  placeholder?: boolean // true = a blinding-pad atom (locked N/A, never scored)
+}
 
 export interface ResponseEntry {
   label: ResponseLabel // blinded display letter (A/B/C)
   markdown: string // the rendered patient-facing letter
   arm: ArmId // source arm — unblinding key, never surfaced in the UI
+  atoms: RubricAtom[] // this response's weighted-boolean checklist (data-driven, per-response)
 }
 
 export interface Demographics {
@@ -39,26 +47,20 @@ export interface DemoCase {
   responses: ResponseEntry[] // ordered by display label A,B[,C]; length 2 or 3
 }
 
-export type RubricDimension =
-  | 'context'
-  | 'personalization'
-  | 'justifiability'
-  | 'relevance'
+// A clinician's answer to one atom: Yes (1) / No (0) / N/A / not-yet-answered (null).
+export type AtomScore = 0 | 1 | 'NA' | null
 
-// RubricState is a flat grid: one Likert score + one optional note per
-// (dimension, slot). Keys are `${dim}_${slot}` and `${dim}_${slot}_note`, e.g.
-// `context_a`, `context_a_note`, ... `relevance_c`, `relevance_c_note`. Flat keying keeps
-// the existing SET_PICK/SET_NOTE reducer and the storage sanitizer working.
-export type RubricScoreKey = `${RubricDimension}_${ResponseSlot}`
-export type RubricNoteKey = `${RubricScoreKey}_note`
+// RubricState is an OPEN, data-driven map: one AtomScore per (responseLabel, atomId), keyed
+// `${label}__${atomId}` (e.g. "A__S1", "B__D2__future_risk_of_essential_hypertension"). The key
+// set is built per case from responses[i].atoms — it is NOT a fixed compile-time product.
+export type CheckKey = string
+export type RubricState = Record<CheckKey, AtomScore>
 
-export type RubricState = {
-  [K in RubricScoreKey]: LikertScore
-} & {
-  [K in RubricNoteKey]: string
+// Build the storage/state key for one (response label, atom id).
+export function atomKey(label: ResponseLabel, atomId: string): CheckKey {
+  return `${label}__${atomId}`
 }
 
 export type RubricAction =
-  | { type: 'SET_PICK'; axis: RubricScoreKey; value: LikertScore }
-  | { type: 'SET_NOTE'; axis: RubricNoteKey; value: string }
+  | { type: 'SET_ATOM'; key: CheckKey; value: AtomScore }
   | { type: 'RESET' }

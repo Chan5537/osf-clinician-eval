@@ -42,7 +42,7 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
 
             <ul className="divide-y rounded-lg border">
               {session.cases.map((c, i) => {
-                const touched = pickCount(c.state) > 0
+                const touched = pickCount(c.state, cases[i]) > 0
                 const status = c.submitted
                   ? { label: 'Submitted', variant: 'secondary' as const }
                   : touched
