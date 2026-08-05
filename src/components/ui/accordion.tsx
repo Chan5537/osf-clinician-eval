@@ -66,7 +66,11 @@ function AccordionContent({
     >
       <div
         className={cn(
-          "h-(--radix-accordion-content-height) pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+          // NOTE: do NOT pin the inner div to h-(--radix-accordion-content-height). That var is
+          // measured once on open, so content that grows afterward (e.g. a "+N more" expander) gets
+          // clipped by the parent's overflow-hidden. The open/close ANIMATION already uses the var
+          // via the accordion-down/up keyframes; the open state should be natural (auto) height.
+          "pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
           className
         )}
       >
