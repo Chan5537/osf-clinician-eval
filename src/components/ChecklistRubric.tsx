@@ -68,7 +68,7 @@ interface Props {
 }
 
 // Human-facing category headers + order (by axis). Future-disease risk leads — it is the prediction's
-// headline (the incremental value SleepFM adds), so the clinician scores it before the sleep-data read.
+// headline (the incremental value OSF adds), so the clinician scores it before the sleep-data read.
 const AXIS_ORDER: string[] = ['incremental_value', 'disease', 'sleep_index', 'safety']
 const AXIS_LABEL: Record<string, string> = {
   incremental_value: 'Future-disease risk',

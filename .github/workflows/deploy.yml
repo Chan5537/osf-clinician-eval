@@ -32,7 +32,7 @@ jobs:
 
       - name: Build
         env:
-          VITE_BASE: /sleepfm-eval/ # MUST equal '/<repo-name>/' — edit to match the repo
+          VITE_BASE: /osf-clinician-eval/ # MUST equal '/<repo-name>/' — edit to match the repo
         run: npm run build
 
       - name: Upload Pages artifact
