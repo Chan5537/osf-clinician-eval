@@ -26,7 +26,7 @@ const CARD_STYLES: Record<ResponseLabel, string> = {
 }
 
 // A single assistant response. CRITICAL: only ever shows the letter A, B, or C —
-// never a source label (Agent / Base / GPT / Gemini / SleepFM). Source identity
+// never a source label (Agent / Base / GPT / Gemini / OSF). Source identity
 // is blinded.
 export function ResponseCard({ label, markdown, streamEnabled, onRevealed }: Props) {
   return (

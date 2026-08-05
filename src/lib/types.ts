@@ -1,4 +1,4 @@
-// Type system for the SleepFM v2 clinician evaluation.
+// Type system for the OSF clinician evaluation.
 //
 // WEIGHTED-BOOLEAN rubric: each response is scored on its OWN per-response checklist of atoms
 // (Yes / No / N/A), grouped by category (sleep-index, disease, safety). The atoms differ per
