@@ -77,6 +77,37 @@ const AXIS_LABEL: Record<string, string> = {
   safety: 'Safety',
 }
 
+// Distinct color scheme per category so the three partitions read at a glance. Static class strings
+// (Tailwind JIT can't see dynamic ones). Hues are chosen to NOT collide with the Yes/No/defect
+// red-green semantics: indigo (disease headline), cyan (sleep data), amber (safety).
+interface CatColor {
+  rail: string // left-border stripe on the block
+  bg: string // subtle tinted background
+  header: string // header pill (text + tint)
+}
+const CATEGORY_COLORS: Record<string, CatColor> = {
+  'Future-disease risk': {
+    rail: 'border-l-indigo-500',
+    bg: 'bg-indigo-500/[0.04] dark:bg-indigo-400/[0.06]',
+    header: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300',
+  },
+  'Sleep-data interpretation': {
+    rail: 'border-l-cyan-500',
+    bg: 'bg-cyan-500/[0.04] dark:bg-cyan-400/[0.06]',
+    header: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300',
+  },
+  Safety: {
+    rail: 'border-l-amber-500',
+    bg: 'bg-amber-500/[0.05] dark:bg-amber-400/[0.07]',
+    header: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
+  },
+}
+const DEFAULT_CAT: CatColor = {
+  rail: 'border-l-border',
+  bg: '',
+  header: 'bg-muted text-muted-foreground',
+}
+
 // Yes / No / N/A tri-state control for one atom.
 function TriState({
   value,
@@ -194,25 +225,36 @@ function ResponseChecklist({
           {answered} of {real.length} answered
         </span>
       </div>
-      <div className="space-y-4 px-4 py-3">
-        {merged.map((g) => (
-          <div key={g.label}>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              {g.label}
-            </p>
-            <div>
-              {g.atoms.map((atom) => (
-                <AtomRow
-                  key={atom.id}
-                  label={response.label}
-                  atom={atom}
-                  state={state}
-                  dispatch={dispatch}
-                />
-              ))}
+      <div className="space-y-3 px-3 py-3">
+        {merged.map((g) => {
+          const c = CATEGORY_COLORS[g.label] ?? DEFAULT_CAT
+          return (
+            <div
+              key={g.label}
+              className={cn('rounded-md border-l-4 py-1 pl-3 pr-1', c.rail, c.bg)}
+            >
+              <span
+                className={cn(
+                  'mb-1.5 inline-block rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wide',
+                  c.header,
+                )}
+              >
+                {g.label}
+              </span>
+              <div>
+                {g.atoms.map((atom) => (
+                  <AtomRow
+                    key={atom.id}
+                    label={response.label}
+                    atom={atom}
+                    state={state}
+                    dispatch={dispatch}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
