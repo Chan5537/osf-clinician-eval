@@ -264,18 +264,14 @@ function ResponseChecklist({
 // (data-driven, per-response), grouped by category. Positive atoms reward; defect atoms are flagged
 // only if present. The clinician answers every atom (N/A when it doesn't apply) to submit.
 export function ChecklistRubric({ state, dispatch, responses }: Props) {
-  // total required atoms across all responses (excludes blinding placeholders)
-  const totalRequired = requiredKeysForCount(responses)
   return (
     <section className="space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-semibold">Clinical quality rubric</h2>
-          <p className="text-xs text-muted-foreground">
-            For each response, mark every item Yes, No, or N/A (when it doesn&apos;t apply).{' '}
-            {totalRequired} items in total.
-          </p>
-        </div>
+      {/* Section divider: the rule under the row separates the rubric from the summaries above it,
+          so the page reads as two blocks rather than one long scroll. The per-response "N of M
+          answered" pill and the sticky submit bar already report progress, so the old instruction
+          line under this heading was duplicating both. */}
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b pb-2">
+        <h2 className="text-lg font-semibold tracking-tight">Clinical quality rubric</h2>
         <RubricRefLink />
       </div>
 
@@ -284,9 +280,4 @@ export function ChecklistRubric({ state, dispatch, responses }: Props) {
       ))}
     </section>
   )
-}
-
-// Count of required (non-placeholder) atoms across the present responses.
-function requiredKeysForCount(responses: ResponseEntry[]): number {
-  return responses.reduce((n, r) => n + r.atoms.filter((a) => !a.placeholder).length, 0)
 }

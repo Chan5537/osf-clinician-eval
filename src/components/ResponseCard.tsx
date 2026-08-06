@@ -34,16 +34,16 @@ export function ResponseCard({ label, markdown, streamEnabled, onRevealed }: Pro
     // content's intrinsic width (long reference URLs). min-w-0 lets the column shrink so the
     // markdown wraps instead of overflowing/clipping.
     <div className="flex min-w-0 flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <Avatar className="size-8">
-          <AvatarFallback className={cn('text-sm font-semibold', AVATAR_STYLES[label])}>
+      {/* Single-line header: with the "assistant" sub-label gone, items-center puts the title's
+          baseline block on the avatar's centre, so the title sits level with the letter inside
+          the circle instead of riding above it. */}
+      <div className="flex items-center gap-2.5">
+        <Avatar className="size-9">
+          <AvatarFallback className={cn('text-base font-semibold', AVATAR_STYLES[label])}>
             {label}
           </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold">Response {label}</span>
-          <span className="text-xs text-muted-foreground">assistant</span>
-        </div>
+        <span className="text-base font-semibold leading-none">Health summary {label}</span>
       </div>
       <Card className={cn('overflow-hidden py-0', CARD_STYLES[label])}>
         <ScrollArea className="max-h-[600px]">

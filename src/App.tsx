@@ -153,6 +153,7 @@ function App() {
         className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 pt-6 pb-28 animate-in fade-in duration-300"
       >
         <CaseContextPanel
+          caseId={demoCase.case_id}
           demographics={demoCase.demographics}
           ehrHistory={demoCase.ehr_history}
         />

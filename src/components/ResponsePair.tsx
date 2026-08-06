@@ -9,9 +9,11 @@ interface Props {
   onAllRevealed?: () => void
 }
 
-// All responses side-by-side on desktop, stacked below md. Cards stream in parallel
-// (identical treatment keeps the blinding intact). The caption keeps the clinician aware
-// that ordering is randomized and source-blinded.
+// All responses side-by-side on desktop, stacked below md. Cards stream in parallel and get
+// identical treatment, which is what keeps the blinding intact.
+//
+// The randomization itself happens in the exporter, which shuffles display order per case; the
+// former "shown in randomized order, source-blinded" caption that said so was dropped on request.
 export function ResponsePair({ responses, streamEnabled, onAllRevealed }: Props) {
   // Count finished cards across renders; fire onAllRevealed exactly once when all are done.
   // The parent remounts this component per case (<main key={i}>), so the ref resets per case.
@@ -28,21 +30,16 @@ export function ResponsePair({ responses, streamEnabled, onAllRevealed }: Props)
   const cols = responses.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'
 
   return (
-    <div className="space-y-3">
-      <p className="text-xs italic text-muted-foreground">
-        Responses shown in randomized order, source-blinded
-      </p>
-      <div className={`grid grid-cols-1 gap-4 ${cols}`}>
-        {responses.map((r) => (
-          <ResponseCard
-            key={r.label}
-            label={r.label}
-            markdown={r.markdown}
-            streamEnabled={streamEnabled}
-            onRevealed={handleRevealed}
-          />
-        ))}
-      </div>
+    <div className={`grid grid-cols-1 gap-4 ${cols}`}>
+      {responses.map((r) => (
+        <ResponseCard
+          key={r.label}
+          label={r.label}
+          markdown={r.markdown}
+          streamEnabled={streamEnabled}
+          onRevealed={handleRevealed}
+        />
+      ))}
     </div>
   )
 }
