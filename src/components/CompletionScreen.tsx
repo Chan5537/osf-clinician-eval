@@ -35,8 +35,8 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
                 Evaluation complete — thank you!
               </h1>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                You have reviewed all {cases.length} pairs. You can download your
-                ratings, review or edit any pair, or start over.
+                You have reviewed all {cases.length} cases. You can download your
+                ratings, review or edit any case, or start over.
               </p>
             </div>
 
@@ -51,7 +51,7 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
                 return (
                   <li key={cases[i].case_id} className="flex items-center justify-between gap-3 px-4 py-3">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium">Pair {i + 1}</span>
+                      <span className="text-sm font-medium">Case {i + 1}</span>
                       <span className="text-xs text-muted-foreground">{cases[i].case_id}</span>
                     </div>
                     <div className="flex items-center gap-3">
