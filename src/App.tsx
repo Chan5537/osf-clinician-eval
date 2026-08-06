@@ -9,6 +9,11 @@ import {
 import type { SessionState, SessionAction } from '@/lib/session'
 import type { RubricAction } from '@/lib/types'
 import { load, save, clear } from '@/lib/storage'
+import { isComplete } from '@/lib/reducer'
+import { SECTION_IDS } from '@/lib/sections'
+import { UI_FLAGS } from '@/lib/ui-flags'
+import { TaskStrip } from '@/components/TaskStrip'
+import { StepRail } from '@/components/StepRail'
 import { Button } from '@/components/ui/button'
 import { LandingScreen } from '@/components/LandingScreen'
 import { CompletionScreen } from '@/components/CompletionScreen'
@@ -148,27 +153,43 @@ function App() {
         </div>
       </header>
 
+      {UI_FLAGS.taskStrip && <TaskStrip responseCount={demoCase.responses.length} />}
+
+      {/* Section anchors drive the step rail and the submit bar's "Go to scoring" jump; the
+          scroll-mt keeps the sticky header from covering whatever we just scrolled to. */}
       <main
         key={i}
         className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 pt-6 pb-28 animate-in fade-in duration-300"
       >
-        <CaseContextPanel
-          caseId={demoCase.case_id}
-          demographics={demoCase.demographics}
-          ehrHistory={demoCase.ehr_history}
-        />
-        <QueryBubble queryText={demoCase.query_text} />
-        <ResponsePair
-          responses={demoCase.responses}
-          streamEnabled={!caseRubric.revealed}
-          onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
-        />
-        <ChecklistRubric
-          state={caseRubric.state}
-          dispatch={caseDispatch}
-          responses={demoCase.responses}
-        />
+        <div id={SECTION_IDS.panel} className="scroll-mt-24">
+          <CaseContextPanel
+            caseId={demoCase.case_id}
+            demographics={demoCase.demographics}
+            ehrHistory={demoCase.ehr_history}
+          />
+        </div>
+        <div id={SECTION_IDS.query} className="scroll-mt-24">
+          <QueryBubble queryText={demoCase.query_text} />
+        </div>
+        <div id={SECTION_IDS.summaries} className="scroll-mt-24">
+          <ResponsePair
+            responses={demoCase.responses}
+            streamEnabled={!caseRubric.revealed}
+            onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
+          />
+        </div>
+        <div id={SECTION_IDS.rubric} className="scroll-mt-24">
+          <ChecklistRubric
+            state={caseRubric.state}
+            dispatch={caseDispatch}
+            responses={demoCase.responses}
+          />
+        </div>
       </main>
+
+      {UI_FLAGS.stepRail && (
+        <StepRail scoringComplete={isComplete(caseRubric.state, demoCase)} />
+      )}
 
       <SubmitBar
         state={caseRubric.state}

@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+import { ClipboardList, Moon, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -7,6 +9,7 @@ import {
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
 import { caseContext } from '@/lib/case-context'
+import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
 
 interface Props {
@@ -26,24 +29,64 @@ function DemographicItem({ label, value }: { label: string; value: string }) {
   )
 }
 
-// Styling for the whole trigger row. Tailwind's preflight resets <button> to cursor:default, so
-// without `cursor-pointer` the row gives no pointer feedback at all. The base trigger's
-// hover:underline is dropped for a row-wide tint, which reads as "this strip is a control"
-// rather than underlining two unrelated pieces of text.
-const TRIGGER_CLASS =
-  '-mx-2 cursor-pointer rounded-md px-2 hover:bg-muted/60 hover:no-underline'
+// Per-section identity: a left rail + a matching icon tint, so each block is recognisable before
+// it is read. Static class strings — Tailwind's JIT cannot see dynamically built ones.
+//
+// The hues are NOT new: they are the ones ChecklistRubric already assigns to its scoring
+// categories (cyan = sleep-data interpretation, indigo = future-disease risk). Reusing them makes
+// the colour a wayfinding cue rather than decoration — the cyan block here holds exactly the data
+// the cyan questions below ask about. Medical history has no rubric counterpart, so it stays a
+// neutral slate instead of borrowing a hue that already means something else.
+interface SectionStyle {
+  rail: string
+  icon: string
+}
+const SLEEP_STYLE: SectionStyle = {
+  rail: 'border-l-cyan-500',
+  icon: 'text-cyan-600 dark:text-cyan-400',
+}
+const HISTORY_STYLE: SectionStyle = {
+  rail: 'border-l-slate-400 dark:border-l-slate-500',
+  icon: 'text-slate-500 dark:text-slate-400',
+}
+const OUTCOME_STYLE: SectionStyle = {
+  rail: 'border-l-indigo-500',
+  icon: 'text-indigo-600 dark:text-indigo-400',
+}
 
-// Header row for a collapsible sub-panel: title on the left; on the right a count (so the
+// Row styling for one collapsible section. The left rail sits on the item so it spans the header
+// AND the opened body, which is what makes an expanded section still read as one block.
+const itemClass = (s: SectionStyle) => cn('border-l-4 px-4', s.rail)
+
+// Tailwind's preflight resets <button> to cursor:default, so without `cursor-pointer` the row
+// gives no pointer feedback at all. The base trigger's hover:underline is dropped for a row-wide
+// tint, which reads as "this strip is a control" rather than underlining two unrelated texts.
+const TRIGGER_CLASS = 'cursor-pointer rounded-md px-1 hover:bg-muted/60 hover:no-underline'
+
+// Header row for a collapsible sub-panel: icon + title on the left; on the right a count (so the
 // clinician knows how much is inside without opening it) plus an explicit Show/Hide chip.
 //
 // The chip exists because these sections start COLLAPSED — a chevron alone is easy to scan past,
 // and a collapsed panel with no visible affordance reads as an empty section rather than a closed
 // one. It flips its own label off the trigger's aria-expanded state via the `group/accordion-trigger`
 // class the base AccordionTrigger already sets, so there is no extra state to thread through.
-function SectionHeader({ title, meta }: { title: string; meta: string }) {
+function SectionHeader({
+  icon: Icon,
+  style,
+  title,
+  meta,
+}: {
+  icon: LucideIcon
+  style: SectionStyle
+  title: string
+  meta: string
+}) {
   return (
     <span className="flex flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1 pr-2">
-      <span className="text-base font-semibold text-foreground">{title}</span>
+      <span className="flex items-center gap-2">
+        <Icon className={cn('size-4 shrink-0', style.icon)} aria-hidden="true" />
+        <span className="text-base font-semibold text-foreground">{title}</span>
+      </span>
       <span className="flex items-center gap-2.5">
         <span className="text-sm font-normal text-muted-foreground">{meta}</span>
         <span className="inline-flex shrink-0 items-center rounded-md border border-blue-300 bg-blue-50 px-2.5 py-0.5 text-sm font-semibold text-blue-700 transition-colors group-hover/accordion-trigger:border-blue-500 group-hover/accordion-trigger:bg-blue-100 group-hover/accordion-trigger:text-blue-800 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300 dark:group-hover/accordion-trigger:border-blue-600 dark:group-hover/accordion-trigger:bg-blue-900/60 dark:group-hover/accordion-trigger:text-blue-200">
@@ -58,12 +101,13 @@ function SectionHeader({ title, meta }: { title: string; meta: string }) {
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 
 // The reference panel: everything about the case the clinician is allowed to see before
-// reading the responses. Four parts — demographics, sleep indices, medical history, and the
+// reading the summaries. Four parts — demographics, sleep indices, medical history, and the
 // recorded future-disease outcome.
 //
-// Demographics sits open at the top (it is one row and always relevant). The other three are
-// independently collapsible and all start COLLAPSED, so the panel stays one screen-line tall and
-// the clinician opens only what a given case actually needs.
+// Demographics sits open in a tinted title bar (it is one row and always relevant); the tint is
+// what makes the whole card read as a titled panel rather than a stretch of page. The other three
+// are independently collapsible and all start COLLAPSED, so the panel stays short and the
+// clinician opens only what a given case actually needs — each identified by its rail and icon.
 //
 // Sleep indices and the future-disease list come from the sidecar (see lib/case-context.ts);
 // demographics and history come from the case file itself.
@@ -89,11 +133,15 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
     : 0
 
   return (
-    <section className="rounded-lg border bg-card">
-      <div className="border-b px-4 py-3">
+    <section className="overflow-hidden rounded-lg border bg-card">
+      <div className="border-b bg-muted/40 px-4 py-3">
         {/* Kept one step above the collapsible sub-section titles (text-base) so the panel still
-            reads as their parent after both were scaled up. */}
-        <h2 className="text-lg font-semibold tracking-tight">Patient Panel</h2>
+            reads as their parent, and level with the Clinical quality rubric heading, which is
+            this section's peer rather than its child. */}
+        <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+          <UserRound className="size-5.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+          Patient Panel
+        </h2>
         <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-5">
           {demoItems.map((it) => (
             <DemographicItem key={it.label} label={it.label} value={it.value} />
@@ -113,10 +161,15 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
 
       {/* No defaultValue: all three start COLLAPSED. The clinician opens what they need, which
           also means the recorded outcome is never on screen unless they deliberately ask for it. */}
-      <Accordion type="multiple" className="px-4">
-        <AccordionItem value="sleep-indices">
+      <Accordion type="multiple">
+        <AccordionItem value="sleep-indices" className={itemClass(SLEEP_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
-            <SectionHeader title="Sleep indices" meta={plural(sleepMetricCount, 'metric')} />
+            <SectionHeader
+              icon={Moon}
+              style={SLEEP_STYLE}
+              title="Sleep indices"
+              meta={plural(sleepMetricCount, 'metric')}
+            />
           </AccordionTrigger>
           <AccordionContent>
             {context ? (
@@ -127,9 +180,11 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="medical-history">
+        <AccordionItem value="medical-history" className={itemClass(HISTORY_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
+              icon={ClipboardList}
+              style={HISTORY_STYLE}
               title="Medical history"
               meta={plural(ehrHistory.length, 'condition')}
             />
@@ -142,15 +197,15 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="future-disease">
+        <AccordionItem value="future-disease" className={itemClass(OUTCOME_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
+              icon={TrendingUp}
+              style={OUTCOME_STYLE}
               // Label deliberately avoids the phrase the blinding gate greps for (see README);
               // "recorded outcome" is also plainer for a clinician than the ML term.
               title="Future disease · recorded outcome"
-              meta={
-                context ? plural(futureGt.length, 'condition') : 'unavailable'
-              }
+              meta={context ? plural(futureGt.length, 'condition') : 'unavailable'}
             />
           </AccordionTrigger>
           <AccordionContent>

@@ -271,7 +271,8 @@ export function ChecklistRubric({ state, dispatch, responses }: Props) {
           answered" pill and the sticky submit bar already report progress, so the old instruction
           line under this heading was duplicating both. */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b pb-2">
-        <h2 className="text-lg font-semibold tracking-tight">Clinical quality rubric</h2>
+        {/* Same size as the Patient Panel heading — the two are peer sections of the page. */}
+        <h2 className="text-xl font-semibold tracking-tight">Clinical quality rubric</h2>
         <RubricRefLink />
       </div>
 

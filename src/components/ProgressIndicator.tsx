@@ -7,14 +7,14 @@ interface Props {
   onGoto?: (index: number) => void
 }
 
-// "Pair n of N" + step dots. A dot is clickable only for already-submitted
-// pairs or the current one (forward navigation to unseen pairs stays Submit-only).
-// aria-labels say "Pair 1/2/3" — never echo query_id (design blinding).
+// "Case n of N" + step dots. A dot is clickable only for already-submitted
+// cases or the current one (forward navigation to unseen cases stays Submit-only).
+// aria-labels say "Case 1/2/3" — never echo query_id (design blinding).
 export function ProgressIndicator({ current, total, submitted, onGoto }: Props) {
   return (
     <div className="flex flex-col items-end gap-1.5">
       <span className="text-xs font-medium text-muted-foreground">
-        Pair {current + 1} of {total}
+        Case {current + 1} of {total}
       </span>
       <div className="flex items-center gap-1.5">
         {Array.from({ length: total }, (_, i) => {
@@ -25,7 +25,7 @@ export function ProgressIndicator({ current, total, submitted, onGoto }: Props) 
             <button
               key={i}
               type="button"
-              aria-label={`Pair ${i + 1}${isDone ? ' (submitted)' : ''}`}
+              aria-label={`Case ${i + 1}${isDone ? ' (submitted)' : ''}`}
               aria-current={isCurrent ? 'step' : undefined}
               disabled={!clickable}
               onClick={clickable ? () => onGoto(i) : undefined}
