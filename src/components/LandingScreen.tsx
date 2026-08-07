@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 import { requiredCount } from '@/lib/reducer'
-import { GUIDELINE_DOC_URL, RUBRIC_DOC_URL } from '@/lib/links'
+import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL, RUBRIC_DOC_URL } from '@/lib/links'
 import { DEMO_CASES } from '@/data/demo-cases'
 
 // The rubric categories shown on the landing screen (weighted-boolean checklist).
@@ -79,8 +79,14 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
                   </a>
                 </Button>
                 <Button asChild variant="outline" className="flex-1 justify-between">
+                  <a href={LIKERT_RUBRIC_DOC_URL} target="_blank" rel="noopener noreferrer">
+                    Likert Scale Rubric
+                    <ExternalLink className="size-4" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="flex-1 justify-between">
                   <a href={RUBRIC_DOC_URL} target="_blank" rel="noopener noreferrer">
-                    Scoring rubric
+                    Boolean Rubric
                     <ExternalLink className="size-4" />
                   </a>
                 </Button>

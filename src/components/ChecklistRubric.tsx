@@ -1,9 +1,21 @@
 import type { Dispatch, ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
-import { RubricRefLink } from '@/components/RubricRefLink'
-import { atomKey } from '@/lib/types'
+import { LikertRubricLink, BooleanRubricLink } from '@/components/RubricRefLink'
+import { LikertDimensions } from '@/components/LikertRubric'
+import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
+import { atomKey, likertKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
-import type { RubricState, RubricAction, AtomScore, ResponseEntry, RubricAtom } from '@/lib/types'
+import type {
+  RubricState,
+  RubricAction,
+  AtomScore,
+  ResponseEntry,
+  RubricAtom,
+  RubricDimension,
+} from '@/lib/types'
+
+// The 3 Likert dimension keys, in config order — used to count Likert cells in the per-response pill.
+const LIKERT_DIMENSION_KEYS: RubricDimension[] = RUBRIC_DIMENSIONS.map((d) => d.key)
 
 // Render an atom question with two emphases so it's fast to scan:
 //   • the DATA ELEMENT the question is about (the sleep-slot label "overnight breathing (AHI, SpO2)",
@@ -158,7 +170,7 @@ function AtomRow({
   dispatch: Dispatch<RubricAction>
 }) {
   const key = atomKey(label, atom.id)
-  const value = state[key] ?? null
+  const value = state.atoms[key] ?? null
   const defect = atom.weight < 0
   return (
     <div className="flex items-start justify-between gap-4 border-t py-2.5 first:border-t-0">
@@ -192,11 +204,19 @@ function ResponseChecklist({
   dispatch: Dispatch<RubricAction>
 }) {
   const real = response.atoms.filter((a) => !a.placeholder)
-  const answered = real.filter((a) => {
-    const v = state[atomKey(response.label, a.id)]
+  const atomAnswered = real.filter((a) => {
+    const v = state.atoms[atomKey(response.label, a.id)]
     return v === 0 || v === 1 || v === 'NA'
   }).length
-  const complete = answered === real.length
+  // The per-response pill counts BOTH the 3 Likert cells and the real boolean atoms, matching the
+  // hybrid completion gate.
+  const likertAnswered = LIKERT_DIMENSION_KEYS.filter((dim) => {
+    const v = state.likert[likertKey(response.label, dim)]
+    return v === 1 || v === 2 || v === 3 || v === 4 || v === 5
+  }).length
+  const answered = atomAnswered + likertAnswered
+  const total = real.length + LIKERT_DIMENSION_KEYS.length
+  const complete = answered === total
 
   // group by axis, in AXIS_ORDER; skip empty groups. Merge incremental_value+disease under one header.
   const groups = AXIS_ORDER.map((axis) => ({
@@ -222,10 +242,30 @@ function ResponseChecklist({
             complete ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
           )}
         >
-          {answered} of {real.length} answered
+          {answered} of {total} answered
         </span>
       </div>
       <div className="space-y-3 px-3 py-3">
+        {/* Subjective-quality Likert scales (1–5) come first: they are asked ONCE per response and
+            frame the read before the per-disease boolean checklist below. The Likert-scale rubric doc
+            sits at this section's top-right; the boolean-rubric doc sits at the boolean section's. */}
+        <div>
+          <div className="mb-1.5 flex items-center justify-between gap-3 px-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Likert questions (rate 1–5)
+            </p>
+            <LikertRubricLink />
+          </div>
+          <LikertDimensions label={response.label} state={state} dispatch={dispatch} />
+        </div>
+        {merged.length > 0 && (
+          <div className="flex items-center justify-between gap-3 px-1 pt-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Boolean questions
+            </p>
+            <BooleanRubricLink />
+          </div>
+        )}
         {merged.map((g) => {
           const c = CATEGORY_COLORS[g.label] ?? DEFAULT_CAT
           return (
@@ -271,9 +311,10 @@ export function ChecklistRubric({ state, dispatch, responses }: Props) {
           answered" pill and the sticky submit bar already report progress, so the old instruction
           line under this heading was duplicating both. */}
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b pb-2">
-        {/* Same size as the Patient Panel heading — the two are peer sections of the page. */}
+        {/* Same size as the Patient Panel heading — the two are peer sections of the page. The rubric
+            doc links now live at each question section's top-right (Likert / boolean), next to the
+            questions they explain, rather than one combined link here. */}
         <h2 className="text-xl font-semibold tracking-tight">Clinical quality rubric</h2>
-        <RubricRefLink />
       </div>
 
       {responses.map((r) => (
