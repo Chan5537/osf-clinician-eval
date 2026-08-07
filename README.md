@@ -34,12 +34,24 @@ npm run build    # type-check + production build to dist/
 
 ## Blinding — do not regress
 
-The UI must never reveal which response is which arm. Response content must contain none of:
-`Agent, Base, GPT, Gemini, OSF, tool, ReAct, oracle, "ground truth"`. The shipped bundle is the gate:
+The UI must never reveal which response is which arm. The blinding-critical surface is the **response
+content** a clinician reads (each arm's `markdown`) — it must contain none of: `Agent, Base, GPT,
+Gemini, OSF, tool, ReAct, oracle, SleepFM, "ground truth"`. Gate on the response content, not the whole
+bundle (the bundle legitimately contains the `react` library name, the `/osf-clinician-eval/` base path,
+the data field `futureDiseaseGroundTruth`, and the verbatim SensorFM rubric anchor "…ground truth
+signals" — none of which identify an arm):
 
 ```bash
-npm run build
-grep -roiE '\b(GPT|Gemini|OSF|ReAct|oracle|ground.?truth)\b' dist/assets/   # expect 0
+# response-content gate — the surface that actually blinds. Expect 0.
+python3 - <<'PY'
+import json, re
+cases = json.load(open("src/data/demo-cases.generated.json"))
+pat = re.compile(r'\b(Agent|Base|GPT|Gemini|OSF|tool|ReAct|oracle|ground.?truth|SleepFM)\b', re.I)
+leaks = [(c["case_id"], r["label"], pat.findall(r.get("markdown","")))
+         for c in cases for r in c["responses"] if pat.search(r.get("markdown",""))]
+print("response-content leaks:", len(leaks))
+assert not leaks, leaks
+PY
 ```
 
 ## Deploy (GitHub Pages)
