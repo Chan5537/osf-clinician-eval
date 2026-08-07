@@ -1,39 +1,52 @@
 // Client-side export of the session's ratings to JSON and CSV.
 //
-// WEIGHTED-BOOLEAN schema (LONG / TIDY format): one row per (case, response, atom). Because the
-// atom set is per-response and per-case-varying, a fixed wide grid no longer fits — long format is
-// the natural shape and the arm map collapses to a single per-row `arm` (the UNBLINDING KEY, carried
-// only in the export, never rendered). The export carries the un-blinding key and is therefore
-// offered ONLY on the completion screen.
+// HYBRID schema (LONG / TIDY format): one row per (case, response, scored item). A `kind` column
+// distinguishes the two item types:
+//   • kind='likert'  — a 1–5 subjective-quality rating; carries `dimension`, `value` 1–5.
+//   • kind='boolean' — a Yes/No/NA disease atom; carries `atom_id/criterion/axis/weight`, value 0/1/NA.
+// The union of columns is emitted for every row; columns that don't apply to a row are blank. Because
+// the item set is per-response and per-case-varying, a fixed wide grid no longer fits — long format
+// is the natural shape and the arm map collapses to a single per-row `arm` (the UNBLINDING KEY,
+// carried only in the export, never rendered). The export carries the un-blinding key and is
+// therefore offered ONLY on the completion screen.
 
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
 import { pickCount } from './reducer'
+import { RUBRIC_DIMENSIONS } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
-import { atomKey } from './types'
-import type { AtomScore } from './types'
+import { atomKey, likertKey } from './types'
+import type { AtomScore, LikertScore } from './types'
 
-// One row per (case, response, atom). `value` is the clinician's answer; `arm` is the unblinding key.
+// One row per (case, response, scored item). `value` is the clinician's answer; `arm` is the
+// unblinding key. `kind` selects which of the type-specific columns are populated.
 const COLUMNS: string[] = [
   'reviewer',
   'case_id',
   'query_id',
   'response_label', // blinded A/B/C the clinician saw
   'arm', // UNBLINDING KEY — source arm for this response
-  'atom_id',
-  'criterion',
-  'axis',
-  'weight',
-  'value', // 1 (Yes) / 0 (No) / NA / '' (unanswered)
+  'kind', // 'likert' | 'boolean'
+  'dimension', // likert rows: justifiability | personalization | safety
+  'atom_id', // boolean rows: stable per-response atom id
+  'criterion', // boolean rows: atom family (A2/D2/S1/…)
+  'axis', // boolean rows: reporting axis
+  'weight', // boolean rows: signed weight
+  'value', // likert: 1–5 ; boolean: 1 (Yes) / 0 (No) / NA ; '' (unanswered)
   'submitted_at',
   'duration_seconds',
 ]
 
 export type ReviewRow = Record<string, string | number | boolean | null>
 
-function valueCell(v: AtomScore): string | number {
+function atomValueCell(v: AtomScore): string | number {
   if (v === 'NA') return 'NA'
   if (v === 0 || v === 1) return v
+  return '' // null / unanswered
+}
+
+function likertValueCell(v: LikertScore): string | number {
+  if (v === 1 || v === 2 || v === 3 || v === 4 || v === 5) return v
   return '' // null / unanswered
 }
 
@@ -45,6 +58,26 @@ export function buildRows(session: SessionState): ReviewRow[] {
     if (!touched) return
     const s = c.state
     for (const r of dc.responses) {
+      // Likert rows first: the 3 subjective-quality dimensions, once per response.
+      for (const dim of RUBRIC_DIMENSIONS) {
+        rows.push({
+          reviewer: session.reviewer,
+          case_id: dc.case_id,
+          query_id: dc.query_id,
+          response_label: r.label,
+          arm: r.arm, // unblinding key
+          kind: 'likert',
+          dimension: dim.key,
+          atom_id: '',
+          criterion: '',
+          axis: '',
+          weight: '',
+          value: likertValueCell(s.likert[likertKey(r.label, dim.key)] ?? null),
+          submitted_at: c.submittedAt,
+          duration_seconds: c.durationSeconds,
+        })
+      }
+      // Boolean atom rows.
       for (const a of r.atoms) {
         if (a.placeholder) continue // padding rows are not scored — omit from the export
         rows.push({
@@ -53,11 +86,13 @@ export function buildRows(session: SessionState): ReviewRow[] {
           query_id: dc.query_id,
           response_label: r.label,
           arm: r.arm, // unblinding key
+          kind: 'boolean',
+          dimension: '',
           atom_id: a.id,
           criterion: a.criterion,
           axis: a.axis,
           weight: a.weight,
-          value: valueCell(s[atomKey(r.label, a.id)] ?? null),
+          value: atomValueCell(s.atoms[atomKey(r.label, a.id)] ?? null),
           submitted_at: c.submittedAt,
           duration_seconds: c.durationSeconds,
         })
