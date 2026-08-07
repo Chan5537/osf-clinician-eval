@@ -13,7 +13,9 @@ import { DEMO_CASES } from '@/data/demo-cases'
 // is discarded rather than mis-hydrated. v2 = N-response shape + SensorFM Likert rubric.
 // v3 = organ-system redesign (sleep-vitals figure, 4-criteria rubric [Harm dropped]).
 // v4 = weighted-boolean rubric (per-response Yes/No/NA atom checklist; open data-driven key scheme).
-export const SCHEMA_VERSION = 4
+// v5 = HYBRID rubric: adds 3 per-response Likert scales (justifiability/personalization/safety) on
+//      top of the boolean atoms; RubricState becomes { atoms, likert } (structured, two maps).
+export const SCHEMA_VERSION = 5
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

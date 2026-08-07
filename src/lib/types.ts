@@ -51,17 +51,43 @@ export interface DemoCase {
 // A clinician's answer to one atom: Yes (1) / No (0) / N/A / not-yet-answered (null).
 export type AtomScore = 0 | 1 | 'NA' | null
 
-// RubricState is an OPEN, data-driven map: one AtomScore per (responseLabel, atomId), keyed
-// `${label}__${atomId}` (e.g. "A__S1", "B__D2__future_risk_of_essential_hypertension"). The key
-// set is built per case from responses[i].atoms — it is NOT a fixed compile-time product.
+// HYBRID rubric (per Prof. Yang, 2026-08): each response is scored on BOTH
+//   (1) 3 subjective-quality Likert scales (1–5), asked ONCE per response, and
+//   (2) the data-driven boolean disease atoms (Yes/No/N/A), per response.
+// A clinician's answer to one Likert dimension: 1–5, or null (not-yet-answered).
+export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
+
+// The three subjective-quality dimensions scored once per response.
+export type RubricDimension = 'justifiability' | 'personalization' | 'harm'
+
+// Boolean-atom key: `${label}__${atomId}` (e.g. "A__S1",
+// "B__D2__future_risk_of_essential_hypertension"). Built per case from responses[i].atoms —
+// NOT a fixed compile-time product.
 export type CheckKey = string
-export type RubricState = Record<CheckKey, AtomScore>
+// Likert key: `${label}__${dimension}` (e.g. "A__safety"). Built per case from the
+// present response labels × the 3 fixed dimensions.
+export type LikertKey = string
+
+// RubricState carries BOTH scoring parts, kept as two parallel data-driven maps so the boolean
+// checklist and the Likert scales never collide in one namespace:
+//   • atoms  — one AtomScore  per (responseLabel, atomId)      keyed by CheckKey
+//   • likert — one LikertScore per (responseLabel, dimension)  keyed by LikertKey
+export interface RubricState {
+  atoms: Record<CheckKey, AtomScore>
+  likert: Record<LikertKey, LikertScore>
+}
 
 // Build the storage/state key for one (response label, atom id).
 export function atomKey(label: ResponseLabel, atomId: string): CheckKey {
   return `${label}__${atomId}`
 }
 
+// Build the storage/state key for one (response label, Likert dimension).
+export function likertKey(label: ResponseLabel, dimension: RubricDimension): LikertKey {
+  return `${label}__${dimension}`
+}
+
 export type RubricAction =
   | { type: 'SET_ATOM'; key: CheckKey; value: AtomScore }
+  | { type: 'SET_LIKERT'; key: LikertKey; value: LikertScore }
   | { type: 'RESET' }
