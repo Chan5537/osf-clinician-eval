@@ -1,30 +1,37 @@
 import { SLEEP_INDEX_GROUPS, formatMetric } from '@/lib/case-context'
 import type { SleepIndex } from '@/lib/case-context'
+import { SleepVitalsChart } from '@/components/SleepVitalsChart'
 
 interface Props {
   sleepIndex: SleepIndex
+  // The case's organ category — drives the category-filtered sleep-vitals chart shown above the grid.
+  category: string
 }
 
-// The session's PSG-derived sleep indices, in three clinical groups (breathing,
-// continuity, architecture).
+// The session's PSG-derived sleep indices: the category-filtered sleep-vitals CHART (browser-native
+// severity bars, from the same numbers as the grid) on top, then the full raw numbers in three
+// clinical groups (breathing, continuity, architecture) below.
 //
-// Values are printed as recorded, with no normal/abnormal verdict attached — the metrics CSV
-// ships raw numbers and any severity cut-off shown here would be a clinical constant invented
-// by the UI. A metric that is null in the source (PLMI is null for 3 of the 5 sessions) is
-// omitted rather than rendered as 0 or "—", matching how the demographics block already
-// refuses to display unrecorded fields.
-export function SleepIndexGrid({ sleepIndex }: Props) {
+// Values are printed as recorded, with no normal/abnormal verdict attached in the grid — the metrics
+// ship raw numbers and any severity cut-off shown in the GRID would be a clinical constant invented by
+// the UI. (The CHART does apply AASM severity bands — those are cited clinical cut-offs, not invented.)
+// A metric that is null in the source (PLMI is null for most sessions) is omitted rather than rendered
+// as 0 or "—", matching how the demographics block already refuses to display unrecorded fields.
+export function SleepIndexGrid({ sleepIndex, category }: Props) {
   const groups = SLEEP_INDEX_GROUPS.map((g) => ({
     ...g,
     metrics: g.metrics.filter((m) => sleepIndex[m.field] != null),
   })).filter((g) => g.metrics.length > 0)
 
+  const chart = <SleepVitalsChart sleepIndex={sleepIndex} category={category} />
+
   if (groups.length === 0) {
-    return <p className="text-sm text-muted-foreground">No sleep indices recorded.</p>
+    return chart ?? <p className="text-sm text-muted-foreground">No sleep indices recorded.</p>
   }
 
   return (
     <div className="space-y-3">
+      {chart}
       {groups.map((g) => (
         <div key={g.title}>
           <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">

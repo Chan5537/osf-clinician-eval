@@ -164,6 +164,7 @@ function App() {
         <div id={SECTION_IDS.panel} className="scroll-mt-24">
           <CaseContextPanel
             caseId={demoCase.case_id}
+            category={demoCase.category}
             demographics={demoCase.demographics}
             ehrHistory={demoCase.ehr_history}
           />
@@ -195,6 +196,10 @@ function App() {
         state={caseRubric.state}
         onSubmit={handleSubmit}
         onBack={() => dispatch({ type: 'GOTO_CASE', caseIndex: i - 1 })}
+        onSkip={() => {
+          dispatch({ type: 'GOTO_CASE', caseIndex: i + 1 })
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
         canGoBack={i > 0}
         isLast={i === DEMO_CASES.length - 1}
         demoCase={demoCase}

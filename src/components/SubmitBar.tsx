@@ -1,4 +1,4 @@
-import { ArrowDown, ChevronLeft } from 'lucide-react'
+import { ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { isComplete, pickCount, requiredCount } from '@/lib/reducer'
 import { SECTION_IDS, scrollToSection } from '@/lib/sections'
@@ -10,6 +10,7 @@ interface Props {
   state: RubricState
   onSubmit: () => void
   onBack: () => void
+  onSkip: () => void
   canGoBack: boolean
   isLast: boolean
   // The current case — sets how many atoms must be answered before submit.
@@ -26,7 +27,7 @@ interface Props {
 //     at a glance, where a fraction has to be divided first;
 //   • a "Go to scoring" jump that appears ONLY while the rubric is off screen, so it guides a
 //     clinician who is lost and gets out of the way once they are looking at the thing it points to.
-export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast, demoCase }: Props) {
+export function SubmitBar({ state, onSubmit, onBack, onSkip, canGoBack, isLast, demoCase }: Props) {
   const total = requiredCount(demoCase)
   const done = pickCount(state, demoCase)
   const complete = isComplete(state, demoCase)
@@ -101,9 +102,19 @@ export function SubmitBar({ state, onSubmit, onBack, canGoBack, isLast, demoCase
           </span>
         )}
 
-        <Button type="button" size="lg" disabled={!complete} onClick={onSubmit}>
-          {isLast ? 'Submit & finish' : 'Submit & next'}
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Skip lets a reviewer move on without scoring this case yet (answers persist, so they can
+              come back via the dots or Back). Hidden on the last case, where Submit is the only exit. */}
+          {!isLast && (
+            <Button type="button" variant="ghost" size="lg" onClick={onSkip}>
+              Skip
+              <ChevronRight className="size-4" />
+            </Button>
+          )}
+          <Button type="button" size="lg" disabled={!complete} onClick={onSubmit}>
+            {isLast ? 'Submit & finish' : 'Submit & next'}
+          </Button>
+        </div>
       </div>
     </div>
   )
