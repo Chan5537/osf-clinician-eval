@@ -41,6 +41,9 @@ export interface Demographics {
 
 export interface DemoCase {
   case_id: string
+  // Organ category the case is scoped to (canonical, e.g. "circulatory system"). Drives the Patient
+  // Panel's category-filtered sleep-vitals chart. Emitted by the exporter from the record's `group`.
+  category: string
   demographics: Demographics
   ehr_history: string[] // e.g. "Essential hypertension (I10)"
   query_id: string

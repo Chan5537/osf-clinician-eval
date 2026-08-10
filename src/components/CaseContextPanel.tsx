@@ -14,6 +14,7 @@ import type { Demographics } from '@/lib/types'
 
 interface Props {
   caseId: string
+  category: string
   demographics: Demographics
   ehrHistory: string[]
 }
@@ -111,7 +112,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 //
 // Sleep indices and the future-disease list come from the sidecar (see lib/case-context.ts);
 // demographics and history come from the case file itself.
-export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
+export function CaseContextPanel({ caseId, category, demographics, ehrHistory }: Props) {
   const { age, sex, bmi, race, bp } = demographics
   const context = caseContext(caseId)
 
@@ -173,7 +174,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionTrigger>
           <AccordionContent>
             {context ? (
-              <SleepIndexGrid sleepIndex={context.sleepIndex} />
+              <SleepIndexGrid sleepIndex={context.sleepIndex} category={category} />
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
@@ -185,11 +186,14 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
             <SectionHeader
               icon={ClipboardList}
               style={HISTORY_STYLE}
-              title="Medical history"
+              title="Prior medical history"
               meta={plural(ehrHistory.length, 'condition')}
             />
           </AccordionTrigger>
           <AccordionContent>
+            <p className="mb-1.5 text-[11px] leading-snug text-muted-foreground">
+              Conditions the patient was already diagnosed with at the time of the sleep study.
+            </p>
             <ConditionList
               conditions={ehrHistory}
               emptyLabel="No coded history recorded at the time of the study."
@@ -211,7 +215,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           <AccordionContent>
             {context ? (
               <>
-                <p className="mb-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="mb-1.5 text-[11px] leading-snug text-muted-foreground">
                   New-onset conditions this patient went on to be diagnosed with, within the
                   6-year window after the sleep study. Recorded outcome — not any
                   system&apos;s prediction.
