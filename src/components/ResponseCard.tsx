@@ -43,7 +43,7 @@ export function ResponseCard({ label, markdown, streamEnabled, onRevealed }: Pro
             {label}
           </AvatarFallback>
         </Avatar>
-        <span className="text-base font-semibold leading-none">Health summary {label}</span>
+        <span className="text-base font-semibold leading-none">Response {label}</span>
       </div>
       <Card className={cn('overflow-hidden py-0', CARD_STYLES[label])}>
         <ScrollArea className="max-h-[600px]">
