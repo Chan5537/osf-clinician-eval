@@ -82,9 +82,12 @@ interface Props {
 // Human-facing category headers + order (by axis). Future-disease risk leads — it is the prediction's
 // headline (the incremental value OSF adds), so the clinician scores it before the sleep-data read.
 const AXIS_ORDER: string[] = ['incremental_value', 'disease', 'sleep_index', 'safety']
+// The clinician-facing disease boolean (incremental_value axis) is labeled "Accuracy" (Zitao
+// 2026-08-10): it is the single merged per-condition boolean (names + interprets + recommends). The
+// judge-only `disease` axis (B1j/DFj) keeps its own label but is never shown on the clinician sheet.
 const AXIS_LABEL: Record<string, string> = {
-  incremental_value: 'Future-disease risk',
-  disease: 'Future-disease risk',
+  incremental_value: 'Accuracy',
+  disease: 'Accuracy',
   sleep_index: 'Sleep-data interpretation',
   safety: 'Safety',
 }
@@ -98,7 +101,7 @@ interface CatColor {
   header: string // header pill (text + tint)
 }
 const CATEGORY_COLORS: Record<string, CatColor> = {
-  'Future-disease risk': {
+  Accuracy: {
     rail: 'border-l-indigo-500',
     bg: 'bg-indigo-500/[0.04] dark:bg-indigo-400/[0.06]',
     header: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300',
@@ -176,16 +179,14 @@ function AtomRow({
     <div className="flex items-start justify-between gap-4 border-t py-2.5 first:border-t-0">
       <div className="min-w-0">
         <p className="text-sm leading-snug">{renderQuestion(atom.question, atom.element)}</p>
-        <span
-          className={cn(
-            'mt-1 inline-block rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
-            defect
-              ? 'bg-destructive/10 text-destructive'
-              : 'bg-primary/10 text-primary',
-          )}
-        >
-          {defect ? 'flag if present' : 'positive'}
-        </span>
+        {/* The badge only carries information for DEFECT atoms ("flag if present"). Every current
+            question is a positive justification, so a "positive" badge on each one was pure
+            repeated noise (Zitao 2026-08-10) — show the badge only when it's a defect atom. */}
+        {defect && (
+          <span className="mt-1 inline-block rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-destructive">
+            flag if present
+          </span>
+        )}
       </div>
       <div className="shrink-0">
         <TriState value={value} onSelect={(v) => dispatch({ type: 'SET_ATOM', key, value: v })} />
@@ -281,6 +282,16 @@ function ResponseChecklist({
               >
                 {g.label}
               </span>
+              {/* One-time note for the disease block (3b): the per-condition questions used to repeat
+                  this qualifier verbatim for every disease. Stated once here instead. */}
+              {g.label === 'Accuracy' && (
+                <p className="mb-1.5 px-1 text-[11px] leading-snug text-muted-foreground">
+                  For each condition below: a <span className="font-medium">family-level</span> mention
+                  counts (e.g. &ldquo;heart failure&rdquo; covers a specific subtype), and a relevant
+                  interpretation should draw on the patient&rsquo;s other data (sleep panel,
+                  demographics, prior history).
+                </p>
+              )}
               <div>
                 {g.atoms.map((atom) => (
                   <AtomRow

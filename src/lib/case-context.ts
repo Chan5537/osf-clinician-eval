@@ -107,7 +107,7 @@ export interface ConditionGroup {
 export function groupByCategory(names: string[]): ConditionGroup[] {
   const buckets = new Map<string, string[]>()
   for (const name of names) {
-    const category = DISEASE_CATEGORY[name] ?? 'unclassified'
+    const category = DISEASE_CATEGORY[name] ?? 'Other Prior Diagnosed Diseases'
     const bucket = buckets.get(category)
     if (bucket) bucket.push(name)
     else buckets.set(category, [name])

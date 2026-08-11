@@ -25,6 +25,15 @@ interface DimColor {
   selectedText: string
 }
 const DIM_COLORS: Record<RubricDimension, DimColor> = {
+  // Verbatim SensorFM "Context" scale (added 2026-08-10). Distinct blue hue — the whole-response
+  // "useful summary to a provider" axis; doesn't collide with violet/teal/amber below.
+  context: {
+    rail: 'border-l-blue-500',
+    bg: 'bg-blue-500/[0.04] dark:bg-blue-400/[0.06]',
+    header: 'bg-blue-500/10 text-blue-700 dark:text-blue-300',
+    selected: 'bg-blue-500/15 ring-1 ring-inset ring-blue-500/40',
+    selectedText: 'text-blue-800 dark:text-blue-200',
+  },
   justifiability: {
     rail: 'border-l-violet-500',
     bg: 'bg-violet-500/[0.04] dark:bg-violet-400/[0.06]',

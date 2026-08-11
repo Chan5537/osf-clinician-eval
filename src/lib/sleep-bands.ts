@@ -9,44 +9,65 @@
 // The chart reads the SAME `sleepIndex` numbers as the numeric grid (human_eval.json source), so the
 // chart and grid are always consistent — no npz/CSV recomputation.
 
-export type Severity = 'normal' | 'borderline' | 'concerning'
+// 4-tier severity (2026-08-10 redesign): AHI/ODI genuinely have 4 AASM tiers
+// (normal/mild/moderate/severe), so "moderate" gets its own ORANGE — it was previously collapsed
+// into the same red as "severe". 3-tier indices simply never use `moderate`.
+export type Severity = 'normal' | 'borderline' | 'moderate' | 'concerning'
 
-// A band spec: ordered thresholds low→high. `higherIsBetter` flips which end is "good".
-// Each stop is [inclusiveUpperBound, severity]; the last stop uses Infinity.
+// A band spec drives a SEVERITY-POSITION bar (not an absolute-length bar): the marker shows WHERE
+// the value falls on the index's own clinical axis, with the danger (red) end ALWAYS on the right.
+//
+// `axisMin`/`axisMax` = the clinical display range (e.g. SpO₂ 70–100, NOT 0–100, so a low SpO₂
+// sits far right instead of looking "high"). `worstEnd` says which axis end is the concerning one:
+//   'high'  → higher value is worse (AHI/ODI/ARI): marker at (v-min)/(max-min), red on the right.
+//   'low'   → lower value is worse (SpO₂/SE):      marker REVERSED so low sits on the right (red).
+// This is what fixes "mean SpO₂ 94% (borderline) looked longer/healthier than nadir 79% (severe)".
+//
+// `stops` are ordered ascending by threshold; the severity is the band a value ≤ threshold falls in.
 interface BandSpec {
-  // display scale max for the bar (the point at which the bar is "full"); clamps beyond it.
-  scaleMax: number
-  higherIsBetter: boolean
+  axisMin: number
+  axisMax: number
+  worstEnd: 'high' | 'low'
   // ordered ascending by threshold; severity is the band a value ≤ threshold falls into.
   stops: { max: number; severity: Severity; label: string }[]
 }
 
-// The 8 banded indices. Thresholds verbatim from aasm_reference.yaml (rounded display bounds).
+// The banded indices. Thresholds from aasm_reference.yaml; `axisMin/Max` are the clinical DISPLAY
+// range (not 0..absolute-max) so the marker position reflects severity, and `worstEnd` puts red on
+// the right. AHI/ODI now use the full 4-tier scale (moderate=orange).
 export const SLEEP_BANDS: Record<string, BandSpec> = {
-  // respiratory-event indices — lower is better
+  // respiratory-event indices — higher is worse; display 0..60 (severe is unbounded, 60 is the cap)
   ahi: {
-    scaleMax: 60,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 60, worstEnd: 'high',
     stops: [
       { max: 5, severity: 'normal', label: 'normal' },
       { max: 15, severity: 'borderline', label: 'mild' },
-      { max: 30, severity: 'concerning', label: 'moderate' },
+      { max: 30, severity: 'moderate', label: 'moderate' },
       { max: Infinity, severity: 'concerning', label: 'severe' },
     ],
   },
   odi: {
-    scaleMax: 60,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 60, worstEnd: 'high',
     stops: [
       { max: 5, severity: 'normal', label: 'normal' },
       { max: 15, severity: 'borderline', label: 'mild' },
-      { max: 30, severity: 'concerning', label: 'moderate' },
+      { max: 30, severity: 'moderate', label: 'moderate' },
+      { max: Infinity, severity: 'concerning', label: 'severe' },
+    ],
+  },
+  rdi: {
+    // RDI ≥ AHI by definition; same AASM-style severity tiers as AHI (2026-08-10, so the respiratory
+    // panel's RDI is a scored bar rather than a grey reference value).
+    axisMin: 0, axisMax: 60, worstEnd: 'high',
+    stops: [
+      { max: 5, severity: 'normal', label: 'normal' },
+      { max: 15, severity: 'borderline', label: 'mild' },
+      { max: 30, severity: 'moderate', label: 'moderate' },
       { max: Infinity, severity: 'concerning', label: 'severe' },
     ],
   },
   ari: {
-    scaleMax: 40,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 40, worstEnd: 'high',
     stops: [
       { max: 15, severity: 'normal', label: 'normal' },
       { max: 25, severity: 'borderline', label: 'elevated' },
@@ -54,17 +75,15 @@ export const SLEEP_BANDS: Record<string, BandSpec> = {
     ],
   },
   plmi: {
-    scaleMax: 40,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 40, worstEnd: 'high',
     stops: [
       { max: 15, severity: 'normal', label: 'normal' },
       { max: Infinity, severity: 'concerning', label: 'elevated' },
     ],
   },
-  // oxygenation + efficiency — higher is better
+  // oxygenation + efficiency — LOWER is worse; display the clinical range, reversed so low = right/red
   se: {
-    scaleMax: 100,
-    higherIsBetter: true,
+    axisMin: 60, axisMax: 100, worstEnd: 'low',
     stops: [
       { max: 75, severity: 'concerning', label: 'poor' },
       { max: 85, severity: 'borderline', label: 'reduced' },
@@ -72,18 +91,29 @@ export const SLEEP_BANDS: Record<string, BandSpec> = {
     ],
   },
   mean_spo2: {
-    scaleMax: 100,
-    higherIsBetter: true,
+    axisMin: 70, axisMax: 100, worstEnd: 'low',
     stops: [
       { max: 90, severity: 'concerning', label: 'low' },
       { max: 94, severity: 'borderline', label: 'borderline' },
       { max: Infinity, severity: 'normal', label: 'normal' },
     ],
   },
-  // sleep-stage ratios — a middle band is normal, both tails abnormal
+  // NEW BAND (2026-08-10 — NOT in the original aasm_reference.yaml; common clinical desaturation
+  // cutoffs, flagged for Zitao to confirm): nadir/lowest SpO₂ ≥90 normal, 85–89 borderline, <85
+  // severe. Same 70–100 reversed axis as mean SpO₂ so the two are directly comparable (79% sits far
+  // right / red, while a borderline 94% mean sits left — the fix for the mean-vs-nadir confusion).
+  nadir_spo2: {
+    axisMin: 70, axisMax: 100, worstEnd: 'low',
+    stops: [
+      { max: 85, severity: 'concerning', label: 'severe' },
+      { max: 90, severity: 'borderline', label: 'borderline' },
+      { max: Infinity, severity: 'normal', label: 'normal' },
+    ],
+  },
+  // sleep-stage ratios — a middle band is normal, both tails abnormal. worstEnd 'high' is nominal
+  // (both tails are 'borderline', none 'concerning'), so the axis direction only sets bar geometry.
   n3_pct: {
-    scaleMax: 40,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 40, worstEnd: 'high',
     stops: [
       { max: 10, severity: 'borderline', label: 'low' },
       { max: 23, severity: 'normal', label: 'normal' },
@@ -91,8 +121,7 @@ export const SLEEP_BANDS: Record<string, BandSpec> = {
     ],
   },
   rem_pct: {
-    scaleMax: 40,
-    higherIsBetter: false,
+    axisMin: 0, axisMax: 40, worstEnd: 'high',
     stops: [
       { max: 15, severity: 'borderline', label: 'low' },
       { max: 25, severity: 'normal', label: 'normal' },
@@ -111,11 +140,38 @@ export function severityOf(field: string, value: number): { severity: Severity; 
   return { severity: spec.stops[spec.stops.length - 1].severity, label: spec.stops[spec.stops.length - 1].label }
 }
 
-// The bar fill fraction (0..1) for a value against its display scale.
-export function barFraction(field: string, value: number): number | null {
+// Marker position (0..1) on the index's clinical axis, with the DANGER end always at 1 (right).
+// For worstEnd 'high' the raw value maps left→right; for 'low' it's reversed so a low value sits
+// right (red). Clamped to the axis. null if the field has no band.
+export function severityPosition(field: string, value: number): number | null {
   const spec = SLEEP_BANDS[field]
   if (!spec) return null
-  return Math.max(0, Math.min(1, value / spec.scaleMax))
+  const { axisMin, axisMax, worstEnd } = spec
+  const raw = (value - axisMin) / (axisMax - axisMin)
+  const pos = worstEnd === 'low' ? 1 - raw : raw
+  return Math.max(0, Math.min(1, pos))
+}
+
+// The colored band SEGMENTS to paint across the track, left→right, danger on the right. Each segment
+// is { widthPct, severity }. Built from the stops mapped onto the axis and ordered so the worst band
+// is rightmost — matching severityPosition's convention.
+export function bandSegments(field: string): { width: number; severity: Severity }[] | null {
+  const spec = SLEEP_BANDS[field]
+  if (!spec) return null
+  const { axisMin, axisMax, worstEnd } = spec
+  const span = axisMax - axisMin
+  // stops are ascending by value; convert each to an axis fraction width
+  const segs: { width: number; severity: Severity }[] = []
+  let prev = axisMin
+  for (const stop of spec.stops) {
+    const upper = stop.max === Infinity ? axisMax : stop.max
+    const width = Math.max(0, Math.min(axisMax, upper) - prev) / span
+    if (width > 0) segs.push({ width, severity: stop.severity })
+    prev = upper
+    if (prev >= axisMax) break
+  }
+  // for 'low' (higher = better), the ascending-value order runs good→…; reverse so red ends right
+  return worstEnd === 'low' ? segs.slice().reverse() : segs
 }
 
 // ── organ-category → which sleep indices to surface ───────────────────────────────────────────────

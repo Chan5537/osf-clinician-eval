@@ -1,9 +1,11 @@
 import { SLEEP_INDEX_GROUPS, formatMetric } from '@/lib/case-context'
 import type { SleepIndex } from '@/lib/case-context'
 import {
-  barFraction,
+  bandSegments,
   indicesForCategory,
   severityOf,
+  severityPosition,
+  SLEEP_BANDS,
   SLEEP_STAGES,
   type Severity,
 } from '@/lib/sleep-bands'
@@ -30,48 +32,80 @@ const SPEC_BY_FIELD = Object.fromEntries(
   SLEEP_INDEX_GROUPS.flatMap((g) => g.metrics).map((m) => [m.field, m]),
 ) as Record<string, { field: string; label: string; unit: string }>
 
-// Severity -> bar + chip classes. Semantic clinical colours (NOT the app accent): green good, amber
-// borderline, red concerning. A no-band index uses a neutral slate bar.
-const SEV_BAR: Record<Severity, string> = {
-  normal: 'bg-emerald-500 dark:bg-emerald-400',
-  borderline: 'bg-amber-500 dark:bg-amber-400',
-  concerning: 'bg-red-500 dark:bg-red-400',
+// Severity -> band-segment fill + chip text. 4-tier semantic clinical colours (NOT the app accent):
+// green normal, amber mild/borderline, ORANGE moderate, red severe/concerning. The band segments are
+// drawn at reduced opacity so the black value marker reads clearly on top.
+const SEV_SEG: Record<Severity, string> = {
+  normal: 'bg-emerald-400/70 dark:bg-emerald-500/60',
+  borderline: 'bg-amber-400/70 dark:bg-amber-500/60',
+  moderate: 'bg-orange-400/75 dark:bg-orange-500/60',
+  concerning: 'bg-red-400/75 dark:bg-red-500/60',
 }
 const SEV_CHIP: Record<Severity, string> = {
   normal: 'text-emerald-700 dark:text-emerald-300',
   borderline: 'text-amber-700 dark:text-amber-300',
+  moderate: 'text-orange-700 dark:text-orange-300',
   concerning: 'text-red-700 dark:text-red-300',
 }
 
-function IndexBar({ field, value }: { field: string; value: number }) {
+// A SEVERITY-POSITION bar: the AASM bands are painted across the track (danger always on the right)
+// and a black marker sits at the value's position on that clinical axis. Position encodes SEVERITY,
+// not raw magnitude — so a severe nadir SpO₂ (79%) sits far right/red even though 79 < a borderline
+// mean SpO₂ of 94% in absolute terms. Only indices with a band reach here (see the reference group
+// below for the rest).
+function SeverityBar({ field, value }: { field: string; value: number }) {
   const spec = SPEC_BY_FIELD[field]
   const label = spec?.label ?? field
   const unit = spec?.unit ?? ''
   const sev = severityOf(field, value)
-  const frac = barFraction(field, value)
-  const barColor = sev ? SEV_BAR[sev.severity] : 'bg-slate-400 dark:bg-slate-500'
-  // no-band indices (tst/waso/sol/…) have no scale — show a thin full-width neutral track + value.
-  const width = frac == null ? 1 : frac
-
+  const pos = severityPosition(field, value)
+  const segs = bandSegments(field)
+  if (!sev || pos == null || !segs) return null
   return (
     <div className="grid grid-cols-[5.5rem_1fr_auto] items-center gap-2">
       <span className="truncate text-xs font-medium text-foreground" title={label}>
         {label}
       </span>
       <div
-        className="relative h-2.5 overflow-hidden rounded-full bg-muted"
+        className="relative h-3 rounded-[4px]"
         role="img"
-        aria-label={`${label} ${formatMetric(value)} ${unit}${sev ? ` (${sev.label})` : ''}`}
+        aria-label={`${label} ${formatMetric(value)} ${unit} — ${sev.label} (marker toward the right = more concerning)`}
       >
+        {/* painted clinical bands, left(healthy)→right(concerning) */}
+        <div className="absolute inset-0 flex overflow-hidden rounded-[4px]">
+          {segs.map((s, i) => (
+            <div key={i} className={cn('h-full', SEV_SEG[s.severity])} style={{ width: `${s.width * 100}%` }} />
+          ))}
+        </div>
+        {/* value marker */}
         <div
-          className={cn('absolute inset-y-0 left-0 rounded-full transition-[width]', barColor)}
-          style={{ width: `${width * 100}%` }}
+          className="absolute -top-0.5 -bottom-0.5 w-[3px] rounded-full bg-slate-900 ring-[1.5px] ring-background dark:bg-white"
+          style={{ left: `calc(${pos * 100}% - 1.5px)` }}
         />
       </div>
       <span className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">
         <span className="font-semibold text-foreground">{formatMetric(value)}</span>
         <span className="ml-0.5 text-[10px]">{unit}</span>
-        {sev && <span className={cn('ml-1.5 font-medium', SEV_CHIP[sev.severity])}>{sev.label}</span>}
+        <span className={cn('ml-1.5 font-semibold', SEV_CHIP[sev.severity])}>{sev.label}</span>
+      </span>
+    </div>
+  )
+}
+
+// A plain reference-value row (no clinical severity band): label + value only, grouped separately so
+// it reads as deliberate context — never a coloured/greyed bar that could look "broken".
+function ReferenceRow({ field, value }: { field: string; value: number }) {
+  const spec = SPEC_BY_FIELD[field]
+  const label = spec?.label ?? field
+  const unit = spec?.unit ?? ''
+  return (
+    <div className="flex items-baseline justify-between gap-3 border-b border-dotted border-border/60 py-1 last:border-b-0">
+      <span className="truncate text-xs text-muted-foreground" title={label}>
+        {label}
+      </span>
+      <span className="whitespace-nowrap text-xs tabular-nums">
+        <span className="font-semibold text-foreground">{formatMetric(value)}</span>
+        <span className="ml-0.5 text-[10px] text-muted-foreground">{unit}</span>
       </span>
     </div>
   )
@@ -166,6 +200,10 @@ export function SleepVitalsChart({ sleepIndex, category }: Props) {
   // the category's index list, minus any that are null/absent for this session
   const fields = indicesForCategory(category).filter((f) => sleepIndex[f] != null)
   const hasStages = SLEEP_STAGES.some((s) => sleepIndex[s.field] != null)
+  // split into clinically-scored (has an AASM band) vs plain reference values (no band). Reference
+  // values are shown as bare numbers in their own group — never a coloured/greyed bar (2026-08-10).
+  const banded = fields.filter((f) => SLEEP_BANDS[f])
+  const reference = fields.filter((f) => !SLEEP_BANDS[f])
 
   if (fields.length === 0 && !hasStages) return null
 
@@ -175,10 +213,11 @@ export function SleepVitalsChart({ sleepIndex, category }: Props) {
         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Sleep vitals relevant to this case
         </span>
-        <span className="flex items-center gap-2 text-[10px] text-muted-foreground">
-          <LegendDot className="bg-emerald-500 dark:bg-emerald-400" /> healthy
-          <LegendDot className="bg-amber-500 dark:bg-amber-400" /> borderline
-          <LegendDot className="bg-red-500 dark:bg-red-400" /> concerning
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
+          <LegendDot className="bg-emerald-400/80 dark:bg-emerald-500/70" /> normal
+          <LegendDot className="bg-amber-400/80 dark:bg-amber-500/70" /> mild
+          <LegendDot className="bg-orange-400/85 dark:bg-orange-500/70" /> moderate
+          <LegendDot className="bg-red-400/85 dark:bg-red-500/70" /> severe
         </span>
       </figcaption>
 
@@ -192,17 +231,32 @@ export function SleepVitalsChart({ sleepIndex, category }: Props) {
         </div>
       )}
 
-      {/* Category-relevant severity bars. */}
-      {fields.length > 0 && (
+      {/* Clinically scored, category-relevant indices — severity-position bars (marker toward the
+          right = more concerning). */}
+      {banded.length > 0 && (
         <div>
-          {hasStages && (
+          {(hasStages || reference.length > 0) && (
             <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Key measures
+              Clinically scored indices
             </p>
           )}
-          <div className="space-y-1.5">
-            {fields.map((f) => (
-              <IndexBar key={f} field={f} value={sleepIndex[f] as number} />
+          <div className="space-y-2">
+            {banded.map((f) => (
+              <SeverityBar key={f} field={f} value={sleepIndex[f] as number} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Reference values — no established severity band, shown as plain context. */}
+      {reference.length > 0 && (
+        <div>
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Reference values <span className="font-normal normal-case">— no severity band</span>
+          </p>
+          <div>
+            {reference.map((f) => (
+              <ReferenceRow key={f} field={f} value={sleepIndex[f] as number} />
             ))}
           </div>
         </div>

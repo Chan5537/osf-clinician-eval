@@ -61,7 +61,7 @@ export type AtomScore = 0 | 1 | 'NA' | null
 export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 
 // The three subjective-quality dimensions scored once per response.
-export type RubricDimension = 'justifiability' | 'personalization' | 'harm'
+export type RubricDimension = 'context' | 'justifiability' | 'personalization' | 'harm'
 
 // Boolean-atom key: `${label}__${atomId}` (e.g. "A__S1",
 // "B__D2__future_risk_of_essential_hypertension"). Built per case from responses[i].atoms —

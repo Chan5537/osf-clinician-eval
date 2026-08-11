@@ -1,14 +1,17 @@
-// Source of truth for the 3 subjective-quality Likert dimensions of the HYBRID clinician rubric.
+// Source of truth for the 4 subjective-quality Likert dimensions of the HYBRID clinician rubric.
 //
-// HYBRID rubric (Prof. Yang, 2026-08): each response is scored on THREE 1–5 Likert scales
-// (Justifiability, Personalization, Harm) — asked ONCE per response — PLUS the data-driven
-// boolean disease atoms (Yes/No/N/A) rendered by ChecklistRubric.
+// HYBRID rubric (Prof. Yang, 2026-08): each response is scored on FOUR 1–5 Likert scales
+// (Context, Justifiability, Personalization, Harm) — asked ONCE per response — PLUS the merged
+// per-condition "Accuracy" boolean (Yes/No/N/A) rendered by ChecklistRubric. Together they form the
+// 5-axis radar for the paper figure: Accuracy (boolean) + the four Likerts.
 //
-// ALL THREE dimensions are copied VERBATIM from the SensorFM "PHA Integration Clinician Rubric"
+// ALL FOUR dimensions are copied VERBATIM from the SensorFM "PHA Integration Clinician Rubric"
 // (Survey ED.1) — see sleepfm-agent-eval/docs/sensorfm_rubric_verbatim.md — the only edit being
-// "this response" in place of "MODEL {A/B/C} RESPONSE" to match the blinded UI. (2026-08-06, per
-// Chan: use the verbatim SensorFM Harm criterion — 1 Very Dangerous … 5 Very Helpful — as the 3rd
-// scale, replacing the earlier authored "Safety" scale.)
+// "this response" in place of "MODEL {A/B/C} RESPONSE" to match the blinded UI. (2026-08-06: verbatim
+// Harm; 2026-08-10 Chan+Zitao: ADD the verbatim Context criterion as the 4th scale so the radar has 5
+// distinct axes. Context over Relevance because Relevance re-measures focus already captured by
+// Personalization + the Accuracy boolean, whereas Context is the only whole-response "useful,
+// decision-ready summary to a provider" axis — the construct the provider-facing redesign targets.)
 //
 // BLINDING CONSTRAINTS (do not relax without sign-off):
 //  - No dimension/anchor text may reference OUR system architecture (tools, ReAct, SleepFM,
@@ -35,6 +38,47 @@ export interface RubricDimensionDef {
 }
 
 export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
+  {
+    // VERBATIM SensorFM "Context" criterion (Survey ED.1). The whole-response "useful summary to a
+    // provider" axis — clinical coherence + decision-readiness. Added 2026-08-10 (Chan+Zitao) as the
+    // 4th Likert so the paper radar has 5 distinct axes. Leads the Likerts (matches SensorFM order,
+    // and reads as the overall-usefulness gestalt before the finer-grained scales).
+    key: 'context',
+    label: 'Context',
+    question:
+      'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
+    anchors: [
+      {
+        value: 1,
+        label: 'Very Useless',
+        description:
+          'Provides highly irrelevant or distracting information that would waste clinical time or frustrate the provider.',
+      },
+      {
+        value: 2,
+        label: 'Useless',
+        description:
+          'Provides tangential or unactionable information that offers no clinical value to the provider.',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description: 'Information is split evenly between being useful and irrelevant.',
+      },
+      {
+        value: 4,
+        label: 'Useful',
+        description:
+          "Provides clinically coherent and relevant information that clearly communicates the patient's status to the provider.",
+      },
+      {
+        value: 5,
+        label: 'Very Useful',
+        description:
+          'Provides highly actionable, well-organized information that a provider can directly utilize for clinical decision-making and next steps.',
+      },
+    ],
+  },
   {
     key: 'justifiability',
     label: 'Justifiability',
