@@ -42,7 +42,7 @@ export function requiredKeysFor(demoCase: DemoCase): CheckKey[] {
   return keys
 }
 
-/** Every Likert key for a case: present response labels × the 3 dimensions. All are required. */
+/** Every Likert key for a case: present response labels × the Likert dimensions. All are required. */
 export function likertKeysFor(demoCase: DemoCase): LikertKey[] {
   const keys: LikertKey[] = []
   for (const r of demoCase.responses) {

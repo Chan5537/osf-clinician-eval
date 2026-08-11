@@ -168,7 +168,7 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             <SectionHeader
               icon={Moon}
               style={SLEEP_STYLE}
-              title="Sleep indices"
+              title="Sleep panel"
               meta={plural(sleepMetricCount, 'metric')}
             />
           </AccordionTrigger>
