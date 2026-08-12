@@ -33,11 +33,9 @@ function DemographicItem({ label, value }: { label: string; value: string }) {
 // Per-section identity: a left rail + a matching icon tint, so each block is recognisable before
 // it is read. Static class strings — Tailwind's JIT cannot see dynamically built ones.
 //
-// The hues are NOT new: they are the ones ChecklistRubric already assigns to its scoring
-// categories (cyan = sleep-data interpretation, indigo = future-disease risk). Reusing them makes
-// the colour a wayfinding cue rather than decoration — the cyan block here holds exactly the data
-// the cyan questions below ask about. Medical history has no rubric counterpart, so it stays a
-// neutral slate instead of borrowing a hue that already means something else.
+// The hues keep their app-wide meaning (cyan = sleep data, indigo = future-disease outcome), so
+// the colour is a wayfinding cue rather than decoration. Medical history has no counterpart hue,
+// so it stays a neutral slate instead of borrowing one that already means something else.
 interface SectionStyle {
   rail: string
   icon: string

@@ -9,11 +9,10 @@ import {
 import type { SessionState, SessionAction } from '@/lib/session'
 import type { RubricAction } from '@/lib/types'
 import { load, save, clear } from '@/lib/storage'
-import { isComplete } from '@/lib/reducer'
-import { SECTION_IDS } from '@/lib/sections'
+import { SECTION_IDS, scrollToSection } from '@/lib/sections'
 import { UI_FLAGS } from '@/lib/ui-flags'
 import { TaskStrip } from '@/components/TaskStrip'
-import { StepRail } from '@/components/StepRail'
+import { ClipboardCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LandingScreen } from '@/components/LandingScreen'
 import { CompletionScreen } from '@/components/CompletionScreen'
@@ -22,7 +21,7 @@ import { AppFooter } from '@/components/AppFooter'
 import { CaseContextPanel } from '@/components/CaseContextPanel'
 import { QueryBubble } from '@/components/QueryBubble'
 import { ResponsePair } from '@/components/ResponsePair'
-import { ChecklistRubric } from '@/components/ChecklistRubric'
+import { FocusReview } from '@/components/FocusReview'
 import { SubmitBar } from '@/components/SubmitBar'
 
 // Lazy initializer: hydrate from localStorage exactly once at render-init.
@@ -84,6 +83,17 @@ function App() {
   // rubric components keep their existing Dispatch<RubricAction> prop type.
   const caseDispatch = (action: RubricAction) =>
     dispatch({ type: 'RUBRIC', caseIndex: i, action })
+
+  // Jump to the scoring block. From compare mode this first switches back to focus, then scrolls
+  // once the focus view has mounted (the rubric anchor does not exist in compare mode).
+  function goToScoring() {
+    if (session.layoutMode !== 'focus') {
+      dispatch({ type: 'SET_LAYOUT_MODE', mode: 'focus' })
+      window.setTimeout(() => scrollToSection(SECTION_IDS.rubric), 60)
+    } else {
+      scrollToSection(SECTION_IDS.rubric)
+    }
+  }
 
   function handleSubmit() {
     const at = new Date().toISOString()
@@ -153,7 +163,9 @@ function App() {
         </div>
       </header>
 
-      {UI_FLAGS.taskStrip && <TaskStrip responseCount={demoCase.responses.length} />}
+      {UI_FLAGS.taskStrip && (
+        <TaskStrip responseCount={demoCase.responses.length} onGoToScoring={goToScoring} />
+      )}
 
       {/* Section anchors drive the step rail and the submit bar's "Go to scoring" jump; the
           scroll-mt keeps the sticky header from covering whatever we just scrolled to. */}
@@ -172,29 +184,52 @@ function App() {
         <div id={SECTION_IDS.query} className="scroll-mt-24">
           <QueryBubble queryText={demoCase.query_text} />
         </div>
-        <div id={SECTION_IDS.summaries} className="scroll-mt-24">
-          <ResponsePair
-            responses={demoCase.responses}
-            streamEnabled={!caseRubric.revealed}
-            onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
-          />
-        </div>
-        <div id={SECTION_IDS.rubric} className="scroll-mt-24">
-          <ChecklistRubric
-            state={caseRubric.state}
-            dispatch={caseDispatch}
-            responses={demoCase.responses}
-          />
-        </div>
+        {session.layoutMode === 'compare' ? (
+          // READ-ONLY comparison: all responses side by side, no scoring controls — there is no
+          // A-vs-B comparison rubric yet, so the Likert scales live in the focus view only.
+          <section className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b pb-2">
+              <h2 className="text-xl font-semibold tracking-tight">
+                All responses — side by side
+              </h2>
+              {/* Bright blue solid — the compare view's one way back into the scoring flow, so it
+                  must not read as a quiet default button. */}
+              <Button
+                type="button"
+                size="lg"
+                onClick={goToScoring}
+                className="bg-blue-600 text-white shadow-md hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400"
+              >
+                <ClipboardCheck className="size-5" />
+                Back to scoring
+              </Button>
+            </div>
+            <div id={SECTION_IDS.summaries} className="scroll-mt-24">
+              <ResponsePair
+                responses={demoCase.responses}
+                streamEnabled={!caseRubric.revealed}
+                onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
+              />
+            </div>
+          </section>
+        ) : (
+          // Focus mode merges "read" and "score" into one split view; it carries the rubric
+          // anchor that goToScoring targets.
+          <div id={SECTION_IDS.rubric} className="scroll-mt-24">
+            <FocusReview
+              responses={demoCase.responses}
+              state={caseRubric.state}
+              dispatch={caseDispatch}
+              onCompare={() => dispatch({ type: 'SET_LAYOUT_MODE', mode: 'compare' })}
+            />
+          </div>
+        )}
       </main>
-
-      {UI_FLAGS.stepRail && (
-        <StepRail scoringComplete={isComplete(caseRubric.state, demoCase)} />
-      )}
 
       <SubmitBar
         state={caseRubric.state}
         onSubmit={handleSubmit}
+        onGoToScoring={goToScoring}
         onBack={() => dispatch({ type: 'GOTO_CASE', caseIndex: i - 1 })}
         onSkip={() => {
           dispatch({ type: 'GOTO_CASE', caseIndex: i + 1 })

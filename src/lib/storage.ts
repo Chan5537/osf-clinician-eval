@@ -18,21 +18,13 @@ interface Envelope {
   session: SessionState
 }
 
-// Rebuild a clean RubricState for a specific case, copying only that case's known keys from
-// `stored`. Renamed/removed/foreign keys vanish, so the reducer never receives a malformed object.
-// Both maps are rebuilt: boolean `atoms` (placeholders re-seeded to 'NA' by buildInitialRubricState)
-// and `likert` cells (1–5 or null).
+// Rebuild a clean RubricState for a specific case, copying only that case's known Likert keys
+// from `stored`. Renamed/removed/foreign keys vanish, so the reducer never receives a malformed
+// object.
 function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
   const base: RubricState = buildInitialRubricState(demoCase)
   if (stored && typeof stored === 'object') {
-    const src = stored as { atoms?: unknown; likert?: unknown }
-    if (src.atoms && typeof src.atoms === 'object') {
-      const a = src.atoms as Record<string, unknown>
-      for (const k of Object.keys(base.atoms)) {
-        const v = a[k]
-        if (v === 0 || v === 1 || v === 'NA' || v === null) base.atoms[k] = v as RubricState['atoms'][string]
-      }
-    }
+    const src = stored as { likert?: unknown }
     if (src.likert && typeof src.likert === 'object') {
       const l = src.likert as Record<string, unknown>
       for (const k of Object.keys(base.likert)) {
@@ -76,6 +68,7 @@ export function load(): SessionState | null {
       cases,
       reviewer: typeof s.reviewer === 'string' ? s.reviewer : '',
       caseEnteredAt: null, // never trust a persisted clock baseline; re-stamp on entry
+      layoutMode: s.layoutMode === 'compare' ? 'compare' : 'focus',
     }
   } catch {
     return null // corrupt JSON / disabled storage -> start fresh, never blank the app

@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { StreamingMarkdown } from '@/components/StreamingMarkdown'
+import { AVATAR_STYLES, CARD_STYLES } from '@/components/response-colors'
 import { cn } from '@/lib/utils'
 import type { ResponseLabel } from '@/lib/types'
 
@@ -11,18 +12,6 @@ interface Props {
   // Streaming reveal: enabled => animate on mount; false => render full immediately.
   streamEnabled: boolean
   onRevealed?: () => void
-}
-
-const AVATAR_STYLES: Record<ResponseLabel, string> = {
-  A: 'bg-emerald-200 text-emerald-800',
-  B: 'bg-pink-200 text-pink-800',
-  C: 'bg-indigo-200 text-indigo-800',
-}
-
-const CARD_STYLES: Record<ResponseLabel, string> = {
-  A: 'border-emerald-200',
-  B: 'border-pink-200',
-  C: 'border-indigo-200',
 }
 
 // A single assistant response. CRITICAL: only ever shows the letter A, B, or C —

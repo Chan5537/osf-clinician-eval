@@ -2,47 +2,21 @@ import type {
   RubricState,
   RubricAction,
   DemoCase,
-  CheckKey,
   LikertKey,
-  AtomScore,
   LikertScore,
+  ResponseLabel,
 } from './types'
-import { atomKey, likertKey } from './types'
+import { likertKey } from './types'
 import { RUBRIC_DIMENSIONS } from './rubric-config'
 
-// HYBRID rubric state machine. Each case's rubric holds TWO data-driven maps:
-//   • atoms  — one AtomScore  per (responseLabel, atomId), keyed `${label}__${atomId}`; a value is
-//              1 (Yes) / 0 (No) / 'NA' / null (unanswered). The key set is built from the case's
-//              responses' atoms (responses[i].atoms), NOT a fixed compile-time grid.
-//   • likert — one LikertScore per (responseLabel, dimension), keyed `${label}__${dimension}`; a
-//              value is 1–5 or null. The key set is the present response labels × the 3 fixed
-//              RUBRIC_DIMENSIONS.
+// LIKERT-ONLY rubric state machine (v6). Each case's rubric holds ONE data-driven map:
+//   likert — one LikertScore per (responseLabel, dimension), keyed `${label}__${dimension}`; a
+//            value is 1–5 or null (unanswered). The key set is the present response labels × the
+//            fixed RUBRIC_DIMENSIONS. Every cell is required for submission.
 //
-// Placeholder atoms (blinding padding, `placeholder: true`) are pre-set to 'NA', are NOT required
-// for completion, and are never presented as answerable — they exist only so every response shows
-// the same atom count. Every Likert cell is required.
+// The boolean atom checklist was removed from scoring in v6; the data's `atoms` are ignored.
 
-/** Every (label, atomId) boolean key for a case — including placeholders. */
-export function allKeysFor(demoCase: DemoCase): CheckKey[] {
-  const keys: CheckKey[] = []
-  for (const r of demoCase.responses) {
-    for (const a of r.atoms) keys.push(atomKey(r.label, a.id))
-  }
-  return keys
-}
-
-/** Boolean keys that GATE submission: every real (non-placeholder) atom on every response. */
-export function requiredKeysFor(demoCase: DemoCase): CheckKey[] {
-  const keys: CheckKey[] = []
-  for (const r of demoCase.responses) {
-    for (const a of r.atoms) {
-      if (!a.placeholder) keys.push(atomKey(r.label, a.id))
-    }
-  }
-  return keys
-}
-
-/** Every Likert key for a case: present response labels × the Likert dimensions. All are required. */
+/** Every Likert key for a case: present response labels × the Likert dimensions. All required. */
 export function likertKeysFor(demoCase: DemoCase): LikertKey[] {
   const keys: LikertKey[] = []
   for (const r of demoCase.responses) {
@@ -51,21 +25,11 @@ export function likertKeysFor(demoCase: DemoCase): LikertKey[] {
   return keys
 }
 
-/**
- * Blank state for a case:
- *  - every real atom -> null (unanswered); every placeholder -> 'NA' (locked);
- *  - every Likert cell -> null (unanswered).
- */
+/** Blank state for a case: every Likert cell -> null (unanswered). */
 export function buildInitialRubricState(demoCase: DemoCase): RubricState {
-  const atoms: Record<CheckKey, AtomScore> = {}
-  for (const r of demoCase.responses) {
-    for (const a of r.atoms) {
-      atoms[atomKey(r.label, a.id)] = a.placeholder ? 'NA' : null
-    }
-  }
   const likert: Record<LikertKey, LikertScore> = {}
   for (const key of likertKeysFor(demoCase)) likert[key] = null
-  return { atoms, likert }
+  return { likert }
 }
 
 export function rubricReducer(
@@ -74,20 +38,13 @@ export function rubricReducer(
   demoCase?: DemoCase,
 ): RubricState {
   switch (action.type) {
-    case 'SET_ATOM':
-      return { ...state, atoms: { ...state.atoms, [action.key]: action.value } }
     case 'SET_LIKERT':
       return { ...state, likert: { ...state.likert, [action.key]: action.value } }
     case 'RESET':
-      return demoCase ? buildInitialRubricState(demoCase) : { atoms: {}, likert: {} }
+      return demoCase ? buildInitialRubricState(demoCase) : { likert: {} }
     default:
       return state
   }
-}
-
-/** An atom counts as answered when it holds a concrete AtomScore (1, 0, or 'NA') — not null. */
-function atomAnswered(v: AtomScore | undefined): boolean {
-  return v === 1 || v === 0 || v === 'NA'
 }
 
 /** A Likert cell counts as answered when it holds a concrete 1–5 value — not null. */
@@ -95,27 +52,40 @@ function likertAnswered(v: LikertScore | undefined): boolean {
   return v === 1 || v === 2 || v === 3 || v === 4 || v === 5
 }
 
-/** Number of required items answered for this case — Likert cells + required boolean atoms. */
+/** Number of required items answered for this case. */
 export function pickCount(state: RubricState, demoCase: DemoCase): number {
-  const likertDone = likertKeysFor(demoCase).reduce(
+  return likertKeysFor(demoCase).reduce(
     (n, key) => (likertAnswered(state.likert[key]) ? n + 1 : n),
     0,
   )
-  const atomDone = requiredKeysFor(demoCase).reduce(
-    (n, key) => (atomAnswered(state.atoms[key]) ? n + 1 : n),
+}
+
+/** Total number of required items for this case. */
+export function requiredCount(demoCase: DemoCase): number {
+  return likertKeysFor(demoCase).length
+}
+
+/** True iff every Likert cell (1–5) of every response is answered. */
+export function isComplete(state: RubricState, demoCase: DemoCase): boolean {
+  return likertKeysFor(demoCase).every((key) => likertAnswered(state.likert[key]))
+}
+
+// --- per-arm helpers (focus mode's tab badges) ------------------------------ //
+
+/** Number of Likert cells answered for ONE response. */
+export function armAnsweredCount(state: RubricState, label: ResponseLabel): number {
+  return RUBRIC_DIMENSIONS.reduce(
+    (n, dim) => (likertAnswered(state.likert[likertKey(label, dim.key)]) ? n + 1 : n),
     0,
   )
-  return likertDone + atomDone
 }
 
-/** Total number of required items for this case — Likert cells + required boolean atoms. */
-export function requiredCount(demoCase: DemoCase): number {
-  return likertKeysFor(demoCase).length + requiredKeysFor(demoCase).length
+/** Number of Likert cells required for one response (the fixed dimension count). */
+export function armRequiredCount(): number {
+  return RUBRIC_DIMENSIONS.length
 }
 
-/** True iff every Likert cell (1–5) AND every required atom (Yes/No/NA) is answered. */
-export function isComplete(state: RubricState, demoCase: DemoCase): boolean {
-  const likertOk = likertKeysFor(demoCase).every((key) => likertAnswered(state.likert[key]))
-  const atomsOk = requiredKeysFor(demoCase).every((key) => atomAnswered(state.atoms[key]))
-  return likertOk && atomsOk
+/** True iff every Likert cell of ONE response is answered. */
+export function armComplete(state: RubricState, label: ResponseLabel): boolean {
+  return armAnsweredCount(state, label) === RUBRIC_DIMENSIONS.length
 }

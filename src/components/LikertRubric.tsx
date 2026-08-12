@@ -11,12 +11,12 @@ import type {
   ResponseLabel,
 } from '@/lib/types'
 
-// The 3 subjective-quality Likert scales (1–5) asked ONCE per response, ABOVE the boolean disease
-// checklist. Each scale is rendered as a TABLE — Score / Anchor / Description — mirroring the
-// clinician rubric doc (the verbatim SensorFM "PHA Integration Clinician Rubric"): the clinician
-// reads every anchor's description in-place and clicks the row whose description best matches, rather
-// than picking a bare number. Visual language matches ChecklistRubric (left rail + tint + header pill)
-// so the two components read as one system.
+// The 4 subjective-quality Likert scales (1–5) asked ONCE per response — the whole rubric since
+// v6 (Likert-only). Each scale is rendered as a TABLE — Score / Anchor / Description — mirroring
+// the clinician rubric doc (the verbatim SensorFM "PHA Integration Clinician Rubric"): the
+// clinician reads every anchor's description in-place and clicks the row whose description best
+// matches, rather than picking a bare number. Rendered by BOTH layout modes (FocusReview's right
+// pane and CompareRubric's columns), which is what keeps the two modes scoring-identical.
 interface DimColor {
   rail: string
   bg: string
@@ -48,7 +48,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-teal-500/15 ring-1 ring-inset ring-teal-500/40',
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
-  // Verbatim SensorFM "Harm" scale — reuses ChecklistRubric's amber category color.
+  // Verbatim SensorFM "Harm" scale — amber, the safety hue used across the app.
   harm: {
     rail: 'border-l-amber-500',
     bg: 'bg-amber-500/[0.05] dark:bg-amber-400/[0.07]',

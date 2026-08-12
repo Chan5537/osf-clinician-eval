@@ -1,9 +1,9 @@
-// Source of truth for the 4 subjective-quality Likert dimensions of the HYBRID clinician rubric.
+// Source of truth for the 4 subjective-quality Likert dimensions of the clinician rubric.
 //
-// HYBRID rubric (Prof. Yang, 2026-08): each response is scored on FOUR 1–5 Likert scales
-// (Context, Justifiability, Personalization, Harm) — asked ONCE per response — PLUS the merged
-// per-condition "Accuracy" boolean (Yes/No/N/A) rendered by ChecklistRubric. Together they form the
-// 5-axis radar for the paper figure: Accuracy (boolean) + the four Likerts.
+// Since v6 (2026-08-12) these four scales ARE the whole rubric: each response is scored on FOUR
+// 1–5 Likert scales (Context, Justifiability, Personalization, Harm), asked ONCE per response.
+// The per-condition "Accuracy" boolean checklist of the earlier HYBRID rubric (Prof. Yang,
+// 2026-08) was dropped from the UI/gate/export — the data's `atoms` remain but are ignored.
 //
 // ALL FOUR dimensions are copied VERBATIM from the SensorFM "PHA Integration Clinician Rubric"
 // (Survey ED.1) — see sleepfm-agent-eval/docs/sensorfm_rubric_verbatim.md — the only edit being
