@@ -15,9 +15,20 @@ import { DEMO_CASES } from '@/data/demo-cases'
 // v4 = weighted-boolean rubric (per-response Yes/No/NA atom checklist; open data-driven key scheme).
 // v5 = HYBRID rubric: adds 3 per-response Likert scales (justifiability/personalization/safety) on
 //      top of the boolean atoms; RubricState becomes { atoms, likert } (structured, two maps).
-export const SCHEMA_VERSION = 5
+// v6 = LIKERT-ONLY rubric (boolean atoms dropped from UI/gate/export; RubricState = { likert })
+//      + focus/compare layout modes (SessionState.layoutMode).
+export const SCHEMA_VERSION = 6
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
+
+// How the case page presents the responses:
+//   'focus'   — one arm at a time: response on the left, its Likert scales on the right.
+//               ALL scoring happens here.
+//   'compare' — READ-ONLY: all arms side by side for cross-reading; no scoring controls
+//               (there is no A-vs-B comparison rubric yet).
+// Entered/left via the in-page action buttons (Compare side by side / Back to scoring);
+// persisted so a reload keeps the view.
+export type LayoutMode = 'focus' | 'compare'
 
 export interface CaseRubric {
   state: RubricState
@@ -33,6 +44,7 @@ export interface SessionState {
   cases: CaseRubric[] // length === DEMO_CASES.length, aligned 1:1 by index
   reviewer: string // optional free-text initials; '' when skipped
   caseEnteredAt: number | null // Date.now() epoch ms — NOT performance.now()
+  layoutMode: LayoutMode // focus (default) | compare — persisted so a reload keeps the choice
 }
 
 const blankCase = (demoCase: DemoCase): CaseRubric => ({
@@ -50,6 +62,7 @@ export function initialSessionState(): SessionState {
     cases: DEMO_CASES.map((dc) => blankCase(dc)),
     reviewer: '',
     caseEnteredAt: null,
+    layoutMode: 'focus',
   }
 }
 
@@ -74,6 +87,7 @@ export type SessionAction =
   | { type: 'RESET_ALL' }
   | { type: 'ENTER_CASE'; at: number } // stamps caseEnteredAt = Date.now()
   | { type: 'REVEAL_CASE'; caseIndex: number } // mark streaming reveal as played (once)
+  | { type: 'SET_LAYOUT_MODE'; mode: LayoutMode } // focus/compare toggle
 
 function patchCase(s: SessionState, i: number, patch: Partial<CaseRubric>): SessionState {
   return { ...s, cases: s.cases.map((c, idx) => (idx === i ? { ...c, ...patch } : c)) }
@@ -120,6 +134,8 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
       return { ...s, caseEnteredAt: a.at }
     case 'REVEAL_CASE':
       return patchCase(s, a.caseIndex, { revealed: true })
+    case 'SET_LAYOUT_MODE':
+      return { ...s, layoutMode: a.mode }
     default:
       return s
   }

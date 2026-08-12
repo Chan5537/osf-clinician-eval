@@ -5,8 +5,10 @@
 // there. Worse, storage.ts restores a resumed session straight into `cycle`, so anyone who closes
 // the tab and comes back never sees the landing instructions again.
 //
-// Three independent treatments address that. They are NOT mutually exclusive — flip any
+// Two independent treatments address that. They are NOT mutually exclusive — flip any
 // combination and compare. Editing this file hot-reloads the page, so no rebuild is needed.
+// (A third treatment, the stepRail section rail, was retired 2026-08-12: the focus/compare
+// redesign removed the four-section page it navigated. StepRail.tsx remains for reference.)
 export const UI_FLAGS = {
   /**
    * A slim always-present strip under the header stating the task in one line.
@@ -14,14 +16,6 @@ export const UI_FLAGS = {
    * after the first couple of cases.
    */
   taskStrip: true,
-
-  /**
-   * A compact fixed rail on the right edge listing the four sections, highlighting whichever is
-   * on screen and jumping to it on click. Turns the page into a visible procedure and, unlike a
-   * banner, stays useful because it tracks position. Hidden below the xl breakpoint, where there
-   * is no room for it beside the content.
-   */
-  stepRail: true,
 
   /**
    * The sticky bottom bar states the next action and shows a progress bar instead of a bare

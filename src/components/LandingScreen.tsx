@@ -6,11 +6,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 import { requiredCount } from '@/lib/reducer'
-import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL, RUBRIC_DOC_URL } from '@/lib/links'
+import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
+import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
 import { DEMO_CASES } from '@/data/demo-cases'
-
-// The rubric categories shown on the landing screen (weighted-boolean checklist).
-const RUBRIC_CATEGORIES = ['Sleep-data interpretation', 'Future-disease risk', 'Safety']
 
 interface Props {
   reviewer: string
@@ -42,27 +40,28 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Thank you for taking part. You will review{' '}
                 <strong>{total} cases</strong>. For each, you will see a case summary, a
-                clinical query, and <strong>{nResponses} responses (Response {responseLetters})</strong>{' '}
-                shown side-by-side. You will not be told which system produced each response.
+                clinical query, and <strong>{nResponses} responses (Response {responseLetters})</strong>.
+                You review and rate them <strong>one at a time</strong>, with the rating scales
+                right beside the response; a side-by-side reading view is one click away whenever
+                you want to compare. You will not be told which system produced each response.
               </p>
             </div>
 
             <div className="space-y-2">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                For each response you will answer a short <strong>Yes / No / N&#47;A checklist</strong>{' '}
-                (about <strong>{itemsPerResponse} items per response</strong>), grouped by category.
-                Mark an item <strong>N&#47;A</strong> when it does not apply to that response. The
-                whole study takes about <strong>15–20 minutes</strong>.
+                For each response you will rate <strong>{itemsPerResponse} quality scales</strong>{' '}
+                from <strong>1 to 5</strong> — each score has a written description; pick the row
+                that best matches. The whole study takes about <strong>15–20 minutes</strong>.
               </p>
             </div>
 
             <div className="space-y-1.5">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Rubric categories
+                Rating scales
               </p>
               <ul className="grid grid-cols-1 gap-1 text-sm sm:grid-cols-2">
-                {RUBRIC_CATEGORIES.map((c) => (
-                  <li key={c}>{c}</li>
+                {RUBRIC_DIMENSIONS.map((d) => (
+                  <li key={d.key}>{d.label}</li>
                 ))}
               </ul>
             </div>
@@ -81,12 +80,6 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
                 <Button asChild variant="outline" className="flex-1 justify-between">
                   <a href={LIKERT_RUBRIC_DOC_URL} target="_blank" rel="noopener noreferrer">
                     Likert Scale Rubric
-                    <ExternalLink className="size-4" />
-                  </a>
-                </Button>
-                <Button asChild variant="outline" className="flex-1 justify-between">
-                  <a href={RUBRIC_DOC_URL} target="_blank" rel="noopener noreferrer">
-                    Boolean Rubric
                     <ExternalLink className="size-4" />
                   </a>
                 </Button>

@@ -1,7 +1,7 @@
 import { ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { isComplete, pickCount, requiredCount } from '@/lib/reducer'
-import { SECTION_IDS, scrollToSection } from '@/lib/sections'
+import { SECTION_IDS } from '@/lib/sections'
 import { useSectionInView } from '@/lib/use-section-observer'
 import { UI_FLAGS } from '@/lib/ui-flags'
 import type { RubricState, DemoCase } from '@/lib/types'
@@ -11,9 +11,12 @@ interface Props {
   onSubmit: () => void
   onBack: () => void
   onSkip: () => void
+  // Cross-mode "go to scoring" jump supplied by App (from compare mode it must first switch
+  // back to focus before scrolling, which a plain scrollToSection cannot do).
+  onGoToScoring: () => void
   canGoBack: boolean
   isLast: boolean
-  // The current case — sets how many atoms must be answered before submit.
+  // The current case — sets how many items must be answered before submit.
   demoCase: DemoCase
 }
 
@@ -27,7 +30,16 @@ interface Props {
 //     at a glance, where a fraction has to be divided first;
 //   • a "Go to scoring" jump that appears ONLY while the rubric is off screen, so it guides a
 //     clinician who is lost and gets out of the way once they are looking at the thing it points to.
-export function SubmitBar({ state, onSubmit, onBack, onSkip, canGoBack, isLast, demoCase }: Props) {
+export function SubmitBar({
+  state,
+  onSubmit,
+  onBack,
+  onSkip,
+  onGoToScoring,
+  canGoBack,
+  isLast,
+  demoCase,
+}: Props) {
   const total = requiredCount(demoCase)
   const done = pickCount(state, demoCase)
   const complete = isComplete(state, demoCase)
@@ -83,7 +95,7 @@ export function SubmitBar({ state, onSubmit, onBack, onSkip, canGoBack, isLast, 
                 variant="outline"
                 size="sm"
                 className="shrink-0"
-                onClick={() => scrollToSection(SECTION_IDS.rubric)}
+                onClick={onGoToScoring}
               >
                 Go to scoring
                 <ArrowDown className="size-4" />
