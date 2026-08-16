@@ -141,8 +141,7 @@
       "futureDiseaseGroundTruth": [],
       "selection": {
         "cohortGroup": "healthy",
-        "stratum": "short_tst",
-        "reason": "healthy \u00b7 assigned short_tst; sleep-issue hits: short TST (314 min < 360); low N3 (7.6% < 10%); burden 3 (<= 3); no 6y panel onset"
+        "stratum": "short_tst"
       }
     },
     "HSP_v7_010": {
@@ -169,8 +168,7 @@
       "futureDiseaseGroundTruth": [],
       "selection": {
         "cohortGroup": "healthy",
-        "stratum": "high_ahi",
-        "reason": "healthy \u00b7 assigned high_ahi; sleep-issue hits: high AHI (24.6 >= 15); low N3 (1.3% < 10%); burden 1 (<= 3); no 6y panel onset"
+        "stratum": "high_ahi"
       }
     },
     "HSP_v7_020": {
@@ -197,8 +195,7 @@
       "futureDiseaseGroundTruth": [],
       "selection": {
         "cohortGroup": "healthy",
-        "stratum": "low_n3",
-        "reason": "healthy \u00b7 assigned low_n3; sleep-issue hits: low N3 (0.8% < 10%); burden 3 (<= 3); no 6y panel onset"
+        "stratum": "low_n3"
       }
     },
     "HSP_v7_030": {
@@ -234,8 +231,7 @@
       ],
       "selection": {
         "cohortGroup": "risky",
-        "stratum": "circulatory",
-        "reason": "risky \u00b7 anchor: Essential hypertension (circulatory; rule related_work_direct, 6y incidence 9.1%); all realized onsets: Essential hypertension, Hyperlipidemia; burden 7 (<= 7)"
+        "stratum": "circulatory"
       }
     },
     "HSP_v7_040": {
@@ -264,8 +260,7 @@
       ],
       "selection": {
         "cohortGroup": "risky",
-        "stratum": "endocrine_metabolic",
-        "reason": "risky \u00b7 anchor: Obesity (endocrine_metabolic; rule related_work_direct, 6y incidence 8.6%); all realized onsets: Obesity; burden 5 (<= 7)"
+        "stratum": "endocrine_metabolic"
       }
     },
     "HSP_v7_050": {
@@ -307,8 +302,7 @@
       ],
       "selection": {
         "cohortGroup": "risky",
-        "stratum": "mental",
-        "reason": "risky \u00b7 anchor: Anxiety disorder (mental; rule related_work_direct, 6y incidence 10.9%); all realized onsets: Sleep disorders, Insomnia, Anxiety disorder, Hyperlipidemia; burden 2 (<= 7)"
+        "stratum": "mental"
       }
     },
     "HSP_v7_060": {
@@ -341,8 +335,7 @@
       ],
       "selection": {
         "cohortGroup": "risky",
-        "stratum": "neurological",
-        "reason": "risky \u00b7 anchor: Insomnia (neurological; rule related_work_direct, 6y incidence 11.3%); all realized onsets: Insomnia, Hyperlipidemia; burden 4 (<= 7)"
+        "stratum": "neurological"
       }
     },
     "HSP_v7_070": {
@@ -374,8 +367,7 @@
       ],
       "selection": {
         "cohortGroup": "risky",
-        "stratum": "respiratory",
-        "reason": "risky \u00b7 anchor: Asthma (respiratory; rule umbrella_high_incidence, 6y incidence 8.5%); all realized onsets: Obesity, Asthma; burden 0 (<= 7)"
+        "stratum": "respiratory"
       }
     }
   }
