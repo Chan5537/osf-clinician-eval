@@ -138,7 +138,12 @@
         "plmi": 2.1019108280254777,
         "ari": 26.751592356687897
       },
-      "futureDiseaseGroundTruth": []
+      "futureDiseaseGroundTruth": [],
+      "selection": {
+        "cohortGroup": "healthy",
+        "stratum": "short_tst",
+        "reason": "healthy \u00b7 assigned short_tst; sleep-issue hits: short TST (314 min < 360); low N3 (7.6% < 10%); burden 3 (<= 3); no 6y panel onset"
+      }
     },
     "HSP_v7_010": {
       "sessionId": "HSP_v7_010",
@@ -161,7 +166,12 @@
         "plmi": 0.0,
         "ari": 12.785622593068036
       },
-      "futureDiseaseGroundTruth": []
+      "futureDiseaseGroundTruth": [],
+      "selection": {
+        "cohortGroup": "healthy",
+        "stratum": "high_ahi",
+        "reason": "healthy \u00b7 assigned high_ahi; sleep-issue hits: high AHI (24.6 >= 15); low N3 (1.3% < 10%); burden 1 (<= 3); no 6y panel onset"
+      }
     },
     "HSP_v7_020": {
       "sessionId": "HSP_v7_020",
@@ -184,7 +194,12 @@
         "plmi": 0.0,
         "ari": 0.0
       },
-      "futureDiseaseGroundTruth": []
+      "futureDiseaseGroundTruth": [],
+      "selection": {
+        "cohortGroup": "healthy",
+        "stratum": "low_n3",
+        "reason": "healthy \u00b7 assigned low_n3; sleep-issue hits: low N3 (0.8% < 10%); burden 3 (<= 3); no 6y panel onset"
+      }
     },
     "HSP_v7_030": {
       "sessionId": "HSP_v7_030",
@@ -216,7 +231,12 @@
         "Migraine",
         "Inflammatory and toxic neuropathy",
         "Essential hypertension"
-      ]
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "circulatory",
+        "reason": "risky \u00b7 anchor: Essential hypertension (circulatory; rule related_work_direct, 6y incidence 9.1%); all realized onsets: Essential hypertension, Hyperlipidemia; burden 7 (<= 7)"
+      }
     },
     "HSP_v7_040": {
       "sessionId": "HSP_v7_040",
@@ -241,7 +261,12 @@
       },
       "futureDiseaseGroundTruth": [
         "Obesity"
-      ]
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "endocrine_metabolic",
+        "reason": "risky \u00b7 anchor: Obesity (endocrine_metabolic; rule related_work_direct, 6y incidence 8.6%); all realized onsets: Obesity; burden 5 (<= 7)"
+      }
     },
     "HSP_v7_050": {
       "sessionId": "HSP_v7_050",
@@ -279,7 +304,12 @@
         "Diaphragmatic hernia",
         "Spondylosis without myelopathy",
         "Osteoarthrosis, generalized"
-      ]
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "mental",
+        "reason": "risky \u00b7 anchor: Anxiety disorder (mental; rule related_work_direct, 6y incidence 10.9%); all realized onsets: Sleep disorders, Insomnia, Anxiety disorder, Hyperlipidemia; burden 2 (<= 7)"
+      }
     },
     "HSP_v7_060": {
       "sessionId": "HSP_v7_060",
@@ -308,7 +338,12 @@
         "Esophagitis, GERD and related diseases",
         "Peripheral enthesopathies and allied syndromes",
         "Enthesopathy"
-      ]
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "neurological",
+        "reason": "risky \u00b7 anchor: Insomnia (neurological; rule related_work_direct, 6y incidence 11.3%); all realized onsets: Insomnia, Hyperlipidemia; burden 4 (<= 7)"
+      }
     },
     "HSP_v7_070": {
       "sessionId": "HSP_v7_070",
@@ -336,7 +371,12 @@
         "Hearing loss",
         "Asthma",
         "Esophagitis, GERD and related diseases"
-      ]
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "respiratory",
+        "reason": "risky \u00b7 anchor: Asthma (respiratory; rule umbrella_high_incidence, 6y incidence 8.5%); all realized onsets: Obesity, Asthma; burden 0 (<= 7)"
+      }
     }
   }
 }
