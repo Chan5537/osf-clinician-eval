@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, Moon, TrendingUp, UserRound } from 'lucide-react'
+import { ClipboardList, FlaskConical, Moon, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -9,6 +9,7 @@ import {
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
 import { caseContext, selectionSummary } from '@/lib/case-context'
+import { useReveal } from '@/lib/reveal'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
 
@@ -51,6 +52,12 @@ const HISTORY_STYLE: SectionStyle = {
 const OUTCOME_STYLE: SectionStyle = {
   rail: 'border-l-indigo-500',
   icon: 'text-indigo-600 dark:text-indigo-400',
+}
+// INTERNAL-only section (cohort group + selection reason): amber, the same hue as the arm-reveal
+// badge, so everything that exists only behind the reveal switch shares one look.
+const INTERNAL_STYLE: SectionStyle = {
+  rail: 'border-l-amber-500 border-dashed',
+  icon: 'text-amber-600 dark:text-amber-400',
 }
 
 // Row styling for one collapsible section. The left rail sits on the item so it spans the header
@@ -113,6 +120,8 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 export function CaseContextPanel({ caseId, category, demographics, ehrHistory }: Props) {
   const { age, sex, bmi, race, bp } = demographics
   const context = caseContext(caseId)
+  // INTERNAL reveal switch (header 'Reveal arms' / ?reveal=1) — also unlocks the selection section.
+  const reveal = useReveal()
 
   // Show only fields that are actually recorded — never a fabricated value. age 0 and bmi 0 are
   // the "not recorded" sentinels from the export (BMI is null in the source for every patient),
@@ -123,9 +132,6 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
   if (bmi > 0) demoItems.push({ label: 'BMI', value: bmi.toFixed(1) })
   if (bp) demoItems.push({ label: 'Blood pressure', value: `${bp} mmHg` })
   if (race && race !== 'Unknown') demoItems.push({ label: 'Race', value: race })
-  // Cohort sub-group the patient was sampled from (header-safe: names no condition).
-  if (context?.selection)
-    demoItems.push({ label: 'Cohort group', value: selectionSummary(context.selection) })
 
   const futureGt = context?.futureDiseaseGroundTruth ?? []
   // Count what will actually be rendered — SleepIndexGrid drops null metrics (PLMI is null for
@@ -225,18 +231,40 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
                   conditions={futureGt}
                   emptyLabel="No new-onset condition recorded in the 6-year window."
                 />
-                {context.selection && (
-                  <p className="mt-2 border-t pt-2 text-[11px] leading-snug text-muted-foreground">
-                    <span className="font-medium text-foreground/80">Why this patient is in the set · </span>
-                    {context.selection.reason}
-                  </p>
-                )}
               </>
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
           </AccordionContent>
         </AccordionItem>
+
+        {/* INTERNAL: why the patient is in the batch (cohort_group x stratum + the selector's
+            verbatim reason). Rendered ONLY while the arm-reveal switch is on — the reason names
+            realized onsets and internal thresholds, so clinicians never see this section. */}
+        {reveal && context?.selection && (
+          <AccordionItem value="selection" className={itemClass(INTERNAL_STYLE)}>
+            <AccordionTrigger className={TRIGGER_CLASS}>
+              <SectionHeader
+                icon={FlaskConical}
+                style={INTERNAL_STYLE}
+                title="Cohort group · why selected"
+                meta={`internal · ${selectionSummary(context.selection)}`}
+              />
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="mb-1.5 text-[11px] leading-snug text-amber-700 dark:text-amber-300">
+                Internal review only — not shown to clinicians. Sub-group the patient was sampled from
+                and the selector&apos;s reason string.
+              </p>
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+                <dt className="text-muted-foreground">Group</dt>
+                <dd className="font-medium">{selectionSummary(context.selection)}</dd>
+                <dt className="text-muted-foreground">Reason</dt>
+                <dd className="font-mono text-[12px] leading-snug">{context.selection.reason}</dd>
+              </dl>
+            </AccordionContent>
+          </AccordionItem>
+        )}
       </Accordion>
     </section>
   )
