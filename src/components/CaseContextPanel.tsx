@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/accordion'
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext } from '@/lib/case-context'
+import { caseContext, selectionSummary } from '@/lib/case-context'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
 
@@ -123,6 +123,9 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
   if (bmi > 0) demoItems.push({ label: 'BMI', value: bmi.toFixed(1) })
   if (bp) demoItems.push({ label: 'Blood pressure', value: `${bp} mmHg` })
   if (race && race !== 'Unknown') demoItems.push({ label: 'Race', value: race })
+  // Cohort sub-group the patient was sampled from (header-safe: names no condition).
+  if (context?.selection)
+    demoItems.push({ label: 'Cohort group', value: selectionSummary(context.selection) })
 
   const futureGt = context?.futureDiseaseGroundTruth ?? []
   // Count what will actually be rendered — SleepIndexGrid drops null metrics (PLMI is null for
@@ -222,6 +225,12 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
                   conditions={futureGt}
                   emptyLabel="No new-onset condition recorded in the 6-year window."
                 />
+                {context.selection && (
+                  <p className="mt-2 border-t pt-2 text-[11px] leading-snug text-muted-foreground">
+                    <span className="font-medium text-foreground/80">Why this patient is in the set · </span>
+                    {context.selection.reason}
+                  </p>
+                )}
               </>
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
