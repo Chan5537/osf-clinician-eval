@@ -4,11 +4,14 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { StreamingMarkdown } from '@/components/StreamingMarkdown'
 import { AVATAR_STYLES, CARD_STYLES } from '@/components/response-colors'
 import { cn } from '@/lib/utils'
-import type { ResponseLabel } from '@/lib/types'
+import type { ArmId, ResponseLabel } from '@/lib/types'
+import { ArmBadge } from '@/components/ArmBadge'
 
 interface Props {
   label: ResponseLabel
   markdown: string
+  // Un-blinding key; only ever rendered via ArmBadge when the INTERNAL reveal switch is on.
+  arm?: ArmId
   // Streaming reveal: enabled => animate on mount; false => render full immediately.
   streamEnabled: boolean
   onRevealed?: () => void
@@ -17,7 +20,7 @@ interface Props {
 // A single assistant response. CRITICAL: only ever shows the letter A, B, or C —
 // never a source label (Agent / Base / GPT / Gemini / OSF). Source identity
 // is blinded.
-export function ResponseCard({ label, markdown, streamEnabled, onRevealed }: Props) {
+export function ResponseCard({ label, markdown, arm, streamEnabled, onRevealed }: Props) {
   return (
     // min-w-0: a grid item defaults to min-width:auto, which prevents it from shrinking below its
     // content's intrinsic width (long reference URLs). min-w-0 lets the column shrink so the
@@ -33,6 +36,7 @@ export function ResponseCard({ label, markdown, streamEnabled, onRevealed }: Pro
           </AvatarFallback>
         </Avatar>
         <span className="text-base font-semibold leading-none">Response {label}</span>
+        {arm && <ArmBadge arm={arm} />}
       </div>
       <Card className={cn('overflow-hidden py-0', CARD_STYLES[label])}>
         <ScrollArea className="max-h-[600px]">

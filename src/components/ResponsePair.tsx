@@ -35,6 +35,7 @@ export function ResponsePair({ responses, streamEnabled, onAllRevealed }: Props)
         <ResponseCard
           key={r.label}
           label={r.label}
+          arm={r.arm}
           markdown={r.markdown}
           streamEnabled={streamEnabled}
           onRevealed={handleRevealed}

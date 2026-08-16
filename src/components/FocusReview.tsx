@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ArmBadge } from '@/components/ArmBadge'
 import type { Dispatch } from 'react'
 import { Check, ChevronLeft, ChevronRight, Columns3 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -95,6 +96,7 @@ export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
                   {resp.label}
                 </span>
                 <span className="hidden sm:inline">Response {resp.label}</span>
+                <ArmBadge arm={resp.arm} />
                 {complete ? (
                   <span className="flex size-4 items-center justify-center rounded-full bg-emerald-600 text-white">
                     <Check className="size-3" />
@@ -136,6 +138,7 @@ export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
               </AvatarFallback>
             </Avatar>
             <span className="text-base font-semibold leading-none">Response {r.label}</span>
+            <ArmBadge arm={r.arm} />
           </div>
           <Card className={cn('overflow-hidden py-0', CARD_STYLES[r.label])}>
             <div key={r.label} className={cn('overflow-y-auto p-4', PANE_HEIGHT)}>

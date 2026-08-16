@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useRef } from 'react'
+import { useReducer, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { DEMO_CASES } from '@/data/demo-cases'
 import {
@@ -11,6 +11,7 @@ import type { RubricAction } from '@/lib/types'
 import { load, save, clear } from '@/lib/storage'
 import { SECTION_IDS, scrollToSection } from '@/lib/sections'
 import { UI_FLAGS } from '@/lib/ui-flags'
+import { RevealContext, initialRevealFromUrl } from '@/lib/reveal'
 import { TaskStrip } from '@/components/TaskStrip'
 import { ClipboardCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -33,6 +34,8 @@ function initSession(): SessionState {
 
 function App() {
   const [session, dispatch] = useReducer(sessionReducer, undefined, initSession)
+  // INTERNAL: arm-reveal switch (not persisted, not exported); see lib/reveal.ts
+  const [reveal, setReveal] = useState<boolean>(initialRevealFromUrl)
   const debounceRef = useRef<number | null>(null)
 
   // Debounced persist; coalesces note keystrokes.
@@ -120,6 +123,7 @@ function App() {
   }
 
   return (
+    <RevealContext.Provider value={reveal}>
     <div className="flex min-h-screen flex-col bg-muted/30">
       <header className="border-b bg-background">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
@@ -141,6 +145,16 @@ function App() {
               submitted={session.cases.map((c) => c.submitted)}
               onGoto={(idx) => dispatch({ type: 'GOTO_CASE', caseIndex: idx })}
             />
+            <Button
+              type="button"
+              variant={reveal ? 'default' : 'outline'}
+              size="sm"
+              title="Internal review only — show which arm (base / ours / ground truth) each response is. Not saved, not exported."
+              className={reveal ? 'bg-amber-600 text-white hover:bg-amber-700' : 'border-dashed text-muted-foreground'}
+              onClick={() => setReveal((v) => !v)}
+            >
+              {reveal ? 'Arms revealed' : 'Reveal arms'}
+            </Button>
             <Button
               type="button"
               variant="ghost"
@@ -241,6 +255,7 @@ function App() {
       />
       <AppFooter />
     </div>
+    </RevealContext.Provider>
   )
 }
 
