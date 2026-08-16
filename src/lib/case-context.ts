@@ -13,14 +13,11 @@ export interface SleepIndex {
 }
 
 // Why the patient is in the batch: the cohort sub-group they were sampled from (healthy = a
-// sleep-issue stratum with no 6-y panel onset; risky = an organ-system stratum anchored on a
-// realized new-onset condition) plus the selector's verbatim reason string. `reason` NAMES the
-// realized onsets for risky patients, so it must only be rendered inside the collapsed
-// future-disease section — never in the always-visible header.
+// sleep-issue stratum with no 6-y panel onset; risky = a disease-category stratum). INTERNAL —
+// rendered only behind the arm-reveal switch.
 export interface CaseSelection {
   cohortGroup: 'healthy' | 'risky'
   stratum: string // short_tst | high_ahi | low_n3 | circulatory | endocrine_metabolic | ...
-  reason: string
 }
 
 export interface CaseContextEntry {
@@ -45,8 +42,11 @@ const STRATUM_LABEL: Record<string, string> = {
 
 // Header-safe one-liner: "healthy · short total sleep time" / "risky · circulatory system".
 // Contains no condition name, so it can sit next to the demographics.
+export function stratumLabel(stratum: string): string {
+  return STRATUM_LABEL[stratum] ?? stratum.replace(/_/g, ' ')
+}
 export function selectionSummary(sel: CaseSelection): string {
-  return `${sel.cohortGroup} · ${STRATUM_LABEL[sel.stratum] ?? sel.stratum.replace(/_/g, ' ')}`
+  return `${sel.cohortGroup} · ${stratumLabel(sel.stratum)}`
 }
 
 interface CaseContextFile {

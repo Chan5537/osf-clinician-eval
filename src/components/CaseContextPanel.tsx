@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/accordion'
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext, selectionSummary } from '@/lib/case-context'
+import { caseContext, selectionSummary, stratumLabel } from '@/lib/case-context'
 import { useReveal } from '@/lib/reveal'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
@@ -239,8 +239,7 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
         </AccordionItem>
 
         {/* INTERNAL: why the patient is in the batch (cohort_group x stratum + the selector's
-            verbatim reason). Rendered ONLY while the arm-reveal switch is on — the reason names
-            realized onsets and internal thresholds, so clinicians never see this section. */}
+            disease category / sleep issue). Rendered ONLY while the arm-reveal switch is on. */}
         {reveal && context?.selection && (
           <AccordionItem value="selection" className={itemClass(INTERNAL_STYLE)}>
             <AccordionTrigger className={TRIGGER_CLASS}>
@@ -253,14 +252,15 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             </AccordionTrigger>
             <AccordionContent>
               <p className="mb-1.5 text-[11px] leading-snug text-amber-700 dark:text-amber-300">
-                Internal review only — not shown to clinicians. Sub-group the patient was sampled from
-                and the selector&apos;s reason string.
+                Internal review only — not shown to clinicians. Sub-group the patient was sampled from.
               </p>
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
                 <dt className="text-muted-foreground">Group</dt>
-                <dd className="font-medium">{selectionSummary(context.selection)}</dd>
-                <dt className="text-muted-foreground">Reason</dt>
-                <dd className="font-mono text-[12px] leading-snug">{context.selection.reason}</dd>
+                <dd className="font-medium">{context.selection.cohortGroup}</dd>
+                <dt className="text-muted-foreground">
+                  {context.selection.cohortGroup === 'risky' ? 'Disease category' : 'Sleep issue'}
+                </dt>
+                <dd className="font-medium">{stratumLabel(context.selection.stratum)}</dd>
               </dl>
             </AccordionContent>
           </AccordionItem>
