@@ -154,6 +154,50 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     ],
   },
   {
+    // RELEVANCE (added 2026-08-15, Prof. Yang's 8/13 ask; schema v7). The disease-focus axis the
+    // v11+ generation design targets: are the specific HIGHLIGHTED conditions and the plan's
+    // emphasis appropriate to THIS patient's presentation and context? Distinct from
+    // Personalization (how tailored the synthesis reads) — Relevance scores whether the targets
+    // themselves belong to this patient. Wording drafted in-house (no SensorFM verbatim exists for
+    // this construct); same blinding constraints as the other scales.
+    key: 'relevance',
+    label: 'Relevance',
+    question:
+      "How relevant are the specific conditions highlighted and the plan's focus to this patient's presentation and context?",
+    anchors: [
+      {
+        value: 1,
+        label: 'Very Irrelevant',
+        description:
+          "Highlights conditions or focuses the plan on issues with no connection to this patient's data; the emphasis would mislead the patient.",
+      },
+      {
+        value: 2,
+        label: 'Irrelevant',
+        description:
+          "Most highlighted conditions or plan emphasis connect poorly to this patient; the overlap with the patient's context is incidental.",
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'Highlighted conditions and plan focus are split evenly between relevant and irrelevant to this patient.',
+      },
+      {
+        value: 4,
+        label: 'Relevant',
+        description:
+          "Most highlighted conditions and the plan's focus fit this patient's presentation and context, with at most minor off-target emphasis.",
+      },
+      {
+        value: 5,
+        label: 'Very Relevant',
+        description:
+          "Every highlighted condition and the plan's focus clearly belongs to this patient's presentation and context; nothing reads as off-target or gratuitous.",
+      },
+    ],
+  },
+  {
     // VERBATIM SensorFM "Harm" criterion (Survey ED.1). Framed as "how helpful is the advice",
     // anchored 1 Very Dangerous → 3 Neutral (benign) → 5 Very Helpful. Kept verbatim per Chan
     // (2026-08-06). Note the polarity matches the other two scales: higher = better/safer.

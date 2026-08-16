@@ -48,6 +48,14 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-teal-500/15 ring-1 ring-inset ring-teal-500/40',
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
+  // Relevance (added 2026-08-15, schema v7) — rose hue, distinct from blue/violet/teal/amber.
+  relevance: {
+    rail: 'border-l-rose-500',
+    bg: 'bg-rose-500/[0.04] dark:bg-rose-400/[0.06]',
+    header: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',
+    selected: 'bg-rose-500/15 ring-1 ring-inset ring-rose-500/40',
+    selectedText: 'text-rose-800 dark:text-rose-200',
+  },
   // Verbatim SensorFM "Harm" scale — amber, the safety hue used across the app.
   harm: {
     rail: 'border-l-amber-500',

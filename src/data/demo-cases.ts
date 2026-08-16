@@ -12,4 +12,8 @@ import raw from './demo-cases.generated.json'
 // `markdown` are rendered. Display order is shuffled in the emitter so card position carries no
 // source signal. If you change case content or count, bump SCHEMA_VERSION in src/lib/session.ts.
 
-export const DEMO_CASES = raw as DemoCase[]
+// Sprint/dev knob: `VITE_CASE_LIMIT=5 npm run dev` serves only the first N cases for faster
+// iteration. Unset (the default — CI/production never sets it) serves the full batch.
+const CASE_LIMIT = Number(import.meta.env.VITE_CASE_LIMIT) || 0
+
+export const DEMO_CASES = CASE_LIMIT > 0 ? (raw as DemoCase[]).slice(0, CASE_LIMIT) : (raw as DemoCase[])

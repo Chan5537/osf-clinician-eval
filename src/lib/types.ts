@@ -57,7 +57,7 @@ export interface DemoCase {
 export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 
 // The four subjective-quality dimensions scored once per response.
-export type RubricDimension = 'context' | 'justifiability' | 'personalization' | 'harm'
+export type RubricDimension = 'context' | 'justifiability' | 'personalization' | 'relevance' | 'harm'
 
 // Likert key: `${label}__${dimension}` (e.g. "A__harm"). Built per case from the
 // present response labels × the fixed dimensions.
