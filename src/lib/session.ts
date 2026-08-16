@@ -17,7 +17,9 @@ import { DEMO_CASES } from '@/data/demo-cases'
 //      top of the boolean atoms; RubricState becomes { atoms, likert } (structured, two maps).
 // v6 = LIKERT-ONLY rubric (boolean atoms dropped from UI/gate/export; RubricState = { likert })
 //      + focus/compare layout modes (SessionState.layoutMode).
-export const SCHEMA_VERSION = 6
+// v7 = adds the 5th Likert dimension "Relevance" (Prof. Yang 8/13) + the v12.1 8-case batch
+//      (one per cohort sub-group, 3 blinded arms per case).
+export const SCHEMA_VERSION = 7
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
