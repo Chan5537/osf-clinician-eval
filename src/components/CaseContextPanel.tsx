@@ -8,8 +8,7 @@ import {
 } from '@/components/ui/accordion'
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext, selectionSummary, stratumLabel } from '@/lib/case-context'
-import { useReveal } from '@/lib/reveal'
+import { caseContext, groupLabel, selectionSummary, stratumLabel } from '@/lib/case-context'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
 
@@ -55,9 +54,11 @@ const OUTCOME_STYLE: SectionStyle = {
 }
 // INTERNAL-only section (cohort group + selection reason): amber, the same hue as the arm-reveal
 // badge, so everything that exists only behind the reveal switch shares one look.
-const INTERNAL_STYLE: SectionStyle = {
-  rail: 'border-l-amber-500 border-dashed',
-  icon: 'text-amber-600 dark:text-amber-400',
+// Patient group — teal, a normal reviewer-facing section (it used to sit behind the reveal
+// switch in amber; owner 2026-08-17 made it default and softened the wording).
+const GROUP_STYLE: SectionStyle = {
+  rail: 'border-l-teal-500',
+  icon: 'text-teal-600 dark:text-teal-400',
 }
 
 // Row styling for one collapsible section. The left rail sits on the item so it spans the header
@@ -120,8 +121,6 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 export function CaseContextPanel({ caseId, category, demographics, ehrHistory }: Props) {
   const { age, sex, bmi, race, bp } = demographics
   const context = caseContext(caseId)
-  // INTERNAL reveal switch (header 'Reveal arms' / ?reveal=1) — also unlocks the selection section.
-  const reveal = useReveal()
 
   // Show only fields that are actually recorded — never a fabricated value. age 0 and bmi 0 are
   // the "not recorded" sentinels from the export (BMI is null in the source for every patient),
@@ -238,25 +237,22 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
           </AccordionContent>
         </AccordionItem>
 
-        {/* INTERNAL: why the patient is in the batch (cohort_group x stratum + the selector's
-            disease category / sleep issue). Rendered ONLY while the arm-reveal switch is on. */}
-        {reveal && context?.selection && (
-          <AccordionItem value="selection" className={itemClass(INTERNAL_STYLE)}>
+        {/* Why this patient is in the batch — shown by default: it carries no arm
+            information, and their question already discloses the group. */}
+        {context?.selection && (
+          <AccordionItem value="selection" className={itemClass(GROUP_STYLE)}>
             <AccordionTrigger className={TRIGGER_CLASS}>
               <SectionHeader
                 icon={FlaskConical}
-                style={INTERNAL_STYLE}
-                title="Cohort group · why selected"
-                meta={`internal · ${selectionSummary(context.selection)}`}
+                style={GROUP_STYLE}
+                title="Patient group"
+                meta={selectionSummary(context.selection)}
               />
             </AccordionTrigger>
             <AccordionContent>
-              <p className="mb-1.5 text-[11px] leading-snug text-amber-700 dark:text-amber-300">
-                Internal review only — not shown to clinicians. Sub-group the patient was sampled from.
-              </p>
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
-                <dt className="text-muted-foreground">Group</dt>
-                <dd className="font-medium">{context.selection.cohortGroup}</dd>
+                <dt className="text-muted-foreground">Came in with</dt>
+                <dd className="font-medium">{groupLabel(context.selection.cohortGroup)}</dd>
                 <dt className="text-muted-foreground">
                   {context.selection.cohortGroup === 'risky' ? 'Disease category' : 'Sleep issue'}
                 </dt>

@@ -12,9 +12,11 @@ export interface SleepIndex {
   [field: string]: number | null
 }
 
-// Why the patient is in the batch: the cohort sub-group they were sampled from (healthy = a
-// sleep-issue stratum with no 6-y panel onset; risky = a disease-category stratum). INTERNAL —
-// rendered only behind the arm-reveal switch.
+// Why the patient is in the batch: the sub-group they were sampled from. Shown to reviewers as
+// "patient group" — the raw keys ('healthy'/'risky') are internal selector names and are never
+// rendered: they are loaded, and under the v14 cohort also inaccurate, since the sleep-concern
+// group does go on to develop conditions. This carries no arm information, and the patient's own
+// question already discloses which group they are in.
 export interface CaseSelection {
   cohortGroup: 'healthy' | 'risky'
   stratum: string // short_tst | high_ahi | low_n3 | circulatory | endocrine_metabolic | ...
@@ -42,11 +44,19 @@ const STRATUM_LABEL: Record<string, string> = {
 
 // Header-safe one-liner: "healthy · short total sleep time" / "risky · circulatory system".
 // Contains no condition name, so it can sit next to the demographics.
+// Reviewer-facing group names for the internal selector keys.
+const GROUP_LABEL: Record<string, string> = {
+  healthy: 'Sleep concerns',
+  risky: 'Future-disease concerns',
+}
+export function groupLabel(group: string): string {
+  return GROUP_LABEL[group] ?? group
+}
 export function stratumLabel(stratum: string): string {
   return STRATUM_LABEL[stratum] ?? stratum.replace(/_/g, ' ')
 }
 export function selectionSummary(sel: CaseSelection): string {
-  return `${sel.cohortGroup} · ${stratumLabel(sel.stratum)}`
+  return `${groupLabel(sel.cohortGroup)} · ${stratumLabel(sel.stratum)}`
 }
 
 interface CaseContextFile {
