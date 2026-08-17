@@ -42,12 +42,15 @@ const STRATUM_LABEL: Record<string, string> = {
   respiratory: 'respiratory',
 }
 
-// Header-safe one-liner: "healthy · short total sleep time" / "risky · circulatory system".
+// Header-safe one-liner: "Sleep-issue group · short total sleep time".
 // Contains no condition name, so it can sit next to the demographics.
-// Reviewer-facing group names for the internal selector keys.
+// Reviewer-facing group names for the internal selector keys. Named for what the patient was
+// sampled ON, not for how well they are doing: 'healthy' / 'risky' read as an ordering and
+// invite the wrong question ("why does the healthy group have more conditions?"), when in fact
+// both groups develop conditions — they were selected on different things.
 const GROUP_LABEL: Record<string, string> = {
-  healthy: 'Sleep concerns',
-  risky: 'Future-disease concerns',
+  healthy: 'Sleep-issue group',
+  risky: 'Future-risk group',
 }
 export function groupLabel(group: string): string {
   return GROUP_LABEL[group] ?? group
