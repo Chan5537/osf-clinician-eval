@@ -12,6 +12,7 @@ import { RUBRIC_DIMENSIONS } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
 import { likertKey } from './types'
 import type { LikertScore } from './types'
+import { msToSeconds } from './timing'
 
 // One row per (case, response, Likert dimension). `value` is the clinician's answer; `arm` is the
 // unblinding key.
@@ -25,7 +26,13 @@ const COLUMNS: string[] = [
   'dimension', // context | justifiability | personalization | harm
   'value', // 1–5 ; '' (unanswered)
   'submitted_at',
-  'duration_seconds',
+  // TIMING (v8). `duration_seconds` keeps its original wall-clock meaning so pre-v8 analysis
+  // scripts stay valid; the new columns are APPENDED, never reordered. All are case-level facts
+  // except response_active_seconds, which is per (case, response).
+  'duration_seconds', // wall clock, entry -> submit (unchanged definition)
+  'active_seconds', // wall clock minus time hidden/idle — real time-on-task
+  'idle_seconds', // the remainder; active + idle == duration (up to rounding)
+  'response_active_seconds', // active seconds attributed to THIS response card
 ]
 
 export type ReviewRow = Record<string, string | number | boolean | null>
@@ -42,6 +49,12 @@ export function buildRows(session: SessionState): ReviewRow[] {
     const touched = pickCount(c.state, dc) > 0 || c.submitted
     if (!touched) return
     const s = c.state
+    const t = c.timing
+    // Report the wall clock the ledger actually measured; fall back to the legacy field for a
+    // case carried over from a session that predates the ledger.
+    const wallSeconds = t.wallMs > 0 ? msToSeconds(t.wallMs) : c.durationSeconds
+    const activeSeconds = msToSeconds(t.acc.activeMs)
+    const idleSeconds = msToSeconds(t.acc.idleMs)
     for (const r of dc.responses) {
       // The 4 subjective-quality Likert dimensions, once per response.
       for (const dim of RUBRIC_DIMENSIONS) {
@@ -55,7 +68,10 @@ export function buildRows(session: SessionState): ReviewRow[] {
           dimension: dim.key,
           value: likertValueCell(s.likert[likertKey(r.label, dim.key)] ?? null),
           submitted_at: c.submittedAt,
-          duration_seconds: c.durationSeconds,
+          duration_seconds: wallSeconds,
+          active_seconds: activeSeconds,
+          idle_seconds: idleSeconds,
+          response_active_seconds: msToSeconds(t.perResponseMs[r.label] ?? 0),
         })
       }
     }

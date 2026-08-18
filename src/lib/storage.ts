@@ -4,8 +4,8 @@
 // and writes can throw on quota. A failure must NEVER blank the app — it just
 // means we fall back to a fresh in-memory session.
 
-import type { SessionState, CaseRubric } from './session'
-import { SCHEMA_VERSION, initialSessionState } from './session'
+import type { SessionState, CaseRubric, CaseTiming } from './session'
+import { SCHEMA_VERSION, initialSessionState, newCaseTiming } from './session'
 import { buildInitialRubricState } from './reducer'
 import type { RubricState, DemoCase } from './types'
 import { DEMO_CASES } from '@/data/demo-cases'
@@ -37,6 +37,40 @@ function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
   return base
 }
 
+// Rebuild a case's timing ledger from storage. ACCUMULATED totals (activeMs/idleMs/perResponseMs/
+// wallMs) are kept — they are the record of effort already spent. LIVE clock baselines
+// (runningSince, enteredAt) are deliberately dropped: a baseline from a previous browser session
+// would otherwise bill the entire time the laptop was closed to this case. ENTER_CASE re-stamps
+// them on mount.
+function sanitizeTiming(stored: unknown): CaseTiming {
+  const base = newCaseTiming()
+  if (!stored || typeof stored !== 'object') return base
+  const t = stored as Partial<CaseTiming>
+  const num = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? v : 0)
+  const acc = (t.acc ?? {}) as Record<string, unknown>
+  const perResponseMs: Record<string, number> = {}
+  if (t.perResponseMs && typeof t.perResponseMs === 'object') {
+    for (const [k, v] of Object.entries(t.perResponseMs)) {
+      if (k === 'A' || k === 'B' || k === 'C') perResponseMs[k] = num(v)
+    }
+  }
+  return {
+    acc: {
+      runningSince: null, // re-stamped on entry; never trusted across a reload
+      lastActivityAt: 0,
+      activeMs: num(acc.activeMs),
+      idleMs: num(acc.idleMs),
+    },
+    perResponseMs,
+    focusedLabel:
+      t.focusedLabel === 'A' || t.focusedLabel === 'B' || t.focusedLabel === 'C'
+        ? t.focusedLabel
+        : null,
+    wallMs: num(t.wallMs),
+    enteredAt: null,
+  }
+}
+
 export function load(): SessionState | null {
   try {
     const raw = localStorage.getItem(KEY)
@@ -55,6 +89,7 @@ export function load(): SessionState | null {
         submittedAt: typeof c?.submittedAt === 'string' ? c.submittedAt : null,
         durationSeconds: typeof c?.durationSeconds === 'number' ? c.durationSeconds : null,
         revealed: !!c?.revealed,
+        timing: sanitizeTiming(c?.timing),
       }
     })
     return {
@@ -67,8 +102,9 @@ export function load(): SessionState | null {
           : 0,
       cases,
       reviewer: typeof s.reviewer === 'string' ? s.reviewer : '',
-      caseEnteredAt: null, // never trust a persisted clock baseline; re-stamp on entry
+      caseEnteredAt: null, // never trust a persisted clock baseline; re-stamped by ENTER_CASE
       layoutMode: s.layoutMode === 'compare' ? 'compare' : 'focus',
+      hiddenAt: null,
     }
   } catch {
     return null // corrupt JSON / disabled storage -> start fresh, never blank the app

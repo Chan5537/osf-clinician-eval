@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArmBadge } from '@/components/ArmBadge'
 import type { Dispatch } from 'react'
 import { Check, ChevronLeft, ChevronRight, Columns3 } from 'lucide-react'
@@ -20,6 +20,9 @@ interface Props {
   dispatch: Dispatch<RubricAction>
   // Switch to the read-only side-by-side comparison view.
   onCompare: () => void
+  // Timing instrumentation only: report which response is now on screen so reading time is
+  // attributed to the right card. Purely observational — never affects scoring or display.
+  onFocusResponse?: (label: ResponseEntry['label']) => void
 }
 
 // Both panes get the same fixed height on lg+, so response and rubric scroll independently and
@@ -32,12 +35,26 @@ const PANE_HEIGHT = 'lg:h-[calc(100vh-19rem)] lg:min-h-[28rem]'
 // completion badge, plus prev/next arrows) selects the arm; below it the split view shows the
 // response's markdown on the left and its 4 Likert scales on the right. All arms share the case's
 // single scoring state, so switching tabs (or to compare mode) never loses answers.
-export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
+export function FocusReview({ responses, state, dispatch, onCompare, onFocusResponse }: Props) {
   // Active arm is view-local: the parent remounts this component per case (<main key={i}>),
   // so each case starts back at the first arm.
   const [idx, setIdx] = useState(0)
   const r = responses[idx]
   const total = armRequiredCount()
+
+  // Move the arm tab AND tell the session which card is now being read, so per-response timing
+  // follows the tab bar rather than only the moments a score is clicked.
+  const goto = (next: number) => {
+    setIdx(next)
+    const label = responses[next]?.label
+    if (label) onFocusResponse?.(label)
+  }
+
+  // Attribute time on the initially-shown card (and on each case's first card after remount).
+  useEffect(() => {
+    if (r?.label) onFocusResponse?.(r.label)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <section className="space-y-3">
@@ -63,7 +80,7 @@ export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
             size="sm"
             aria-label="Previous response"
             disabled={idx === 0}
-            onClick={() => setIdx(idx - 1)}
+            onClick={() => goto(idx - 1)}
           >
             <ChevronLeft className="size-4" />
           </Button>
@@ -77,7 +94,7 @@ export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
                 type="button"
                 role="tab"
                 aria-selected={selected}
-                onClick={() => setIdx(i)}
+                onClick={() => goto(i)}
                 className={cn(
                   'flex cursor-pointer items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors',
                   // Selected = dark solid, unmistakable which arm is under review.
@@ -120,7 +137,7 @@ export function FocusReview({ responses, state, dispatch, onCompare }: Props) {
             size="sm"
             aria-label="Next response"
             disabled={idx === responses.length - 1}
-            onClick={() => setIdx(idx + 1)}
+            onClick={() => goto(idx + 1)}
           >
             <ChevronRight className="size-4" />
           </Button>
