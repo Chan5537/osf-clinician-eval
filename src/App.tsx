@@ -47,6 +47,31 @@ function App() {
     }
   }, [session])
 
+  // Re-stamp the clock baseline for the case being resumed. storage.load() deliberately drops
+  // every live baseline (a persisted one would bill the whole overnight gap to the case), so
+  // WITHOUT this the resumed case has no baseline and reports a null duration. Pre-v8 the
+  // ENTER_CASE action existed but was never dispatched, which is exactly that bug.
+  const entered = useRef(false)
+  useEffect(() => {
+    if (entered.current) return // StrictMode double-invokes effects; stamp once
+    entered.current = true
+    if (session.view === 'cycle') dispatch({ type: 'ENTER_CASE', at: Date.now() })
+  }, [session.view])
+
+  // Idle accounting: a hidden tab is not time-on-task. Also settles on pagehide so a closed
+  // laptop parks the clock instead of accruing until the next interaction.
+  useEffect(() => {
+    const onVisibility = () =>
+      dispatch({ type: 'VISIBILITY', hidden: document.hidden, at: Date.now() })
+    const onHide = () => dispatch({ type: 'VISIBILITY', hidden: true, at: Date.now() })
+    document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('pagehide', onHide)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pagehide', onHide)
+    }
+  }, [])
+
   // Synchronous write that cancels the pending debounce — used on Submit so a
   // navigation can never drop the just-committed picks.
   const flush = (next: SessionState) => {
@@ -100,10 +125,17 @@ function App() {
 
   function handleSubmit() {
     const at = new Date().toISOString()
-    const durationSeconds =
-      session.caseEnteredAt != null
-        ? Math.round((Date.now() - session.caseEnteredAt) / 1000)
-        : null
+    // Wall clock across ALL visits to this case (prior visits are already banked in timing.wallMs),
+    // not just the current one — so a case interrupted by a reload reports total elapsed time.
+    const priorWallMs = caseRubric.timing.wallMs
+    const thisVisitMs =
+      caseRubric.timing.enteredAt != null
+        ? Math.max(0, Date.now() - caseRubric.timing.enteredAt)
+        : session.caseEnteredAt != null
+          ? Math.max(0, Date.now() - session.caseEnteredAt)
+          : 0
+    const totalWallMs = priorWallMs + thisVisitMs
+    const durationSeconds = totalWallMs > 0 ? Math.round(totalWallMs / 1000) : null
     const submitAction: SessionAction = {
       type: 'SUBMIT_CASE',
       caseIndex: i,
@@ -235,6 +267,9 @@ function App() {
               state={caseRubric.state}
               dispatch={caseDispatch}
               onCompare={() => dispatch({ type: 'SET_LAYOUT_MODE', mode: 'compare' })}
+              onFocusResponse={(label) =>
+                dispatch({ type: 'FOCUS_RESPONSE', label, at: Date.now() })
+              }
             />
           </div>
         )}
