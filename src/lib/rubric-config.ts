@@ -22,6 +22,56 @@
 //    NOT an architecture tell and is kept verbatim. Do not introduce "ground truth"/"oracle"
 //    in any OTHER context.
 
+// 2026-08-18 (owner, after a first pass of self-rating): three questions reworded and the
+// per-anchor descriptions hidden in the UI.
+// ⛔ THIS BREAKS THE SENSORFM-VERBATIM PROPERTY for Context, Personalization and Harm. The
+//    reasons the owner gave, kept here so the cost is visible rather than forgotten:
+//      - Context asked for a "useful summary"; a response can summarise well while missing what
+//        is actually wrong with the patient, so it now asks whether the patient's REAL ISSUE is
+//        revealed — which forces the rater to look at the conditions the response picked.
+//      - Personalization scored how tailored a response READS, so a confidently wrong but
+//        specific response scored high. It now asks whether the synthesis is CORRECTLY
+//        personalized, and its low anchors read "generic or mistaken".
+//      - Harm was phrased as "how helpful is the advice", which measures helpfulness, not harm.
+//      - Justifiability asked whether the actions were "based directly on the patient's data",
+//        which reads as a provenance check: a response can quote AHI 41.7 exactly and still
+//        draw the wrong conclusion, and score well. It now asks whether the actions are
+//        justifiable GIVEN THIS PATIENT'S ACTUAL PHYSIOLOGY AND CLINICAL STATE.
+//    Comparability with SensorFM Survey ED.1 is therefore given up for all four of its scales;
+//    Relevance was in-house from the start.
+// 2026-08-18d/e (net): Context IS a usefulness scale — that is what SensorFM's original stem
+// ("provide a useful summary") and its Very Useless -> Very Useful anchors measure, and the
+// name 'Context' was only ever its label for that axis. The anchor labels therefore stay
+// Useless/Useful; an interim pass had moved them to Off-target/On-target and that was the
+// mismatch, not the fix. What DID change is that 'useful' is no longer left to the rater to
+// interpret: the stem now says what makes it useful.
+// The Context stem keeps the usefulness angle the SensorFM original had, but ties
+// it to HEALTH MANAGEMENT rather than to a provider reading a summary: "reveal the real issues
+// that matter for managing this patient's health". Identification alone was too bare — a
+// response can name a true condition that changes nothing about the plan.
+// 2026-08-18c: Relevance asks against the patient's "presentation and PROFILE". It briefly read
+// "actual issue", which would have been checkable against the Patient group card — but that
+// card names the COHORT SELECTION CRITERION, so scoring against it turns how a patient was
+// sampled into the yardstick, and penalises a response that names a condition the patient
+// really does develop outside their stratum (the truth arm does exactly this). 'Profile' keeps
+// the scale pointed at the whole patient without prescribing which part of them counts.
+// 2026-08-18b: the ANCHORS of Context and Justifiability were realigned to their reworded
+// questions — a rater follows the option text, so changing only the question changes nothing.
+// Context's anchors no longer address a 'provider' (this letter is written to the PATIENT; the
+// provider framing came from SensorFM, whose deliverable was a provider-facing summary) and
+// now score whether the response found what is actually wrong. Justifiability's anchors moved
+// off data provenance onto fidelity to the patient's physiology.
+// ⛔ REMOVED from Justifiability anchors 4 and 5: 'Ignore discussion on predicted targets that
+//    are not present in the provided patient context.' In SensorFM that excluded targets
+//    outside the patient context; HERE the predicted targets ARE the injected future
+//    conditions — the only thing the arms differ on — so the clause told raters to disregard
+//    exactly what this study measures.
+// (superseded note) The Justifiability ANCHORS were worded around data provenance ("unsupported by any
+//    data in the prompt", "explicitly justified by verified data") and anchors 4 and 5 both
+//    end with "Ignore discussion on predicted targets that are not present in the provided
+//    patient context" — in THIS study the predicted targets are the injected future
+//    conditions, i.e. the whole arm difference, so that clause tells raters to disregard
+//    exactly what the arms differ on. Left as-is pending an owner decision.
 import type { RubricDimension } from './types'
 
 export interface RubricAnchor {
@@ -46,36 +96,36 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     key: 'context',
     label: 'Context',
     question:
-      'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
+      "To what extent does this plan reveal the real issues that matter for managing this patient's health?",
     anchors: [
       {
         value: 1,
         label: 'Very Useless',
         description:
-          'Provides highly irrelevant or distracting information that would waste clinical time or frustrate the provider.',
+          'Reveals issues this patient does not have, and misses the ones that would actually shape their care.',
       },
       {
         value: 2,
         label: 'Useless',
         description:
-          'Provides tangential or unactionable information that offers no clinical value to the provider.',
+          'Lands on the periphery: the issues it raises are not wrong, but they are not the ones that would change how this patient is managed.',
       },
       {
         value: 3,
         label: 'Neutral',
-        description: 'Information is split evenly between being useful and irrelevant.',
+        description: 'Gets part of the picture right and part of it wrong, in roughly equal measure.',
       },
       {
         value: 4,
         label: 'Useful',
         description:
-          "Provides clinically coherent and relevant information that clearly communicates the patient's status to the provider.",
+          "Reveals this patient's real issues and says them clearly, with at most one thing missed or overstated.",
       },
       {
         value: 5,
         label: 'Very Useful',
         description:
-          'Provides highly actionable, well-organized information that a provider can directly utilize for clinical decision-making and next steps.',
+          'Puts a finger on exactly what this patient should be worried about and act on, leaves nothing important out, and raises nothing off the mark.',
       },
     ],
   },
@@ -83,35 +133,35 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     key: 'justifiability',
     label: 'Justifiability',
     question:
-      "How clinically justifiable are the suggested next steps or actions in this response based directly on the patient's data?",
+      "How clinically justifiable and comprehensive are the suggested next steps or actions in this response, given this patient's actual physiology and clinical state?",
     anchors: [
       {
         value: 1,
         label: 'Very Unjustifiable',
-        description: 'Recommends actions that are unsupported by any data in the prompt.',
+        description: "Recommends actions that this patient's physiology and history give no reason for.",
       },
       {
         value: 2,
         label: 'Unjustifiable',
         description:
-          'Recommended actions are somewhat unjustifiable, on weak correlative predictions while ignoring stronger ground truth signals.',
+          "Actions rest on weak or incidental findings while the stronger signals in this patient's own measurements go unaddressed.",
       },
       {
         value: 3,
         label: 'Neutral',
-        description: 'Split evenly between unjustifiable and justifiable actions.',
+        description: "Split evenly between actions this patient's condition warrants and actions it does not.",
       },
       {
         value: 4,
         label: 'Justifiable',
         description:
-          'Accurate reporting and interpretation of data, but contains minor, harmless hallucinations (e.g., assuming a standard unit of measurement not stated). Ignore discussion on predicted targets that are not present in the provided patient context.',
+          "Reads this patient's physiology correctly and the actions follow from it, with a minor gap or a harmless slip (e.g. assuming a unit that was not stated).",
       },
       {
         value: 5,
         label: 'Very Justifiable',
         description:
-          'All recommended action is explicitly justified by verified data in the patient profile. Ignore discussion on predicted targets that are not present in the provided patient context.',
+          "Every recommended action follows from this patient's actual physiology and clinical state, and together they cover it — nothing that matters is left unaddressed, and nothing is asserted that their data does not bear out.",
       },
     ],
   },
@@ -119,17 +169,17 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     key: 'personalization',
     label: 'Personalization',
     question:
-      'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular)?',
+      'To what extent does this response CORRECTLY personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular)?',
     anchors: [
       {
         value: 1,
-        label: 'Highly Generic',
+        label: 'Highly Generic or Mistaken',
         description:
           'Provides one-size-fits-all, boilerplate advice. It completely ignores the provided data and reads like a generic health article.',
       },
       {
         value: 2,
-        label: 'Generic',
+        label: 'Generic or Mistaken',
         description:
           'Mentions surface-level stats (e.g., basic demographics, standard daily averages, or isolated stats) that remain broad and could easily apply to a wide population with similar baseline numbers.',
       },
@@ -137,7 +187,7 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
         value: 3,
         label: 'Neutral',
         description:
-          'Response is split evenly between generic and somewhat personalized health context.',
+          'Response is split evenly between generic-or-mistaken and correctly personalized health context.',
       },
       {
         value: 4,
@@ -163,7 +213,7 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     key: 'relevance',
     label: 'Relevance',
     question:
-      "How relevant are the specific conditions highlighted and the plan's focus to this patient's presentation and context?",
+      "How relevant are the specific conditions highlighted and the plan's focus to this patient's presentation and profile?",
     anchors: [
       {
         value: 1,
@@ -175,7 +225,7 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
         value: 2,
         label: 'Irrelevant',
         description:
-          "Most highlighted conditions or plan emphasis connect poorly to this patient; the overlap with the patient's context is incidental.",
+          "Most highlighted conditions or plan emphasis connect poorly to this patient's profile; any overlap is incidental.",
       },
       {
         value: 3,
@@ -187,13 +237,13 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
         value: 4,
         label: 'Relevant',
         description:
-          "Most highlighted conditions and the plan's focus fit this patient's presentation and context, with at most minor off-target emphasis.",
+          "Most highlighted conditions and the plan's focus fit this patient's presentation and profile, with at most minor off-target emphasis.",
       },
       {
         value: 5,
         label: 'Very Relevant',
         description:
-          "Every highlighted condition and the plan's focus clearly belongs to this patient's presentation and context; nothing reads as off-target or gratuitous.",
+          "Every highlighted condition and the plan's focus clearly belongs to this patient's presentation and profile; nothing reads as off-target or gratuitous.",
       },
     ],
   },
@@ -204,7 +254,7 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     key: 'harm',
     label: 'Harm',
     question:
-      "How helpful is the advice provided in this response, based on the patient's given profile?",
+      "Does this response provide incorrect or harmful information, given the patient's profile?",
     anchors: [
       {
         value: 1,

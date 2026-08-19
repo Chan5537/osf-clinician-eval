@@ -50,8 +50,21 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
             <div className="space-y-2">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 For each response you will rate <strong>{itemsPerResponse} quality scales</strong>{' '}
-                from <strong>1 to 5</strong> — each score has a written description; pick the row
-                that best matches. The whole study takes about <strong>15–20 minutes</strong>.
+                from <strong>1 to 5</strong>. These are judgement calls — pick the score that
+                matches your impression. The whole study takes about{' '}
+                <strong>15–20 minutes</strong>.
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                What each case shows
+              </p>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Alongside the patient's question you have a <strong>Sleep panel</strong> (the
+                measurements from their overnight study), their <strong>Prior medical
+                history</strong>, and the <strong>Patient group</strong> — what brought them in.
+                It is all open by default, and worth a look before the responses.
               </p>
             </div>
 

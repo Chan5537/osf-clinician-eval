@@ -2,6 +2,7 @@ import type { Dispatch } from 'react'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import type { RubricAnchor } from '@/lib/rubric-config'
 import { likertKey } from '@/lib/types'
+import { AxisHelp } from '@/components/AxisHelp'
 import { cn } from '@/lib/utils'
 import type {
   RubricState,
@@ -110,9 +111,10 @@ function AnchorRow({
         >
           {anchor.label}
         </span>
-        <span className="block text-[13px] leading-snug text-muted-foreground">
-          {anchor.description}
-        </span>
+        {/* The per-anchor description is deliberately NOT rendered (owner, 2026-08-18): these are
+            subjective scores, and a paragraph under every option invited rule-matching against the
+            wording instead of a judgement. The text stays in rubric-config.ts and in the linked
+            rubric doc, so a rater who wants the long form can still read it. */}
       </span>
     </button>
   )
@@ -149,6 +151,29 @@ export function LikertDimensions({
               <span className="text-sm font-medium leading-snug text-foreground">
                 {dim.question}
               </span>
+              {/* The full anchor definitions live behind this toggletip rather than under every
+                  option (owner, 2026-08-18): a paragraph beneath all 25 choices invited matching
+                  the wording instead of judging, but bare labels drift between raters — "Useful"
+                  vs "Very Useful" carries no definition on its own. One click, without leaving
+                  the page. */}
+              <AxisHelp
+                label={dim.label}
+                cta="What 1–5 mean here"
+                text={
+                  <dl className="space-y-2">
+                    {dim.anchors.map((a) => (
+                      <div key={a.value}>
+                        <dt className="font-semibold tabular-nums">
+                          {a.value} · {a.label}
+                        </dt>
+                        <dd className="text-[13px] leading-snug text-muted-foreground">
+                          {a.description}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                }
+              />
             </div>
             <div
               role="radiogroup"
