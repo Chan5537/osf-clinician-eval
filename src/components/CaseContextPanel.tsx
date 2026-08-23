@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, FlaskConical, Moon, TrendingUp, UserRound } from 'lucide-react'
+import { ClipboardList, Moon, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -7,8 +7,10 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import { ConditionList } from '@/components/ConditionList'
+import { FutureRiskGrid } from '@/components/FutureRiskGrid'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext, groupLabel, selectionSummary, stratumLabel } from '@/lib/case-context'
+import { caseContext, inPanel23 } from '@/lib/case-context'
+import { withGivenFieldsOnly } from '@/lib/given-inputs'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
 
@@ -52,14 +54,16 @@ const OUTCOME_STYLE: SectionStyle = {
   rail: 'border-l-indigo-500',
   icon: 'text-indigo-600 dark:text-indigo-400',
 }
-// INTERNAL-only section (cohort group + selection reason): amber, the same hue as the arm-reveal
-// badge, so everything that exists only behind the reveal switch shares one look.
-// Patient group — teal, a normal reviewer-facing section (it used to sit behind the reveal
-// switch in amber; owner 2026-08-17 made it default and softened the wording).
-const GROUP_STYLE: SectionStyle = {
-  rail: 'border-l-teal-500',
-  icon: 'text-teal-600 dark:text-teal-400',
-}
+// REMOVED 2026-08-22 (owner): the "Patient group" / "Patient future risk" card and its teal style.
+// It named the COHORT SAMPLING criterion while reading as a claim about this patient's prognosis,
+// and it overlapped with the recorded-outcome block. With the disease rubric onboarded it would
+// have sat beside the scoring questions as a de-facto answer key — and a wrong one, since the
+// stratum is the sampling anchor, matching the dominant recorded risk type for only 4 of the 5
+// risky cases and naming a SLEEP FINDING ("short total sleep time") rather than any risk for all
+// three sleep-issue cases. What it usefully carried is now the left column of FutureRiskGrid.
+// ⚠️ Dropped with it: cohort group ('Sleep-issue' / 'Future-risk') and stratum are no longer
+//    visible anywhere in the UI. Put them back somewhere deliberate if a reviewer needs them —
+//    the sleep-issue strata would belong in the Sleep panel, not next to the outcome.
 
 // Row styling for one collapsible section. The left rail sits on the item so it spans the header
 // AND the opened body, which is what makes an expanded section still read as one block.
@@ -133,10 +137,18 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
   if (race && race !== 'Unknown') demoItems.push({ label: 'Race', value: race })
 
   const futureGt = context?.futureDiseaseGroundTruth ?? []
-  // Count what will actually be rendered — SleepIndexGrid drops null metrics (PLMI is null for
-  // 3 of the 5 sessions), so the raw field count would overstate it.
-  const sleepMetricCount = context
-    ? Object.values(context.sleepIndex).filter((v) => v != null).length
+  // The header count matches what the block actually lists — it is scoped to the 23-disease panel
+  // (see FutureRiskGrid), so counting the raw recorded list would promise rows that are not there.
+  const futureGtInPanel = futureGt.filter(inPanel23)
+
+  // The sleep panel shows ONLY what the system was given (owner 2026-08-22). Filtering here — at
+  // the one place the sidecar's index enters the UI — means the numeric grid, the severity bars,
+  // the category chart and the stage donut all inherit it, instead of each filtering separately.
+  const givenSleepIndex = context ? withGivenFieldsOnly(context.sleepIndex) : null
+  // Count what will actually be rendered — nulls are dropped downstream, so the raw field count
+  // would overstate it.
+  const sleepMetricCount = givenSleepIndex
+    ? Object.values(givenSleepIndex).filter((v) => v != null).length
     : 0
 
   return (
@@ -179,8 +191,12 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             />
           </AccordionTrigger>
           <AccordionContent>
-            {context ? (
-              <SleepIndexGrid sleepIndex={context.sleepIndex} category={category} />
+            {context && givenSleepIndex ? (
+              <SleepIndexGrid
+                sleepIndex={givenSleepIndex}
+                stageIndex={context.sleepIndex}
+                category={category}
+              />
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
@@ -197,9 +213,6 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             />
           </AccordionTrigger>
           <AccordionContent>
-            <p className="mb-1.5 text-[11px] leading-snug text-muted-foreground">
-              Conditions the patient was already diagnosed with at the time of the sleep study.
-            </p>
             <ConditionList
               conditions={ehrHistory}
               emptyLabel="No coded history recorded at the time of the study."
@@ -212,55 +225,35 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             <SectionHeader
               icon={TrendingUp}
               style={OUTCOME_STYLE}
-              // Label deliberately avoids the phrase the blinding gate greps for (see README);
-              // "recorded outcome" is also plainer for a clinician than the ML term.
-              title="Future disease · recorded outcome"
-              meta={context ? plural(futureGt.length, 'condition') : 'unavailable'}
+              // Owner 2026-08-22. Three things the old "Future disease · recorded outcome" left
+              // unsaid, all of which a rater needs:
+              //   - EHR-recorded: where it comes from, and by saying so it also carries the
+              //     "not any system's prediction" point the old "recorded outcome" was there for;
+              //   - NEW diagnoses: this list excludes anything already present at the study, so it
+              //     reads as one half of a pair with "Prior medical history" directly above it —
+              //     before the study vs after it. "Future disease" alone reads as "diseases they
+              //     have later", which would include the prevalent ones;
+              //   - 6 years: the window was only visible after expanding the section.
+              // "new diagnoses" over the epidemiological "incident disease": plainer to a clinician.
+              // ⛔ Still avoids the phrases the blinding gate greps for (see README) — no
+              //    "ground truth", no "oracle" — even though that gate scans response content
+              //    rather than UI labels.
+              title="EHR-recorded new diagnoses · 6 years"
+              meta={context ? plural(futureGtInPanel.length, 'condition') : 'unavailable'}
             />
           </AccordionTrigger>
           <AccordionContent>
             {context ? (
-              <>
-                <p className="mb-1.5 text-[11px] leading-snug text-muted-foreground">
-                  New-onset conditions this patient went on to be diagnosed with, within the
-                  6-year window after the sleep study. Recorded outcome — not any
-                  system&apos;s prediction.
-                </p>
-                <ConditionList
-                  conditions={futureGt}
-                  emptyLabel="No new-onset condition recorded in the 6-year window."
-                />
-              </>
+              <FutureRiskGrid
+                conditions={futureGt}
+                emptyLabel="No new-onset condition recorded in the 6-year window."
+              />
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
           </AccordionContent>
         </AccordionItem>
 
-        {/* Why this patient is in the batch — shown by default: it carries no arm
-            information, and their question already discloses the group. */}
-        {context?.selection && (
-          <AccordionItem value="selection" className={itemClass(GROUP_STYLE)}>
-            <AccordionTrigger className={TRIGGER_CLASS}>
-              <SectionHeader
-                icon={FlaskConical}
-                style={GROUP_STYLE}
-                title="Patient group"
-                meta={selectionSummary(context.selection)}
-              />
-            </AccordionTrigger>
-            <AccordionContent>
-              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
-                <dt className="text-muted-foreground">Came in with</dt>
-                <dd className="font-medium">{groupLabel(context.selection.cohortGroup)}</dd>
-                <dt className="text-muted-foreground">
-                  {context.selection.cohortGroup === 'risky' ? 'Disease category' : 'Sleep issue'}
-                </dt>
-                <dd className="font-medium">{stratumLabel(context.selection.stratum)}</dd>
-              </dl>
-            </AccordionContent>
-          </AccordionItem>
-        )}
       </Accordion>
     </section>
   )

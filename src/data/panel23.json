@@ -1,0 +1,34 @@
+{
+ "_meta": {
+  "what": "The 23-disease panel — the output vocabulary the responses choose from (menu_scope='panel23').",
+  "generated_from": "osf-LLM-prompt/v28_ui_batch/sleepfm/disease_prediction/*.pkl -> panel_pred[].clinical_name",
+  "verified": "identical across all 8 case pkls of the v28 batch; every name falls inside the five menu groups",
+  "generated_on": "2026-08-23",
+  "n": 23
+ },
+ "categoryByName": {
+  "Acute and chronic tonsillitis": "respiratory",
+  "Allergic rhinitis": "respiratory",
+  "Anxiety disorder": "mental disorders",
+  "Asthma": "respiratory",
+  "Chronic tonsillitis and adenoiditis": "respiratory",
+  "Congestive heart failure; nonhypertensive": "circulatory system",
+  "Coronary atherosclerosis": "circulatory system",
+  "Depression": "mental disorders",
+  "Essential hypertension": "circulatory system",
+  "Heart failure NOS": "circulatory system",
+  "Hyperlipidemia": "endocrine/metabolic",
+  "Hypertensive heart and/or renal disease": "circulatory system",
+  "Insomnia": "neurological",
+  "Ischemic Heart Disease": "circulatory system",
+  "Mitral valve disease": "circulatory system",
+  "Nonrheumatic mitral valve disorders": "circulatory system",
+  "Nonrheumatic tricuspid valve disorders": "circulatory system",
+  "Obesity": "endocrine/metabolic",
+  "Obstructive sleep apnea": "neurological",
+  "Respiratory failure": "respiratory",
+  "Sleep disorders": "neurological",
+  "Tobacco use disorder": "mental disorders",
+  "Type 2 diabetes": "endocrine/metabolic"
+ }
+}
