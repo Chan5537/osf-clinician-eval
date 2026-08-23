@@ -24,7 +24,15 @@ import { advance, touch, park, resume } from './timing'
 // v8 = TIMING instrumentation only (no rubric/content change): per-case active/idle accounting
 //      alongside the original wall clock, plus per-response active time. CaseRubric gains
 //      `timing`, so the stored shape changes and stale v7 sessions must be discarded.
-export const SCHEMA_VERSION = 8
+// v9 = v28 letter batch (group-level Assessment) on the same v16 8-patient set.
+// v10 = the DISEASE rubric is onboarded (lib/rubric-config-disease.ts). The Likert KEYS are
+//       unchanged, so a stale v9 session would deserialise cleanly and silently present
+//       answers given to the health-management questions as answers to the disease ones.
+//       Same keys + different questions is exactly the case a version bump exists to catch.
+// v11 = the disease rubric is rewritten to the owner's five axes (Factuality / Safe /
+//       Personalization / Trustworthy / Justifiability). Keys unchanged again, questions
+//       and anchors changed again — same reason as v10, so the same bump.
+export const SCHEMA_VERSION = 11
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

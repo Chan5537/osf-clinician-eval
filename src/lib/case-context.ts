@@ -7,13 +7,15 @@
 // the future-disease list is the recorded ground truth, so none of it can leak arm identity.
 
 import raw from '@/data/case-context.generated.json'
+import phecodeCategories from '@/data/phecode-categories.json'
+import panel23 from '@/data/panel23.json'
 
 export interface SleepIndex {
   [field: string]: number | null
 }
 
 // Why the patient is in the batch: the sub-group they were sampled from. Shown to reviewers as
-// "patient group" — the raw keys ('healthy'/'risky') are internal selector names and are never
+// "Patient future risk" (renamed from "patient group", owner 2026-08-22) — the raw keys ('healthy'/'risky') are internal selector names and are never
 // rendered: they are loaded, and under the v14 cohort also inaccurate, since the sleep-concern
 // group does go on to develop conditions. This carries no arm information, and the patient's own
 // question already discloses which group they are in.
@@ -72,7 +74,24 @@ interface CaseContextFile {
 const data = raw as CaseContextFile
 
 export const CATEGORY_ORDER = data.categoryOrder
-export const DISEASE_CATEGORY = data.diseaseCategoryByName
+
+// Disease -> organ-system category.
+//
+// ⛔ The sidecar's own `diseaseCategoryByName` is WRONG for 17 of its 82 names, and every one of
+//    those errors files the condition under 'circulatory system' — Respiratory failure, Type 1
+//    diabetes, Senile cataract, Spinal stenosis, Sensorineural hearing loss, both anemias, ...
+//    That is a one-directional fallback bug, not noise, and it lands on the single category the
+//    responses name most often, so it would systematically flatter a 'circulatory' call in
+//    exactly the section a clinician checks it against.
+//    The authoritative phecode map (src/data/phecode-categories.json, generated from
+//    exp/sleepfm/phecode_map_authoritative.json) therefore takes precedence; the sidecar map is
+//    kept only as the fallback for names the authoritative map does not carry.
+const AUTHORITATIVE_CATEGORY = (phecodeCategories as { categoryByName: Record<string, string> })
+  .categoryByName
+export const DISEASE_CATEGORY: Record<string, string> = {
+  ...data.diseaseCategoryByName,
+  ...AUTHORITATIVE_CATEGORY,
+}
 
 export function caseContext(caseId: string): CaseContextEntry | undefined {
   return data.cases[caseId]
@@ -140,6 +159,89 @@ export function formatMetric(value: number): string {
 export interface ConditionGroup {
   category: string
   conditions: string[]
+}
+
+// --- the 23-disease panel --------------------------------------------------- //
+// The output vocabulary the responses choose from (`menu_scope: "panel23"`). A response can only
+// name a condition on this list, so the recorded-outcome block is scoped to it for the same reason
+// the sleep panel is scoped to the given metrics: a rater should not be able to fault a letter for
+// "missing" something it was never offered.
+//
+// ⛔ SOURCE OF TRUTH is the case data, NOT this file: `panel_pred[].clinical_name` in each case
+//    pkl. src/data/panel23.json was generated from the v28 batch's eight pkls and was identical
+//    across all of them. There is no automatic link between the two repos — re-generate it if the
+//    panel composition changes. Every one of the 23 falls inside the five menu groups, so scoping
+//    to it also empties the "outside the five groups" bucket.
+const PANEL23_CATEGORY = (panel23 as { categoryByName: Record<string, string> }).categoryByName
+export const PANEL23_NAMES: ReadonlySet<string> = new Set(Object.keys(PANEL23_CATEGORY))
+
+export function inPanel23(conditionName: string): boolean {
+  return PANEL23_NAMES.has(conditionName)
+}
+
+// --- future-risk group roll-up ---------------------------------------------- //
+// The v28 letter answers at GROUP level: it names one of five organ-system groups, not a
+// diagnosis. To judge whether that call was right, the clinician has to know which group this
+// patient's recorded outcome actually falls in — which previously meant mentally mapping a list
+// of up to 22 condition names onto a group. This does that mapping on screen instead.
+//
+// The five groups are the closed menu the response chooses from; a recorded condition outside
+// them (musculoskeletal, sense organs, neoplasms, ...) is counted under `outside` rather than
+// forced into one, because the response was never offered those and cannot be marked wrong for
+// not naming them.
+
+// Menu group -> the sidecar/phecode category strings that roll into it.
+const MENU_GROUP_BY_CATEGORY: Record<string, string> = {
+  'circulatory system': 'circulatory',
+  'endocrine/metabolic': 'endocrine/metabolic',
+  'mental disorders': 'mental',
+  neurological: 'neurological',
+  respiratory: 'respiratory',
+}
+// Display order for the roll-up when counts tie — the same order the prompt lists the menu in.
+export const MENU_GROUPS = [
+  'circulatory',
+  'endocrine/metabolic',
+  'mental',
+  'neurological',
+  'respiratory',
+] as const
+export type MenuGroup = (typeof MENU_GROUPS)[number]
+
+export function menuGroupOf(conditionName: string): MenuGroup | null {
+  const category = DISEASE_CATEGORY[conditionName]
+  const group = category ? MENU_GROUP_BY_CATEGORY[category] : undefined
+  return (group as MenuGroup | undefined) ?? null
+}
+
+export interface FutureRiskRollup {
+  // Menu groups present in the recorded outcome, most conditions first.
+  groups: { group: MenuGroup; conditions: string[] }[]
+  // Recorded conditions that fall outside the five-group menu.
+  outside: string[]
+}
+
+export function futureRiskRollup(conditions: string[]): FutureRiskRollup {
+  const buckets = new Map<MenuGroup, string[]>()
+  const outside: string[] = []
+  for (const name of conditions) {
+    const group = menuGroupOf(name)
+    if (!group) {
+      outside.push(name)
+      continue
+    }
+    const bucket = buckets.get(group)
+    if (bucket) bucket.push(name)
+    else buckets.set(group, [name])
+  }
+  const groups = [...buckets.entries()]
+    .map(([group, list]) => ({ group, conditions: list }))
+    .sort(
+      (a, b) =>
+        b.conditions.length - a.conditions.length ||
+        MENU_GROUPS.indexOf(a.group) - MENU_GROUPS.indexOf(b.group),
+    )
+  return { groups, outside }
 }
 
 // Bucket a flat disease-name list into organ-system groups, in CATEGORY_ORDER.

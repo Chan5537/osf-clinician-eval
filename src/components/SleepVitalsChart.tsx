@@ -13,9 +13,11 @@ import { cn } from '@/lib/utils'
 
 // The Patient Panel's sleep-vitals visualization: a compact, browser-native severity-bar chart.
 //
-// It reads the SAME `sleepIndex` numbers as the numeric grid (human_eval.json source), so the chart
-// and the grid can never disagree — there is no npz/CSV recomputation (the old baked matplotlib PNG,
-// which drew from a different, conflicting source, was removed 2026-08-07).
+// Its BARS read the SAME `sleepIndex` numbers as the numeric grid (human_eval.json source), so the
+// chart and the grid can never disagree — there is no npz/CSV recomputation (the old baked matplotlib
+// PNG, which drew from a different, conflicting source, was removed 2026-08-07). The stage donut is
+// the one exception: it reads `stageIndex`, the full recorded set, because a donut missing two of its
+// four slices would be drawn wrong rather than drawn partially.
 //
 // It shows ONLY the indices clinically relevant to the case's organ CATEGORY (indicesForCategory) —
 // e.g. a circulatory case shows AHI/ODI/SpO₂/arousals, a neurological case shows sleep stages/PLMI.
@@ -23,7 +25,12 @@ import { cn } from '@/lib/utils'
 // no clinical band render as a plain grey bar with the value only. Null indices are omitted.
 
 interface Props {
+  // Metrics the system was GIVEN — drives the severity bars and the reference rows, i.e. every
+  // number this figure states.
   sleepIndex: SleepIndex
+  // FULL recorded index, used for the stage donut and nothing else. See StageDonut for why the
+  // donut is allowed to read beyond the given set.
+  stageIndex: SleepIndex
   category: string
 }
 
@@ -112,9 +119,23 @@ function ReferenceRow({ field, value }: { field: string; value: number }) {
 }
 
 // An inline-SVG sleep-stage donut (the shape carried over from the old matplotlib figure), drawn from
-// the same N1/N2/N3/REM percentages the grid shows. No image, no external lib — arc paths computed
-// from cumulative angles. Center shows TST if available.
+// the recorded N1/N2/N3/REM percentages. No image, no external lib — arc paths computed from
+// cumulative angles. Center shows TST if available.
+// NOTE: N1 and N2 are deliberately NOT in the numeric grid any more, so the donut is the only place
+// they appear — as shape, not as figures. See the comment inside the function.
 function StageDonut({ sleepIndex }: { sleepIndex: SleepIndex }) {
+  // Owner 2026-08-22: the donut EARNS ITS PLACE even though N1/N2 were not given to the system —
+  // it is the one view of overall sleep architecture, and a clinician reads the shape of the night
+  // from it. What does not need to be on screen is the supporting numbers: N1 and N2 stay out of
+  // the numeric grid, so the figure informs the reader without adding two metrics they might then
+  // fault a response for ignoring. It is therefore fed the FULL recorded index, not the given-only
+  // one — the deliberate exception to the panel's "given metrics only" rule.
+  //
+  // ⛔ ALL FOUR stages or nothing. The donut normalises by the sum of the slices it has, so a
+  //    partial set is not a partial donut — it is a WRONG one: with only N3 (10%) and REM (15%)
+  //    present the ring would draw them as 40% / 60% of the night.
+  if (SLEEP_STAGES.some((s) => sleepIndex[s.field] == null)) return null
+
   const slices = SLEEP_STAGES.map((s) => ({ ...s, value: sleepIndex[s.field] })).filter(
     (s) => s.value != null && (s.value as number) > 0,
   ) as { field: string; label: string; color: string; value: number }[]
@@ -196,10 +217,13 @@ function StageDonut({ sleepIndex }: { sleepIndex: SleepIndex }) {
   )
 }
 
-export function SleepVitalsChart({ sleepIndex, category }: Props) {
+export function SleepVitalsChart({ sleepIndex, stageIndex, category }: Props) {
   // the category's index list, minus any that are null/absent for this session
   const fields = indicesForCategory(category).filter((f) => sleepIndex[f] != null)
-  const hasStages = SLEEP_STAGES.some((s) => sleepIndex[s.field] != null)
+  // Read from stageIndex, not sleepIndex: the donut draws the FULL architecture (see StageDonut).
+  // `every`, matching StageDonut's own all-or-nothing rule, so the figure is not kept alive by a
+  // stage set the donut will then refuse to draw.
+  const hasStages = SLEEP_STAGES.every((s) => stageIndex[s.field] != null)
   // split into clinically-scored (has an AASM band) vs plain reference values (no band). Reference
   // values are shown as bare numbers in their own group — never a coloured/greyed bar (2026-08-10).
   const banded = fields.filter((f) => SLEEP_BANDS[f])
@@ -227,7 +251,7 @@ export function SleepVitalsChart({ sleepIndex, category }: Props) {
           <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
             Sleep stages
           </p>
-          <StageDonut sleepIndex={sleepIndex} />
+          <StageDonut sleepIndex={stageIndex} />
         </div>
       )}
 

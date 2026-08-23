@@ -73,6 +73,9 @@
 //    conditions, i.e. the whole arm difference, so that clause tells raters to disregard
 //    exactly what the arms differ on. Left as-is pending an owner decision.
 import type { RubricDimension } from './types'
+// Type-only above, value below: the disease set imports RubricDimensionDef back from THIS module,
+// so the type import there is erased at compile time and no runtime cycle is created.
+import { RUBRIC_DIMENSIONS_DISEASE } from './rubric-config-disease'
 
 export interface RubricAnchor {
   value: 1 | 2 | 3 | 4 | 5
@@ -87,7 +90,11 @@ export interface RubricDimensionDef {
   anchors: RubricAnchor[]
 }
 
-export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
+// The HEALTH-MANAGEMENT set: the instrument as it stood through v27, asking about "this plan".
+// No longer the active set — see the ACTIVE RUBRIC switch at the bottom of this file — but kept
+// here in full, because every batch scored up to and including v27 was scored on these exact
+// stems and the wording has to stay recoverable to report those numbers honestly.
+export const RUBRIC_DIMENSIONS_HEALTH_MANAGEMENT: RubricDimensionDef[] = [
   {
     // VERBATIM SensorFM "Context" criterion (Survey ED.1). The whole-response "useful summary to a
     // provider" axis — clinical coherence + decision-readiness. Added 2026-08-10 (Chan+Zitao) as the
@@ -287,3 +294,18 @@ export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = [
     ],
   },
 ]
+
+// ── ACTIVE RUBRIC ─────────────────────────────────────────────────────────────────────────────
+// One switch, one import path. Every consumer (LikertRubric, LandingScreen, reducer, export)
+// imports `RUBRIC_DIMENSIONS` from this module and does not care which set it resolves to, so
+// swapping instruments is this line and nothing else.
+//
+// Onboarded 2026-08-22 (owner): the DISEASE set, because the v28 letter's deliverable is a
+// future-disease call rather than a management plan. To go back, point this at
+// RUBRIC_DIMENSIONS_HEALTH_MANAGEMENT — and bump SCHEMA_VERSION in lib/session.ts when you do,
+// for the same reason it was bumped on the way in.
+//
+// ⛔ The two sets share their KEYS but not their QUESTIONS. Stored answers therefore look
+//    perfectly valid across a switch while meaning something different, which is why the version
+//    bump (which discards stale sessions) is part of the switch rather than optional.
+export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = RUBRIC_DIMENSIONS_DISEASE
