@@ -174,32 +174,47 @@ export function LikertDimensions({
                   </dl>
                 }
               />
-            </div>
-            {/* "How to score it" — the procedure, NOT behind the toggletip (2026-08-24, v4 rubric).
-                Factuality and Safety each send the rater to a named panel, and Trustworthiness
-                tells them to score fit rather than agreement; a rater who does not see that before
-                clicking invents their own procedure. That is the documented cause of the ±0.55
-                rater sign-flip in the 2026-08-18 internal round, where two raters produced equal
-                and opposite B−A effects on the same eight cases. The anchor DEFINITIONS stay
-                behind the toggletip as before — this is the method, not the scale. */}
+              {/* "How to score it" + the worked example, behind a toggletip (Zitao, 2026-08-25).
+                HISTORY, because this reverses a deliberate decision and the reasoning still
+                stands: on 2026-08-24 this block was placed INLINE precisely so a rater could not
+                miss it — Factuality and Safety each send the rater to a named panel, and a rater
+                who invents their own procedure is the documented cause of the ±0.55 sign-flip in
+                the 2026-08-18 internal round.
+                WHAT CHANGED: the v4 rubric put five of these on screen per response, three
+                responses to a page — roughly 1,500 words of standing instruction competing with
+                the letters being judged. Zitao's report from using the interface is that the
+                page is too dense to read, and instruction nobody reads protects nobody.
+                WHY THIS IS ACCEPTABLE: the CTA names what is inside ("How to score · example")
+                rather than hiding it behind a bare icon, and it sits beside the anchor toggletip
+                raters already open by habit.
+                RESIDUAL RISK, recorded honestly: the panel each axis is scored against is now
+                one click away rather than on the page. An inline chip naming that panel was
+                built and then removed as unnecessary (Zitao, same day) — the rubric pin plus
+                example was judged enough. If the clinician round shows raters scoring Factuality
+                or Safety without opening the outcome panel, this is the first thing to revisit. */}
             {(dim.howToScore || dim.example) && (
-              <div className="mt-1.5 px-3">
-                <div className="rounded border border-border/60 bg-background/55 px-2.5 py-2">
-                  {dim.howToScore && (
-                    <p className="text-[12.5px] leading-snug text-muted-foreground">
-                      <span className="font-semibold text-foreground/80">How to score it: </span>
-                      {dim.howToScore}
-                    </p>
-                  )}
-                  {dim.example && (
-                    <p className="mt-1.5 text-[12.5px] italic leading-snug text-muted-foreground">
-                      <span className="font-semibold not-italic text-foreground/80">Example: </span>
-                      {dim.example}
-                    </p>
-                  )}
-                </div>
-              </div>
+              <AxisHelp
+                label={dim.label}
+                cta="How to score · example"
+                text={
+                  <div className="space-y-2">
+                    {dim.howToScore && (
+                      <p className="text-[13px] leading-snug">
+                        <span className="font-semibold">How to score it: </span>
+                        <span className="text-muted-foreground">{dim.howToScore}</span>
+                      </p>
+                    )}
+                    {dim.example && (
+                      <p className="text-[13px] leading-snug">
+                        <span className="font-semibold">Example: </span>
+                        <span className="italic text-muted-foreground">{dim.example}</span>
+                      </p>
+                    )}
+                  </div>
+                }
+              />
             )}
+            </div>
             <div
               role="radiogroup"
               aria-label={`${dim.label} — 1 to 5`}
