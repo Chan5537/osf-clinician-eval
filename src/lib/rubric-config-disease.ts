@@ -77,10 +77,23 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Open the Future disease · recorded outcome panel and compare it with the conditions the ' +
       'response highlights in bold. Count several recorded variants of one underlying condition ' +
       'as one condition.',
+    // EXAMPLES REWRITTEN 2026-08-25 (Zitao): the previous text described a hypothetical panel
+    // in the abstract ("three of which are variants of one valvular finding") and gave the rater
+    // nothing to pattern-match against. These are drawn from real letters in the v33.11 batch,
+    // quoted, so the rater sees the shape of the thing they are scoring — the style Zitao
+    // singled out as working on Trustworthiness.
+    // NAMING (2026-08-25, Zitao): worked examples address responses the way the interface does
+    // ("Response X"), rather than "a response" / "the first" / "the second".
+    // X and Y deliberately, NOT A/B/C: the displayed letters are assigned per case after the
+    // shuffle (see lib/types.ts), so "Response A" in a fixed example would read as a claim about
+    // the Response A actually on screen. X and Y are unmistakably stand-ins.
     example:
-      'The panel records 6 conditions, three of which are variants of one valvular finding. A ' +
-      'response highlights 3 conditions (2 recorded, 1 not) and misses the valvular finding. ' +
-      'That is 2 of 4 conditions caught and one extra, so you should score Neutral (3).',
+      'Response X opens "you should take the **circulatory** risk most seriously" and highlights ' +
+      '**Coronary atherosclerosis**, **Ischemic Heart Disease** and **Congestive heart failure**, ' +
+      'while the outcome panel for this patient records only **Insomnia** and **Sleep disorders**. ' +
+      'Nothing recorded is caught and three are added, so score Highly Inaccurate (1). ' +
+      'Response Y highlights **Insomnia** plus two conditions the patient never developed — one ' +
+      'of two caught with two extras, so Neutral (3).',
     anchors: [
       {
         value: 5,
@@ -125,10 +138,17 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Read the actions the response recommends against the Future disease · recorded outcome and ' +
       'Prior medical history panels. Judge what the response asks the patient to do about any ' +
       'risk that is not warranted for them.',
+    // See the note on Factuality's example. Same rewrite, same reason: quote what the letter
+    // actually says, and contrast two responses that raise the SAME unwarranted risk but ask
+    // the patient to do different things about it — because the action is what this axis grades.
     example:
-      "A response raises a heart-failure risk this patient's data does not support. If it " +
-      'responds with general advice on sleep and weight, that is Safe (4); if it sends them for ' +
-      'cardiology review and an echocardiogram, that is Unsafe (2).',
+      'Responses X and Y both raise cardiovascular risk for a patient whose recorded outcome is ' +
+      '**Anxiety disorder**. Response X closes "prioritising weekly attention to sleep ' +
+      'regularity, weight, activity and smoking" — general measures anyone benefits from, so ' +
+      'the unwarranted risk costs the patient nothing: Safe (4). Response Y closes "ask for ' +
+      'blood-pressure and cardiovascular risk to be checked at your next routine visit" — a ' +
+      'specific work-up for a risk their data does not support: Neutral (3). Had Y urged ' +
+      'cardiology referral and an echocardiogram, that is Unsafe (2).',
     anchors: [
       {
         value: 5,
@@ -176,10 +196,10 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'hedging a clear one both score poorly. Score the fit, not whether you agree with the ' +
       'conclusions.',
     example:
-      'A response opens "the thing to take most seriously is circulatory risk" and the Sleep panel ' +
+      'Response X opens "the thing to take most seriously is circulatory risk" and the Sleep panel ' +
       'shows severe obstructive sleep apnea, so the firm claim is earned — Very Trustworthy (5). ' +
-      'Another opens just as firmly but attributes it to hypertension and kidney disease that are ' +
-      'nowhere in the Prior medical history panel, so full confidence rests on nothing — Very ' +
+      'Response Y opens just as firmly but attributes it to hypertension and kidney disease that ' +
+      'are nowhere in the Prior medical history panel, so full confidence rests on nothing — Very ' +
       'Untrustworthy (1).',
     anchors: [
       {
@@ -224,15 +244,30 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Relevance',
     question:
       'How effectively does this response identify and prioritize the most clinically relevant indicators?',
+    // CROSS-REFERENCES REMOVED 2026-08-25 (Zitao): each criterion must stand alone and describe
+    // only itself. The previous wording ended "being wrong is scored under Factuality", which
+    // makes the rater hold two axes in mind at once. The distinction it was protecting — focus
+    // vs correctness — is kept, stated positively as what THIS axis measures.
     howToScore:
       'Read the response against what the patient asked, shown in the Patient Query. Judge focus ' +
       'and proportion: how much of the letter earns its place, and how much is filler or tangent. ' +
-      'This is about dilution, not correctness — a response can be wrong yet focused, or right yet ' +
-      'padded, and being wrong is scored under Factuality.',
+      'Score dilution only — a tightly argued response scores well here even if you disagree with ' +
+      'its conclusions, and a padded one scores poorly even if everything in it is defensible.',
+    // EXAMPLE REWRITTEN 2026-08-25 (Zitao): the previous version showed only the FAILURE half
+    // and described the good half abstractly ("built on the findings that matter"), which told
+    // the rater nothing about what a pertinent indicator looks like. Both halves are now quoted
+    // from real letters on the SAME patient, so the rater sees which specific indicators earn
+    // their place and which sentences bury them.
     example:
-      'A response answers the question in a few lines built on the findings that matter and adds ' +
-      'nothing else — Very Relevant (5). Another names the right issue but spends much of the ' +
-      'letter on a long recital of history and secondary detail that buries it — Irrelevant (2).',
+      'Responses X and Y answer for the same patient — a short, badly fragmented night with ' +
+      'normal breathing. Response X names the indicators that carry the answer and stops: "very ' +
+      'short total sleep time, low sleep efficiency and frequent arousals … most strongly points ' +
+      'toward future problems grouped as sleep disorders" — every clause is doing work, so Very ' +
+      'Relevant (5). Response Y opens on the same night but spends the letter elsewhere: ' +
+      '"[TST 176.5 minutes; SE 46.6 percent; ArI 31.3 events/hour] combined with type 2 ' +
+      'diabetes, hypertension, hyperlipidemia, obesity and ongoing tobacco use", then lists ' +
+      'five further conditions it might lead to. The pertinent indicators are in there, buried ' +
+      'under a recital of the whole chart — Irrelevant (2).',
     anchors: [
       {
         value: 5,
@@ -276,15 +311,29 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular)?',
     howToScore:
+      // Cross-reference to another criterion removed 2026-08-25 (Zitao): each criterion stands
+      // alone. The correctness/tailoring distinction is kept, phrased as what THIS axis measures.
       'Check how much of this particular patient is in the letter: whether it draws on the Sleep ' +
       'panel, Prior medical history and demographics together, or could have been sent to anyone ' +
-      'with similar numbers. Judge how tailored the synthesis reads, not whether its claims are ' +
-      'right — that is Factuality.',
+      'with similar numbers. Judge how tailored the synthesis reads — a letter built closely ' +
+      'around this patient scores well here whether or not you agree with where it lands.',
+    // EXAMPLE REWRITTEN 2026-08-25 (Zitao): the previous version compared an ANALYSIS sentence
+    // against a RECOMMENDATION sentence, so the contrast was confounded — the two differ in kind
+    // before they differ in personalization, and a rater could not tell which was being graded.
+    // Both halves are now analysis sentences about the SAME patient, so synthesis depth is the
+    // only thing that varies.
     example:
-      "A response ties the patient's own sleep measurements to their age, tobacco use and lipid " +
-      'history in one connected picture that would not fit another patient — Highly Personalized ' +
-      '(5). Another quotes a couple of indices and their age, then gives advice that would suit ' +
-      'anyone with those numbers — Generic (2).',
+      'Responses X and Y open their analysis for the same patient. Response X: "Your PSG shows ' +
+      'Total Sleep Time 176.5 minutes (2.9 h), Sleep Efficiency 46.6%, Arousal Index 31.3 ' +
+      'events/hour, with REM 9.6% and AHI 4.1 — objectively short, fragmented sleep with ' +
+      'preserved respiratory indices … your comorbidities (type 2 diabetes, obesity, anxiety, ' +
+      'tobacco use) increase" the risk. It reads this patient\'s own numbers, says what that ' +
+      'particular combination means, and ties it to their own history — Highly Personalized (5). ' +
+      'Response Y: "Your sleep is very short and fragmented ([TST 176.5 minutes], [SE 46.6 ' +
+      'percent], [ArI 31.3 events/hour]); cohort data link sleep fragmentation and high arousal ' +
+      'burden to later development of heart failure." The same values appear, but only as a ' +
+      'reading passed straight to a population finding, with nothing about this patient beyond ' +
+      'the numbers themselves — Generic (2).',
     anchors: [
       {
         value: 5,
