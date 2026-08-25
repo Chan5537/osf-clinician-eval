@@ -225,20 +225,23 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
             <SectionHeader
               icon={TrendingUp}
               style={OUTCOME_STYLE}
-              // Owner 2026-08-22. Three things the old "Future disease · recorded outcome" left
-              // unsaid, all of which a rater needs:
-              //   - EHR-recorded: where it comes from, and by saying so it also carries the
-              //     "not any system's prediction" point the old "recorded outcome" was there for;
-              //   - NEW diagnoses: this list excludes anything already present at the study, so it
-              //     reads as one half of a pair with "Prior medical history" directly above it —
-              //     before the study vs after it. "Future disease" alone reads as "diseases they
-              //     have later", which would include the prevalent ones;
-              //   - 6 years: the window was only visible after expanding the section.
-              // "new diagnoses" over the epidemiological "incident disease": plainer to a clinician.
+              // Owner 2026-08-22, reworded 2026-08-25 (Zitao) from
+              // "EHR-recorded new diagnoses · 6 years" to plain clinical English.
+              // The 08-22 rationale listed three things the label had to carry; all three
+              // survive the rewording, which is why it is safe:
+              //   - NOT A PREDICTION. Previously carried by "EHR-recorded". Now carried by
+              //     "developed" — a past-tense fact about what happened to this patient, which
+              //     no reading turns into a system's output.
+              //   - NEW diagnoses only, i.e. excluding what was already present at the study.
+              //     Previously "new diagnoses"; now "developed", which likewise cannot describe
+              //     a condition the patient already had. The pairing with "Prior medical
+              //     history" directly above still reads as before-the-study vs after-it.
+              //   - THE 6-YEAR WINDOW stays on the collapsed header rather than hiding inside
+              //     the section.
               // ⛔ Still avoids the phrases the blinding gate greps for (see README) — no
               //    "ground truth", no "oracle" — even though that gate scans response content
               //    rather than UI labels.
-              title="EHR-recorded new diagnoses · 6 years"
+              title="Future disease(s) patient developed in 6 years"
               meta={context ? plural(futureGtInPanel.length, 'condition') : 'unavailable'}
             />
           </AccordionTrigger>
