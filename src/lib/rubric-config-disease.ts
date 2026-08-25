@@ -73,10 +73,22 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Factuality',
     question:
       'Does this response accurately highlight the conditions this patient later developed?',
+    // SOFTENED 2026-08-25 (Zitao): the previous wording — "compare it with … Count several
+    // recorded variants of one underlying condition as one condition" — turned this axis into an
+    // arithmetic exercise. Two problems with that. It asked for a tally the rater then had to
+    // convert into a 1-5 judgement with no stated conversion, and it CONTRADICTED its own
+    // anchors, which are deliberately soft ("all / most / about half / few / none"). A rater
+    // counting 2-of-4-plus-one-extra has no rule telling them whether that is 3 or 4, so the
+    // instruction created false precision and then abandoned them at the point of decision.
+    // The clinical-judgement framing now matches the other four axes, all of which say "Judge".
+    // What is KEPT: which panel to open (the axis is meaningless without it), and the guidance
+    // that closely-related recorded variants are one condition — reworded as how to READ the
+    // panel rather than how to count it.
     howToScore:
-      'Open the Future disease · recorded outcome panel and compare it with the conditions the ' +
-      'response highlights in bold. Count several recorded variants of one underlying condition ' +
-      'as one condition.',
+      'Open the Future disease · recorded outcome panel and read it against the conditions the ' +
+      'response highlights in bold. Where the panel records several closely related variants of ' +
+      'one underlying problem, treat them as a single condition. Judge how well the response ' +
+      'captures what this patient went on to develop, and how much it raises that they did not.',
     // EXAMPLES REWRITTEN 2026-08-25 (Zitao): the previous text described a hypothetical panel
     // in the abstract ("three of which are variants of one valvular finding") and gave the rater
     // nothing to pattern-match against. These are drawn from real letters in the v33.11 batch,
@@ -87,13 +99,17 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // X and Y deliberately, NOT A/B/C: the displayed letters are assigned per case after the
     // shuffle (see lib/types.ts), so "Response A" in a fixed example would read as a claim about
     // the Response A actually on screen. X and Y are unmistakably stand-ins.
+    // Softened alongside howToScore (Zitao, 2026-08-25). The example previously resolved its
+    // scores arithmetically ("one of two caught with two extras, so Neutral (3)"), which
+    // reintroduced the counting rule the instruction had just dropped. It now shows the same two
+    // responses and reasons to the same scores in the anchors' own language.
     example:
       'Response X opens "you should take the **circulatory** risk most seriously" and highlights ' +
       '**Coronary atherosclerosis**, **Ischemic Heart Disease** and **Congestive heart failure**, ' +
       'while the outcome panel for this patient records only **Insomnia** and **Sleep disorders**. ' +
-      'Nothing recorded is caught and three are added, so score Highly Inaccurate (1). ' +
-      'Response Y highlights **Insomnia** plus two conditions the patient never developed — one ' +
-      'of two caught with two extras, so Neutral (3).',
+      'It misses what actually happened entirely and points somewhere else — Highly Inaccurate (1). ' +
+      'Response Y highlights **Insomnia** but surrounds it with conditions the patient never ' +
+      'developed: the real finding is in there, diluted by as much that is not — Neutral (3).',
     anchors: [
       {
         value: 5,
