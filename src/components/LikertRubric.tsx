@@ -3,6 +3,7 @@ import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import type { RubricAnchor } from '@/lib/rubric-config'
 import { likertKey } from '@/lib/types'
 import { AxisHelp } from '@/components/AxisHelp'
+import { InlineEmphasis } from '@/components/InlineEmphasis'
 import { cn } from '@/lib/utils'
 import type {
   RubricState,
@@ -201,13 +202,17 @@ export function LikertDimensions({
                     {dim.howToScore && (
                       <p className="text-[13px] leading-snug">
                         <span className="font-semibold">How to score it: </span>
-                        <span className="text-muted-foreground">{dim.howToScore}</span>
+                        <span className="text-muted-foreground">
+                          <InlineEmphasis text={dim.howToScore} />
+                        </span>
                       </p>
                     )}
                     {dim.example && (
                       <p className="text-[13px] leading-snug">
                         <span className="font-semibold">Example: </span>
-                        <span className="italic text-muted-foreground">{dim.example}</span>
+                        <span className="italic text-muted-foreground">
+                          <InlineEmphasis text={dim.example} />
+                        </span>
                       </p>
                     )}
                   </div>

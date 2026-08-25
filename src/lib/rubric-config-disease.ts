@@ -90,7 +90,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       // when that header changed. An instruction pointing at a panel name that is not on screen
       // is worse than no instruction.
       'Open the "Future disease(s) patient developed in 6 years" panel and read it against the ' +
-      'conditions the response highlights in bold. Where the panel records several closely ' +
+      'conditions the response highlights **in bold**. Where the panel records several closely ' +
       'related variants of ' +
       'one underlying problem, treat them as a single condition. Judge how well the response ' +
       'captures what this patient went on to develop, and how much it raises that they did not.',
@@ -218,11 +218,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'hedging a clear one both score poorly. Score the fit, not whether you agree with the ' +
       'conclusions.',
     example:
-      'Response X opens "the thing to take most seriously is circulatory risk" and the Sleep panel ' +
-      'shows severe obstructive sleep apnea, so the firm claim is earned — Very Trustworthy (5). ' +
-      'Response Y opens just as firmly but attributes it to hypertension and kidney disease that ' +
-      'are nowhere in the Prior medical history panel, so full confidence rests on nothing — Very ' +
-      'Untrustworthy (1).',
+      'Response X opens "the thing to take most seriously is **circulatory** risk" and the Sleep ' +
+      'panel shows **severe obstructive sleep apnea**, so the firm claim is earned — Very ' +
+      'Trustworthy (5). Response Y opens just as firmly but attributes it to **hypertension** ' +
+      'and **kidney disease** that are nowhere in the Prior medical history panel, so full ' +
+      'confidence rests on nothing — Very Untrustworthy (1).',
     anchors: [
       {
         value: 5,
@@ -282,14 +282,15 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // their place and which sentences bury them.
     example:
       'Responses X and Y answer for the same patient — a short, badly fragmented night with ' +
-      'normal breathing. Response X names the indicators that carry the answer and stops: "very ' +
-      'short total sleep time, low sleep efficiency and frequent arousals … most strongly points ' +
-      'toward future problems grouped as sleep disorders" — every clause is doing work, so Very ' +
-      'Relevant (5). Response Y opens on the same night but spends the letter elsewhere: ' +
-      '"[TST 176.5 minutes; SE 46.6 percent; ArI 31.3 events/hour] combined with type 2 ' +
-      'diabetes, hypertension, hyperlipidemia, obesity and ongoing tobacco use", then lists ' +
-      'five further conditions it might lead to. The pertinent indicators are in there, buried ' +
-      'under a recital of the whole chart — Irrelevant (2).',
+      'normal breathing. Response X names the indicators that carry the answer and stops: ' +
+      '"**very short total sleep time**, **low sleep efficiency** and **frequent arousals** … ' +
+      'most strongly points toward future problems grouped as **sleep disorders**" — every ' +
+      'clause is doing work, so Very Relevant (5). Response Y opens on the same night but spends ' +
+      'the letter elsewhere: "[TST 176.5 minutes; SE 46.6 percent; ArI 31.3 events/hour] ' +
+      'combined with **type 2 diabetes**, **hypertension**, **hyperlipidemia**, **obesity** and ' +
+      '**ongoing tobacco use**", then lists five further conditions it might lead to. The ' +
+      'pertinent indicators are in there, buried under a recital of the whole chart — ' +
+      'Irrelevant (2).',
     anchors: [
       {
         value: 5,
@@ -347,15 +348,15 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     example:
       'Responses X and Y open their analysis for the same patient. Response X: "Your PSG shows ' +
       'Total Sleep Time 176.5 minutes (2.9 h), Sleep Efficiency 46.6%, Arousal Index 31.3 ' +
-      'events/hour, with REM 9.6% and AHI 4.1 — objectively short, fragmented sleep with ' +
-      'preserved respiratory indices … your comorbidities (type 2 diabetes, obesity, anxiety, ' +
-      'tobacco use) increase" the risk. It reads this patient\'s own numbers, says what that ' +
-      'particular combination means, and ties it to their own history — Highly Personalized (5). ' +
-      'Response Y: "Your sleep is very short and fragmented ([TST 176.5 minutes], [SE 46.6 ' +
-      'percent], [ArI 31.3 events/hour]); cohort data link sleep fragmentation and high arousal ' +
-      'burden to later development of heart failure." The same values appear, but only as a ' +
-      'reading passed straight to a population finding, with nothing about this patient beyond ' +
-      'the numbers themselves — Generic (2).',
+      'events/hour, with REM 9.6% and AHI 4.1 — **objectively short, fragmented sleep with ' +
+      'preserved respiratory indices** … **your comorbidities (type 2 diabetes, obesity, ' +
+      'anxiety, tobacco use)** increase" the risk. It reads this patient\'s own numbers, says ' +
+      'what that particular combination means, and ties it to their own history — Highly ' +
+      'Personalized (5). Response Y: "Your sleep is very short and fragmented ([TST 176.5 ' +
+      'minutes], [SE 46.6 percent], [ArI 31.3 events/hour]); **cohort data** link sleep ' +
+      'fragmentation and high arousal burden to later development of heart failure." The same ' +
+      'values appear, but only as a reading passed straight to a population finding, with ' +
+      'nothing about this patient beyond the numbers themselves — Generic (2).',
     anchors: [
       {
         value: 5,
