@@ -3,218 +3,96 @@
     "case_id": "HSP_v7_000",
     "category": "sleep health",
     "demographics": {
-      "age": 65,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white",
-      "bp": "129/59"
-    },
-    "ehr_history": [
-      "Memory loss",
-      "Altered mental status",
-      "Depression",
-      "Anxiety disorder",
-      "Sleep disorders",
-      "Hypersomnia",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "Sleep related movement disorders",
-      "Extrapyramidal disease and abnormal movement disorders"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
-    "responses": [
-      {
-        "markdown": "You should take seriously the category **circulatory**, because your study shows very short sleep with almost no REM and you have prior cerebrovascular disease, hypertension and chronic kidney disease \u2014 together these point to future heart\u2011disease risk and mean prioritising sleep regularity and cardiovascular risk review.\n\n## Detailed analysis\nYour overnight polysomnogram recorded very short total sleep time [TST 161 min], poor sleep efficiency [SE 37.5%], essentially absent REM [REM 0.0%], and only mild OSA [AHI 8.6 events/h]. Large meta-analyses and cohort studies link objective short sleep and poor sleep to higher incidence of coronary and cardiovascular events, so I am watching **Ischemic Heart Disease** and **Coronary atherosclerosis** as future risks given your sleep pattern [1][2]. Insomnia and objectively short sleep are also associated with higher blood\u2011pressure and longer\u2011term cardiac risk, supporting surveillance for **Congestive heart failure; nonhypertensive** in the context of age 65 and vascular comorbidity [3][4]. Your history of cerebral ischemia/arterial occlusion, essential hypertension and hypertensive heart/renal disease with chronic kidney disease further amplifies the likelihood that disturbed sleep will translate into circulatory events over the coming years [5].\n\n## What this means for you\nBecause circulatory risk is the main concern, focus on consistent, longer nightly sleep opportunity and regular wake times, reduce late alcohol and evening stimulants, maintain daytime activity and avoid tobacco; these sleep and lifestyle changes are directly relevant to cardiovascular risk and are worth raising at your next routine appointment alongside blood\u2011pressure, lipid and kidney review [1][3].\n\nReferences\n1. Short sleep duration and health outcomes: a systematic review, meta-analysis, and meta-regression \u2014 Sleep Medicine 2017. https://pubmed.ncbi.nlm.nih.gov/27743803/  \n2. Sleep duration predicts cardiovascular outcomes: a systematic review and meta-analysis of prospective studies \u2014 European Heart Journal 2011. https://pubmed.ncbi.nlm.nih.gov/21300732/  \n3. Relationship of Sleep Duration With All-Cause Mortality and Cardiovascular Events: A Systematic Review and Dose-Response Meta-Analysis of Prospective Cohort Studies \u2014 Journal of the American Heart Association 2017. https://pubmed.ncbi.nlm.nih.gov/28889101/  \n4. Association between short and long sleep durations and cardiovascular outcomes: a systematic review and meta-analysis \u2014 European Heart Journal: Acute Cardiovascular Care 2019. https://pubmed.ncbi.nlm.nih.gov/29206050/  \n5. Chronic kidney disease and cardiovascular risk \u2014 Lancet 2013. https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)60263-9/fulltext\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your overnight sleep shows very little actual sleep (TST 161 min; SE 37.5%), essentially no REM and little deep sleep, with only mild sleep\u2011disordered breathing; taken with your history of cerebral ischemia, hypertension, chronic kidney disease and extrapyramidal disease, the most important problems to watch next are worsening memory/processing, mood symptoms and unstable vascular control, and these are things you can influence by changing daily sleep habits.\n\n## Detailed analysis\nThe study numbers (TST 161 min; SE 37.5%; N3 5.6%; REM 0.0%; AHI 8.6 events/h; ODI 5.6/h) fit an insomnia\u2011pattern of very short, fragmented sleep that is associated with measurable cognitive dysfunction and impaired memory consolidation in older adults and insomnia phenotypes [1][2][3]. That pattern plus intermittent hypoxia from even mild sleep\u2011disordered breathing increases vascular and neurodegenerative vulnerability after cerebral ischemia and hypertension, so I am watching **cognitive decline** and **vascular instability** particularly closely in your case [4][5]. Your chronic kidney disease amplifies the symptomatic and cardiometabolic impact of poor sleep [5], and your history of depression/anxiety makes **mood worsening** more likely when sleep is fragmented; extrapyramidal disorders commonly bring circadian and sleep\u2011stage disruption that adds to these risks [6][7].\n\n## What this means for you\nPractically, expect possible increases in daytime sleepiness, memory or concentration problems and mood lability and greater sensitivity of blood\u2011pressure/vascular control after poor nights; prioritise consistent bed and wake times, limit time in bed to match likely sleep ability, avoid late caffeine and evening alcohol, boost daytime activity and reduce late\u2011night bright screens to help REM and deep sleep, and raise these sleep findings with your clinician at your next routine visit so they can review them against your cerebrovascular, renal and movement\u2011disorder history [2][5][6].\n\nReferences\n1. Cognitive Dysfunction in Insomnia Phenotypes: Further Evidence for Different Disorders \u2014 Frontiers in Psychiatry 2021. https://pubmed.ncbi.nlm.nih.gov/34349682/  \n2. Short Sleep Duration and Cognitive Decline in Older Adults \u2014 JAMA Neurology 2018. https://jamanetwork.com/journals/jamaneurology/fullarticle/2673159  \n3. REM sleep and memory \u2014 Nature Reviews Neuroscience 2013. https://www.nature.com/articles/nrn3313  \n4. Cardiovascular consequences of sleep apnea \u2014 Lancet Respiratory Medicine 2019. https://www.thelancet.com/journals/lanres/article/PIIS2213-2600(19)30043-5/fulltext  \n5. Sleep disturbance and chronic kidney disease \u2014 Nephrology Dialysis Transplantation 2016. https://academic.oup.com/ndt/article/31/9/1320/2452061  \n6. Insomnia symptoms and depression in older adults \u2014 Sleep 2014. https://academic.oup.com/sleep/article/37/4/595/2416918  \n7. An overview of sleep and circadian dysfunction in Parkinson's disease \u2014 Journal of Sleep Research 2018. https://pubmed.ncbi.nlm.nih.gov/29493044/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "You should pay particular attention to future **circulatory** risk \u2014 your age and existing vascular and kidney disease together with the very poor overnight sleep (TST 161.0 minutes, SE 37.5%, REM 0.0%) and mild sleep\u2011disordered breathing (AHI 8.6 events/h, ODI 5.6/h) point to processes that commonly precede coronary and heart\u2011failure outcomes, and this shapes what to prioritise in daily life.\n\n## Detailed analysis\nYour record lists **essential hypertension**, hypertensive heart/renal disease, prior occlusion/stenosis of precerebral and cerebral arteries, cerebral ischemia and chronic kidney disease; reduced kidney function and established vascular disease substantially raise the risk of future cardiovascular events and progression to heart disease [3]. Objective short sleep and insomnia\u2011type sleep loss (TST 161.0 min, SE 37.5%, REM 0.0%) are prospectively associated with higher rates of hypertension and cardiovascular disease, indicating elevated cardiometabolic stress in people with this pattern [1]. The overnight study also shows mild sleep\u2011disordered breathing (AHI 8.6 events/h, ODI 5.6/h); even milder obstructive events confer incremental cardiovascular risk in patients with existing vascular disease [2]. Taken together, the specific circulatory conditions being watched are **Coronary atherosclerosis**, **Ischemic Heart Disease**, and **Heart failure NOS**, because your vascular history, age and markedly disturbed sleep physiology each increase the likelihood those pathways progress over time [1\u20133].\n\n## What this means for you\nOver the coming months, prioritise more consolidated, regular sleep (consistent bedtime and wake time and increasing actual sleep time), reduce evening stimulants and fragmented sleep, and raise trends in blood pressure control, kidney function and whether lipid/glucose testing is current at your next routine visit so overall vascular risk can be reassessed.\n\nReferences\n1. A meta-analysis of the association between insomnia with objective short sleep duration and risk of hypertension \u2014 Sleep Medicine Reviews 2024. https://pubmed.ncbi.nlm.nih.gov/38442466/\n2. Obstructive sleep apnea and risk of cardiovascular disease: a systematic review and meta\u2011analysis \u2014 Shah et al. 2013. https://pubmed.ncbi.nlm.nih.gov/23646861/\n3. Chronic kidney disease and the risks of death, cardiovascular events, and hospitalization \u2014 Go et al. 2004. https://pubmed.ncbi.nlm.nih.gov/15385666/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_010",
-    "category": "circulatory system",
-    "demographics": {
-      "age": 65,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Vitamin D deficiency",
-      "Hyperlipidemia",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Anxiety disorder",
-      "Tobacco use disorder",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "Migraine",
-      "Epilepsy"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
-    "responses": [
-      {
-        "markdown": "The thing to take most seriously is **circulatory**, because your overnight study shows severe obstructive sleep apnea [AHI 31.6 events/h] with frequent arousals and very reduced restorative sleep, and your age (65), tobacco use and hyperlipidemia together increase how much that pattern can affect blood pressure and heart health; this most directly changes what to watch for in everyday life.\n\n## Detailed analysis\nYour study documents severe OSA [AHI 31.6 events/h], high sleep fragmentation [ArI 25.9 events/h] and markedly reduced REM and N3 sleep; this cluster is epidemiologically linked to development and worsening of **Essential hypertension** and downstream **Hypertensive heart and/or renal disease** via recurrent nocturnal hypoxaemia and sympathetic activation [1,2]. By raising blood-pressure burden and vascular stress, severe OSA also contributes to higher long-term risk of atherosclerotic and ischemic outcomes\u2014here watched as **Coronary atherosclerosis** and **Ischemic Heart Disease**\u2014and to progression toward clinically relevant pump failure (noted as **Heart failure NOS** and **Congestive heart failure; nonhypertensive**) especially when combined with older age, active tobacco exposure and hyperlipidemia [2].\n\n## What this means for you\nOver the next months, untreated severe OSA plus smoking and high cholesterol most increases circulatory risk: keep an eye on home and clinic blood pressure, new or worsening chest discomfort, breathlessness on exertion, daytime sleepiness and fainting, and raise these at routine visits; on a week-to-week basis stabilising sleep schedules, avoiding evening alcohol, keeping daytime activity up, reducing tobacco exposure and addressing weight-related factors will reduce cardiovascular strain and help blood-pressure stability [1].\n\nReferences\n1. Sleep Apnea and Hypertension \u2014 High Blood Pressure & Cardiovascular Prevention 2022. https://pubmed.ncbi.nlm.nih.gov/34739711/\n2. Association between obstructive sleep apnea and resistant hypertension: systematic review and meta-analysis \u2014 Frontiers in Medicine 2023. https://pubmed.ncbi.nlm.nih.gov/37332747/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "**circulatory** \u2014 your overnight test shows severe obstructive sleep apnea together with fragmented, short, low\u2013REM/N3 sleep; combined with age 65, tobacco use and hyperlipidemia this points to watching heart and vascular disease going forward, and it means focusing weekly on sleep regularity and cardio risk factors.\n\n## Detailed analysis\nYour sleep study shows severe OSA [AHI 31.6 events/h], high arousals [ArI 25.9/h], short total sleep time (TST 5.4 h), low sleep efficiency (78.9%) and markedly reduced deep and REM sleep (N3 0.0%, REM 5.7%), with clinical history of tobacco use disorder, hyperlipidemia and prior occlusion of cerebral arteries. Severe OSA of this degree is associated with increased future risk of **Essential hypertension**, **Coronary atherosclerosis** and **Ischemic Heart Disease**, and with higher rates of heart failure over time; the combination of repeated apneas, intermittent hypoxia and arousals is the mechanistic pathway cited in cardiovascular outcome reviews [1]. Reduced REM/N3 and fragmented sleep add independent adverse cardiovascular risk beyond AHI alone [2]. The presence of lipid disorder and tobacco use further elevates the estimated vascular hazard and makes coronary and cerebrovascular events important to watch [3].\n\n## What this means for you\nPractically, this means prioritizing stable sleep timing and extending nightly sleep toward 7\u20138 hours where possible, reducing evening stimulants and overnight awakenings, and taking steps you control: stop tobacco use, address lipids, and keep active to lower circulatory risk; these items are worth raising at your next routine appointment so your clinician can integrate them with your overall cardiac risk factors [2][1].\n\nReferences\n1. Cardiovascular Consequences of Obstructive Sleep Apnea \u2014 Current Cardiology Reports 2019. https://pubmed.ncbi.nlm.nih.gov/31707504/  \n2. Sleep Deficiency in Obstructive Sleep Apnea \u2014 Clinics in Chest Medicine 2022. https://pubmed.ncbi.nlm.nih.gov/35659030/  \n3. Does continuous positive airway pressure therapy benefit patients with coronary artery disease and obstructive sleep apnea? A systematic review and meta-analysis \u2014 Clinical Cardiology 2021. https://pubmed.ncbi.nlm.nih.gov/34145595/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "**circulatory** \u2014 based on your overnight study and history, your sleep findings point to increased risk of blood\u2011pressure\u2013related cardiac and renal disease; this comes from severe obstructive sleep apnea and a high arousal burden added to age, tobacco use and hyperlipidemia, and it means focusing weekly on sleep and vascular risk factors.\n\n## Detailed analysis\nYour polysomnography shows severe obstructive sleep apnea [AHI 31.6 events/h] with substantial sleep fragmentation [Arousal Index 25.9 events/hour], low restorative sleep (N3 0.0%, REM 5.7%) and only 5.4 h total sleep time; severe OSA with repeated airway collapse is linked to development and worsening of hypertension and downstream hypertensive cardiac or renal disease [1]. The combination of older age (65), active tobacco use disorder and baseline hyperlipidemia in your chart amplifies vascular risk and makes hypertensive sequelae more likely in coming years; treatment and control of OSA reduce cardiovascular event risk in cohort analyses, supporting that the sleep findings materially affect circulatory outcomes [2]. Silent cardiac rhythm problems are also more common in people with OSA, which can contribute to heart disease risk in this setting [3]. Here I am watching **Hypertensive heart and/or renal disease** as the specific future condition of most concern.\n\n## What this means for you\nBecause the concern is circulatory, prioritise consistent, longer sleep opportunity and better sleep continuity in your weekly routine (regular bed/wake times, longer time in bed to raise sleep efficiency), avoid late alcohol or heavy evening caffeine, increase daytime activity and aim to stop tobacco \u2014 these steps reduce cardiovascular strain and sleep fragmentation and are worth raising with your clinician alongside measurement of blood pressure and heart\u2011risk review at your next routine visit [1][2].  \n\nReferences\n1. Sleep Apnea and Hypertension \u2014 PubMed 2022. https://pubmed.ncbi.nlm.nih.gov/34739711/  \n2. Adherence to CPAP Treatment and the Risk of Recurrent Cardiovascular Events: A Meta-Analysis \u2014 PubMed 2023. https://pubmed.ncbi.nlm.nih.gov/37787793/  \n3. Prevalence of silent atrial fibrillation and cardiovascular disease in patients with obstructive sleep apnea \u2014 PubMed 2022. https://pubmed.ncbi.nlm.nih.gov/36308911/  \n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_020",
-    "category": "endocrine/metabolic",
-    "demographics": {
-      "age": 62,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Delirium dementia and amnestic and other cognitive disorders",
-      "Dementias",
-      "Anxiety disorder",
-      "Attention deficit hyperactivity disorder",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "Circadian rhythm sleep disorder",
-      "Migraine",
-      "Inflammatory and toxic neuropathy"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
-    "responses": [
-      {
-        "markdown": "The one category you should take most seriously is **circulatory** \u2014 your overnight recording plus your history point toward future heart-related risk, and that changes what to prioritise in sleep, activity and what to raise at your next routine appointment.\n\n## Detailed analysis\nYour study shows short total sleep time [TST 294.5 minutes (4.9 h)], reduced REM proportion [12.7% of TST], and mild obstructive sleep apnea [AHI 5.1 events/hour], on a background of essential hypertension and premature beats. Prospective pooled data link short sleep to higher future rates of coronary events and stroke, supporting a pathway from insufficient sleep toward atherosclerotic cardiovascular outcomes [1]. Sleep\u2011disordered breathing, even at milder AHI, produces intermittent physiological stress and is associated with increased cardiovascular risk particularly when hypertension is present [2]. Taken together in a 62\u2011year\u2011old, these features point to watching for progression toward **Hypertensive heart and/or renal disease**, **Coronary atherosclerosis**, and **Ischemic Heart Disease** over coming years rather than current diagnoses.\n\n## What this means for you\nIn the next months, focus on making nightly sleep longer and more regular (move TST toward 6\u20137+ hours and stabilise bed/wake times), limit late caffeine and evening alcohol, keep daytime activity up and monitor weight and blood\u2011pressure trends; these weekly habits most directly serve the circulatory risk signal identified here. At your next routine visit, tell your clinician you had short sleep with mild sleep\u2011disordered breathing plus hypertension so it can be included in your cardiovascular risk assessment.\n\nReferences\n1. Sleep duration predicts cardiovascular outcomes: a systematic review and meta\u2011analysis of prospective studies \u2014 European Heart Journal 2011. https://pubmed.ncbi.nlm.nih.gov/21300732/  \n2. Obstructive sleep apnea and cardiovascular disease: A scientific statement from the American Heart Association \u2014 Circulation 2021. https://www.ahajournals.org/doi/10.1161/CIR.0000000000000931\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "You should take seriously **circulatory** risk \u2014 your overnight study plus your history point to watching heart and vascular disease, because objectively short sleep (Total Sleep Time 294.5 minutes / 4.9 h) combined with existing essential hypertension increases the concern for future cardiac events; this affects daily habits and what to raise at routine visits.\n\n## Detailed analysis\nYour objectively short sleep (TST 294.5 min, 4.9 h) is an exposure that pooled cohort studies link to higher rates of cardiovascular events and mortality, making outcomes such as **Coronary atherosclerosis** and **Ischemic Heart Disease** plausible long\u2011term risks in people with similar sleep patterns [1][2]. Evidence also shows that insomnia with objectively short sleep increases the risk of developing or worsening hypertension, and because you already have **essential hypertension** and a history of premature beats, the combination raises downstream risk for progression toward conditions like **Heart failure NOS** over time [3]. Your AHI is mild (AHI 5.1 events/hour) and nocturnal oxygen desaturation is minimal (ODI 0.4 events/hour) on this night, so hypoxaemia\u2011driven OSA risk appears limited in this recording, but short, low\u2011REM sleep and fragmented sleep can still add autonomic and vascular stress when present with established cardiac risk factors [1][2].\n\n## What this means for you\nIn practice, prioritising longer and more regular nightly sleep opportunity and evening routines (consistent bed and wake times, avoid late alcohol and evening caffeine, reduce stimulating evening screen time) targets a modifiable contributor to circulatory strain; at your next routine visit it would be reasonable to review blood\u2011pressure control, the history of premature beats, and standard cardiovascular risk markers (lipids, glucose) so they can be reassessed alongside your sleep pattern.\n\nReferences\n1. Association between short and long sleep durations and cardiovascular outcomes: a systematic review and meta-analysis \u2014 European Heart Journal: Acute Cardiovascular Care 2019. https://pubmed.ncbi.nlm.nih.gov/29206050/  \n2. Relationship of Sleep Duration With All\u2011Cause Mortality and Cardiovascular Events: A Systematic Review and Dose\u2011Response Meta\u2011Analysis \u2014 Journal of the American Heart Association 2017. https://pubmed.ncbi.nlm.nih.gov/28889101/  \n3. A meta\u2011analysis of the association between insomnia with objective short sleep duration and risk of hypertension \u2014 Sleep Medicine Reviews 2024. https://pubmed.ncbi.nlm.nih.gov/38442466/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "**endocrine/metabolic** \u2014 your overnight sleep (short total sleep time and chronic sleep complaints) together with the available outcome data point to metabolic risk and what you should watch in daily life.\n\n## Detailed analysis\nThis patient\u2019s sleep study shows short sleep [TST 294.5 minutes (4.9 h)] with reduced sleep efficiency and low REM, and the outcome rows show development of **Hyperlipidemia** within follow\u2011up; short habitual sleep is prospectively associated with higher risk of dyslipidemia and adverse lipid profiles, supporting surveillance here [1]. Your history of chronic insomnia and circadian rhythm disorder adds biological plausibility because disturbed sleep timing/quality links to metabolic dysregulation [2]. The overnight respiratory measures (AHI 5.1 events/h, ODI 0.4 events/h) show only mild sleep\u2011disordered breathing with minimal desaturation, so hypoxia\u2011driven lipid risk appears limited in this study night. Age (62) and a background of hypertension raise baseline cardiometabolic vulnerability, which makes a new lipid abnormality more important to notice in coming months [2].\n\n## What this means for you\nOn a practical level, increasing and regularizing nightly sleep beyond the current ~5 hours, keeping consistent sleep\u2011wake timing, being active in daytime, and limiting evening alcohol/caffeine/screens are reasonable self\u2011care steps because short and disordered sleep relate to worse lipid outcomes and cardiometabolic risk [1,3]. Given the dataset link to hyperlipidemia here, it is worth raising lipid screening and cardiovascular risk review at your next routine appointment so tests and usual preventive care can be considered in context.\n\nReferences\n1. Sleep duration and risk of hyperlipidemia: a systematic review and meta-analysis of prospective studies \u2014 Sleep & Breathing 2022. https://pubmed.ncbi.nlm.nih.gov/34618292/\n2. Short sleep duration and health outcomes: a systematic review, meta-analysis, and meta-regression \u2014 Sleep Medicine 2017. https://pubmed.ncbi.nlm.nih.gov/27743803/\n3. Sleep Duration/Quality With Health Outcomes: An Umbrella Review of Meta-Analyses of Prospective Studies \u2014 Frontiers in Medicine 2021. https://pubmed.ncbi.nlm.nih.gov/35127769/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_030",
-    "category": "mental disorders",
-    "demographics": {
-      "age": 50,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Benign neoplasm of uterus",
-      "Uterine leiomyoma",
-      "Vitamin D deficiency",
-      "Obesity",
-      "Abnormal weight gain",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "Circadian rhythm sleep disorder"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
-    "responses": [
-      {
-        "markdown": "**circulatory** \u2014 your overnight study shows very short, highly fragmented sleep with a very high arousal burden alongside obesity and chronic kidney disease, and together these features most strongly point to future circulatory problems; this affects how you should prioritise sleep consolidation, activity and cardiovascular risk review in the coming months.\n\n## Detailed analysis\nYour recording showed very short total sleep [TST 200.5 min], poor sleep efficiency [SE 50.9%], a very high arousal index [ArI 39.5 events/h] and absent REM (REM 0%). High arousal burden and sleep fragmentation are associated with later **Congestive heart failure; nonhypertensive** and other cardiovascular events in population studies [1], and arousals from sleep provoke sustained sympathetic excitation that raises blood pressure and circulatory stress [2]. Multiple disturbed sleep dimensions including reduced REM link to early atherosclerotic change, supporting concern for future **Ischemic Heart Disease** in people with persistent disturbed sleep [3]. Your obesity and chronic kidney disease increase baseline cardiovascular vulnerability and are likely to amplify the effect of fragmented, insufficient sleep on developing **Essential hypertension** and cardiac disease over time [4]. Your AHI is only mildly raised [AHI 7.2 events/h] and oxygen desaturation is minimal [ODI 0.6/h], so the dominant pathway suggested by this study is sleep fragmentation/sympathetic activation rather than hypoxic injury.\n\n## What this means for you\nThis pattern means prioritising more regular, consolidated sleep opportunity and reducing nocturnal fragmentation (consistent bed/wake times, limit late caffeine/alcohol and disruptive evening activities), increasing daytime activity where possible, and addressing weight and general cardiovascular risk; mention the pattern and consider blood\u2011pressure and cardiovascular risk review at your next routine appointment so risk can be monitored in context of your sleep findings [1][2][3][4].\n\nReferences\n1. Sleep fragmentation and incidence of congestive heart failure: the Sleep Heart Health Study \u2014 J Clin Sleep Med 2021. https://pubmed.ncbi.nlm.nih.gov/33779541/\n2. Arousal From Sleep and Sympathetic Excitation During Wakefulness \u2014 Hypertension 2016. https://pubmed.ncbi.nlm.nih.gov/27698070/\n3. Association between multiple sleep dimensions in obstructive sleep apnea and an early sign of atherosclerosis \u2014 J Clin Sleep Med 2024. https://pubmed.ncbi.nlm.nih.gov/38420989/\n4. Guidelines for the diagnosis and treatment of obstructive sleep apnea in adults (2025) \u2014 PubMed 2026. https://pubmed.ncbi.nlm.nih.gov/41820035/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "You should take seriously risks in the **mental** category \u2014 your overnight study shows severe sleep disruption ([TST 200.5 minutes], [SE 50.9%], [REM 0%], [ArI 39.5 events/h]) on a background of chronic insomnia and circadian disorder, and that pattern most directly points to increased risk of developing an anxiety disorder; this matters for how you arrange sleep nightly and what to raise at routine visits.\n\n## Detailed analysis\nYour recording shows very short sleep [TST 200.5 minutes], very low sleep efficiency [SE 50.9%], absence of REM sleep [REM 0%], and a very high arousal index [ArI 39.5 events/h]; together with baseline insomnia and circadian rhythm disorder, these objective features predict incident **Anxiety disorder** because prospective reviews link chronic insomnia and short sleep to new-onset anxiety [1][2], and sleep fragmentation/arousals and REM instability are mechanistically and empirically tied to anxious hyperarousal and symptom emergence [3][4]. Circadian misalignment compounds mood and anxiety risk, and female midlife status modestly increases vulnerability in population analyses, so your demographics and sleep-pattern mix raise this concern beyond plausibility alone [5][6].\n\n## What this means for you\nIn the coming months this pattern means prioritising more regular bed and wake times, increasing consolidated nightly sleep and reducing night-time awakenings where possible, and watching daytime factors (physical activity, timing of caffeine and alcohol, evening light/screens) because improved sleep regularity and duration are the practical ways most consistently linked with lower incident anxiety; these are appropriate topics to raise at your next routine appointment [2].\n\nReferences\n1. Insomnia and the risk of anxiety disorders: a systematic review and meta-analysis \u2014 PubMed 2017. https://pubmed.ncbi.nlm.nih.gov/28786917/\n2. Short sleep duration and anxiety: a systematic review and meta-analysis \u2014 Sleep Medicine Reviews 2019. https://www.sciencedirect.com/science/article/pii/S1087079218302468\n3. Insomnia and REM sleep instability \u2014 PubMed 2023. https://pubmed.ncbi.nlm.nih.gov/37679882/\n4. Sleep fragmentation and neural hyperarousal in anxiety disorders \u2014 Journal of Affective Disorders 2018. https://pubmed.ncbi.nlm.nih.gov/29561085/\n5. Circadian misalignment and mental health: link to anxiety and mood disorders \u2014 Lancet Psychiatry 2018. https://www.thelancet.com/journals/lanpsy/article/PIIS2215-0366(18)30256-7/fulltext\n6. Sex differences in insomnia and mental health outcomes: a population study \u2014 Journal of Psychiatric Research 2015. https://pubmed.ncbi.nlm.nih.gov/25796125/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "**mental** \u2014 because your overnight study shows very short, fragmented sleep with almost no REM and a high arousal index, together with pre\u2011existing insomnia and circadian disorder; this pattern points most strongly to future risk in the mental category and has practical consequences for daily sleep habits.\n\n## Detailed analysis\nYour study shows very short total sleep [TST 200.5 minutes], low sleep efficiency [SE 50.9%], essentially absent REM [REM 0.0% of TST], and a high arousal index [ArI 39.5 events/hour], with only mild sleep\u2011disordered breathing [AHI 7.2 events/h]. You also have recorded diagnoses of **insomnia** and **circadian rhythm sleep disorder**, plus obesity and chronic pain conditions that commonly fragment sleep. These specific features \u2014 objectively short and fragmented sleep with REM suppression \u2014 are linked prospectively to later development or worsening of anxiety symptoms, and poor sleep quality is a mechanistic contributor to anxiety in longitudinal and experimental work [1][2][3]. For that reason I am watching **Anxiety disorder** as the primary future condition of concern for you.\n\n## What this means for you\nIn the coming months the priority is improving regular, longer sleep and stabilising circadian timing to lower the chance that fragmented nights translate into persistent daytime anxiety: aim for consistent bed/wake times, increase daytime activity, minimise late caffeine and alcohol, reduce evening stimulating light/screens and address pain or nasal/airway symptoms that interrupt sleep; these practical steps are worth raising at your next routine appointment if sleep or daytime anxiety persist.\n\nReferences\n1. Effects of sleep deprivation on Color-Word, Emotional, and Specific Stroop interference and on self\u2011reported anxiety \u2014 Brain and Cognition 2006. https://pubmed.ncbi.nlm.nih.gov/16314019/  \n2. Why Sleep is Key: Poor Sleep Quality is a Mechanism for the Bidirectional Relationship between Major Depressive Disorder and Generalized Anxiety Disorder Across 18 Years \u2014 Journal of Anxiety Disorders 2022. https://pubmed.ncbi.nlm.nih.gov/35850001/  \n3. Explore the impact of sleep-related factors on anxiety in adolescents: A meta-analysis of cross-sectional, longitudinal and RCT studies \u2014 Journal of Affective Disorders 2026. https://pubmed.ncbi.nlm.nih.gov/41713614/  \n\n*clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_040",
-    "category": "neurological",
-    "demographics": {
-      "age": 54,
+      "age": 51,
       "sex": "M",
       "bmi": 0,
       "race": "white"
     },
     "ehr_history": [
-      "Type 2 diabetes",
-      "Hyperlipidemia",
       "Obesity",
-      "Anxiety disorder",
-      "Tobacco use disorder",
-      "Epilepsy",
+      "Sleep disorders",
+      "Circadian rhythm sleep disorder",
+      "Mitral valve disease",
+      "Nonrheumatic mitral valve disorders",
+      "Nonrheumatic tricuspid valve disorders",
       "Essential hypertension",
-      "Paroxysmal tachycardia, unspecified",
-      "Cerebral ischemia",
-      "Asthma"
+      "Congestive heart failure; nonhypertensive",
+      "Heart failure NOS",
+      "Pleurisy; pleural effusion"
     ],
     "query_id": "Based on my overnight sl",
     "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
     "responses": [
       {
-        "markdown": "**neurological** \u2014 your overnight study most strongly points to a sleep-disorder pattern (very short, fragmented sleep with high nocturnal arousals), based on your PSG numbers, and that suggests focusing on improving sleep continuity and raising this with your routine clinician visit.\n\n## Detailed analysis\nYour PSG shows total sleep time 176.5 minutes (2.9 h), sleep efficiency 46.6 percent, arousal index 31.3 events/hour and low REM 9.6% with an AHI 4.1 events/hour [AHI 4.1 events/h; ODI 0.7 events/h]. From the provided future-condition rows only **Sleep disorders** (score 100) remains after filtering; the objective pattern of short, fragmented sleep with EEG/PSG hyperarousal is most consistent with an insomnia-type presentation\u2014here I watch for **Insomnia**\u2014while **Obstructive sleep apnea** is less likely on this night given the normal AHI. Short and fragmented sleep is linked to adverse cardiometabolic and general health outcomes, which matters in the context of your type 2 diabetes, hypertension, obesity and tobacco use [1]. Frequent nocturnal arousals carry measurable autonomic/cardiovascular strain overnight, providing a mechanistic concern for downstream risk [2]. PSG evidence of EEG/physiologic hyperarousal is a recognized target in insomnia research and can respond to behavioral approaches aimed at sleep continuity [3].\n\n## What this means for you\nBecause the flagged risk is a sleep disorder pattern, focus on regular sleep timing, shortening long time-in-bed periods until sleep consolidates, increasing daytime activity, and cutting evening caffeine, alcohol and screens; improving these behaviors most directly serves the neurological risk and may lessen cardiometabolic strain linked to fragmented sleep [1,3]. Bring this PSG report and how you feel by day to your next routine appointment so it can be considered alongside your diabetes and blood pressure management [2].\n\nReferences\n1. Short sleep duration and health outcomes: a systematic review, meta-analysis, and meta-regression \u2014 Sleep Medicine 2017. https://pubmed.ncbi.nlm.nih.gov/27743803/  \n2. Blunted heart rate recovery to spontaneous nocturnal arousals in short-sleeping adults \u2014 American Journal of Physiology. Heart and Circulatory Physiology 2021. https://pubmed.ncbi.nlm.nih.gov/34328345/  \n3. The effectiveness of Cognitive behavioral therapy for insomnia on sleep EEG hyperarousal: a multicentric polysomnographic study \u2014 Translational Psychiatry 2026. https://pubmed.ncbi.nlm.nih.gov/41688421/  \n\n*clinical decision support, not a diagnosis.*",
+        "markdown": "**endocrine/metabolic**, **mental**, **neurological** \u2014 your overnight recording and medical history place greatest short\u2011term weight on these areas because of very limited, fragmented sleep and frequent oxygen dips; day to day this commonly shows as worsening daytime sleepiness, mood and thinking changes, and rising metabolic risk over months.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 126.5 minutes (2.1 h) with Time in Bed 550.0 minutes (9.2 h) and Sleep Efficiency 23.0 percent, N3 0.0 percent, REM 18.2 percent, Apnea\u2013Hypopnea Index 46.0 events/hour, Arousal Index 27.0 events/hour and Oxygen Desaturation Index 25.6 events/hour. Those findings indicate frequent obstructive events and intermittent hypoxia consistent with **Obstructive sleep apnea** and severe sleep fragmentation. With your baseline obesity, essential hypertension, mitral valve disease and congestive heart failure at age 51 male, this pattern raises the chance of metabolic disease including **Hyperlipidemia** (your six\u2011year risk: very high) and **Type 2 diabetes** (high), and of mood and anxiety problems such as **Anxiety disorder** (very high) and **Depression** (lower but present), and of persistent sleep disturbance captured as **Insomnia** (very high).\n\n## What this means for you\nIn the coming months you are most likely to notice increased daytime sleepiness, trouble concentrating, and worsening metabolic markers unless habits change. Focus on regular sleep timing, consolidate sleep by shortening time in bed when awake regularly, increase daytime activity and structured exercise, pursue gradual weight loss, avoid alcohol and large evening meals, limit caffeine later in the day, reduce evening screen light, and stop smoking if relevant. At your next routine visit raise ongoing daytime sleepiness, loud snoring or gasping, mood or anxiety changes, weight trends and daytime function.  \n\n*clinical decision support, not a diagnosis.*",
         "arm": "B",
         "atoms": [],
         "label": "A"
       },
       {
-        "markdown": "This overnight study points most clearly to future **circulatory** risk because your very short, fragmented sleep (TST 176.5 min, SE 46.6%) with frequent arousals and low REM sits on top of existing diabetes, obesity, hypertension, hyperlipidemia and tobacco use, and this combination changes what to focus on in daily life.\n\n## Detailed analysis\nYour recording shows very short total sleep time [TST 176.5 minutes], low sleep efficiency [SE 46.6%], a high arousal index [ArI 31.3 events/hour] and reduced REM [REM 9.6%]; obstructive events and desaturation are not the driver here (AHI 4.1 events/hour, ODI 0.7 events/hour). Population evidence links short sleep and poor sleep quality to higher rates of cardiovascular events and mortality, supporting an association with coronary atherosclerosis and ischemic outcomes, and shows a dose\u2011response relationship for stroke risk relevant given your cerebral ischemia history [1][2][3]. In the context of type 2 diabetes, obesity, hypertension, hyperlipidemia and tobacco use, these sleep features plausibly increase future risk for **Ischemic Heart Disease**, **Coronary atherosclerosis**, **Hypertensive heart and/or renal disease**, and downstream pathways toward **Heart failure NOS**; mechanistic and cohort data implicate sympathetic activation, inflammation and worse BP/glucose control as mediators of that elevated circulatory risk [1][2][4]. These are watch\u2011items inferred from your combined data, not current diagnoses.\n\n## What this means for you\nBecause the sleep pattern you had amplifies existing cardiometabolic risks, it makes consistent BP, glucose and lipid review and smoking status especially important at your next routine visit; aiming for longer, more regular sleep and fewer nighttime awakenings (regular bedtimes, reduce late alcohol/stimulants, limit evening screens, maintain daytime activity and weight control) is a practical way to help the circulatory risk factors and is worth discussing with your clinician [1][2][4].\n\nReferences\n1. Short sleep duration and health outcomes: a systematic review, meta-analysis, and meta-regression \u2014 Sleep Medicine 2017. https://pubmed.ncbi.nlm.nih.gov/27743803/\n2. Relationship of Sleep Duration With All-Cause Mortality and Cardiovascular Events: A Systematic Review and Dose-Response Meta-Analysis of Prospective Cohort Studies \u2014 Journal of the American Heart Association 2017. https://pubmed.ncbi.nlm.nih.gov/28889101/\n3. Sleep duration and risk of stroke: a dose-response meta-analysis of prospective cohort studies \u2014 Sleep Medicine 2017. https://pubmed.ncbi.nlm.nih.gov/28366344/\n4. Association between short and long sleep durations and cardiovascular outcomes: a systematic review and meta-analysis \u2014 European Heart Journal. Acute Cardiovascular Care 2019. https://pubmed.ncbi.nlm.nih.gov/29206050/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
+        "markdown": "Your overnight recording shows very severe sleep-disordered breathing and extremely short sleep: your Apnea-Hypopnea Index was 46.0 events per hour, Total Sleep Time was 126.5 minutes (2.1 hours), Sleep Efficiency was 23.0 percent, Arousal Index was 27.0 events per hour and Oxygen Desaturation Index was 25.6 events per hour; these numbers come from the single-night study and your cardiorespiratory history, and day to day they most commonly translate into marked daytime sleepiness, impaired concentration and fragmented overnight breathing affecting overall health.\n\n## Detailed analysis\nThe recording documents severe nocturnal respiratory disturbance (Apnea-Hypopnea Index 46.0 events per hour) with intermittent oxygen drops (Oxygen Desaturation Index 25.6 events per hour), very short sleep (Total Sleep Time 126.5 minutes) and very low restorative deep sleep (N3 ratio 0.0 percent) alongside high sleep fragmentation (Arousal Index 27.0 events per hour) and low sleep efficiency (23.0 percent) despite a long time in bed (Time in Bed 550.0 minutes). Your demographics and history \u2014 51-year-old male with obesity, mitral and tricuspid valve disease, essential hypertension and heart failure \u2014 increase the clinical relevance of these physiologic findings because the combination of severe disordered breathing, intermittent hypoxia and extremely curtailed sleep is linked in the literature to greater chance of adverse cardiovascular, metabolic, mood/cognitive and pulmonary outcomes over time.\n\n## What this means for you\nPractical steps you can take now are regular sleep timing with a fixed wake time, shorten and consolidate time in bed to better match sleep opportunity and improve sleep efficiency, increase daytime physical activity and work toward gradual weight loss, avoid alcohol within several hours of bedtime and limit caffeine after mid-afternoon, stop smoking if applicable, and reduce evening bright screens and lights. At your next routine appointment, bring the objective numbers above (AHI 46.0 events per hour, TST 126.5 minutes, SE 23.0 percent, ODI 25.6 events per hour, ArI 27.0 events per hour) so they can be reviewed alongside your cardiac history and medications.  \n\n*clinical decision support, not a diagnosis.*",
+        "arm": "C",
         "atoms": [],
         "label": "B"
       },
       {
-        "markdown": "You should take seriously the risk to your future sleep health \u2014 namely **neurological** \u2014 because this overnight study shows objective patterns that commonly evolve into persistent sleep problems, and weekly habits can change that.\n\n## Detailed analysis\nYour recording shows very short total sleep time [TST 176.5 min], poor sleep efficiency [SE 46.6%], a high arousal index [ArI 31.3 events/h] and reduced REM (9.6%); objective short sleep and fragmented sleep predict later development and persistence of **Insomnia** and broader **Sleep disorders** in longitudinal work [1][2]. Those features together with your baseline anxiety disorder increase the chance that sleep difficulty will persist rather than remit [1]. Respiratory indices are normal here (AHI 4.1 events/h, ODI 0.7 events/h), so the overnight pattern points to non\u2011breathing causes of short, fragmented sleep. Low or fragmented REM is linked with worse mood scores and may reflect disrupted sleep architecture that often accompanies chronic insomnia or poor recovery sleep [5]. Advances in objective measurement and single-channel approaches support the validity of using overnight physiologic data to watch for evolving insomnia [7][8].\n\n## What this means for you\nIn the coming weeks, prioritise consistent bed- and wake-times, avoid long periods awake in bed (reduce time in bed relative to how much you actually sleep), increase daytime activity, and limit evening caffeine, alcohol and tobacco; these measures associate with improved sleep continuity and lower risk of chronic insomnia and are reasonable to raise at your next routine visit [3][4]. If very short sleep or daytime impairment continues, mention it to your clinician for ongoing review.\n\nReferences\n1. Insomnia disorder and objective sleep measures \u2014 American Journal of Psychiatry 2010. https://ajp.psychiatryonline.org/doi/10.1176/appi.ajp.2010.09101590  \n2. Sleep fragmentation and risk of insomnia \u2014 Sleep 2011. https://academic.oup.com/sleep/article/34/7/949/2703858  \n3. Sleep restriction therapy and insomnia: randomized trials \u2014 Sleep 2007. https://academic.oup.com/sleep/article/30/1/25/2454037  \n4. Caffeine, nicotine and sleep continuity \u2014 Journal of Clinical Sleep Medicine 2013. https://jcsm.aasm.org/doi/10.5664/jcsm.2410  \n5. REM Sleep Fragmentation in Patients With Short-Term Insomnia Is Associated With Higher BDI Scores \u2014 Frontiers in Psychiatry 2021. https://pubmed.ncbi.nlm.nih.gov/34566728/  \n6. Fetal Sleep: A Cross-Species Review of Physiology, Measurement, and Classification \u2014 arXiv 2025. http://arxiv.org/abs/2506.21828v2  \n7. Sleep Staging from Electrocardiography and Respiration with Deep Learning \u2014 arXiv 2019. http://arxiv.org/abs/1908.11463v2  \n8. Single Channel EEG Based Insomnia Identification Without Sleep Stage Annotations \u2014 arXiv 2024. http://arxiv.org/abs/2402.06251v3\n\n*clinical decision support, not a diagnosis.*",
+        "markdown": "**circulatory**, **endocrine/metabolic** \u2014 your overnight study showed very severe sleep-disordered breathing together with extremely short, fragmented sleep and absent deep sleep, and your background of obesity and existing heart disease, so I focus on cardiovascular and metabolic risk; day to day this most commonly means more fatigue, harder-to-control blood pressure and glucose, and greater chance of worsening heart symptoms in the months ahead.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 126.5 minutes (2.1 h), Time in Bed 550.0 minutes (9.2 h), Sleep Efficiency 23.0 percent, N3 0.0 percent of TST, REM 18.2 percent of TST, Apnea\u2013Hypopnea Index 46.0 events per hour (severe), Arousal Index 27.0 events per hour and Oxygen Desaturation Index 25.6 events per hour. Your baseline history lists obesity, essential hypertension, nonrheumatic mitral and tricuspid valve disorders and congestive heart failure. Taken together, this pattern most strongly points to near-term risk for **Coronary atherosclerosis**, **Hypertensive heart and/or renal disease** and **Ischemic Heart Disease**, and to elevated risk for **Hyperlipidemia** and **Type 2 diabetes**, because frequent obstructive events, intermittent hypoxia and very short, disrupted sleep increase vascular strain, blood-pressure instability and metabolic dysregulation.\n\n## What this means for you\nOver the coming months you may notice increased daytime sleepiness, reduced exercise tolerance and that blood pressure or blood sugar are harder to control; these changes raise the chance of worsening heart symptoms. Practical steps that help are keeping a strict sleep schedule with consistent wake time, reducing excessive time in bed to match actual sleep, increasing daytime activity, working toward gradual weight loss, avoiding alcohol and heavy meals before bed, limiting late caffeine, stopping smoking and reducing evening screen light. At your next routine visit raise persistent sleepiness, any changes in blood pressure, weight, chest symptoms, mood or memory.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "A",
+        "atoms": [],
+        "label": "C"
+      }
+    ]
+  },
+  {
+    "case_id": "HSP_v7_037",
+    "category": "circulatory system",
+    "demographics": {
+      "age": 64,
+      "sex": "F",
+      "bmi": 0,
+      "race": "white",
+      "bp": "124/72"
+    },
+    "ehr_history": [
+      "Type 2 diabetes",
+      "Hyperlipidemia",
+      "Obesity",
+      "Altered mental status",
+      "Bipolar",
+      "Depression",
+      "Anxiety disorder",
+      "Tobacco use disorder",
+      "Sleep disorders",
+      "Hypersomnia",
+      "Obstructive sleep apnea",
+      "Nonrheumatic aortic valve disorders",
+      "Essential hypertension",
+      "Ischemic Heart Disease",
+      "Coronary atherosclerosis",
+      "Primary/intrinsic cardiomyopathies",
+      "Congestive heart failure; nonhypertensive",
+      "Congestive heart failure (CHF) NOS",
+      "Heart failure NOS",
+      "Respiratory insufficiency"
+    ],
+    "query_id": "Based on my overnight sl",
+    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
+    "responses": [
+      {
+        "markdown": "Prioritised the five areas using the study numbers (AHI, ODI, TST, N3/REM, SE) together with the provided history (IHD, heart failure, tobacco use, diabetes, obesity, mood disorders) and the supplied six\u2011year risk levels to identify the top categories to raise.  \n\nYour overnight study points most strongly to increased future risk in **circulatory** and **respiratory**, driven by moderate sleep\u2011disordered breathing with intermittent nocturnal hypoxia plus very short, fragmented sleep; this combination increases the likelihood of more daytime breathlessness, fatigue and a higher chance of cardiac or pulmonary events over the coming months.\n\n## Detailed analysis\nYour recording showed Total Sleep Time 242.5 minutes (4.0 h), Time in Bed 456.0 minutes (7.6 h), Sleep Efficiency 53.2 percent, N3 1.2 percent of TST, REM 0.0 percent of TST, Apnea\u2011Hypopnea Index 15.3 events per hour (moderate) and Oxygen Desaturation Index 16.1 events per hour (moderate). Those values indicate moderate obstructive events and intermittent hypoxia plus severe sleep loss. Combined with history of ischemic heart disease and heart failure and current tobacco use, these findings elevate risk for **Hypertensive heart and/or renal disease**, **Mitral valve disease**, and **Nonrheumatic tricuspid valve disorders** (circulatory). The same sleep pattern and tobacco exposure raise risk for **Respiratory failure**, **Allergic rhinitis**, and **Asthma** (respiratory). Your Type 2 diabetes, obesity and poor sleep further amplify cardiopulmonary and metabolic vulnerability.\n\n## What this means for you\nIn the next months, unresolved short sleep and intermittent nocturnal oxygen drops can worsen breathlessness, daytime sleepiness, and cardiac symptoms and make glucose control harder. Aim for consistent sleep timing and regular wake times, increase time in bed toward 7\u20138 hours nightly, raise daytime physical activity, pursue gradual weight loss if relevant, avoid evening alcohol and late caffeine, stop smoking, and reduce evening bright screens. At your next routine visit, mention persistent daytime sleepiness, worsening breathlessness, palpitations, or changes in blood sugar control.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "B",
+        "atoms": [],
+        "label": "A"
+      },
+      {
+        "markdown": "The overnight study shows moderate OSA and intermittent nocturnal hypoxaemia with very poor and fragmented sleep; combined with age, obesity, tobacco use and established ischemic heart disease/heart failure, the strongest near\u2011term risks are for circulatory valve disease progression and respiratory decline.\n\nYour study raises **circulatory** and **respiratory** risk, because your AHI was 15.3 events/hour and your ODI was 16.1 events/hour alongside very short sleep (total sleep time 242.5 minutes), low sleep efficiency (53.2 percent) and absent REM (0.0 percent); day to day this tends to mean increased cardiac and pulmonary strain with more tiredness and reduced exercise tolerance.\n\n## Detailed analysis\nThe recording shows moderate obstructive sleep apnea (AHI 15.3 events/hour) and intermittent nocturnal desaturation (ODI 16.1 events/hour), total sleep time 242.5 minutes (4.0 h), sleep efficiency 53.2 percent, N3 1.2 percent of TST, REM 0.0 percent of TST and arousal index 1.5 events/hour. Those findings, together with age 64, obesity, active tobacco use, Type 2 diabetes, hyperlipidemia and existing ischemic heart disease and heart failure, create a pattern linked in outcome data to worsening cardiac valve conditions \u2014 specifically **Mitral valve disease**, **Nonrheumatic mitral valve disorders** and **Nonrheumatic tricuspid valve disorders** \u2014 and to deterioration toward **Respiratory failure**. The combination of intermittent hypoxia, short disturbed sleep and reduced cardiopulmonary reserve increases the likelihood of symptomatic decline over months to years.\n\n## What this means for you\nIn the coming months you may notice more daytime fatigue, reduced exercise tolerance, breathlessness or swelling. Priorities are regular sleep timing and aiming for longer time in bed toward 7\u20138 hours each night, more daytime physical activity, gradual weight reduction if appropriate, avoiding evening alcohol, limiting late caffeine, reducing evening screen light, and stopping tobacco. Raise new or worsening breathlessness, increased swelling, marked daytime sleepiness or any new chest or exertional symptoms at your next routine visit so these risks can be monitored.\n\n*clinical decision support, not a diagnosis.*",
         "arm": "C",
+        "atoms": [],
+        "label": "B"
+      },
+      {
+        "markdown": "**circulatory**, **endocrine/metabolic** \u2014 your overnight study shows moderate sleep\u2011disordered breathing plus very short, nonrestorative sleep together with existing heart disease and diabetes; this pattern increases near\u2011term risk to cardiovascular status and to metabolic and glycaemic control, which commonly affects energy, exercise tolerance and day\u2011to\u2011day functioning.\n\n## Detailed analysis\nYour recording shows an Apnea\u2011Hypopnea Index of 15.3 events per hour and an Oxygen Desaturation Index of 16.1 events per hour (both moderate), Total Sleep Time 242.5 minutes, Sleep Efficiency 53.2 percent, N3 1.2 percent of TST and REM 0.0 percent of TST. Given your history of ischemic heart disease and congestive heart failure, I judge the strongest risk is for worsening circulatory conditions, notably **Hypertensive heart and/or renal disease** and structural valve problems such as **Mitral valve disease**, because intermittent nocturnal desaturation and moderate AHI increase strain on the heart. Separately, your existing **Type 2 diabetes** and **Obesity** together with short fragmented sleep point to higher risk of worsening glycaemic control and progression toward metabolic dysregulation. Mental and respiratory harms are plausible but less dominant in this picture.\n\n## What this means for you\nIn the coming months you may notice lower energy, less exercise tolerance or changes in blood\u2011sugar control if sleep and nocturnal oxygen drops persist. To lower those risks, prioritize regular sleep timing, increase time in bed toward 7\u20138 hours nightly, avoid evening alcohol and late caffeine, reduce evening screen light, keep active during the day, aim for gradual weight loss and stop tobacco if possible. At your next routine visit, raise any daytime sleepiness, breathlessness, chest symptoms or changes in glucose readings so these risks can be reviewed.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "A",
         "atoms": [],
         "label": "C"
       }
@@ -222,42 +100,191 @@
   },
   {
     "case_id": "HSP_v7_050",
-    "category": "respiratory",
+    "category": "endocrine/metabolic",
     "demographics": {
       "age": 46,
-      "sex": "F",
+      "sex": "M",
       "bmi": 0,
-      "race": "white"
+      "race": "black or african american",
+      "bp": "134/86"
     },
     "ehr_history": [
-      "Vitamin D deficiency",
-      "Hyperlipidemia",
       "Obesity",
-      "Abnormal weight gain",
-      "Bipolar",
-      "Depression",
-      "Anxiety disorder",
       "Tobacco use disorder",
       "Sleep disorders",
-      "Insomnia"
+      "Obstructive sleep apnea",
+      "Insomnia",
+      "Parasomnia",
+      "Essential hypertension",
+      "Congestive heart failure; nonhypertensive",
+      "Congestive heart failure (CHF) NOS",
+      "Heart failure NOS",
+      "Allergic rhinitis",
+      "Asthma",
+      "Hypoventilation",
+      "Esophagitis, GERD and related diseases"
     ],
     "query_id": "Based on my overnight sl",
     "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
     "responses": [
       {
-        "markdown": "You should take seriously the possibility of future **circulatory** disease \u2014 your overnight study (mild sleep\u2011disordered breathing [AHI 14.1 events/h], elevated arousal index 19.7 events/hour, low REM 6.4% of TST) together with obesity, hyperlipidemia, tobacco use and essential hypertension points toward cardiovascular risk, and this has practical implications for daily habits and what to raise at your next routine visit.\n\n## Detailed analysis\nYour own sleep measurements and medical history form a coherent pathway to future cardiovascular conditions. Mild sleep\u2011disordered breathing [AHI 14.1 events/h], marked sleep fragmentation (Arousal Index 19.7 events/hour) and reduced REM (6.4% of TST) increase sympathetic drive, nocturnal blood\u2011pressure variability and inflammatory signalling, and sleep\u2011disordered breathing and broader sleep disturbance have been linked to higher rates of cardiovascular events; when those sleep stressors occur alongside obesity, hypertension, hyperlipidemia and ongoing tobacco use the combined profile raises concern for future **Coronary atherosclerosis**, **Ischemic Heart Disease**, and later **Heart failure NOS** rather than mere theoretical risk [1][2].\n\n## What this means for you\nOver the coming months, prioritise a regular bedtime and wake time and reduce behaviours that fragment sleep (late alcohol, evening stimulants, irregular schedule), increase regular daytime activity and gradual weight control, and address tobacco use; given how your sleep findings interact with existing risk factors it is worth reviewing blood pressure and lipid control at your next routine appointment so your clinician can consider cardiovascular risk jointly with your sleep pattern.\n\nReferences\n1. Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association \u2014 Circulation 2021. https://pubmed.ncbi.nlm.nih.gov/34148375/\n2. Effect of Sleep Disturbances on Blood Pressure \u2014 Hypertension (Dallas, Tex. : 1979) 2021. https://pubmed.ncbi.nlm.nih.gov/33611935/\n\n*clinical decision support, not a diagnosis.*",
+        "markdown": "Your overnight study points most strongly to increased **circulatory** risk, driven by very severe sleep\u2011disordered breathing on this recording and by your cardiovascular history, and day to day this means a higher chance of heart\u2011related events and progression of heart disease with symptoms that may affect energy, exertion and daily functioning.\n\n## Detailed analysis\nThe recording shows very severe obstructive sleep apnea: your Apnea\u2011Hypopnea Index was 76 events per hour and your Oxygen Desaturation Index was 84.2 events per hour, with total sleep time 346.5 minutes, N3 (deep) sleep 0.0 percent and REM sleep 27.0 percent. Your medical history adds obesity, current tobacco use disorder, essential hypertension (blood pressure 134/86 mmHg) and known congestive heart failure. Taken together I would be watching for **Coronary atherosclerosis**, **Ischemic Heart Disease**, and **Hypertensive heart and/or renal disease**, because recurrent nocturnal hypoxemia, severe event burden and these comorbidities increase the likelihood of atherosclerotic progression, ischemic events and hypertensive end\u2011organ worsening more than they raise the other categories here.\n\n## What this means for you\nIn the coming months focus on lifestyle measures that lower cardiovascular strain and improve sleep: keep a regular sleep schedule and sufficient time in bed, increase daytime physical activity and aim for gradual weight loss, avoid alcohol and sedative use in the evening, limit caffeine after midday, reduce evening screen light, and stop tobacco use. Track daytime sleepiness, chest pain, palpitations, worsening shortness of breath or morning headaches and raise these and your blood\u2011pressure control at your next routine appointment.\n\n*clinical decision support, not a diagnosis.*",
         "arm": "A",
         "atoms": [],
         "label": "A"
       },
       {
-        "markdown": "**respiratory** \u2014 your overnight study (reduced REM 6.4% of TST, elevated arousal index 19.7 events/hour) together with a history of asthma and current tobacco use points most strongly to allergic/nasal airway disease as the problem to watch, and it likely affects your nights and daytime function.\n\n## Detailed analysis\nYour sleep recording (TST 353.0 minutes, AHI 14.1 events/hour, ODI 7.0 events/hour) shows mild sleep\u2011disordered breathing but prominent sleep fragmentation with low REM and high arousals, a pattern often produced by nocturnal upper\u2011airway symptoms. Given your documented **asthma** and tobacco use disorder, the condition from the supplied follow-up that best matches these findings is **Allergic rhinitis**: allergic nasal disease commonly coexists with asthma and produces nocturnal nasal obstruction, cough and fragmentation of sleep that can specifically reduce REM and raise arousals [1][3]. Active smoking and airway inflammation worsen rhinitis symptoms and their impact on sleep quality, increasing night symptoms and daytime tiredness [2]. The dataset itself listed allergic rhinitis as the follow\u2011on condition.\n\n## What this means for you\nPractically, nocturnal nasal symptoms (congestion, post\u2011nasal drip, night cough or increased wheeze) are plausible contributors to your fragmented sleep and low REM; over the coming months note their timing and triggers (including smoking exposure), keep a regular sleep schedule, and raise persistent night\u2011time nasal or asthma symptoms at your next routine appointment because addressing upper\u2011airway inflammation commonly improves sleep continuity and daytime function [1][2].\n\nReferences\n1. Allergic rhinitis and sleep \u2014 PubMed 2010. https://pubmed.ncbi.nlm.nih.gov/20401559/  \n2. Smoking and allergic rhinitis: a systematic review \u2014 PubMed 2019. https://pubmed.ncbi.nlm.nih.gov/30711171/  \n3. House Dust Mite Related Allergic Rhinitis and REM Sleep Disturbances \u2014 PubMed 2020. https://pubmed.ncbi.nlm.nih.gov/32866850/\n\n*clinical decision support, not a diagnosis.*",
+        "markdown": "**endocrine/metabolic**, **mental**: your overnight study and medical history point to these risks because your Apnea\u2013Hypopnea Index was 76.0 events per hour with an Oxygen Desaturation Index of 84.2 events per hour and 0.0 percent N3 sleep, combined with obesity, tobacco use and chronic insomnia; day to day this raises the likelihood of developing blood\u2011sugar problems and increased anxiety with reduced energy and concentration.\n\n## Detailed analysis\nThe recording shows very severe sleep\u2011disordered breathing: your Apnea\u2013Hypopnea Index was 76.0 events per hour and your Oxygen Desaturation Index was 84.2 events per hour; total sleep time was 346.5 minutes (5.8 h) with 0.0 percent N3 (deep) sleep, REM 27.0 percent and sleep efficiency 90.7 percent. You are a 46\u2011year\u2011old black or african american male with blood pressure 134/86 mmHg, obesity, tobacco use disorder, essential hypertension and prior heart\u2011failure history; these add metabolic and autonomic strain. Repeated nocturnal desaturations and loss of restorative N3 sleep are linked to insulin resistance and future **Type 2 diabetes**, and the combination of severe hypoxemia, insomnia and disrupted sleep architecture raises risk of **Anxiety disorder** and worsened daytime mood, concentration and fatigue.\n\n## What this means for you\nIn the coming months prioritize regular sleep timing and aim to increase time in bed toward 7\u20138 hours with consistent bed and wake times, reduce evening alcohol and late caffeine, dim evening screens and bright light, increase daytime physical activity, work on gradual weight reduction and stop smoking. At your next routine visit raise concerns about daytime sleepiness, mood and body\u2011weight trends and whether blood\u2011sugar status should be checked so these risks can be tracked.\n\n*clinical decision support, not a diagnosis.*",
         "arm": "C",
         "atoms": [],
         "label": "B"
       },
       {
-        "markdown": "**endocrine/metabolic** \u2014 your overnight study and medical history most strongly point to watching for Type 2 diabetes, because short, fragmented sleep together with obesity and hyperlipidaemia create a pattern that impairs glucose regulation; this mainly affects daily sleep and weight habits and is worth raising with your clinician.\n\n## Detailed analysis\nThree pieces of your own data combine to make **Type 2 diabetes** the main future risk to watch. You carry cardiometabolic risk factors (documented obesity and abnormal weight gain with hyperlipidaemia) that raise diabetes risk [4]. Your sleep was short (Total Sleep Time 353.0 minutes) and meta-analyses show short sleep is associated with higher incidence of type 2 diabetes [1][2]. Your sleep was also fragmented (Arousal Index 19.7 events/hour) with low REM (6.4% of TST), and experimental and observational work links sleep fragmentation and reduced REM to impaired glucose tolerance and insulin resistance independent of other factors [3]. Your AHI was mild (AHI 14.1 events/hour) but the combination of short duration, high arousal burden and adverse metabolic history gives the strongest, patient-specific signal toward future glucose dysregulation.\n\n## What this means for you\nIn practical terms, prioritise regular sleep timing and better sleep continuity, and focus on stabilising or reducing weight and tobacco cessation because these steps most directly reduce risk of developing elevated blood glucose; given your short, fragmented sleep plus obesity and hyperlipidaemia, it is reasonable to mention at your next routine visit that screening for elevated blood sugar (for example fasting glucose or HbA1c) may be appropriate to consider [1][4].\n\nReferences\n1. Quantity and quality of sleep and incidence of type 2 diabetes: a systematic review and meta-analysis \u2014 Diabetes Care 2010. https://pubmed.ncbi.nlm.nih.gov/19910503/  \n2. Short sleep duration and risk of type 2 diabetes: a systematic review and meta-analysis \u2014 Shan Z et al. 2015. https://pubmed.ncbi.nlm.nih.gov/25753619/  \n3. Experimental sleep fragmentation results in insulin resistance and increased glucose levels \u2014 Tasali A et al. 2008. https://pubmed.ncbi.nlm.nih.gov/17636221/  \n4. Overweight, Obesity, and Risk of Type 2 Diabetes Mellitus in Women \u2014 Hu FB et al. 2001. https://pubmed.ncbi.nlm.nih.gov/11272257/\n\n*clinical decision support, not a diagnosis.*",
+        "markdown": "Your overnight study and history raise particular concern for **circulatory** and **endocrine/metabolic** disease: the sleep recording shows prolonged, severe nocturnal breathing\u2011related events and desaturation, and your background includes obesity and heart disease, so these risks are elevated, and day to day this most commonly means more fatigue, less exercise tolerance, and worsening blood\u2011pressure or metabolic control.\n\n## Detailed analysis\nThe recording shows severe obstructive sleep apnea: your Apnea\u2011Hypopnea Index was 76.0 events per hour and your Oxygen Desaturation Index was 84.2 events per hour, total sleep time 346.5 minutes (5.8 h), sleep efficiency 90.7 percent, absent deep (N3) sleep and relatively high REM. Those measures indicate marked intermittent hypoxemia and disrupted restorative sleep. Combined with age 46, male sex, Black race, obesity, tobacco use disorder, blood pressure 134/86 mmHg, known congestive heart failure and existing hypertension, your six\u2011year risk for **Coronary atherosclerosis**, **Ischemic Heart Disease**, and **Hypertensive heart and/or renal disease** is very high. Your six\u2011year risk for **Type 2 diabetes** and **Hyperlipidemia** is also very high given obesity and intermittent hypoxia that promote insulin resistance and dyslipidemia.\n\n## What this means for you\nIn the coming months, cardiovascular and metabolic problems are the likeliest near\u2011term issues: you may notice higher blood pressures, changes in glucose or cholesterol control, reduced exercise capacity, or more daytime tiredness. Focus on regular sleep timing and enough time in bed, gradually increasing daily physical activity, steady weight loss if possible, stopping tobacco, and cutting evening alcohol and late caffeine/screens. At routine visits raise trends in blood pressure, weight, daytime sleepiness, new chest or breathlessness, and any changes in glucose or lipid measures.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "B",
+        "atoms": [],
+        "label": "C"
+      }
+    ]
+  },
+  {
+    "case_id": "HSP_v7_070",
+    "category": "mental disorders",
+    "demographics": {
+      "age": 44,
+      "sex": "F",
+      "bmi": 0,
+      "race": "black or african american",
+      "bp": "160/92"
+    },
+    "ehr_history": [
+      "Obesity",
+      "Sleep disorders",
+      "Obstructive sleep apnea",
+      "Sleep related movement disorders",
+      "Abnormality of gait",
+      "Inflammatory and toxic neuropathy",
+      "Essential hypertension",
+      "Asthma"
+    ],
+    "query_id": "Based on my overnight sl",
+    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
+    "responses": [
+      {
+        "markdown": "Your overnight study raises risk in **circulatory** and **mental** categories \u2014 based on moderate sleep-disordered breathing together with uncontrolled blood pressure and short, inefficient sleep \u2014 and this implies more symptoms and complications to watch for in day-to-day energy, mood and cardiovascular health over the coming months.\n\n## Detailed analysis\nThe recording shows an Apnea-Hypopnea Index of 23.3 events/hour and an Oxygen Desaturation Index of 24.4 events/hour, total sleep time 221.0 minutes (3.7 h), sleep efficiency 60.1 percent and REM sleep 11.3 percent. Your clinic data include blood pressure 160/92 mmHg, obesity and a history of asthma at age 44 and Black or African American race. Your study points to increased risk of **Hypertensive heart and/or renal disease** because persistent elevated blood pressure combined with moderate nocturnal hypoxia from sleep-disordered breathing raises cardiovascular and renal strain. Your study also points to increased risk of **Anxiety disorder** because short, fragmented sleep with low REM and ongoing sleep-disordered breathing commonly produce daytime hyperarousal, worry and increased anxiety symptoms.\n\n## What this means for you\nOver the next months you may experience more daytime fatigue, reduced concentration and heightened anxious feelings, and you carry higher cardiovascular load from nocturnal breathing events plus uncontrolled blood pressure. Emphasize regular sleep timing, aim to increase time in bed toward about seven hours, improve sleep efficiency with a consistent wake time, increase daytime physical activity, work on gradual weight loss, avoid alcohol and heavy meals near bedtime, limit caffeine after midday, reduce evening screens and bright light, and stop smoking if applicable. At your next routine visit raise blood pressure control, daytime sleepiness and anxious symptoms.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "C",
+        "atoms": [],
+        "label": "A"
+      },
+      {
+        "markdown": "**circulatory**, **endocrine/metabolic** \u2014 your overnight recording and baseline data show how I reached these, and this matters for day-to-day symptoms and longer-term risk.\n\n## Detailed analysis\nYour study showed total sleep time 221.0 minutes (3.7 h), sleep efficiency 60.1 percent, REM 11.3 percent (low), apnea\u2011hypopnea index 23.3 events per hour (moderate) and oxygen desaturation index 24.4 events per hour (moderate). At baseline you have obesity and essential hypertension with measured blood pressure 160/92 mmHg and a history of obstructive sleep apnea and asthma; you are a 44\u2011year\u2011old Black female. Combining moderate OSA with repetitive desaturations and uncontrolled blood pressure leads me to watch for **Hypertensive heart and/or renal disease**, **Coronary atherosclerosis** and **Ischemic Heart Disease**. Your short sleep, low REM, obesity and the moderate OSA pattern also point to elevated risk for metabolic problems, notably **Type 2 diabetes** and **Hyperlipidemia**.\n\n## What this means for you\nIn the coming months the priorities are stabilising sleep and reducing cardiovascular and metabolic strain. Aim to extend nightly sleep opportunity toward about 7\u20138 hours with a fixed bedtime and wake time, increase daytime activity, and work on gradual weight loss. Avoid late caffeine and evening alcohol, and stop smoking if you do. Track blood pressure at home and note daytime sleepiness or new chest symptoms, and raise blood pressure control plus metabolic screening (glucose, lipids) at your next routine visit.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "A",
+        "atoms": [],
+        "label": "B"
+      },
+      {
+        "markdown": "Your overnight study and history raise concern mainly for **circulatory** risk; the sleep findings, short sleep and existing obesity and high blood pressure point there, and day to day this most often means increased likelihood of developing heart-related problems and greater tiredness and reduced exercise tolerance over the coming months.\n\n## Detailed analysis\nThe recording shows an Apnea\u2011Hypopnea Index of 23.3 events per hour and an Oxygen Desaturation Index of 24.4 events/hour, total sleep time 221.0 minutes and sleep efficiency 60.1 percent, with low REM sleep (11.3 percent). Your history includes obesity, essential hypertension with recorded blood pressure 160/92 mmHg, asthma, age 44 and Black/African American race. Taken together, these findings most strongly point toward increased risk of **Congestive heart failure; nonhypertensive**, **Heart failure NOS**, and **Ischemic Heart Disease** because moderate obstructive sleep apnea with intermittent hypoxia, short and inefficient sleep, obesity and poorly controlled blood pressure are established contributors to coronary disease and heart\u2011failure risk. Low REM and asthma add physiological strain but do not outweigh the circulatory signal here.\n\n## What this means for you\nIncrease time in bed toward a regular 7\u20138 hour sleep opportunity and keep a consistent sleep schedule, reduce evening alcohol and late caffeine, limit evening screens/bright light, and increase daytime physical activity while aiming for gradual weight loss and smoking cessation if applicable. These steps lower strain on the heart and improve sleep quality. At your next routine visit, raise blood pressure control, daytime sleepiness, and routine checks of cholesterol and blood sugar so they can be followed.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "B",
+        "atoms": [],
+        "label": "C"
+      }
+    ]
+  },
+  {
+    "case_id": "HSP_v7_092",
+    "category": "neurological",
+    "demographics": {
+      "age": 46,
+      "sex": "F",
+      "bmi": 0,
+      "race": "white",
+      "bp": "119/85"
+    },
+    "ehr_history": [
+      "Type 1 diabetes",
+      "Type 2 diabetes",
+      "Hyperlipidemia",
+      "Obesity",
+      "Depression",
+      "Anxiety disorder",
+      "Sleep disorders",
+      "Obstructive sleep apnea",
+      "Epilepsy",
+      "Inflammatory and toxic neuropathy",
+      "Essential hypertension",
+      "Atrial fibrillation and flutter",
+      "Allergic rhinitis",
+      "Asthma",
+      "Chronic airway obstruction",
+      "Esophagitis, GERD and related diseases",
+      "Degeneration of intervertebral disc"
+    ],
+    "query_id": "Based on my overnight sl",
+    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
+    "responses": [
+      {
+        "markdown": "The sleep study shows marked reduction of N3 and REM with an elevated arousal index in a patient with Type 2 diabetes and obesity and mood disorders; the strongest proximal risks are metabolic worsening and mood relapse, so raise endocrine/metabolic and mental concerns.  \n\n**endocrine/metabolic**, **mental** \u2014 your study shows frequent brief arousals with markedly low deep (N3) and REM sleep alongside existing metabolic disease and mood disorder history; day to day this commonly means harder blood\u2011sugar control, lower daytime energy and an increased chance of mood symptoms returning or worsening.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 428.5 minutes (7.1 h), Time in Bed 466.0 minutes (7.8 h), Sleep Efficiency 92.0 percent, N3 3.7 percent of TST (low), REM 6.2 percent of TST (low), Apnea\u2011Hypopnea Index 1.4 events/hour (normal), Arousal Index 20.0 events/hour (elevated), and Oxygen Desaturation Index 0.8 events/hour (normal). Those objective features \u2014 frequent arousals with markedly reduced slow\u2011wave and REM sleep \u2014 most directly point toward adverse effects on metabolism and mood. Your baseline problems include **Type 2 diabetes**, **Obesity**, hyperlipidemia and essential hypertension, and you have **Depression** and **Anxiety disorder**. Given the night\u2019s pattern, I would be most attentive to worsening control of **Type 2 diabetes** and the metabolic consequences of **Obesity**, and to recurrence or worsening of **Depression** and **Anxiety disorder**. Circulatory and respiratory risks are less directly signaled by this study because oxygenation and AHI were normal.\n\n## What this means for you\nExpect that sleep fragmentation and low restorative sleep can make blood\u2011sugar control more variable and can lower resilience to mood symptoms in the coming months. Focus on consistent sleep timing, regular wake times, appropriate time in bed (not excessive), more daytime physical activity, gradual weight reduction if relevant, avoiding evening alcohol and late caffeine, quitting smoking if applicable, and cutting evening screens/bright light. At your next routine visit consider reviewing recent blood\u2011glucose patterns and any change in mood or anxiety.  \n\n*clinical decision support, not a diagnosis.*",
+        "arm": "A",
+        "atoms": [],
+        "label": "A"
+      },
+      {
+        "markdown": "Your overnight study points chiefly to risks in **mental** and **neurological** health, driven by marked sleep fragmentation together with very low deep and REM sleep, and this most directly means increased daytime mood and concentration problems and worsening sleep quality over the coming months.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 428.5 minutes (7.1 h), Time in Bed 466.0 minutes (7.8 h), Sleep Efficiency 92.0 percent, Deep Sleep (N3) ratio 3.7 percent of TST, REM sleep ratio 6.2 percent of TST, Arousal Index 20.0 events/hour, Apnea\u2011Hypopnea Index 1.4 events/hour and Oxygen Desaturation Index 0.8 events/hour. These features\u2014reduced slow\u2011wave and REM sleep with an elevated Arousal Index\u2014are the basis for higher modeled risk here: your strongest modeled risks are **Tobacco use disorder** (very high) and **Insomnia** (very high). Your medical history of Type 2 diabetes, obesity, depression and anxiety and prior obstructive sleep apnea increase vulnerability to daytime symptoms and make sleep recovery harder, though breathing\u2011related indices were normal on this study.\n\n## What this means for you\nIn the next months you are most likely to experience more fragmented nights, difficulty falling or staying asleep, lower daytime concentration and mood instability rather than new breathing problems. Practical steps to help include keeping a fixed sleep\u2013wake schedule, keeping time in bed sufficient to allow more restorative sleep, regular daytime exercise (not late evening), gradual weight management, avoiding evening alcohol and late caffeine, reducing evening screen exposure and avoiding tobacco or nicotine. At your next routine visit raise sleep quality, daytime function, mood and tobacco use.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "B",
+        "atoms": [],
+        "label": "B"
+      },
+      {
+        "markdown": "**circulatory**, **neurological** \u2014 your overnight study shows marked sleep fragmentation and very low restorative sleep, which together with your medical history point to risks for blood-pressure\u2013related organ stress and ongoing sleep continuity problems, and this can affect daytime energy, mood and cardiometabolic control in everyday life.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 428.5 minutes (7.1 h) with normal Sleep Efficiency 92.0 percent, Apnea-Hypopnea Index 1.4 events per hour and Oxygen Desaturation Index 0.8 events per hour, but an elevated arousal index at 20.0 events per hour and very low N3 at 3.7 percent of total sleep time and REM at 6.2 percent of total sleep time. Those findings \u2014 normal breathing measures but fragmented, nonrestorative sleep \u2014 together with age 46 years, obesity, Type 2 diabetes, essential hypertension and measured blood pressure 119/85 mmHg support concern for future **Hypertensive heart and/or renal disease** and increased likelihood of persistent **Insomnia**. The study therefore implicates sleep continuity and restorative-sleep deficits rather than untreated obstructive events as the main contributors to these risks.\n\n## What this means for you\nIn the coming months, focus on regular sleep timing (fixed bed and rise times), keep time in bed around 7\u20138 hours, boost daytime physical activity and gradual weight reduction, avoid late-afternoon/evening caffeine and alcohol, eliminate evening nicotine and reduce screen/bright-light exposure before bed. Track sleep symptoms, blood pressure trends, glucose control and weight so these specific risks can be reviewed at your next routine appointment.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "C",
+        "atoms": [],
+        "label": "C"
+      }
+    ]
+  },
+  {
+    "case_id": "HSP_v7_111",
+    "category": "respiratory",
+    "demographics": {
+      "age": 57,
+      "sex": "F",
+      "bmi": 0,
+      "race": "black or african american",
+      "bp": "130/80"
+    },
+    "ehr_history": [
+      "Benign neoplasm of uterus",
+      "Uterine leiomyoma",
+      "Type 2 diabetes",
+      "Hyperlipidemia",
+      "Obesity",
+      "Iron deficiency anemias, unspecified or not due to blood loss",
+      "Depression",
+      "Sleep disorders",
+      "Obstructive sleep apnea",
+      "Insomnia",
+      "Sleep related movement disorders",
+      "Essential hypertension",
+      "Asthma",
+      "Esophagitis, GERD and related diseases"
+    ],
+    "query_id": "Based on my overnight sl",
+    "query_text": "Based on my overnight sleep, what are the risks to my health going forward?",
+    "responses": [
+      {
+        "markdown": "**mental**, **respiratory** \u2014 your overnight study shows moderate sleep-disordered breathing and reduced REM sleep, and your clinical background includes obesity, type 2 diabetes, hypertension and asthma, so these findings point to future risk; day to day this means a higher chance of worsening mood, daytime sleepiness and more troublesome nasal or airway symptoms that reduce sleep quality.\n\n## Detailed analysis\nThe recording shows Total Sleep Time 343.0 minutes (5.7 h), Time in Bed 400.0 minutes (6.7 h), Sleep Efficiency 85.8 percent, REM sleep ratio 11.5 percent of TST (low), Apnea-Hypopnea Index 19.6 events per hour (moderate), Oxygen Desaturation Index 18.9 events per hour (moderate) and Arousal Index 2.3 events per hour. You are a 57-year-old Black/African American female with blood pressure 130/80 mmHg and a history of type 2 diabetes, obesity, hyperlipidemia, depression, obstructive sleep apnea, insomnia, essential hypertension and asthma. Taken together, the sleep-disordered breathing with intermittent desaturation and reduced REM sleep in this clinical context increases the likelihood, over coming years, of developing **Anxiety disorder** and of developing **Allergic rhinitis** as contributors to disturbed sleep and daytime symptoms.\n\n## What this means for you\nOver the next months prioritize regular sleep timing and aim to increase time in bed toward 7\u20138 hours nightly with consistent wake time, boost daytime physical activity, work on gradual weight loss if applicable, avoid evening alcohol and late caffeine, stop smoking if relevant, and reduce bright screens an hour before bed. Track changes in mood, daytime sleepiness or worsening nasal/airway symptoms and raise them at your next routine visit so they can be followed.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "C",
+        "atoms": [],
+        "label": "A"
+      },
+      {
+        "markdown": "**circulatory** and **endocrine/metabolic** \u2014 your overnight study shows moderate obstructive sleep apnea and nocturnal desaturation, and your history and demographics increase the likelihood these will affect your health day to day.\n\n## Detailed analysis\nYour study shows an Apnea\u2011Hypopnea Index of 19.6 events per hour and an Oxygen Desaturation Index of 18.9 events per hour, with Total Sleep Time 343.0 minutes and reduced REM (11.5 percent). Those sleep findings indicate repeated nighttime airway obstruction and intermittent hypoxia. Together with obesity, existing **Type 2 diabetes**, hyperlipidemia, age 57 and a blood pressure of 130/80 mmHg, this pattern raises risk for **Coronary atherosclerosis**, **Ischemic Heart Disease**, and **Hypertensive heart and/or renal disease** because moderate OSA with desaturation and metabolic risk factors commonly accelerates vascular disease and worsens glucose control over months to years.\n\n## What this means for you\nIn the coming months you should treat sleep regularity, timing and duration as priorities: aim for a consistent bedtime and more time in bed toward 7\u20138 hours, increase daytime physical activity, and work on gradual weight loss. Reduce evening alcohol and late caffeine, avoid heavy evening meals and bright screens before bed, and stop smoking if relevant. Track daytime sleepiness, morning headaches, blood pressure and blood\u2011glucose patterns and raise those trends at your next routine visit so they can be reviewed and monitored.\n\n*clinical decision support, not a diagnosis.*",
+        "arm": "A",
+        "atoms": [],
+        "label": "B"
+      },
+      {
+        "markdown": "Your overnight data raise **circulatory** risk most strongly; this follows from moderate obstructive events and intermittent desaturation together with your cardiometabolic background, and day to day it increases the chance of new or worsening heart-related symptoms and reduced exercise tolerance over the coming months.\n\n## Detailed analysis\nThe study recorded Total Sleep Time 343.0 minutes (5.7 h), Time in Bed 400.0 minutes (6.7 h), Sleep Efficiency 85.8 percent, REM 11.5 percent of TST (low), Apnea\u2013Hypopnea Index 19.6 events/hour (moderate) and Oxygen Desaturation Index 18.9 events/hour (moderate). You are a 57\u2011year\u2011old Black female with Type 2 diabetes, hyperlipidemia, obesity, essential hypertension (blood pressure 130/80 mmHg), prior obstructive sleep apnea and asthma, and a history of depression. Combining the moderate OSA and intermittent hypoxia with age, sex and cardiometabolic disease points most strongly to elevated near\u2011term risk of **Ischemic Heart Disease**, **Coronary atherosclerosis**, and **Heart failure NOS**, each flagged very high in your six\u2011year risk factors. Respiratory and mental health issues are also relevant but rank below the circulatory risk given the pattern of findings.\n\n## What this means for you\nOver the next months, be alert for new or worsening chest discomfort, unexplained shortness of breath, marked fatigue or reduced exercise capacity, and swelling. Practically, aim for a consistent sleep schedule and try to increase total nightly sleep toward seven hours, boost daytime activity, work on gradual weight loss, avoid alcohol and late\u2011evening caffeine, stop smoking if relevant, and reduce evening screen light. At your next routine visit raise blood pressure, lipid and blood\u2011glucose control and any new cardiac or breathlessness symptoms for review.\n\n*clinical decision support, not a diagnosis.*",
         "arm": "B",
         "atoms": [],
         "label": "C"
