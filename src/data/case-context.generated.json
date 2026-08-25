@@ -121,84 +121,53 @@
       "sessionId": "HSP_v7_000",
       "sourceIndex": 0,
       "sleepIndex": {
-        "ahi": 46.00790513833992,
-        "odi": 25.61264822134387,
-        "rdi": 66.40316205533597,
-        "tst_min": 126.5,
-        "trt_min": 550.0,
-        "se": 23.0,
-        "sol_min": 5.0,
-        "waso_min": 134.5,
-        "rem_pct": 18.181818181818183,
-        "n1_pct": 12.648221343873518,
-        "n2_pct": 69.1699604743083,
+        "ahi": 31.627906976744185,
+        "odi": 12.83720930232558,
+        "rdi": 51.72093023255814,
+        "tst_min": 322.5,
+        "trt_min": 409.0,
+        "se": 78.85085574572128,
+        "sol_min": 18.0,
+        "waso_min": 68.0,
+        "rem_pct": 5.736434108527131,
+        "n1_pct": 32.24806201550388,
+        "n2_pct": 62.01550387596899,
         "n3_pct": 0.0,
-        "mean_spo2": 95.78999693214658,
-        "nadir_spo2": 89.96108770370483,
-        "plmi": 19.92094861660079,
-        "ari": 27.035573122529645
-      },
-      "futureDiseaseGroundTruth": [],
-      "selection": {
-        "cohortGroup": "no_new_onset",
-        "stratum": "no_new_onset"
-      }
-    },
-    "HSP_v7_037": {
-      "sessionId": "HSP_v7_037",
-      "sourceIndex": 1,
-      "sleepIndex": {
-        "ahi": 15.340206185567007,
-        "odi": 16.082474226804123,
-        "rdi": 42.30927835051546,
-        "tst_min": 242.50000000000003,
-        "trt_min": 456.0,
-        "se": 53.17982456140351,
-        "sol_min": 48.5,
-        "waso_min": 100.0,
-        "rem_pct": 0.0,
-        "n1_pct": 15.463917525773194,
-        "n2_pct": 83.29896907216494,
-        "n3_pct": 1.2371134020618555,
-        "mean_spo2": 87.3304910257346,
-        "nadir_spo2": 82.98603820800781,
-        "plmi": null,
-        "ari": 1.4845360824742266
+        "mean_spo2": 96.67933468022692,
+        "nadir_spo2": 89.9620532989502,
+        "plmi": 39.81395348837209,
+        "ari": 25.86046511627907
       },
       "futureDiseaseGroundTruth": [
-        "Mitral valve disease",
-        "Respiratory failure",
-        "Nonrheumatic tricuspid valve disorders",
-        "Nonrheumatic mitral valve disorders"
+        "Hypertensive heart and/or renal disease"
       ],
       "selection": {
         "cohortGroup": "risky",
         "stratum": "circulatory"
       }
     },
-    "HSP_v7_050": {
-      "sessionId": "HSP_v7_050",
-      "sourceIndex": 2,
+    "HSP_v7_001": {
+      "sessionId": "HSP_v7_001",
+      "sourceIndex": 1,
       "sleepIndex": {
-        "ahi": 76.017316017316,
-        "odi": 84.15584415584415,
-        "rdi": 99.22077922077922,
-        "tst_min": 346.5,
-        "trt_min": 382.0,
-        "se": 90.70680628272252,
-        "sol_min": 0.0,
-        "waso_min": 32.5,
-        "rem_pct": 26.984126984126984,
-        "n1_pct": 5.05050505050505,
-        "n2_pct": 67.96536796536796,
+        "ahi": 23.112480739599384,
+        "odi": 8.135593220338983,
+        "rdi": 42.71186440677966,
+        "tst_min": 324.5,
+        "trt_min": 406.5,
+        "se": 79.82779827798278,
+        "sol_min": 8.5,
+        "waso_min": 59.0,
+        "rem_pct": 33.7442218798151,
+        "n1_pct": 8.320493066255779,
+        "n2_pct": 57.93528505392912,
         "n3_pct": 0.0,
-        "mean_spo2": 84.35801174059577,
-        "nadir_spo2": 57.45005416870117,
-        "plmi": null,
-        "ari": 0.6926406926406926
+        "mean_spo2": null,
+        "nadir_spo2": null,
+        "plmi": 32.54237288135593,
+        "ari": 10.354391371340524
       },
       "futureDiseaseGroundTruth": [
-        "Anxiety disorder",
         "Type 2 diabetes"
       ],
       "selection": {
@@ -206,89 +175,87 @@
         "stratum": "endocrine_metabolic"
       }
     },
-    "HSP_v7_070": {
-      "sessionId": "HSP_v7_070",
-      "sourceIndex": 3,
+    "HSP_v7_002": {
+      "sessionId": "HSP_v7_002",
+      "sourceIndex": 2,
       "sleepIndex": {
-        "ahi": 23.34841628959276,
-        "odi": 24.43438914027149,
-        "rdi": 62.98642533936652,
-        "tst_min": 221.0,
-        "trt_min": 368.0,
-        "se": 60.05434782608695,
-        "sol_min": 5.0,
-        "waso_min": 18.5,
-        "rem_pct": 11.312217194570136,
-        "n1_pct": 4.97737556561086,
-        "n2_pct": 70.58823529411765,
-        "n3_pct": 13.12217194570136,
-        "mean_spo2": 91.8542538638568,
-        "nadir_spo2": 73.00000762939453,
-        "plmi": null,
-        "ari": 0.8144796380090498
+        "ahi": 7.182044887780548,
+        "odi": 0.5985037406483791,
+        "rdi": 11.97007481296758,
+        "tst_min": 200.5,
+        "trt_min": 394.0,
+        "se": 50.88832487309645,
+        "sol_min": 46.0,
+        "waso_min": 146.0,
+        "rem_pct": 0.0,
+        "n1_pct": 27.18204488778055,
+        "n2_pct": 61.59600997506235,
+        "n3_pct": 11.221945137157109,
+        "mean_spo2": 96.1316806839184,
+        "nadir_spo2": 52.78722047805786,
+        "plmi": 3.591022443890274,
+        "ari": 39.50124688279302
       },
       "futureDiseaseGroundTruth": [
-        "Anxiety disorder",
-        "Hypertensive heart and/or renal disease"
+        "Anxiety disorder"
       ],
       "selection": {
         "cohortGroup": "risky",
         "stratum": "mental"
       }
     },
-    "HSP_v7_092": {
-      "sessionId": "HSP_v7_092",
-      "sourceIndex": 4,
+    "HSP_v7_003": {
+      "sessionId": "HSP_v7_003",
+      "sourceIndex": 3,
       "sleepIndex": {
-        "ahi": 1.4002333722287048,
-        "odi": 0.8401400233372229,
-        "rdi": 21.143523920653443,
-        "tst_min": 428.5,
-        "trt_min": 466.0,
-        "se": 91.9527896995708,
-        "sol_min": 2.0,
-        "waso_min": 35.5,
-        "rem_pct": 6.18436406067678,
-        "n1_pct": 3.267211201866978,
-        "n2_pct": 86.8144690781797,
-        "n3_pct": 3.7339556592765457,
-        "mean_spo2": 95.03294183441008,
-        "nadir_spo2": 91.00000762939452,
-        "plmi": null,
-        "ari": 20.02333722287048
+        "ahi": 4.079320113314448,
+        "odi": 0.6798866855524078,
+        "rdi": 6.798866855524079,
+        "tst_min": 176.5,
+        "trt_min": 378.5,
+        "se": 46.63143989431968,
+        "sol_min": 11.5,
+        "waso_min": 163.5,
+        "rem_pct": 9.631728045325778,
+        "n1_pct": 27.47875354107649,
+        "n2_pct": 34.56090651558073,
+        "n3_pct": 28.328611898017,
+        "mean_spo2": 95.73351788003,
+        "nadir_spo2": 88.58778476715088,
+        "plmi": 90.08498583569404,
+        "ari": 31.274787535410763
       },
       "futureDiseaseGroundTruth": [
-        "Insomnia",
-        "Hypertensive heart and/or renal disease"
+        "Sleep disorders",
+        "Insomnia"
       ],
       "selection": {
         "cohortGroup": "risky",
         "stratum": "neurological"
       }
     },
-    "HSP_v7_111": {
-      "sessionId": "HSP_v7_111",
-      "sourceIndex": 5,
+    "HSP_v7_004": {
+      "sessionId": "HSP_v7_004",
+      "sourceIndex": 4,
       "sleepIndex": {
-        "ahi": 19.59183673469388,
-        "odi": 18.89212827988338,
-        "rdi": 89.91253644314868,
-        "tst_min": 343.0,
-        "trt_min": 400.0,
-        "se": 85.75,
-        "sol_min": 5.5,
-        "waso_min": 51.0,
-        "rem_pct": 11.51603498542274,
-        "n1_pct": 10.349854227405247,
-        "n2_pct": 67.93002915451895,
-        "n3_pct": 10.20408163265306,
-        "mean_spo2": 93.46166307877522,
-        "nadir_spo2": 86.62445831298828,
-        "plmi": null,
-        "ari": 2.2740524781341107
+        "ahi": 14.107648725212464,
+        "odi": 6.96883852691218,
+        "rdi": 19.716713881019828,
+        "tst_min": 353.0,
+        "trt_min": 424.0,
+        "se": 83.25471698113208,
+        "sol_min": 10.0,
+        "waso_min": 57.5,
+        "rem_pct": 6.373937677053824,
+        "n1_pct": 4.815864022662889,
+        "n2_pct": 75.07082152974505,
+        "n3_pct": 13.739376770538245,
+        "mean_spo2": 91.66689263693672,
+        "nadir_spo2": 72.96498417854309,
+        "plmi": 0.0,
+        "ari": 19.716713881019828
       },
       "futureDiseaseGroundTruth": [
-        "Anxiety disorder",
         "Allergic rhinitis"
       ],
       "selection": {
