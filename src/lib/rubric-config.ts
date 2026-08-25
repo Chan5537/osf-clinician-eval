@@ -88,6 +88,16 @@ export interface RubricDimensionDef {
   label: string
   question: string
   anchors: RubricAnchor[]
+  /**
+   * "How to score it" — which panels to open and what to compare, shown to the rater under the
+   * question. Added 2026-08-24 with the v4 rubric: the criteria are no longer self-explanatory
+   * from the stem alone (Factuality and Safety both send the rater to a specific panel), and
+   * without this raters improvise their own procedure — the documented cause of the ±0.55
+   * rater sign-flip in the 2026-08-18 internal round.
+   */
+  howToScore?: string
+  /** A worked example resolving to one score, shown beneath `howToScore`. */
+  example?: string
 }
 
 // The HEALTH-MANAGEMENT set: the instrument as it stood through v27, asking about "this plan".

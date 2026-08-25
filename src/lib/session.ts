@@ -32,7 +32,14 @@ import { advance, touch, park, resume } from './timing'
 // v11 = the disease rubric is rewritten to the owner's five axes (Factuality / Safe /
 //       Personalization / Trustworthy / Justifiability). Keys unchanged again, questions
 //       and anchors changed again — same reason as v10, so the same bump.
-export const SCHEMA_VERSION = 11
+// v12 = disease rubric v4 (Chan, 2026-08-24; agreed with Zitao). Five axes: Factuality / Safety /
+//       Trustworthiness / Relevance / Personalization. Justifiability is DROPPED and Relevance
+//       restored in its place, so the `justifiability` KEY now carries the Relevance question —
+//       a v11 session would deserialise cleanly and present Justifiability answers as Relevance
+//       ones. Factuality and Safety are now scored against the recorded-outcome panel, reversing
+//       the v11 prohibition (see the header of lib/rubric-config-disease.ts). Questions, anchors
+//       and the meaning of one key all changed: discard stale sessions.
+export const SCHEMA_VERSION = 12
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

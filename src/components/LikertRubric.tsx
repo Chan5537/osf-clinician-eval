@@ -175,6 +175,31 @@ export function LikertDimensions({
                 }
               />
             </div>
+            {/* "How to score it" — the procedure, NOT behind the toggletip (2026-08-24, v4 rubric).
+                Factuality and Safety each send the rater to a named panel, and Trustworthiness
+                tells them to score fit rather than agreement; a rater who does not see that before
+                clicking invents their own procedure. That is the documented cause of the ±0.55
+                rater sign-flip in the 2026-08-18 internal round, where two raters produced equal
+                and opposite B−A effects on the same eight cases. The anchor DEFINITIONS stay
+                behind the toggletip as before — this is the method, not the scale. */}
+            {(dim.howToScore || dim.example) && (
+              <div className="mt-1.5 px-3">
+                <div className="rounded border border-border/60 bg-background/55 px-2.5 py-2">
+                  {dim.howToScore && (
+                    <p className="text-[12.5px] leading-snug text-muted-foreground">
+                      <span className="font-semibold text-foreground/80">How to score it: </span>
+                      {dim.howToScore}
+                    </p>
+                  )}
+                  {dim.example && (
+                    <p className="mt-1.5 text-[12.5px] italic leading-snug text-muted-foreground">
+                      <span className="font-semibold not-italic text-foreground/80">Example: </span>
+                      {dim.example}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
             <div
               role="radiogroup"
               aria-label={`${dim.label} — 1 to 5`}
