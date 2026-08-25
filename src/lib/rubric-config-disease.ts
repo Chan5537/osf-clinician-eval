@@ -175,6 +175,12 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'evidence and a hedged claim on weak evidence both score well; overstating a thin case or ' +
       'hedging a clear one both score poorly. Score the fit, not whether you agree with the ' +
       'conclusions.',
+    example:
+      'A response opens "the thing to take most seriously is circulatory risk" and the Sleep panel ' +
+      'shows severe obstructive sleep apnea, so the firm claim is earned — Very Trustworthy (5). ' +
+      'Another opens just as firmly but attributes it to hypertension and kidney disease that are ' +
+      'nowhere in the Prior medical history panel, so full confidence rests on nothing — Very ' +
+      'Untrustworthy (1).',
     anchors: [
       {
         value: 5,
@@ -218,6 +224,15 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Relevance',
     question:
       'How effectively does this response identify and prioritize the most clinically relevant indicators?',
+    howToScore:
+      'Read the response against what the patient asked, shown in the Patient Query. Judge focus ' +
+      'and proportion: how much of the letter earns its place, and how much is filler or tangent. ' +
+      'This is about dilution, not correctness — a response can be wrong yet focused, or right yet ' +
+      'padded, and being wrong is scored under Factuality.',
+    example:
+      'A response answers the question in a few lines built on the findings that matter and adds ' +
+      'nothing else — Very Relevant (5). Another names the right issue but spends much of the ' +
+      'letter on a long recital of history and secondary detail that buries it — Irrelevant (2).',
     anchors: [
       {
         value: 5,
@@ -260,6 +275,16 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Personalization',
     question:
       'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular)?',
+    howToScore:
+      'Check how much of this particular patient is in the letter: whether it draws on the Sleep ' +
+      'panel, Prior medical history and demographics together, or could have been sent to anyone ' +
+      'with similar numbers. Judge how tailored the synthesis reads, not whether its claims are ' +
+      'right — that is Factuality.',
+    example:
+      "A response ties the patient's own sleep measurements to their age, tobacco use and lipid " +
+      'history in one connected picture that would not fit another patient — Highly Personalized ' +
+      '(5). Another quotes a couple of indices and their age, then gives advice that would suit ' +
+      'anyone with those numbers — Generic (2).',
     anchors: [
       {
         value: 5,
