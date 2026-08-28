@@ -186,7 +186,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       "demographics. Weigh two things: how broadly the analysis ranges across the pertinent " +
       "aspects of this patient's health (e.g. sleep, cardiovascular, metabolic, mental health, " +
       'lifestyle), and whether what it raises does work in the argument — interpreted and ' +
-      'connected to the conclusion, not listed for volume. Score the analysis section only.',
+      'connected to the conclusion, not listed for volume.',
     // TODO example (v5): must quote real letters from the batch that ships to clinicians
     // (2026-08-25 rule). The loaded v33.11 letters carry nothing that separates this axis;
     // write it when the final batch lands.
