@@ -121,25 +121,26 @@
       "sessionId": "HSP_v7_000",
       "sourceIndex": 0,
       "sleepIndex": {
-        "ahi": 31.627906976744185,
-        "odi": 12.83720930232558,
-        "rdi": 51.72093023255814,
-        "tst_min": 322.5,
-        "trt_min": 409.0,
-        "se": 78.85085574572128,
-        "sol_min": 18.0,
-        "waso_min": 68.0,
-        "rem_pct": 5.736434108527131,
-        "n1_pct": 32.24806201550388,
-        "n2_pct": 62.01550387596899,
-        "n3_pct": 0.0,
-        "mean_spo2": 96.67933468022692,
-        "nadir_spo2": 89.9620532989502,
-        "plmi": 39.81395348837209,
-        "ari": 25.86046511627907
+        "ahi": 13.982608695652171,
+        "odi": 10.434782608695652,
+        "rdi": 42.57391304347826,
+        "tst_min": 287.5,
+        "trt_min": 422.5,
+        "se": 68.04733727810651,
+        "sol_min": 7.5,
+        "waso_min": 127.0,
+        "rem_pct": 8.0,
+        "n1_pct": 7.652173913043478,
+        "n2_pct": 83.82608695652173,
+        "n3_pct": 0.5217391304347827,
+        "mean_spo2": 96.15797691190416,
+        "nadir_spo2": 91.0,
+        "plmi": null,
+        "ari": 16.904347826086955
       },
       "futureDiseaseGroundTruth": [
-        "Hypertensive heart and/or renal disease"
+        "Ischemic Heart Disease",
+        "Coronary atherosclerosis"
       ],
       "selection": {
         "cohortGroup": "risky",
@@ -150,25 +151,25 @@
       "sessionId": "HSP_v7_001",
       "sourceIndex": 1,
       "sleepIndex": {
-        "ahi": 23.112480739599384,
-        "odi": 8.135593220338983,
-        "rdi": 42.71186440677966,
-        "tst_min": 324.5,
-        "trt_min": 406.5,
-        "se": 79.82779827798278,
-        "sol_min": 8.5,
-        "waso_min": 59.0,
-        "rem_pct": 33.7442218798151,
-        "n1_pct": 8.320493066255779,
-        "n2_pct": 57.93528505392912,
-        "n3_pct": 0.0,
-        "mean_spo2": null,
-        "nadir_spo2": null,
-        "plmi": 32.54237288135593,
-        "ari": 10.354391371340524
+        "ahi": 41.08474576271186,
+        "odi": 37.83050847457627,
+        "rdi": 70.98305084745762,
+        "tst_min": 295.0,
+        "trt_min": 428.0,
+        "se": 68.92523364485982,
+        "sol_min": 17.5,
+        "waso_min": 115.5,
+        "rem_pct": 23.559322033898304,
+        "n1_pct": 7.627118644067797,
+        "n2_pct": 68.47457627118644,
+        "n3_pct": 0.3389830508474576,
+        "mean_spo2": 91.61213108213607,
+        "nadir_spo2": 82.00001525878906,
+        "plmi": null,
+        "ari": 5.084745762711864
       },
       "futureDiseaseGroundTruth": [
-        "Type 2 diabetes"
+        "Hyperlipidemia"
       ],
       "selection": {
         "cohortGroup": "risky",
@@ -179,22 +180,22 @@
       "sessionId": "HSP_v7_002",
       "sourceIndex": 2,
       "sleepIndex": {
-        "ahi": 7.182044887780548,
-        "odi": 0.5985037406483791,
-        "rdi": 11.97007481296758,
-        "tst_min": 200.5,
-        "trt_min": 394.0,
-        "se": 50.88832487309645,
-        "sol_min": 46.0,
-        "waso_min": 146.0,
-        "rem_pct": 0.0,
-        "n1_pct": 27.18204488778055,
-        "n2_pct": 61.59600997506235,
-        "n3_pct": 11.221945137157109,
-        "mean_spo2": 96.1316806839184,
-        "nadir_spo2": 52.78722047805786,
-        "plmi": 3.591022443890274,
-        "ari": 39.50124688279302
+        "ahi": 5.904761904761905,
+        "odi": 5.714285714285714,
+        "rdi": 34.666666666666664,
+        "tst_min": 315.0,
+        "trt_min": 435.5,
+        "se": 72.33065442020667,
+        "sol_min": 2.0,
+        "waso_min": 58.5,
+        "rem_pct": 19.365079365079367,
+        "n1_pct": 6.031746031746032,
+        "n2_pct": 59.68253968253968,
+        "n3_pct": 14.92063492063492,
+        "mean_spo2": 96.63582997646598,
+        "nadir_spo2": 90.0,
+        "plmi": null,
+        "ari": 14.857142857142858
       },
       "futureDiseaseGroundTruth": [
         "Anxiety disorder"
@@ -208,26 +209,25 @@
       "sessionId": "HSP_v7_003",
       "sourceIndex": 3,
       "sleepIndex": {
-        "ahi": 4.079320113314448,
-        "odi": 0.6798866855524078,
-        "rdi": 6.798866855524079,
-        "tst_min": 176.5,
-        "trt_min": 378.5,
-        "se": 46.63143989431968,
-        "sol_min": 11.5,
-        "waso_min": 163.5,
-        "rem_pct": 9.631728045325778,
-        "n1_pct": 27.47875354107649,
-        "n2_pct": 34.56090651558073,
-        "n3_pct": 28.328611898017,
-        "mean_spo2": 95.73351788003,
-        "nadir_spo2": 88.58778476715088,
-        "plmi": 90.08498583569404,
-        "ari": 31.274787535410763
+        "ahi": 4.0251572327044025,
+        "odi": 0.0,
+        "rdi": 4.0251572327044025,
+        "tst_min": 238.5,
+        "trt_min": 417.0,
+        "se": 57.19424460431655,
+        "sol_min": 3.5,
+        "waso_min": 98.5,
+        "rem_pct": 16.771488469601678,
+        "n1_pct": 18.238993710691823,
+        "n2_pct": 64.57023060796647,
+        "n3_pct": 0.4192872117400419,
+        "mean_spo2": 98.04621404358592,
+        "nadir_spo2": 91.75987243652344,
+        "plmi": 39.496855345911946,
+        "ari": 5.534591194968553
       },
       "futureDiseaseGroundTruth": [
-        "Sleep disorders",
-        "Insomnia"
+        "Sleep disorders"
       ],
       "selection": {
         "cohortGroup": "risky",
@@ -238,25 +238,171 @@
       "sessionId": "HSP_v7_004",
       "sourceIndex": 4,
       "sleepIndex": {
-        "ahi": 14.107648725212464,
-        "odi": 6.96883852691218,
-        "rdi": 19.716713881019828,
-        "tst_min": 353.0,
-        "trt_min": 424.0,
-        "se": 83.25471698113208,
-        "sol_min": 10.0,
-        "waso_min": 57.5,
-        "rem_pct": 6.373937677053824,
-        "n1_pct": 4.815864022662889,
-        "n2_pct": 75.07082152974505,
-        "n3_pct": 13.739376770538245,
-        "mean_spo2": 91.66689263693672,
-        "nadir_spo2": 72.96498417854309,
-        "plmi": 0.0,
-        "ari": 19.716713881019828
+        "ahi": 1.1228070175438596,
+        "odi": 0.2807017543859649,
+        "rdi": 10.666666666666666,
+        "tst_min": 427.5,
+        "trt_min": 482.0,
+        "se": 88.69294605809128,
+        "sol_min": 3.0,
+        "waso_min": 48.0,
+        "rem_pct": 2.3391812865497075,
+        "n1_pct": 6.549707602339182,
+        "n2_pct": 84.67836257309942,
+        "n3_pct": 6.432748538011696,
+        "mean_spo2": 95.37385234513012,
+        "nadir_spo2": 90.0,
+        "plmi": 3.789473684210526,
+        "ari": 0.0
       },
       "futureDiseaseGroundTruth": [
-        "Allergic rhinitis"
+        "Asthma"
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "respiratory"
+      }
+    },
+    "HSP_v7_005": {
+      "sessionId": "HSP_v7_005",
+      "sourceIndex": 5,
+      "sleepIndex": {
+        "ahi": 6.467065868263473,
+        "odi": 4.131736526946108,
+        "rdi": 22.63473053892216,
+        "tst_min": 334.0,
+        "trt_min": 401.0,
+        "se": 83.29177057356608,
+        "sol_min": 9.0,
+        "waso_min": 58.0,
+        "rem_pct": 2.5449101796407185,
+        "n1_pct": 5.089820359281437,
+        "n2_pct": 69.61077844311377,
+        "n3_pct": 22.75449101796407,
+        "mean_spo2": 97.4388967461022,
+        "nadir_spo2": 88.0,
+        "plmi": null,
+        "ari": 3.5928143712574854
+      },
+      "futureDiseaseGroundTruth": [
+        "Nonrheumatic tricuspid valve disorders"
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "circulatory"
+      }
+    },
+    "HSP_v7_006": {
+      "sessionId": "HSP_v7_006",
+      "sourceIndex": 6,
+      "sleepIndex": {
+        "ahi": 27.692307692307693,
+        "odi": 27.53036437246964,
+        "rdi": 32.388663967611336,
+        "tst_min": 370.5,
+        "trt_min": 424.5,
+        "se": 87.27915194346289,
+        "sol_min": 8.0,
+        "waso_min": 46.0,
+        "rem_pct": 2.968960863697706,
+        "n1_pct": 1.214574898785425,
+        "n2_pct": 94.87179487179486,
+        "n3_pct": 0.9446693657219972,
+        "mean_spo2": 94.69135556205993,
+        "nadir_spo2": 79.01058197021484,
+        "plmi": 0.0,
+        "ari": 6.153846153846154
+      },
+      "futureDiseaseGroundTruth": [
+        "Obesity"
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "endocrine_metabolic"
+      }
+    },
+    "HSP_v7_007": {
+      "sessionId": "HSP_v7_007",
+      "sourceIndex": 7,
+      "sleepIndex": {
+        "ahi": 12.541567695961996,
+        "odi": 0.0,
+        "rdi": 12.541567695961996,
+        "tst_min": 421.0,
+        "trt_min": 502.0,
+        "se": 83.86454183266933,
+        "sol_min": 50.5,
+        "waso_min": 30.5,
+        "rem_pct": 19.596199524940616,
+        "n1_pct": 0.5938242280285035,
+        "n2_pct": 78.85985748218528,
+        "n3_pct": 0.9501187648456058,
+        "mean_spo2": 94.06579983893218,
+        "nadir_spo2": 90.02936553955078,
+        "plmi": 37.62470308788598,
+        "ari": 0.4275534441805225
+      },
+      "futureDiseaseGroundTruth": [
+        "Depression"
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "mental"
+      }
+    },
+    "HSP_v7_008": {
+      "sessionId": "HSP_v7_008",
+      "sourceIndex": 8,
+      "sleepIndex": {
+        "ahi": 27.42489270386266,
+        "odi": 19.313304721030043,
+        "rdi": 31.28755364806867,
+        "tst_min": 466.0,
+        "trt_min": 493.0,
+        "se": 94.52332657200812,
+        "sol_min": 7.0,
+        "waso_min": 14.0,
+        "rem_pct": 10.944206008583691,
+        "n1_pct": 12.875536480686694,
+        "n2_pct": 71.45922746781116,
+        "n3_pct": 4.721030042918455,
+        "mean_spo2": 97.01326081478628,
+        "nadir_spo2": 88.97230625152588,
+        "plmi": 33.862660944206006,
+        "ari": 11.587982832618026
+      },
+      "futureDiseaseGroundTruth": [
+        "Sleep disorders",
+        "Insomnia"
+      ],
+      "selection": {
+        "cohortGroup": "risky",
+        "stratum": "neurological"
+      }
+    },
+    "HSP_v7_009": {
+      "sessionId": "HSP_v7_009",
+      "sourceIndex": 9,
+      "sleepIndex": {
+        "ahi": 26.41726618705036,
+        "odi": 0.0,
+        "rdi": 26.41726618705036,
+        "tst_min": 347.5,
+        "trt_min": 550.0,
+        "se": 63.18181818181819,
+        "sol_min": 8.0,
+        "waso_min": 194.5,
+        "rem_pct": 12.805755395683452,
+        "n1_pct": 15.53956834532374,
+        "n2_pct": 71.65467625899281,
+        "n3_pct": 0.0,
+        "mean_spo2": 96.31819952345008,
+        "nadir_spo2": 89.98880004882812,
+        "plmi": 0.1726618705035971,
+        "ari": 0.5179856115107914
+      },
+      "futureDiseaseGroundTruth": [
+        "Asthma"
       ],
       "selection": {
         "cohortGroup": "risky",
