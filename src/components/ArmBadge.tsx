@@ -10,7 +10,7 @@ export function ArmBadge({ arm }: { arm: ArmId }) {
       className="ml-2 rounded-md border border-dashed border-amber-500/70 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200"
       title="Internal review only — arm identity"
     >
-      {ARM_NAMES[arm]}
+      {ARM_NAMES[arm] ?? arm /* unmapped exporter literal — show it raw, never blank */}
     </span>
   )
 }

@@ -10,9 +10,9 @@ import { createContext, useContext } from 'react'
 import type { ArmId } from './types'
 
 export const ARM_NAMES: Record<ArmId, string> = {
-  A: 'base',
-  B: 'ours',
-  C: 'ground truth',
+  BASE: 'base',
+  OURS: 'ours',
+  TRUTH: 'ground truth',
 }
 
 export const RevealContext = createContext<boolean>(false)

@@ -11,8 +11,10 @@
 
 // Blinded display letter the clinician sees; assigned by the exporter after shuffle.
 export type ResponseLabel = 'A' | 'B' | 'C'
-// Source arm — the UNBLINDING KEY. Carried in data + export only; NEVER rendered.
-export type ArmId = 'A' | 'B' | 'C'
+// Source arm — the UNBLINDING KEY. Carried in data + export only; NEVER rendered (except via
+// the internal reveal switch). v46 exporter literals; the v33 batches wrote 'A'|'B'|'C', which
+// collided with ResponseLabel and is retired with them.
+export type ArmId = 'BASE' | 'OURS' | 'TRUTH'
 
 // A single weighted-boolean rubric atom, as present in the generated data. IGNORED since v6 —
 // kept only so the generated JSON keeps type-checking without edits.

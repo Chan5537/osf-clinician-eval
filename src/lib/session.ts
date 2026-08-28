@@ -43,7 +43,11 @@ import { advance, touch, park, resume } from './timing'
 //       Safety is retired (it tracked Factuality; see the header of lib/rubric-config-disease.ts)
 //       — and Personalization is re-scoped from the synthesis to the recommendations. A v12
 //       session would present Safety answers as Comprehensiveness ones: discard stale sessions.
-export const SCHEMA_VERSION = 13
+// v14 = the v46 letter batch (10 patients, two per category) replaced the 5-case v33.11 batch
+//       in commit 7121544 WITHOUT this bump — case count and content both changed, so a v13
+//       session created against the old batch would map its answers onto the wrong cases.
+//       Bumped here after the fact, with the arm-literal fix (BASE/OURS/TRUTH).
+export const SCHEMA_VERSION = 14
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
