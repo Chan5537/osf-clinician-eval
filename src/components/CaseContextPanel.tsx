@@ -16,7 +16,6 @@ import type { Demographics } from '@/lib/types'
 
 interface Props {
   caseId: string
-  category: string
   demographics: Demographics
   ehrHistory: string[]
 }
@@ -122,7 +121,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 //
 // Sleep indices and the future-disease list come from the sidecar (see lib/case-context.ts);
 // demographics and history come from the case file itself.
-export function CaseContextPanel({ caseId, category, demographics, ehrHistory }: Props) {
+export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
   const { age, sex, bmi, race, bp } = demographics
   const context = caseContext(caseId)
 
@@ -178,9 +177,43 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
         </p>
       )}
 
-      {/* No defaultValue: all three start COLLAPSED. The clinician opens what they need, which
-          also means the recorded outcome is never on screen unless they deliberately ask for it. */}
-      <Accordion type="multiple">
+      {/* Order + defaults reversed 2026-08-28 (owner): the recorded outcome now sits FIRST and
+          starts OPEN. Clinician feedback showed raters opening sleep + history first and
+          re-deriving their own (cardiovascular) prediction — doing the letters' job instead of
+          judging it against what actually happened. The reference belongs on screen before the
+          material it grades. Sleep and history still start collapsed. */}
+      <Accordion type="multiple" defaultValue={['future-disease']}>
+        <AccordionItem value="future-disease" className={itemClass(OUTCOME_STYLE)}>
+          <AccordionTrigger className={TRIGGER_CLASS}>
+            <SectionHeader
+              icon={TrendingUp}
+              style={OUTCOME_STYLE}
+              // Renamed "Future risk" 2026-08-28 (owner). The 08-22 rationale required the
+              // label to carry NOT-A-PREDICTION and the 6-year window; the short name carries
+              // neither, so both move to the meta text ("recorded in the 6 years after the
+              // study" — past-tense fact, window stated). Rubric howToScore strings reference
+              // this panel BY NAME — keep them in step (rubric-config-disease.ts, Factuality).
+              // ⛔ Still avoids the blinding-gate phrases: no "ground truth", no "oracle".
+              title="Future risk"
+              meta={
+                context
+                  ? `${plural(futureGtInPanel.length, 'condition')} · recorded in the 6 years after the study`
+                  : 'unavailable'
+              }
+            />
+          </AccordionTrigger>
+          <AccordionContent>
+            {context ? (
+              <FutureRiskGrid
+                conditions={futureGt}
+                emptyLabel="No new-onset condition recorded in the 6-year window."
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">Unavailable.</p>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="sleep-indices" className={itemClass(SLEEP_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
@@ -192,11 +225,7 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
           </AccordionTrigger>
           <AccordionContent>
             {context && givenSleepIndex ? (
-              <SleepIndexGrid
-                sleepIndex={givenSleepIndex}
-                stageIndex={context.sleepIndex}
-                category={category}
-              />
+              <SleepIndexGrid sleepIndex={givenSleepIndex} />
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
@@ -217,43 +246,6 @@ export function CaseContextPanel({ caseId, category, demographics, ehrHistory }:
               conditions={ehrHistory}
               emptyLabel="No coded history recorded at the time of the study."
             />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="future-disease" className={itemClass(OUTCOME_STYLE)}>
-          <AccordionTrigger className={TRIGGER_CLASS}>
-            <SectionHeader
-              icon={TrendingUp}
-              style={OUTCOME_STYLE}
-              // Owner 2026-08-22, reworded 2026-08-25 (Zitao) from
-              // "EHR-recorded new diagnoses · 6 years" to plain clinical English.
-              // The 08-22 rationale listed three things the label had to carry; all three
-              // survive the rewording, which is why it is safe:
-              //   - NOT A PREDICTION. Previously carried by "EHR-recorded". Now carried by
-              //     "developed" — a past-tense fact about what happened to this patient, which
-              //     no reading turns into a system's output.
-              //   - NEW diagnoses only, i.e. excluding what was already present at the study.
-              //     Previously "new diagnoses"; now "developed", which likewise cannot describe
-              //     a condition the patient already had. The pairing with "Prior medical
-              //     history" directly above still reads as before-the-study vs after-it.
-              //   - THE 6-YEAR WINDOW stays on the collapsed header rather than hiding inside
-              //     the section.
-              // ⛔ Still avoids the phrases the blinding gate greps for (see README) — no
-              //    "ground truth", no "oracle" — even though that gate scans response content
-              //    rather than UI labels.
-              title="Future disease(s) patient developed in 6 years"
-              meta={context ? plural(futureGtInPanel.length, 'condition') : 'unavailable'}
-            />
-          </AccordionTrigger>
-          <AccordionContent>
-            {context ? (
-              <FutureRiskGrid
-                conditions={futureGt}
-                emptyLabel="No new-onset condition recorded in the 6-year window."
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground">Unavailable.</p>
-            )}
           </AccordionContent>
         </AccordionItem>
 
