@@ -192,7 +192,8 @@ export function LikertDimensions({
                 one click away rather than on the page. An inline chip naming that panel was
                 built and then removed as unnecessary (Zitao, same day) — the rubric pin plus
                 example was judged enough. If the clinician round shows raters scoring Factuality
-                or Safety without opening the outcome panel, this is the first thing to revisit. */}
+                without opening the outcome panel (the only outcome-keyed axis since rubric v5),
+                this is the first thing to revisit. */}
             {(dim.howToScore || dim.example) && (
               <AxisHelp
                 label={dim.label}

@@ -39,7 +39,11 @@ import { advance, touch, park, resume } from './timing'
 //       ones. Factuality and Safety are now scored against the recorded-outcome panel, reversing
 //       the v11 prohibition (see the header of lib/rubric-config-disease.ts). Questions, anchors
 //       and the meaning of one key all changed: discard stale sessions.
-export const SCHEMA_VERSION = 12
+// v13 = disease rubric v5 (2026-08-28, Zitao). The `harm` KEY now carries Comprehensiveness —
+//       Safety is retired (it tracked Factuality; see the header of lib/rubric-config-disease.ts)
+//       — and Personalization is re-scoped from the synthesis to the recommendations. A v12
+//       session would present Safety answers as Comprehensiveness ones: discard stale sessions.
+export const SCHEMA_VERSION = 13
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

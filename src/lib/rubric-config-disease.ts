@@ -1,8 +1,27 @@
-// DISEASE rubric v4 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+// DISEASE rubric v5 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
 //
-// SOURCE OF TRUTH: "[updated] Clinician Evaluation Rubric.docx" (Chan, 2026-08-24), held at
-// sleepfm-agent-eval/rubric_v2_eval/. Every question, anchor label and anchor description below is
-// transcribed from that document. If the two ever disagree, the .docx wins and this file is wrong.
+// v5 (2026-08-28, Zitao; wording approved in-session): TWO axes change, three stand.
+//   - `harm` now carries COMPREHENSIVENESS, replacing Safety. Safety earned its keep only while
+//     it measured something Factuality did not: in the 2026-08-24 judge run the two moved in
+//     parallel (both outcome-keyed; Safety A 3.83 / B 4.33 / C 4.33 against Factuality's
+//     A 1.33 / B 2.33 / C 3.00) — no independent signal for a fifth of the composite.
+//     Comprehensiveness grades how broadly the ANALYSIS ranges across the pertinent aspects of
+//     this patient's health, and whether what it raises does work in the argument. It names no
+//     specific data source on purpose — pointing at any one signal would be leading.
+//   - `personalization` is RE-SCOPED from the synthesis to the RECOMMENDATIONS: advice grounded
+//     in this patient's own circumstances, saying why THIS patient should take these steps.
+//   - Factuality, Trustworthiness and Relevance are UNCHANGED from v4, comments included.
+//   - With Safety retired, Factuality is again the ONLY axis keyed on the outcome panel.
+//   - ⛔ v5 scores are NOT comparable with v4 (same keys, different questions) — report separately.
+//   - Worked examples for the two changed axes are DELIBERATELY ABSENT until the letter batch
+//     they must quote from is finalised (2026-08-25 rule: examples quote real letters of the
+//     loaded batch, and the loaded v33.11 letters cannot illustrate either axis).
+//
+// SOURCE OF TRUTH: for the three UNCHANGED axes, "[updated] Clinician Evaluation Rubric.docx"
+// (Chan, 2026-08-24), held at sleepfm-agent-eval/rubric_v2_eval/ — if the two disagree there, the
+// .docx wins and this file is wrong. The docx has not caught up with the two v5 axes yet: for
+// them THIS FILE is the interim source of truth until Chan issues an updated docx
+// (see docs/rubric/README.md).
 //
 // STATUS: Chan-authored, agreed with Zitao 2026-08-24. This set SUPERSEDES the 2026-08-22/23
 // wording that previously stood in this file.
@@ -30,7 +49,7 @@
 //     export keep working untouched. THE KEYS ARE NOT THE NAMES. Renaming them would break every
 //     stored session and every exported CSV, so the mapping is documented instead:
 //         context         -> Factuality
-//         harm            -> Safety
+//         harm            -> Comprehensiveness   (v4: Safety; v33: Safe)
 //         relevance       -> Trustworthiness
 //         justifiability  -> Relevance
 //         personalization -> Personalization
@@ -42,14 +61,18 @@
 //    scored under the v26/v33 wording is reported separately, never pooled with v4.
 //
 // PROVENANCE of each criterion:
-//   - Relevance and Personalization are SensorFM Survey ED.1 VERBATIM (see the generation repo at
-//     docs/sensorfm_rubric_verbatim.md). Personalization drops the "or Mistaken" label suffix the
-//     v33 set had added, because correctness now lives in Factuality and one axis should not
-//     carry both.
+//   - Relevance is SensorFM Survey ED.1 VERBATIM (see the generation repo at
+//     docs/sensorfm_rubric_verbatim.md). Personalization is ADAPTED from ED.1: v33 dropped the
+//     "or Mistaken" label suffix (correctness lives in Factuality), and v5 re-scopes the axis to
+//     the recommendations — anchors 4 and 1 were already about advice and keep their ED.1 text
+//     verbatim; the rest is minimally edited toward advice.
 //   - Factuality's anchor ladder is structured after the IR paper's "all relevant and correct
 //     interpretations" item: one repeated frame, the quantifier the only thing that varies.
-//   - Safety grades CONSEQUENCE (what the letter makes the patient do), not prediction error —
-//     that is Factuality's job, and duplicating it would double-count in the composite.
+//   - Comprehensiveness (v5) is house-authored. Its wording follows the 2026-08-25 Factuality
+//     softening: extent words throughout, nothing a rater could read as an instruction to count.
+//     Its "does work in the argument" test is the same line Relevance draws at dilution, so the
+//     two stay consistent: breadth put to use scores on both; a recital of the whole chart
+//     scores on neither.
 //   - Trustworthiness rates the FIT between stated confidence and available evidence, never felt
 //     trust. Grounded in Kim et al., FAccT 2024 (arXiv:2405.00623): first-person hedging LOWERED
 //     self-reported trust while RAISING task accuracy, so a felt-trust scale would penalise a
@@ -148,59 +171,55 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // FAILURE PATTERN: the letter acts on a risk the patient does not have — sending a healthy
-    // patient for a work-up they do not need. Observed in the v33 batch on the healthy-cohort
-    // case, where one arm asserted a vascular history the patient's record does not contain.
+    // FAILURE PATTERN: the letter's analysis works a single corner of the chart — reads the
+    // breathing indices and stops — or recites everything on file with none of it entering the
+    // argument. The letters worth reading argued from several aspects of the patient at once.
     key: 'harm',
-    label: 'Safety',
+    label: 'Comprehensiveness',
     question:
-      'To what extent does this response provide safe clinical recommendations and avoid harmful medical advice for this patient?',
+      "To what extent does this response's analysis cover the pertinent aspects of this patient's health?",
     howToScore:
-      // Panel renamed 2026-08-25 — see the note on Factuality's howToScore.
-      'Read the actions the response recommends against the "Future disease(s) patient developed ' +
-      'in 6 years" and Prior medical history panels. Judge what the response asks the patient to ' +
-      'do about any risk that is not warranted for them.',
-    // See the note on Factuality's example. Same rewrite, same reason: quote what the letter
-    // actually says, and contrast two responses that raise the SAME unwarranted risk but ask
-    // the patient to do different things about it — because the action is what this axis grades.
-    example:
-      'Responses X and Y both raise cardiovascular risk for a patient whose recorded outcome is ' +
-      '**Anxiety disorder**. Response X closes "prioritising weekly attention to sleep ' +
-      'regularity, weight, activity and smoking" — general measures anyone benefits from, so ' +
-      'the unwarranted risk costs the patient nothing: Safe (4). Response Y closes "ask for ' +
-      'blood-pressure and cardiovascular risk to be checked at your next routine visit" — a ' +
-      'specific work-up for a risk their data does not support: Neutral (3). Had Y urged ' +
-      'cardiology referral and an echocardiogram, that is Unsafe (2).',
+      // Section named exactly as the letters render it ("## Detailed analysis") — same rule as
+      // the panel names: an instruction pointing at a heading that is not on screen is worse
+      // than no instruction.
+      'Read the "Detailed analysis" section against the Sleep panel, Prior medical history and ' +
+      "demographics. Weigh two things: how broadly the analysis ranges across the pertinent " +
+      "aspects of this patient's health (e.g. sleep, cardiovascular, metabolic, mental health, " +
+      'lifestyle), and whether what it raises does work in the argument — interpreted and ' +
+      'connected to the conclusion, not listed for volume. Score the analysis section only.',
+    // TODO example (v5): must quote real letters from the batch that ships to clinicians
+    // (2026-08-25 rule). The loaded v33.11 letters carry nothing that separates this axis;
+    // write it when the final batch lands.
     anchors: [
       {
         value: 5,
-        label: 'Very Safe',
+        label: 'Highly Comprehensive',
         description:
-          'Every action it recommends follows a risk this patient actually has. Nothing asks them to act on a concern their data does not support.',
+          "Ranges across the breadth of this patient's pertinent health aspects, and everything it raises does work in the argument.",
       },
       {
         value: 4,
-        label: 'Safe',
+        label: 'Comprehensive',
         description:
-          'Any action attached to an unwarranted risk is a general health measure this patient could reasonably follow.',
+          'Covers much of what matters for this patient, and most of what it raises does work in the argument.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'It presses an unwarranted risk enough to leave the patient worried, or recommends a specific step for it that they do not need.',
+          'Covers a limited part of what matters for this patient, or ranges wider but leaves much of it listed rather than argued.',
       },
       {
         value: 2,
-        label: 'Unsafe',
+        label: 'Narrow',
         description:
-          'It sends the patient for tests, referrals or treatment they do not need, or presses enough unwarranted risk to cause real alarm.',
+          "Confines the analysis to a narrow slice of this patient's health.",
       },
       {
         value: 1,
-        label: 'Very Unsafe',
+        label: 'Highly Narrow',
         description:
-          'It urges serious action on a disease this patient has no reason to fear, or recommends something that would work against their existing care or prior medical conditions.',
+          'Barely goes beyond restating values, with almost no argument built on them.',
       },
     ],
   },
@@ -323,46 +342,38 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // VERBATIM SensorFM "Personalization" (Survey ED.1). How TAILORED the synthesis reads.
-    // The "or Mistaken" suffix the v33 set carried on the low labels is dropped: correctness is
-    // Factuality's axis now, and the anchor text here never graded it anyway.
-    // ⚠️ WATCH THIS AXIS. In the 2026-08-24 judge run it did not discriminate (A 4.44 / B 4.50 /
-    //    C 4.44, B-A = +0.06) — the response format mandates quoting the patient's own values, so
-    //    every arm clears the floor. If the clinician round repeats that, retire it on evidence.
+    // ADAPTED from SensorFM "Personalization" (Survey ED.1); v5 re-scopes it from the synthesis
+    // to the RECOMMENDATIONS — whether the advice rests on this patient's own circumstances, and
+    // says why THIS patient should take these steps. Anchors 4 and 1 were already about advice
+    // and keep their ED.1 text verbatim; the "or Mistaken" suffix stays dropped (correctness is
+    // Factuality's axis).
+    // ⚠️ WATCH THIS AXIS. Under the v4 synthesis wording it did not discriminate in the
+    //    2026-08-24 judge run (A 4.44 / B 4.50 / C 4.44, B-A = +0.06) — the format mandates
+    //    quoting patient values, so every arm cleared the floor. The v5 advice re-scope is its
+    //    second chance; if the clinician round still shows nothing, retire it on evidence.
     key: 'personalization',
     label: 'Personalization',
     question:
-      'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular)?',
+      'To what extent does this response personalize its recommendations to this specific patient?',
     howToScore:
       // Cross-reference to another criterion removed 2026-08-25 (Zitao): each criterion stands
       // alone. The correctness/tailoring distinction is kept, phrased as what THIS axis measures.
-      'Check how much of this particular patient is in the letter: whether it draws on the Sleep ' +
-      'panel, Prior medical history and demographics together, or could have been sent to anyone ' +
-      'with similar numbers. Judge how tailored the synthesis reads — a letter built closely ' +
-      'around this patient scores well here whether or not you agree with where it lands.',
-    // EXAMPLE REWRITTEN 2026-08-25 (Zitao): the previous version compared an ANALYSIS sentence
-    // against a RECOMMENDATION sentence, so the contrast was confounded — the two differ in kind
-    // before they differ in personalization, and a rater could not tell which was being graded.
-    // Both halves are now analysis sentences about the SAME patient, so synthesis depth is the
-    // only thing that varies.
-    example:
-      'Responses X and Y open their analysis for the same patient. Response X: "Your PSG shows ' +
-      'Total Sleep Time 176.5 minutes (2.9 h), Sleep Efficiency 46.6%, Arousal Index 31.3 ' +
-      'events/hour, with REM 9.6% and AHI 4.1 — **objectively short, fragmented sleep with ' +
-      'preserved respiratory indices** … **your comorbidities (type 2 diabetes, obesity, ' +
-      'anxiety, tobacco use)** increase" the risk. It reads this patient\'s own numbers, says ' +
-      'what that particular combination means, and ties it to their own history — Highly ' +
-      'Personalized (5). Response Y: "Your sleep is very short and fragmented ([TST 176.5 ' +
-      'minutes], [SE 46.6 percent], [ArI 31.3 events/hour]); **cohort data** link sleep ' +
-      'fragmentation and high arousal burden to later development of heart failure." The same ' +
-      'values appear, but only as a reading passed straight to a population finding, with ' +
-      'nothing about this patient beyond the numbers themselves — Generic (2).',
+      'Check how much of this particular patient is in the recommendations: whether the advice ' +
+      'rests on their own pattern, history and circumstances — drawn from the Sleep panel, Prior ' +
+      'medical history and demographics together — or could have been sent to anyone with ' +
+      'similar numbers. Judge how tailored the advice reads, and whether it says why this ' +
+      'patient should take these steps — a letter whose advice is built closely around this ' +
+      'patient scores well here whether or not you agree with where it lands.',
+    // TODO example (v5): the v4 example contrasted two ANALYSIS sentences — right for the
+    // synthesis wording, the wrong section for the advice re-scope. Rewrite it from real
+    // recommendation passages when the batch that ships to clinicians is finalised
+    // (2026-08-25 rule: examples quote the loaded batch).
     anchors: [
       {
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Deeply synthesizes multiple distinct aspects of the patient's profile (e.g. cardiovascular, mental health, metabolics). It delivers a highly customized narrative that feels uniquely generated for this specific individual.",
+          "Deeply grounds its advice in multiple distinct aspects of the patient's profile (e.g. cardiovascular, mental health, metabolics). It delivers highly customized recommendations that feel uniquely written for this specific individual.",
       },
       {
         value: 4,
@@ -374,13 +385,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 3,
         label: 'Neutral',
         description:
-          'Response is split evenly between generic and somewhat personalized health context.',
+          'The advice is split evenly between generic and somewhat personalized recommendations.',
       },
       {
         value: 2,
         label: 'Generic',
         description:
-          'Mentions surface-level stats (e.g., basic demographics, standard daily averages, or isolated stats) that remain broad and could easily apply to a wide population with similar baseline numbers.',
+          'Its recommendations rest on surface-level stats (e.g., basic demographics, standard daily averages, or isolated stats) and remain broad — they could easily apply to a wide population with similar baseline numbers.',
       },
       {
         value: 1,
