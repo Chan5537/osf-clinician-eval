@@ -222,7 +222,6 @@ function App() {
         <div id={SECTION_IDS.panel} className="scroll-mt-24">
           <CaseContextPanel
             caseId={demoCase.case_id}
-            category={demoCase.category}
             demographics={demoCase.demographics}
             ehrHistory={demoCase.ehr_history}
           />

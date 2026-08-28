@@ -84,8 +84,9 @@
 //
 // BLINDING CONSTRAINTS carry over unchanged: no reference to architecture (tools, ReAct, SleepFM,
 // "the model", a specific arm), no naming of a condition or group, no "ground truth" / "oracle"
-// anywhere in rater-facing text. The panel is called "Future disease(s) patient developed in 6
-// years" (renamed 2026-08-25; keep the howToScore strings below in step with it).
+// anywhere in rater-facing text. The panel is called "Future risk" (renamed 2026-08-28, owner;
+// previously "Future disease(s) patient developed in 6 years" — keep the howToScore strings
+// below in step with it; the recorded-outcome meaning now lives in the panel's meta line).
 import type { RubricDimensionDef } from './rubric-config'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
@@ -112,9 +113,9 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       // Panel named exactly as the UI labels it (CaseContextPanel.tsx) — reworded 2026-08-25
       // when that header changed. An instruction pointing at a panel name that is not on screen
       // is worse than no instruction.
-      'Open the "Future disease(s) patient developed in 6 years" panel and read it against the ' +
-      'conditions the response highlights **in bold**. Where the panel records several closely ' +
-      'related variants of ' +
+      'Open the "Future risk" panel — the conditions this patient actually developed in the six ' +
+      'years after the study — and read it against the conditions the response highlights ' +
+      '**in bold**. Where the panel records several closely related variants of ' +
       'one underlying problem, treat them as a single condition. Judge how well the response ' +
       'captures what this patient went on to develop, and how much it raises that they did not.',
     // EXAMPLES REWRITTEN 2026-08-25 (Zitao): the previous text described a hypothetical panel

@@ -40,7 +40,7 @@ the .docx wins and the code is wrong.**
 
 | # | Criterion | Stored key | Scored against |
 |---|---|---|---|
-| 1 | **Factuality** | `context` | Future disease · recorded outcome panel |
+| 1 | **Factuality** | `context` | The "Future risk" panel (recorded 6-year outcome) |
 | 2 | **Comprehensiveness** | `harm` | The "Detailed analysis" section · breadth put to use |
 | 3 | **Trustworthiness** | `relevance` | Sleep panel + Prior medical history |
 | 4 | **Relevance** | `justifiability` | What the patient asked |

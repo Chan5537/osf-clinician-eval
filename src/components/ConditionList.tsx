@@ -1,43 +1,36 @@
-import { groupByCategory } from '@/lib/case-context'
-
 interface Props {
   conditions: string[]
   // Shown when the list is empty — the two lists mean different things when nothing is there.
   emptyLabel: string
 }
 
-// A flat list of condition names, bucketed into organ-system groups (label on the left,
-// conditions on the right). Replaces the previous badge/chip treatment: chips rendered at
-// text-xs, wrapped into ragged rows, carried no ordering, and hid the tail behind "+N more" —
-// none of which survives a clinician scanning 20 conditions. Plain rows at text-sm read at a
-// glance and the grouping does the work the chips were pretending to do.
-//
-// Used by BOTH medical history and the future-disease ground truth, so the two lists stay
-// visually parallel and a reader can compare them without re-learning a layout.
+// A raw exporter token (`pc_296.22_dx`) that slipped through the upstream name lookup renders as
+// "Code 296.22" — visible and obviously unfinished rather than machine noise in a clinical panel.
+// STOPGAP, not a fix: the name belongs in the exporter's phecode map; 16 such entries shipped in
+// the v46 batch. Remove this once the exporter resolves every name.
+function displayName(name: string): string {
+  const m = /^pc_(.+)_dx$/.exec(name)
+  return m ? `Code ${m[1]}` : name
+}
+
+// One wrapped row of condition names. Until 2026-08-28 this grouped conditions under organ-system
+// headings (MENTAL DISORDERS / MUSCULOSKELETAL / ...) — and clinician feedback showed exactly the
+// failure that invites: raters read the history taxonomy as a diagnostic worksheet and derived
+// their own prediction from it. Flat names state what is on record without ranking or organising
+// it into an argument. The category grouping survives where it IS the point: the outcome panel
+// (FutureRiskGrid).
 export function ConditionList({ conditions, emptyLabel }: Props) {
   if (conditions.length === 0) {
     return <p className="text-sm text-muted-foreground">{emptyLabel}</p>
   }
-  const groups = groupByCategory(conditions)
   return (
-    <dl className="divide-y divide-border/60">
-      {groups.map((g) => (
-        <div
-          key={g.category}
-          className="grid grid-cols-1 gap-x-4 gap-y-1 py-2 first:pt-0 last:pb-0 sm:grid-cols-[10.5rem_1fr]"
-        >
-          <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground sm:pt-0.5">
-            {g.category}
-          </dt>
-          <dd className="flex flex-col gap-1">
-            {g.conditions.map((c) => (
-              <span key={c} className="text-sm leading-snug text-foreground">
-                {c}
-              </span>
-            ))}
-          </dd>
-        </div>
+    <p className="text-sm leading-relaxed text-foreground">
+      {conditions.map((c, i) => (
+        <span key={c} className="whitespace-nowrap">
+          {displayName(c)}
+          {i < conditions.length - 1 && <span className="text-muted-foreground/70"> · </span>}
+        </span>
       ))}
-    </dl>
+    </p>
   )
 }
