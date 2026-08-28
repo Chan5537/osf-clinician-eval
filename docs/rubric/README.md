@@ -1,8 +1,34 @@
-# Rubric v4 — source of truth and validation
+# Rubric v5 — source of truth and validation
 
-**Active as of 2026-08-24** (Chan, agreed with Zitao). Implemented in
+**Active as of 2026-08-28** (v5, Zitao; v4 by Chan 2026-08-24 stands for the three unchanged
+axes). Implemented in
 [`src/lib/rubric-config-disease.ts`](../../src/lib/rubric-config-disease.ts); session
-`SCHEMA_VERSION` bumped to **12**.
+`SCHEMA_VERSION` bumped to **13**.
+
+## What v5 changes from v4
+
+1. **Safety is retired; the `harm` key now carries Comprehensiveness.** In the 2026-08-24
+   judge run Safety moved in parallel with Factuality (both outcome-keyed, same arm ordering) —
+   no independent signal for a fifth of the composite. Comprehensiveness grades how broadly the
+   *Detailed analysis* ranges across the pertinent aspects of the patient's health and whether
+   what it raises does work in the argument. It deliberately names no data source, and its
+   wording deliberately avoids anything a rater could read as an instruction to count (the same
+   softening Factuality got on 2026-08-25).
+2. **Personalization is re-scoped from the synthesis to the recommendations** — advice grounded
+   in this patient's own circumstances, saying why *this* patient should take these steps.
+   Anchors 4 and 1 keep their SensorFM ED.1 text verbatim; the rest is minimally edited.
+3. Factuality, Trustworthiness and Relevance are unchanged from v4.
+4. With Safety retired, **Factuality is again the only axis keyed on the recorded outcome.**
+   Note the ground-truth arm carries no medication/lab content (no labels exist for most
+   patients), so it need not top Comprehensiveness — expected, not a bug.
+5. ⛔ **v5 scores are not comparable with v4** (same keys, different questions) — report
+   separately, never pooled.
+6. Worked examples for the two changed axes are deliberately absent until the letter batch that
+   ships to clinicians is finalised — examples must quote real letters of the loaded batch, and
+   the loaded v33.11 letters cannot illustrate either axis.
+7. The .docx has not caught up with the two v5 axes yet: for them the config file is the interim
+   source of truth until Chan issues an updated docx. The three unchanged axes still follow the
+   2026-08-24 docx.
 
 ## Source of truth
 
@@ -15,10 +41,10 @@ the .docx wins and the code is wrong.**
 | # | Criterion | Stored key | Scored against |
 |---|---|---|---|
 | 1 | **Factuality** | `context` | Future disease · recorded outcome panel |
-| 2 | **Safety** | `harm` | Recorded outcome + Prior medical history |
+| 2 | **Comprehensiveness** | `harm` | The "Detailed analysis" section · breadth put to use |
 | 3 | **Trustworthiness** | `relevance` | Sleep panel + Prior medical history |
 | 4 | **Relevance** | `justifiability` | What the patient asked |
-| 5 | **Personalization** | `personalization` | The patient's own profile |
+| 5 | **Personalization** | `personalization` | The "What this means for you" advice · this patient's own circumstances |
 
 **The keys are not the names.** They are frozen so `LikertKey`, the completion gate, the reducer
 and the CSV export keep working. Renaming them breaks every stored session and every exported CSV.
@@ -45,7 +71,7 @@ produced **equal and opposite** B−A effects — Chan −0.55, Zitao +0.55 — 
 0.000 (p = 0.86). Each rater found a large effect and disagreed on its *sign*. Without a visible
 procedure, raters invent their own; the anchors alone were not enough.
 
-## Validation (2026-08-24 LLM-judge run)
+## Validation (2026-08-24 LLM-judge run — **v4 axes**; a v5 smoke is pending)
 
 3 judges (Claude Opus 4.5, GPT-5 mini, Gemini 2.5 Pro) × 6 cases × 3 arms = 54 scored responses.
 Harness in the generation repo at `sleepfm-agent-eval/rubric_v2_eval/`.
@@ -69,9 +95,12 @@ clinician round.
 
 ## Open items
 
-- **Personalization does not discriminate** (+0.06). Every arm clears the floor because the
-  response format mandates quoting patient values. Retire it on evidence if the clinician round
-  repeats this.
+- **Personalization did not discriminate under the v4 synthesis wording** (+0.06); every arm
+  cleared the floor because the format mandates quoting patient values. The v5 advice re-scope
+  is its second chance — if the clinician round still shows nothing, retire it on evidence.
+- **v5 judge smoke not yet run**: rerun the 3-judge harness on the final batch to check that
+  Comprehensiveness discriminates, that re-scoped Personalization leaves the floor, and that no
+  remaining axis tracks Factuality.
 - **Blinding leak** in the v33 batch, `HSP_v7_040` arm B: the letter says *"From the provided
   future-condition rows only Sleep disorders (score 100) remains after filtering"*, which reveals
   it had prediction scores. 1 of 18 responses; must be fixed before clinicians see it.
