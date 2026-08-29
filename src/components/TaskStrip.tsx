@@ -24,11 +24,13 @@ export function TaskStrip({ responseCount, onGoToScoring }: Props) {
       {/* Structured as a brief, not a hint bar (owner 2026-08-29): an eyebrow naming what this
           block is, the role definition as the primary line, and the procedure demoted to a
           smaller muted line. The previous single-sentence strip read as a dismissible tip. */}
-      <div className="mx-auto max-w-7xl px-4 py-3.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-blue-700/80 dark:text-blue-300/80">
+      <div className="mx-auto max-w-7xl px-4 py-4">
+        {/* The heading carries the tension (owner 2026-08-29): a real title, not an eyebrow —
+            the definition below it is the point of the page, and an 11px whisper undersold it. */}
+        <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-blue-50">
           Your task
-        </p>
-        <p className="mt-1 text-base font-medium leading-relaxed text-blue-950 dark:text-blue-100">
+        </h2>
+        <p className="mt-1.5 text-base font-medium leading-relaxed text-blue-950 dark:text-blue-100">
           Each patient has six years of follow-up on record. The <strong>Future risk</strong>{' '}
           panel shows what health conditions actually developed during this period. Use this
           information when rating the accuracy of each response.
