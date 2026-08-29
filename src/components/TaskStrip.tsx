@@ -26,15 +26,14 @@ export function TaskStrip({ responseCount, onGoToScoring }: Props) {
     // through. Compressed to one breath: heading inline, definition primary, procedure demoted
     // to the same line in a quieter voice.
     <div className="sticky top-0 z-40 border-b bg-blue-50 shadow-sm dark:bg-blue-950">
-      <p className="mx-auto max-w-7xl px-4 py-2 text-sm leading-snug text-blue-950 dark:text-blue-100">
+      <p className="mx-auto max-w-7xl px-4 py-2 text-base leading-snug text-blue-950 dark:text-blue-100">
         <span className="font-bold">Your task</span>
         <span aria-hidden="true" className="mx-2 text-blue-400 dark:text-blue-600">|</span>
         Each patient has six years of follow-up on record; the <strong>Future risk</strong> panel
         shows what actually developed. Use this information when rating the accuracy of each
         response.{' '}
         <span className="text-blue-900/70 dark:text-blue-200/70">
-          Rate the {responseCount} health summaries using the rubric below — answers are saved as
-          you go.{' '}
+          Rate the {responseCount} health summaries using the rubric below.{' '}
           <button
             type="button"
             onClick={onGoToScoring}
