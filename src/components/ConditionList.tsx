@@ -1,16 +1,21 @@
+import phecodeNames from '@/data/phecode-names.json'
+
 interface Props {
   conditions: string[]
   // Shown when the list is empty — the two lists mean different things when nothing is there.
   emptyLabel: string
 }
 
-// A raw exporter token (`pc_296.22_dx`) that slipped through the upstream name lookup renders as
-// "Code 296.22" — visible and obviously unfinished rather than machine noise in a clinical panel.
-// STOPGAP, not a fix: the name belongs in the exporter's phecode map; 16 such entries shipped in
-// the v46 batch. Remove this once the exporter resolves every name.
+// A raw exporter token (`pc_296.22_dx`) that slipped through the upstream name lookup resolves
+// here against the authoritative phecode map (every code the v46 batch leaked has a
+// clinical_name there — the exporter simply used a narrower name source). A code the table
+// somehow lacks stays visible as "Code X" rather than disappearing. The exporter should still
+// be fixed at the source; 16 such entries shipped across 8 cases.
+const NAME_BY_CODE: Record<string, string> = phecodeNames.nameByCode
 function displayName(name: string): string {
   const m = /^pc_(.+)_dx$/.exec(name)
-  return m ? `Code ${m[1]}` : name
+  if (!m) return name
+  return NAME_BY_CODE[m[1]] ?? `Code ${m[1]}`
 }
 
 // One wrapped row of condition names. Until 2026-08-28 this grouped conditions under organ-system
