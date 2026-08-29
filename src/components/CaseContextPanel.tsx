@@ -132,7 +132,11 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
   if (age > 0) demoItems.push({ label: 'Age', value: `${age}` })
   if (sex) demoItems.push({ label: 'Sex', value: sex })
   if (bmi > 0) demoItems.push({ label: 'BMI', value: bmi.toFixed(1) })
-  if (bp) demoItems.push({ label: 'Blood pressure', value: `${bp} mmHg` })
+  // Blood pressure is deliberately NOT shown (owner 2026-08-29): an abnormal reading is a
+  // one-line cardiovascular argument, and the clinician round showed raters building their own
+  // prediction from exactly such cues. The letters may still cite it; the panel does not lead
+  // with it. (`bp` stays destructured so the data path is documented, not silently dropped.)
+  void bp
   if (race && race !== 'Unknown') demoItems.push({ label: 'Race', value: race })
 
   const futureGt = context?.futureDiseaseGroundTruth ?? []
