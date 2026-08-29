@@ -104,7 +104,13 @@ export interface RubricDimensionDef {
 // No longer the active set — see the ACTIVE RUBRIC switch at the bottom of this file — but kept
 // here in full, because every batch scored up to and including v27 was scored on these exact
 // stems and the wording has to stay recoverable to report those numbers honestly.
-export const RUBRIC_DIMENSIONS_HEALTH_MANAGEMENT: RubricDimensionDef[] = [
+// The DORMANT health-management set keeps its ORIGINAL keys (they already match its own labels
+// — Context, Justifiability, Personalization, Relevance, Harm). It is reference material, not a
+// mountable instrument: mounting it again would need its own schema bump and key review, so it
+// carries a local key type rather than sharing the active RubricDimension union.
+type HealthManagementKey = 'context' | 'justifiability' | 'personalization' | 'relevance' | 'harm'
+type HealthManagementDimensionDef = Omit<RubricDimensionDef, 'key'> & { key: HealthManagementKey }
+export const RUBRIC_DIMENSIONS_HEALTH_MANAGEMENT: HealthManagementDimensionDef[] = [
   {
     // VERBATIM SensorFM "Context" criterion (Survey ED.1). The whole-response "useful summary to a
     // provider" axis — clinical coherence + decision-readiness. Added 2026-08-10 (Chan+Zitao) as the
@@ -319,3 +325,4 @@ export const RUBRIC_DIMENSIONS_HEALTH_MANAGEMENT: RubricDimensionDef[] = [
 //    perfectly valid across a switch while meaning something different, which is why the version
 //    bump (which discards stale sessions) is part of the switch rather than optional.
 export const RUBRIC_DIMENSIONS: RubricDimensionDef[] = RUBRIC_DIMENSIONS_DISEASE
+export { RUBRIC_VERSION } from './rubric-config-disease'

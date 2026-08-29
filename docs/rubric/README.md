@@ -40,17 +40,21 @@ the .docx wins and the code is wrong.**
 
 | # | Criterion | Stored key | Scored against |
 |---|---|---|---|
-| 1 | **Factuality** | `context` | The "Future risk" panel (recorded 6-year outcome) |
-| 2 | **Comprehensiveness** | `harm` | The "Detailed analysis" section · breadth put to use |
-| 3 | **Trustworthiness** | `relevance` | Sleep panel + Prior medical history |
-| 4 | **Relevance** | `justifiability` | What the patient asked |
+| 1 | **Factuality** | `factuality` | The "Future risk" panel (recorded 6-year outcome) |
+| 2 | **Comprehensiveness** | `comprehensiveness` | The "Detailed analysis" section · breadth put to use |
+| 3 | **Trustworthiness** | `trustworthiness` | Sleep panel + Prior medical history |
+| 4 | **Relevance** | `relevance` | What the patient asked |
 | 5 | **Personalization** | `personalization` | The "What this means for you" advice · this patient's own circumstances |
 
-**The keys are not the names.** They are frozen so `LikertKey`, the completion gate, the reducer
-and the CSV export keep working. Renaming them breaks every stored session and every exported CSV.
+**Keys renamed 2026-08-29 (SCHEMA_VERSION 15): the keys now ARE the names.** The frozen set had
+been relabelled three times and ended with `relevance` and `justifiability` each carrying the
+other's axis. Exports now also stamp a `rubric_version` column; files with different values are
+never pooled. Reading a pre-rename CSV: `context`→factuality, `harm`→Safety (v4) /
+Comprehensiveness (v5), `relevance`→Trustworthiness, `justifiability`→Relevance.
 
-Note `justifiability` now carries **Relevance**: v4 drops the Justifiability criterion and restores
-Relevance, which needed a key.
+**Historical note (superseded 2026-08-29):** through v4/v5 the keys were frozen while labels
+moved, under the rule "the keys are not the names". That rule is retired — keys now match labels,
+and each future axis change renames its key in the same schema bump.
 
 ## What v4 changes from v33
 

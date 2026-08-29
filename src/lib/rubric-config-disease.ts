@@ -43,19 +43,17 @@
 //    can in principle be picked out. It is accepted knowingly, and should be checked after the
 //    clinician round by testing whether raters can identify arms above chance.
 //
-// WHAT IS FIXED and must not drift:
-//   - the five KEYS (context / justifiability / personalization / relevance / harm) and the 1-5
-//     anchor values are unchanged, so LikertKey, the completion gate, the reducer and the CSV
-//     export keep working untouched. THE KEYS ARE NOT THE NAMES. Renaming them would break every
-//     stored session and every exported CSV, so the mapping is documented instead:
-//         context         -> Factuality
-//         harm            -> Comprehensiveness   (v4: Safety; v33: Safe)
-//         relevance       -> Trustworthiness
-//         justifiability  -> Relevance
-//         personalization -> Personalization
-//     NOTE the `justifiability` key now carries RELEVANCE: v4 drops the Justifiability criterion
-//     and restores Relevance, which needs a key, and this is the free one.
-//   - higher is better on all five, including Safety.
+// KEYS RENAMED 2026-08-29 (owner): the keys now ARE the labels. The old frozen set had been
+// relabelled three times and ended with `relevance` and `justifiability` each carrying the
+// other's axis — a guaranteed misread for anyone analysing the export by column name. The
+// rename rode the same SCHEMA_VERSION bump as the v5 axis changes, so no comparable session
+// was invalidated by it. For reading HISTORICAL (pre-rename) exports:
+//         old context         -> factuality        (Factuality since v33)
+//         old harm            -> comprehensiveness (Safety in v33/v4, Comprehensiveness in v5)
+//         old relevance       -> trustworthiness   (Trustworthy v33, Trustworthiness v4/v5)
+//         old justifiability  -> relevance         (Justifiability v33, Relevance v4/v5)
+//         personalization     -> personalization
+//   - higher is better on all five.
 //
 // ⛔ SCORES ARE NOT COMPARABLE with any earlier batch. Same keys, different questions. Anything
 //    scored under the v26/v33 wording is reported separately, never pooled with v4.
@@ -89,12 +87,16 @@
 // below in step with it; the recorded-outcome meaning now lives in the panel's meta line).
 import type { RubricDimensionDef } from './rubric-config'
 
+// Stamped into every export row (rubric_version column) so a CSV identifies which wording —
+// and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
+export const RUBRIC_VERSION = 'v5-keys20260829'
+
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
     // FAILURE PATTERN: the letter names conditions this patient never went on to develop, or
     // misses the ones they did. Observed hard in the base arm — in the v33 batch it answered for
     // the circulatory system on a patient whose recorded outcomes were entirely neurological.
-    key: 'context',
+    key: 'factuality',
     label: 'Factuality',
     question:
       'Does this response accurately highlight the conditions this patient later developed?',
@@ -175,7 +177,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // FAILURE PATTERN: the letter's analysis works a single corner of the chart — reads the
     // breathing indices and stops — or recites everything on file with none of it entering the
     // argument. The letters worth reading argued from several aspects of the patient at once.
-    key: 'harm',
+    key: 'comprehensiveness',
     label: 'Comprehensiveness',
     question:
       "To what extent does this response's analysis cover the pertinent aspects of this patient's health?",
@@ -228,7 +230,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // FAILURE PATTERN: the letter states a conclusion far more firmly than its evidence carries —
     // or hedges so heavily that nothing is claimed. In the v33 batch the base arm asserted a firm
     // circulatory conclusion while its own text conceded the respiratory indices were normal.
-    key: 'relevance',
+    key: 'trustworthiness',
     label: 'Trustworthiness',
     question: "To what extent is this response's confidence warranted by the patient's data?",
     howToScore:
@@ -282,7 +284,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // right yet padded. Carried on the `justifiability` key: v4 drops Justifiability, and this is
     // the free key. FAILURE PATTERN: the base arm names 8 conditions where 3 belong, several as
     // speculative asides, diluting the letter.
-    key: 'justifiability',
+    key: 'relevance',
     label: 'Relevance',
     question:
       'How effectively does this response identify and prioritize the most clinically relevant indicators?',

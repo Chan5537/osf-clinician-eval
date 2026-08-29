@@ -29,14 +29,14 @@ interface DimColor {
 const DIM_COLORS: Record<RubricDimension, DimColor> = {
   // Verbatim SensorFM "Context" scale (added 2026-08-10). Distinct blue hue — the whole-response
   // "useful summary to a provider" axis; doesn't collide with violet/teal/amber below.
-  context: {
+  factuality: {
     rail: 'border-l-blue-500',
     bg: 'bg-blue-500/[0.04] dark:bg-blue-400/[0.06]',
     header: 'bg-blue-500/10 text-blue-700 dark:text-blue-300',
     selected: 'bg-blue-500/15 ring-1 ring-inset ring-blue-500/40',
     selectedText: 'text-blue-800 dark:text-blue-200',
   },
-  justifiability: {
+  relevance: {
     rail: 'border-l-violet-500',
     bg: 'bg-violet-500/[0.04] dark:bg-violet-400/[0.06]',
     header: 'bg-violet-500/10 text-violet-700 dark:text-violet-300',
@@ -51,7 +51,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
   // Relevance (added 2026-08-15, schema v7) — rose hue, distinct from blue/violet/teal/amber.
-  relevance: {
+  trustworthiness: {
     rail: 'border-l-rose-500',
     bg: 'bg-rose-500/[0.04] dark:bg-rose-400/[0.06]',
     header: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',
@@ -59,7 +59,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selectedText: 'text-rose-800 dark:text-rose-200',
   },
   // Verbatim SensorFM "Harm" scale — amber, the safety hue used across the app.
-  harm: {
+  comprehensiveness: {
     rail: 'border-l-amber-500',
     bg: 'bg-amber-500/[0.05] dark:bg-amber-400/[0.07]',
     header: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
