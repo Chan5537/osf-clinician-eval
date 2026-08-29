@@ -15,6 +15,22 @@ interface Props {
 // `items-stretch` on the row makes the pill exactly as tall as the bubble, so the two read as one
 // paired unit rather than a small tag floating beside a big box. The bubble sets the height; the
 // pill follows it, including when a long query wraps.
+// The object of the ask gets weight (owner 2026-08-29): raters skimmed the query and answered a
+// different question ("what is wrong with this patient now"). The phrase is emphasized at render
+// time so the data stays the verbatim query; a batch whose query drops the phrase renders plain.
+function emphasizeAsk(text: string) {
+  const phrase = 'new health conditions'
+  const i = text.indexOf(phrase)
+  if (i < 0) return text
+  return (
+    <>
+      {text.slice(0, i)}
+      <strong className="font-semibold not-italic">{phrase}</strong>
+      {text.slice(i + phrase.length)}
+    </>
+  )
+}
+
 export function QueryBubble({ queryText }: Props) {
   return (
     <div className="flex items-stretch gap-3">
@@ -29,7 +45,7 @@ export function QueryBubble({ queryText }: Props) {
           className="absolute -left-1.5 top-4 size-3 rotate-45 border-b border-l border-purple-200 bg-purple-50"
         />
         <p className="text-[15px] italic leading-relaxed text-purple-950">
-          &ldquo;{queryText}&rdquo;
+          &ldquo;{emphasizeAsk(queryText)}&rdquo;
         </p>
       </div>
     </div>
