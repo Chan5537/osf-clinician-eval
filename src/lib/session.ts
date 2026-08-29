@@ -47,7 +47,12 @@ import { advance, touch, park, resume } from './timing'
 //       in commit 7121544 WITHOUT this bump — case count and content both changed, so a v13
 //       session created against the old batch would map its answers onto the wrong cases.
 //       Bumped here after the fact, with the arm-literal fix (BASE/OURS/TRUTH).
-export const SCHEMA_VERSION = 14
+// v15 = the Likert KEYS are renamed to match the v5 labels (factuality / comprehensiveness /
+//       trustworthiness / relevance / personalization). A v14 session's stored answers live
+//       under the old keys ("A__harm") and would all read as unanswered — and worse, any code
+//       still writing old keys would silently split answers across two vocabularies: discard
+//       stale sessions. Axis wording is UNCHANGED from v5.
+export const SCHEMA_VERSION = 15
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

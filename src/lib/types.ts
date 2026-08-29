@@ -58,10 +58,20 @@ export interface DemoCase {
 // A clinician's answer to one Likert dimension: 1–5, or null (not-yet-answered).
 export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 
-// The four subjective-quality dimensions scored once per response.
-export type RubricDimension = 'context' | 'justifiability' | 'personalization' | 'relevance' | 'harm'
+// The five Likert dimensions scored once per response. RENAMED 2026-08-29 (owner) so the keys
+// ARE the axis names — the old set (context/harm/relevance/justifiability) had drifted three
+// relabelings away from its contents, with `relevance` and `justifiability` each carrying the
+// OTHER one's axis. Old->new for anyone reading a pre-rename CSV:
+//   context -> factuality · harm -> comprehensiveness · relevance -> trustworthiness ·
+//   justifiability -> relevance · personalization unchanged.
+export type RubricDimension =
+  | 'factuality'
+  | 'comprehensiveness'
+  | 'trustworthiness'
+  | 'relevance'
+  | 'personalization'
 
-// Likert key: `${label}__${dimension}` (e.g. "A__harm"). Built per case from the
+// Likert key: `${label}__${dimension}` (e.g. "A__comprehensiveness"). Built per case from the
 // present response labels × the fixed dimensions.
 export type LikertKey = string
 

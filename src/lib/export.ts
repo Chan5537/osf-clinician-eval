@@ -8,7 +8,7 @@
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
 import { pickCount } from './reducer'
-import { RUBRIC_DIMENSIONS } from './rubric-config'
+import { RUBRIC_DIMENSIONS, RUBRIC_VERSION } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
 import { likertKey } from './types'
 import type { LikertScore } from './types'
@@ -23,7 +23,7 @@ const COLUMNS: string[] = [
   'response_label', // blinded A/B/C the clinician saw
   'arm', // UNBLINDING KEY — source arm for this response
   'kind', // 'likert' (reserved for future comparison-metric row kinds)
-  'dimension', // context | justifiability | personalization | harm
+  'dimension', // factuality | comprehensiveness | trustworthiness | relevance | personalization
   'value', // 1–5 ; '' (unanswered)
   'submitted_at',
   // TIMING (v8). `duration_seconds` keeps its original wall-clock meaning so pre-v8 analysis
@@ -33,6 +33,9 @@ const COLUMNS: string[] = [
   'active_seconds', // wall clock minus time hidden/idle — real time-on-task
   'idle_seconds', // the remainder; active + idle == duration (up to rounding)
   'response_active_seconds', // active seconds attributed to THIS response card
+  // APPENDED (2026-08-29, keys renamed): which rubric wording + key vocabulary produced this
+  // row. Files with different values must never be pooled — same rule as the SCHEMA bumps.
+  'rubric_version',
 ]
 
 export type ReviewRow = Record<string, string | number | boolean | null>
@@ -72,6 +75,7 @@ export function buildRows(session: SessionState): ReviewRow[] {
           active_seconds: activeSeconds,
           idle_seconds: idleSeconds,
           response_active_seconds: msToSeconds(t.perResponseMs[r.label] ?? 0),
+          rubric_version: RUBRIC_VERSION,
         })
       }
     }
