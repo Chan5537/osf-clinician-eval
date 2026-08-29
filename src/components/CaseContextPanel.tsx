@@ -195,9 +195,12 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               // this panel BY NAME — keep them in step (rubric-config-disease.ts, Factuality).
               // ⛔ Still avoids the blinding-gate phrases: no "ground truth", no "oracle".
               title="Future risk"
+              // Meta trimmed 2026-08-29 (owner): the long form read as generated scaffolding.
+              // "6-year follow-up" keeps the recorded-not-predicted cue in two clinical words;
+              // the full statement lives in Factuality's howToScore.
               meta={
                 context
-                  ? `${plural(futureGtInPanel.length, 'condition')} · recorded in the 6 years after the study`
+                  ? `${plural(futureGtInPanel.length, 'condition')} · 6-year follow-up`
                   : 'unavailable'
               }
             />

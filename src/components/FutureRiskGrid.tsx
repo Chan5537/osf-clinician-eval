@@ -69,14 +69,10 @@ export function FutureRiskGrid({ conditions, emptyLabel }: Props) {
 
   return (
     <div>
+      {/* No column headers (owner 2026-08-29): a category chip beside condition names explains
+          itself, and the labels ("Risk type" / "Conditions recorded in it") read as generated
+          scaffolding rather than clinical language. */}
       <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-0">
-        <div className="pb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          Risk type
-        </div>
-        <div className="pb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          Conditions recorded in it
-        </div>
-
         {groups.map(({ group, conditions: names }) => (
           <Row
             key={group}
