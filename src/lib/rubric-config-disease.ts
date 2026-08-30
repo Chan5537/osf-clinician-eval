@@ -129,10 +129,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Usefulness',
     question: 'How much does this response tell the patient that they could not already know?',
     howToScore:
-      'Read the response against the Prior medical history and demographics. Ask what the ' +
-      'patient learns. A useful response surfaces a specific new concern, grounded in this ' +
-      'overnight recording. Restating the chart scores low: a known condition repackaged as a ' +
-      'future risk, or a risk anyone of this age and history would be told anyway.',
+      'Read the response **against** the Prior medical history and demographics. Ask what the ' +
+      'patient learns. A useful response surfaces a specific new concern, grounded in the ' +
+      'patient profile or in predictive evidence from the overnight recording. Restating the ' +
+      'chart scores low: a known condition repackaged as a future risk, or a risk anyone of ' +
+      'this age and history would be told anyway.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -179,8 +180,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Open the "Future risk" panel. It lists the conditions this patient newly developed in ' +
       'the six years after the study. Check two things against it: the risk area the response ' +
       'commits to in bold, and the conditions it names. Closely related variants of one ' +
-      'problem count as one condition. The follow-up has already happened; judge against the ' +
-      'panel.',
+      'problem count as one condition. The follow-up has already happened.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -268,11 +268,10 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Personalization',
     question: "To what extent are this response's suggestions specific to this patient?",
     howToScore:
-      'Read the "What this means for you" section. Each suggestion gives the patient something ' +
-      'to watch, to raise, or to do. Check where each comes from: a specific finding of this ' +
-      "patient's, or advice anyone with similar numbers could receive. General wellness steps " +
-      'are not faulted. Score how much of the guidance belongs to this patient rather than to ' +
-      'anyone.',
+      'Read the "What this means for you" section. Check where its suggestions come from: ' +
+      "this patient's own findings, or advice anyone with similar numbers could receive. " +
+      'General wellness steps are not faulted. Score how much of the guidance is this ' +
+      "patient's rather than anyone's.",
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
