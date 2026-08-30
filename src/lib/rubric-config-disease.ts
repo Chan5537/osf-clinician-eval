@@ -129,11 +129,10 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Usefulness',
     question: 'How much does this response tell the patient that they could not already know?',
     howToScore:
-      'Read the response against the Prior medical history and demographics, and ask what the ' +
-      'patient learns from it. A response earns this score by surfacing something new — a ' +
-      'specific new-onset concern, grounded in what this overnight recording showed — rather ' +
-      'than re-reading what is already on the chart: a known condition repackaged as a future ' +
-      'risk, or a risk anyone of this age and history would be told anyway.',
+      'Read the response against the Prior medical history and demographics. Ask what the ' +
+      'patient learns. A useful response surfaces a specific new concern, grounded in this ' +
+      'overnight recording. Restating the chart scores low: a known condition repackaged as a ' +
+      'future risk, or a risk anyone of this age and history would be told anyway.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -177,12 +176,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
     howToScore:
-      'Open the "Future risk" panel — the conditions this patient newly developed in the six ' +
-      'years after the study; what they already had sits in Prior medical history. Two reads: ' +
-      'whether the risk area the response commits to in bold matches what the panel records, ' +
-      'and whether the conditions it names are the recorded ones — several closely related ' +
-      'variants of one underlying problem count as one condition. Judge against what the panel ' +
-      'records; the follow-up has already happened.',
+      'Open the "Future risk" panel. It lists the conditions this patient newly developed in ' +
+      'the six years after the study. Check two things against it: the risk area the response ' +
+      'commits to in bold, and the conditions it names. Closely related variants of one ' +
+      'problem count as one condition. The follow-up has already happened; judge against the ' +
+      'panel.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -225,9 +223,9 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       "How well does this response's analysis bring the different aspects of this patient's health together into its conclusion?",
     howToScore:
       'Read the "Detailed analysis" section against the Sleep panel, Prior medical history and ' +
-      'demographics. Judge the argument it builds: does the conclusion rest on this patient\'s ' +
-      'different health aspects reasoned together — each interpreted and connected — or does it ' +
-      'stand on one thread while the rest is recited alongside?',
+      'demographics. Judge the argument it builds. A strong analysis reasons several aspects ' +
+      "of this patient's health into the conclusion, each interpreted and connected. A weak " +
+      'one argues from a single thread and recites the rest.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -270,12 +268,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Personalization',
     question: "To what extent are this response's suggestions specific to this patient?",
     howToScore:
-      'Read the "What this means for you" section and check how much of this particular ' +
-      'patient is in the suggestions it offers: whether each one — something to watch, to ' +
-      'raise, or to do — follows from their own findings, a specific result linked to a ' +
-      'specific step, or could be sent to anyone with similar numbers. General wellness steps ' +
-      'are not faulted on their own; what is scored is how much of it is this patient\'s ' +
-      'rather than anyone\'s.',
+      'Read the "What this means for you" section. Each suggestion gives the patient something ' +
+      'to watch, to raise, or to do. Check where each comes from: a specific finding of this ' +
+      "patient's, or advice anyone with similar numbers could receive. General wellness steps " +
+      'are not faulted. Score how much of the guidance belongs to this patient rather than to ' +
+      'anyone.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
@@ -321,11 +318,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       "To what extent are this response's conclusions justified by the evidence it presents?",
     howToScore:
-      'Read each conclusion against the grounds the response gives for it, and check anything ' +
-      'it quotes against the Sleep panel and Prior medical history. A justified conclusion ' +
-      'shows its grounds — a recorded finding, an estimate from the recording, an inference — ' +
-      'and addresses the findings that point away from it as well as those that support it. ' +
-      'Score how well the case is made, not whether you agree with where it lands.',
+      'Read each conclusion against the grounds the response gives for it. Check anything it ' +
+      'quotes against the Sleep panel and Prior medical history. A justified conclusion names ' +
+      'its grounds: a recorded finding, an estimate from the recording, an inference. It also ' +
+      'addresses the findings that point the other way. Score how well the case is made, not ' +
+      'whether you agree with where it lands.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
