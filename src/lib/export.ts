@@ -23,7 +23,7 @@ const COLUMNS: string[] = [
   'response_label', // blinded A/B/C the clinician saw
   'arm', // UNBLINDING KEY — source arm for this response
   'kind', // 'likert' (reserved for future comparison-metric row kinds)
-  'dimension', // factuality | comprehensiveness | trustworthiness | relevance | personalization
+  'dimension', // usefulness | factuality | comprehensiveness | personalization | justifiability
   'value', // 1–5 ; '' (unanswered)
   'submitted_at',
   // TIMING (v8). `duration_seconds` keeps its original wall-clock meaning so pre-v8 analysis

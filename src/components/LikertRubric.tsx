@@ -36,7 +36,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-blue-500/15 ring-1 ring-inset ring-blue-500/40',
     selectedText: 'text-blue-800 dark:text-blue-200',
   },
-  relevance: {
+  usefulness: {
     rail: 'border-l-violet-500',
     bg: 'bg-violet-500/[0.04] dark:bg-violet-400/[0.06]',
     header: 'bg-violet-500/10 text-violet-700 dark:text-violet-300',
@@ -51,7 +51,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
   // Relevance (added 2026-08-15, schema v7) — rose hue, distinct from blue/violet/teal/amber.
-  trustworthiness: {
+  justifiability: {
     rail: 'border-l-rose-500',
     bg: 'bg-rose-500/[0.04] dark:bg-rose-400/[0.06]',
     header: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',

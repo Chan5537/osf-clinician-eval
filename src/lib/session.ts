@@ -52,7 +52,11 @@ import { advance, touch, park, resume } from './timing'
 //       under the old keys ("A__harm") and would all read as unanswered — and worse, any code
 //       still writing old keys would silently split answers across two vocabularies: discard
 //       stale sessions. Axis wording is UNCHANGED from v5.
-export const SCHEMA_VERSION = 15
+// v16 = disease rubric v6 (2026-08-29, owner): Usefulness replaces Relevance (key `usefulness`),
+//       Justifiability replaces Trustworthiness (key `justifiability`), Factuality goes
+//       two-tier, Personalization re-anchored on findings-linked suggestions, Usefulness moves
+//       to the front. Questions, anchors, keys and order all changed: discard stale sessions.
+export const SCHEMA_VERSION = 16
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
