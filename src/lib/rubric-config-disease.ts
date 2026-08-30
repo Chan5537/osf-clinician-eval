@@ -177,8 +177,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
     howToScore:
-      'Open the "Future risk" panel. It lists the conditions this patient newly developed in ' +
-      'the six years after the study. Check two things against it: the risk area the response ' +
+      'Open the "Future risk" panel. It lists the **future diseases** this patient newly ' +
+      'developed in the six years after the study. Check two things against it: the risk area the response ' +
       'commits to in bold, and the conditions it names. Closely related variants of one ' +
       'problem count as one condition. The follow-up has already happened.',
     // TODO example (v6): quote from the final clinician batch.
@@ -223,8 +223,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       "How well does this response's analysis bring the different aspects of this patient's health together into its conclusion?",
     howToScore:
       'Read the "Detailed analysis" section against the Sleep panel, Prior medical history and ' +
-      'demographics. Judge the argument it builds. A strong analysis reasons several aspects ' +
-      "of this patient's health into the conclusion, each interpreted and connected. A weak " +
+      'demographics. Judge the argument it builds. A strong response analyzes more aspects ' +
+      "of this patient's health, each interpreted and connected into the conclusion. A weak " +
       'one argues from a single thread and recites the rest.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
@@ -320,8 +320,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Read each conclusion against the grounds the response gives for it. Check anything it ' +
       'quotes against the Sleep panel and Prior medical history. A justified conclusion names ' +
       'its grounds: a recorded finding, an estimate from the recording, an inference. It also ' +
-      'addresses the findings that point the other way. Score how well the case is made, not ' +
-      'whether you agree with where it lands.',
+      'addresses the findings that point the other way.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
