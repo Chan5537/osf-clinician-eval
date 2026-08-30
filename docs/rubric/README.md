@@ -1,4 +1,26 @@
-# Rubric v5 — source of truth and validation
+# Rubric v6 — source of truth and validation
+
+**Active as of 2026-08-29** (owner; settled in-session against the live v56 letters).
+SCHEMA_VERSION **16**, `rubric_version` **v6-20260829**.
+
+| # | Criterion | Stored key | Asks |
+|---|---|---|---|
+| 1 | **Usefulness** | `usefulness` | Does the patient learn anything their chart could not already tell them? |
+| 2 | **Factuality** | `factuality` | The new risk area right, and the recorded conditions named (area alone caps at 3) |
+| 3 | **Comprehensiveness** | `comprehensiveness` | Aspects of this patient reasoned together into the conclusion |
+| 4 | **Personalization** | `personalization` | Suggestions specific to this patient's own findings (ED.1 sweet point) |
+| 5 | **Justifiability** | `justifiability` | Conclusions no firmer than the evidence the response gives (the guard axis) |
+
+What v6 changes from v5: Relevance is retired (clinicians score chart-reading as good practice,
+so the axis ran backwards); Trustworthiness's confidence-tone framing is retired (the format
+forces every letter to commit, and a panel-only evidence reference could not be scored on
+letters whose grounds the rater cannot see). Usefulness leads the order on purpose — it teaches
+the "what is NEW" frame before any other judgement. ⛔ v6 scores are never pooled with v5 or
+earlier. Worked examples land when the clinician batch is final.
+
+---
+
+# Rubric v5 (superseded 2026-08-29) — source of truth and validation
 
 **Active as of 2026-08-28** (v5, Zitao; v4 by Chan 2026-08-24 stands for the three unchanged
 axes). Implemented in

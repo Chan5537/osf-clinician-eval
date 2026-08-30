@@ -1,4 +1,33 @@
-// DISEASE rubric v5 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+// DISEASE rubric v6 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+//
+// v6 (2026-08-29, owner; wording settled in-session against the live v56 letters): the axis SET
+// is rebuilt around what the clinician round showed raters actually doing.
+//   ORDER IS PART OF THE DESIGN: Usefulness comes FIRST because it teaches the task frame —
+//   "the question is what is NEW for this patient" — before any other judgement is made.
+//   1. Usefulness (key `usefulness`, was Relevance on `relevance`): what does the patient learn
+//      that their chart could not already tell them. Replaces Relevance, which clinicians
+//      scored backwards — reading the history is good practice to them, so history-heavy
+//      responses scored HIGH on focus. Usefulness does not fault reading the chart; it asks
+//      whether the patient learns anything beyond it.
+//   2. Factuality (unchanged key): now explicitly two-tier — the NEW risk area is the entry,
+//      the named conditions are the ceiling (right area alone caps at 3).
+//   3. Comprehensiveness (unchanged key): the integration wording — aspects reasoned together
+//      into the conclusion, not counted.
+//   4. Personalization (unchanged key): suggestions specific to this patient. Sweet point
+//      between SensorFM ED.1 (anchors 1-3 near-verbatim) and findings-linked specificity
+//      (anchors 4-5). "Suggestions", not "recommendations" — the section carries things to
+//      watch and to raise, not only things to do. Verified against the v56 letters: the
+//      actionable STYLE is format-driven and arm-invariant; what varies is whether the asks
+//      come from this letter's own findings.
+//   5. Justifiability (key `justifiability`, was Trustworthiness on `trustworthiness`): the
+//      guard axis — conclusions weighed against the evidence THE RESPONSE GIVES, never against
+//      the visible panels alone (that reference punished any arm whose grounds the rater
+//      cannot see). Replaces the confidence-tone framing: the format forces every letter to
+//      commit, so under-claiming barely exists, and "is this justified" is the judgement
+//      clinicians already know how to make.
+//   ⛔ v6 scores are NOT comparable with v5 or earlier — report separately, never pooled.
+//   Worked examples are DELIBERATELY ABSENT until the clinician batch is final; they must
+//   quote real letters of the loaded batch.
 //
 // v5 (2026-08-28, Zitao; wording approved in-session): TWO axes change, three stand.
 //   - `harm` now carries COMPREHENSIVENESS, replacing Safety. Safety earned its keep only while
@@ -89,318 +118,245 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v5-keys20260829'
+export const RUBRIC_VERSION = 'v6-20260829'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
-    // FAILURE PATTERN: the letter names conditions this patient never went on to develop, or
-    // misses the ones they did. Observed hard in the base arm — in the v33 batch it answered for
-    // the circulatory system on a patient whose recorded outcomes were entirely neurological.
+    // FIRST on purpose: it frames every later judgement as "what is NEW for this patient".
+    // FAILURE PATTERN it grades: the letter repackages known conditions as future risks, or
+    // tells the patient what anyone of their age and history would be told anyway.
+    key: 'usefulness',
+    label: 'Usefulness',
+    question: 'How much does this response tell the patient that they could not already know?',
+    howToScore:
+      'Read the response against the Prior medical history and demographics, and ask what the ' +
+      'patient learns from it. A response earns this score by surfacing something new — a ' +
+      'specific new-onset concern, grounded in what this overnight recording showed — rather ' +
+      'than re-reading what is already on the chart: a known condition repackaged as a future ' +
+      'risk, or a risk anyone of this age and history would be told anyway.',
+    // TODO example (v6): quote from the final clinician batch.
+    anchors: [
+      {
+        value: 5,
+        label: 'Very Useful',
+        description:
+          'The patient learns a specific new concern they could not have taken from their own chart, and the response says what in this recording points there.',
+      },
+      {
+        value: 4,
+        label: 'Useful',
+        description:
+          'Mostly new information, with some space spent restating what the patient already knows.',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'A new signal is in there, wrapped in about as much recital of known conditions and general truisms.',
+      },
+      {
+        value: 2,
+        label: 'Of Little Use',
+        description:
+          "Mostly repackages the patient's known conditions or their age-and-history profile as future risk; little rests on this recording.",
+      },
+      {
+        value: 1,
+        label: 'Useless',
+        description:
+          'Nothing here needed the recording: the whole message could have been written from the chart alone.',
+      },
+    ],
+  },
+  {
+    // Two-tier by design: the NEW risk area is the entry, the named conditions the ceiling —
+    // committing to the right area alone caps at 3. "New" is said out loud so the rater's frame
+    // matches the patient query and the task strip word for word.
     key: 'factuality',
     label: 'Factuality',
     question:
-      'Does this response accurately highlight the conditions this patient later developed?',
-    // SOFTENED 2026-08-25 (Zitao): the previous wording — "compare it with … Count several
-    // recorded variants of one underlying condition as one condition" — turned this axis into an
-    // arithmetic exercise. Two problems with that. It asked for a tally the rater then had to
-    // convert into a 1-5 judgement with no stated conversion, and it CONTRADICTED its own
-    // anchors, which are deliberately soft ("all / most / about half / few / none"). A rater
-    // counting 2-of-4-plus-one-extra has no rule telling them whether that is 3 or 4, so the
-    // instruction created false precision and then abandoned them at the point of decision.
-    // The clinical-judgement framing now matches the other four axes, all of which say "Judge".
-    // What is KEPT: which panel to open (the axis is meaningless without it), and the guidance
-    // that closely-related recorded variants are one condition — reworded as how to READ the
-    // panel rather than how to count it.
+      'Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
     howToScore:
-      // Panel named exactly as the UI labels it (CaseContextPanel.tsx) — reworded 2026-08-25
-      // when that header changed. An instruction pointing at a panel name that is not on screen
-      // is worse than no instruction.
-      'Open the "Future risk" panel — the conditions this patient actually developed in the six ' +
-      'years after the study — and read it against the conditions the response highlights ' +
-      '**in bold**. Where the panel records several closely related variants of ' +
-      'one underlying problem, treat them as a single condition. Judge how well the response ' +
-      'captures what this patient went on to develop, and how much it raises that they did not.',
-    // EXAMPLES REWRITTEN 2026-08-25 (Zitao): the previous text described a hypothetical panel
-    // in the abstract ("three of which are variants of one valvular finding") and gave the rater
-    // nothing to pattern-match against. These are drawn from real letters in the v33.11 batch,
-    // quoted, so the rater sees the shape of the thing they are scoring — the style Zitao
-    // singled out as working on Trustworthiness.
-    // NAMING (2026-08-25, Zitao): worked examples address responses the way the interface does
-    // ("Response X"), rather than "a response" / "the first" / "the second".
-    // X and Y deliberately, NOT A/B/C: the displayed letters are assigned per case after the
-    // shuffle (see lib/types.ts), so "Response A" in a fixed example would read as a claim about
-    // the Response A actually on screen. X and Y are unmistakably stand-ins.
-    // Softened alongside howToScore (Zitao, 2026-08-25). The example previously resolved its
-    // scores arithmetically ("one of two caught with two extras, so Neutral (3)"), which
-    // reintroduced the counting rule the instruction had just dropped. It now shows the same two
-    // responses and reasons to the same scores in the anchors' own language.
-    example:
-      'Response X opens "you should take the **circulatory** risk most seriously" and highlights ' +
-      '**Coronary atherosclerosis**, **Ischemic Heart Disease** and **Congestive heart failure**, ' +
-      'while the outcome panel for this patient records only **Insomnia** and **Sleep disorders**. ' +
-      'It misses what actually happened entirely and points somewhere else — Highly Inaccurate (1). ' +
-      'Response Y highlights **Insomnia** but surrounds it with conditions the patient never ' +
-      'developed: the real finding is in there, diluted by as much that is not — Neutral (3).',
+      'Open the "Future risk" panel — the conditions this patient newly developed in the six ' +
+      'years after the study; what they already had sits in Prior medical history. Two reads: ' +
+      'whether the risk area the response commits to in bold matches what the panel records, ' +
+      'and whether the conditions it names are the recorded ones — several closely related ' +
+      'variants of one underlying problem count as one condition. Judge against what the panel ' +
+      'records; the follow-up has already happened.',
+    // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
         value: 5,
         label: 'Highly Accurate',
         description:
-          'Highlights all of the conditions this patient later developed, and adds none the patient did not.',
+          'The right risk area, and the recorded conditions named — nothing added that the patient did not develop.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'Highlights most conditions the patient later developed, and adds one or two the patient did not.',
+          'The right risk area and most recorded conditions, with one or two named that the patient did not develop.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Highlights about half the conditions the patient later developed, or adds about as many the patient did not.',
+          'The right risk area, but the conditions inside it are wrong or missing, or diluted by as many the patient did not develop.',
       },
       {
         value: 2,
         label: 'Inaccurate',
         description:
-          'Highlights few of the conditions the patient later developed, or adds many the patient did not.',
+          'The risk area is wrong, though something it names touches what the patient developed.',
       },
       {
         value: 1,
         label: 'Highly Inaccurate',
-        description: 'Highlights none of the conditions this patient later developed.',
+        description: 'Wrong risk area, and none of what the patient developed appears.',
       },
     ],
   },
   {
-    // FAILURE PATTERN: the letter's analysis works a single corner of the chart — reads the
-    // breathing indices and stops — or recites everything on file with none of it entering the
-    // argument. The letters worth reading argued from several aspects of the patient at once.
+    // Integration, not coverage: the target is the ARGUMENT, so counting aspects is not a
+    // strategy a rater can even apply (the same root-cause fix Factuality got on 2026-08-25).
     key: 'comprehensiveness',
     label: 'Comprehensiveness',
     question:
-      "To what extent does this response's analysis cover the pertinent aspects of this patient's health?",
+      "How well does this response's analysis bring the different aspects of this patient's health together into its conclusion?",
     howToScore:
-      // Section named exactly as the letters render it ("## Detailed analysis") — same rule as
-      // the panel names: an instruction pointing at a heading that is not on screen is worse
-      // than no instruction.
       'Read the "Detailed analysis" section against the Sleep panel, Prior medical history and ' +
-      "demographics. Weigh two things: how broadly the analysis ranges across the pertinent " +
-      "aspects of this patient's health (e.g. sleep, cardiovascular, metabolic, mental health, " +
-      'lifestyle), and whether what it raises does work in the argument — interpreted and ' +
-      'connected to the conclusion, not listed for volume.',
-    // TODO example (v5): must quote real letters from the batch that ships to clinicians
-    // (2026-08-25 rule). The loaded v33.11 letters carry nothing that separates this axis;
-    // write it when the final batch lands.
+      'demographics. Judge the argument it builds: does the conclusion rest on this patient\'s ' +
+      'different health aspects reasoned together — each interpreted and connected — or does it ' +
+      'stand on one thread while the rest is recited alongside?',
+    // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
         value: 5,
         label: 'Highly Comprehensive',
         description:
-          "Ranges across the breadth of this patient's pertinent health aspects, and everything it raises does work in the argument.",
+          "The conclusion is built from several aspects of this patient's health reasoned together; everything raised plays a part in it.",
       },
       {
         value: 4,
         label: 'Comprehensive',
         description:
-          'Covers much of what matters for this patient, and most of what it raises does work in the argument.',
+          'The conclusion draws on much of what matters for this patient, most of it genuinely argued rather than mentioned.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Covers a limited part of what matters for this patient, or ranges wider but leaves much of it listed rather than argued.',
+          'The analysis touches several aspects but argues from only one; the rest sits alongside as description.',
       },
       {
         value: 2,
         label: 'Narrow',
-        description:
-          "Confines the analysis to a narrow slice of this patient's health.",
+        description: "The analysis works a single thread of this patient's health.",
       },
       {
         value: 1,
         label: 'Highly Narrow',
-        description:
-          'Barely goes beyond restating values, with almost no argument built on them.',
+        description: 'Values are restated; no argument is built on them.',
       },
     ],
   },
   {
-    // FAILURE PATTERN: the letter states a conclusion far more firmly than its evidence carries —
-    // or hedges so heavily that nothing is claimed. In the v33 batch the base arm asserted a firm
-    // circulatory conclusion while its own text conceded the respiratory indices were normal.
-    key: 'trustworthiness',
-    label: 'Trustworthiness',
-    question: "To what extent is this response's confidence warranted by the patient's data?",
-    howToScore:
-      'Weigh how firmly the response states things against how much support it has in the Sleep ' +
-      'panel and Prior medical history. Judge the fit between the two: a firm claim on strong ' +
-      'evidence and a hedged claim on weak evidence both score well; overstating a thin case or ' +
-      'hedging a clear one both score poorly. Score the fit, not whether you agree with the ' +
-      'conclusions.',
-    example:
-      'Response X opens "the thing to take most seriously is **circulatory** risk" and the Sleep ' +
-      'panel shows **severe obstructive sleep apnea**, so the firm claim is earned — Very ' +
-      'Trustworthy (5). Response Y opens just as firmly but attributes it to **hypertension** ' +
-      'and **kidney disease** that are nowhere in the Prior medical history panel, so full ' +
-      'confidence rests on nothing — Very Untrustworthy (1).',
-    anchors: [
-      {
-        value: 5,
-        label: 'Very Trustworthy',
-        description:
-          "States its case as firmly as the evidence allows and no further. Where this patient's data is clear it is direct; where the data is weak it says so, and a reader could rely on it without checking behind it.",
-      },
-      {
-        value: 4,
-        label: 'Trustworthy',
-        description:
-          'Confidence broadly fits the evidence, with one claim pitched harder or more cautiously than its support warrants.',
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description:
-          'Confidence and evidence fit in places and not in others; a reader would need to check parts of it before relying on any of it.',
-      },
-      {
-        value: 2,
-        label: 'Untrustworthy',
-        description:
-          'States much of its case more firmly than the evidence supports, or hedges so heavily that a reader cannot tell what it is claiming.',
-      },
-      {
-        value: 1,
-        label: 'Very Untrustworthy',
-        description:
-          'Presents an unsupported case with full confidence, or commits to nothing at all. A reader relying on it would be misled about how much is known.',
-      },
-    ],
-  },
-  {
-    // VERBATIM SensorFM "Relevance" (Survey ED.1). Focus / dilution against what the patient
-    // asked — NOT correctness, which is Factuality's axis. A letter can be wrong yet focused, or
-    // right yet padded. Carried on the `justifiability` key: v4 drops Justifiability, and this is
-    // the free key. FAILURE PATTERN: the base arm names 8 conditions where 3 belong, several as
-    // speculative asides, diluting the letter.
-    key: 'relevance',
-    label: 'Relevance',
-    question:
-      'How effectively does this response identify and prioritize the most clinically relevant indicators?',
-    // CROSS-REFERENCES REMOVED 2026-08-25 (Zitao): each criterion must stand alone and describe
-    // only itself. The previous wording ended "being wrong is scored under Factuality", which
-    // makes the rater hold two axes in mind at once. The distinction it was protecting — focus
-    // vs correctness — is kept, stated positively as what THIS axis measures.
-    howToScore:
-      'Read the response against what the patient asked, shown in the Patient Query. Judge focus ' +
-      'and proportion: how much of the letter earns its place, and how much is filler or tangent. ' +
-      'Score dilution only — a tightly argued response scores well here even if you disagree with ' +
-      'its conclusions, and a padded one scores poorly even if everything in it is defensible.',
-    // EXAMPLE REWRITTEN 2026-08-25 (Zitao): the previous version showed only the FAILURE half
-    // and described the good half abstractly ("built on the findings that matter"), which told
-    // the rater nothing about what a pertinent indicator looks like. Both halves are now quoted
-    // from real letters on the SAME patient, so the rater sees which specific indicators earn
-    // their place and which sentences bury them.
-    example:
-      'Responses X and Y answer for the same patient — a short, badly fragmented night with ' +
-      'normal breathing. Response X names the indicators that carry the answer and stops: ' +
-      '"**very short total sleep time**, **low sleep efficiency** and **frequent arousals** … ' +
-      'most strongly points toward future problems grouped as **sleep disorders**" — every ' +
-      'clause is doing work, so Very Relevant (5). Response Y opens on the same night but spends ' +
-      'the letter elsewhere: "[TST 176.5 minutes; SE 46.6 percent; ArI 31.3 events/hour] ' +
-      'combined with **type 2 diabetes**, **hypertension**, **hyperlipidemia**, **obesity** and ' +
-      '**ongoing tobacco use**", then lists five further conditions it might lead to. The ' +
-      'pertinent indicators are in there, buried under a recital of the whole chart — ' +
-      'Irrelevant (2).',
-    anchors: [
-      {
-        value: 5,
-        label: 'Very Relevant',
-        description:
-          "Directly and concisely addresses the patient's query. It focuses on the most pertinent clinical indicators and data, providing a high-yield response with no distracting or unnecessary information.",
-      },
-      {
-        value: 4,
-        label: 'Relevant',
-        description:
-          'Adequately covers the appropriate clinical indicators, but includes some unnecessary filler data or minor tangents that slightly obscure the core message.',
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description: 'Split evenly between relevant and irrelevant information.',
-      },
-      {
-        value: 2,
-        label: 'Irrelevant',
-        description:
-          'Mentions the correct issue but the response is heavily diluted. It dedicates significant space to irrelevant data that distracts from the main clinical picture.',
-      },
-      {
-        value: 1,
-        label: 'Very Irrelevant',
-        description: 'Fails to address the core query, focusing entirely on unrelated data.',
-      },
-    ],
-  },
-  {
-    // ADAPTED from SensorFM "Personalization" (Survey ED.1); v5 re-scopes it from the synthesis
-    // to the RECOMMENDATIONS — whether the advice rests on this patient's own circumstances, and
-    // says why THIS patient should take these steps. Anchors 4 and 1 were already about advice
-    // and keep their ED.1 text verbatim; the "or Mistaken" suffix stays dropped (correctness is
-    // Factuality's axis).
-    // ⚠️ WATCH THIS AXIS. Under the v4 synthesis wording it did not discriminate in the
-    //    2026-08-24 judge run (A 4.44 / B 4.50 / C 4.44, B-A = +0.06) — the format mandates
-    //    quoting patient values, so every arm cleared the floor. The v5 advice re-scope is its
-    //    second chance; if the clinician round still shows nothing, retire it on evidence.
+    // Sweet point between SensorFM ED.1 (anchors 1-3 near-verbatim) and findings-linked
+    // specificity (anchors 4-5). "Suggestions" — the section carries things to WATCH, to RAISE
+    // and to DO; only the last is a recommendation. Checked against the v56 letters: the
+    // actionable style is format-driven and identical across arms, so style is not scored;
+    // whether each suggestion comes from THIS letter's findings is.
     key: 'personalization',
     label: 'Personalization',
-    question:
-      'To what extent does this response personalize its recommendations to this specific patient?',
+    question: "To what extent are this response's suggestions specific to this patient?",
     howToScore:
-      // Cross-reference to another criterion removed 2026-08-25 (Zitao): each criterion stands
-      // alone. The correctness/tailoring distinction is kept, phrased as what THIS axis measures.
-      'Check how much of this particular patient is in the recommendations: whether the advice ' +
-      'rests on their own pattern, history and circumstances — drawn from the Sleep panel, Prior ' +
-      'medical history and demographics together — or could have been sent to anyone with ' +
-      'similar numbers. Judge how tailored the advice reads, and whether it says why this ' +
-      'patient should take these steps — a letter whose advice is built closely around this ' +
-      'patient scores well here whether or not you agree with where it lands.',
-    // TODO example (v5): the v4 example contrasted two ANALYSIS sentences — right for the
-    // synthesis wording, the wrong section for the advice re-scope. Rewrite it from real
-    // recommendation passages when the batch that ships to clinicians is finalised
-    // (2026-08-25 rule: examples quote the loaded batch).
+      'Read the "What this means for you" section and check how much of this particular ' +
+      'patient is in the suggestions it offers: whether each one — something to watch, to ' +
+      'raise, or to do — follows from their own findings, a specific result linked to a ' +
+      'specific step, or could be sent to anyone with similar numbers. General wellness steps ' +
+      'are not faulted on their own; what is scored is how much of it is this patient\'s ' +
+      'rather than anyone\'s.',
+    // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Deeply grounds its advice in multiple distinct aspects of the patient's profile (e.g. cardiovascular, mental health, metabolics). It delivers highly customized recommendations that feel uniquely written for this specific individual.",
+          "The suggestions are built from this patient's own findings — each specific result linked to something to watch, raise, or do — and read as written for this individual alone.",
       },
       {
         value: 4,
         label: 'Personalized',
         description:
-          "Goes beyond surface-level reporting by connecting specific aspects of the individual's profile (e.g., linking a unique biomarker to a distinct lifestyle habit). The response provides actively tailored, patient-specific advice.",
+          'Goes beyond general guidance by connecting specific findings of this individual to specific suggestions (e.g., linking one result to one habit or check). Some general advice alongside.',
       },
       {
         value: 3,
         label: 'Neutral',
-        description:
-          'The advice is split evenly between generic and somewhat personalized recommendations.',
+        description: 'Split about evenly between patient-specific and generic suggestions.',
       },
       {
         value: 2,
         label: 'Generic',
         description:
-          'Its recommendations rest on surface-level stats (e.g., basic demographics, standard daily averages, or isolated stats) and remain broad — they could easily apply to a wide population with similar baseline numbers.',
+          'Mentions surface-level stats (e.g., basic demographics or isolated values), but the advice remains broad and could easily apply to a wide population with similar baseline numbers.',
       },
       {
         value: 1,
         label: 'Highly Generic',
         description:
-          'Provides one-size-fits-all, boilerplate advice. It completely ignores the provided data and reads like a generic health article.',
+          'Provides one-size-fits-all, boilerplate advice. It ignores the provided data and reads like a generic health article.',
+      },
+    ],
+  },
+  {
+    // The GUARD axis — the one a strong arm can still lose. Reference: the evidence THE
+    // RESPONSE GIVES, never the visible panels alone — a panel-only reference punished any arm
+    // whose grounds the rater cannot see, and made the procedure impossible to complete on
+    // those letters. Quoted values are still checked against the record. Known gamble, accepted:
+    // a letter could dress thin grounds in firm language about an unverifiable source; the tone
+    // of over-claim is still caught here, and the facts are Factuality's job.
+    key: 'justifiability',
+    label: 'Justifiability',
+    question:
+      "To what extent are this response's conclusions justified by the evidence it presents?",
+    howToScore:
+      'Read each conclusion against the grounds the response gives for it, and check anything ' +
+      'it quotes against the Sleep panel and Prior medical history. A justified conclusion ' +
+      'shows its grounds — a recorded finding, an estimate from the recording, an inference — ' +
+      'and addresses the findings that point away from it as well as those that support it. ' +
+      'Score how well the case is made, not whether you agree with where it lands.',
+    // TODO example (v6): quote from the final clinician batch.
+    anchors: [
+      {
+        value: 5,
+        label: 'Very Justifiable',
+        description:
+          'Every conclusion is grounded: the response says what each claim rests on, the grounds bear the claim out, and findings pointing the other way are addressed. Nothing it quotes disagrees with the record.',
+      },
+      {
+        value: 4,
+        label: 'Justifiable',
+        description:
+          'The conclusions are grounded, with one claim resting on thinner grounds than stated, or one contrary finding passed over.',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'Grounded in places and not in others: some claims outrun the grounds given, or inconvenient findings go unmentioned.',
+      },
+      {
+        value: 2,
+        label: 'Unjustifiable',
+        description:
+          "Conclusions rest on weak or incidental findings while the stronger signals in the patient's own record go unaddressed, or the argument is built by leaving out what points the other way.",
+      },
+      {
+        value: 1,
+        label: 'Very Unjustifiable',
+        description:
+          'The conclusions rest on grounds the response never gives, or on quoted findings the record contradicts.',
       },
     ],
   },

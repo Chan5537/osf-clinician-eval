@@ -64,12 +64,14 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // OTHER one's axis. Old->new for anyone reading a pre-rename CSV:
 //   context -> factuality · harm -> comprehensiveness · relevance -> trustworthiness ·
 //   justifiability -> relevance · personalization unchanged.
+// v6 (2026-08-29): `relevance` -> `usefulness` and `trustworthiness` -> `justifiability`,
+// renamed WITH their axes in the same schema bump (keys stay equal to labels).
 export type RubricDimension =
+  | 'usefulness'
   | 'factuality'
   | 'comprehensiveness'
-  | 'trustworthiness'
-  | 'relevance'
   | 'personalization'
+  | 'justifiability'
 
 // Likert key: `${label}__${dimension}` (e.g. "A__comprehensiveness"). Built per case from the
 // present response labels × the fixed dimensions.
