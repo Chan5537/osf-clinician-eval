@@ -21,5 +21,5 @@ function DocChip({ href, children }: { href: string; children: React.ReactNode }
 
 // The 1–5 quality-scale rubric doc — placed by the Likert scales.
 export function LikertRubricLink() {
-  return <DocChip href={LIKERT_RUBRIC_DOC_URL}>Likert Scale Rubric</DocChip>
+  return <DocChip href={LIKERT_RUBRIC_DOC_URL}>Rubrics</DocChip>
 }

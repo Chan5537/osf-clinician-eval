@@ -8,7 +8,7 @@ export const GUIDELINE_DOC_URL =
 // still described the pre-v4 wording, so a rater following the link met a different
 // instrument from the one on screen.
 export const LIKERT_RUBRIC_DOC_URL =
-  'https://docs.google.com/document/d/1_t86BLiXvuMtP7oJROd__dccni7gzRo6V-KGaWfct8w/edit?usp=sharing'
+  'https://docs.google.com/document/d/1PmanIBkkpjXDrYPTC6p4cDwCCeQBpwizciXnCfWO9nI/edit?tab=t.0'
 // The weighted-boolean disease-checklist doc of the retired hybrid rubric — kept for reference,
 // no longer linked anywhere in the UI.
 export const RUBRIC_DOC_URL =

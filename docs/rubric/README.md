@@ -1,3 +1,29 @@
+# Rubric v7 — source of truth and validation
+
+**Active as of 2026-09-01** (owner; settled in-session after the first clinician round).
+SCHEMA_VERSION **17**, `rubric_version` **v7-20260901**. Full clinician-facing text with
+worked examples: `Clinician Evaluation Rubrics v7 (for Google Doc).md` in this folder
+(examples left the UI on 2026-09-01 — the v7 questions are self-contained).
+
+| # | Criterion | Stored key | Asks |
+|---|---|---|---|
+| 1 | **Usefulness** | `usefulness` | The warning against the recorded outcome, weighted by how hard it was to identify from the known information |
+| 2 | **Factuality** | `factuality` | unchanged from v6 |
+| 3 | **Comprehensiveness** | `comprehensiveness` | Information beyond the known information (Sleep panel, Prior medical history) — key and label kept, question changed |
+| 4 | **Personalization** | `personalization` | unchanged question; anchors trimmed to short sentences |
+| 5 | **Relevance** | `relevance` | Attaches to future health risks, not the conditions the patient already has (replaces Justifiability) |
+
+What v7 changes from v6, and why: the clinician round showed Justifiability read as
+justified-by-the-chart ("can only use medical history") no matter how the howToScore framed
+it, and Comprehensiveness's coverage framing put the ground-truth arm LOWEST — both axes ran
+against the eval's purpose. Usefulness's novelty question moved into Comprehensiveness;
+Usefulness now scores outcome value with a foreseeability weight (a correct call the known
+information would not suggest counts most). ⚠️ `usefulness` and `comprehensiveness` KEEP their
+keys while their questions change meaning — the v12-style hazard — so stale sessions are
+discarded at SCHEMA 17. ⛔ v7 scores are never pooled with v6 or earlier.
+
+---
+
 # Rubric v6 — source of truth and validation
 
 **Active as of 2026-08-29** (owner; settled in-session against the live v56 letters).

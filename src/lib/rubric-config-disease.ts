@@ -118,7 +118,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v6-20260829'
+export const RUBRIC_VERSION = 'v7-20260901'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
