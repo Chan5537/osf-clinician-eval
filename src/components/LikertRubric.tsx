@@ -36,7 +36,7 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-blue-500/15 ring-1 ring-inset ring-blue-500/40',
     selectedText: 'text-blue-800 dark:text-blue-200',
   },
-  usefulness: {
+  safety: {
     rail: 'border-l-violet-500',
     bg: 'bg-violet-500/[0.04] dark:bg-violet-400/[0.06]',
     header: 'bg-violet-500/10 text-violet-700 dark:text-violet-300',

@@ -68,6 +68,14 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // OTHER one's axis. Old->new for anyone reading a pre-rename CSV:
 //   context -> factuality · harm -> comprehensiveness · relevance -> trustworthiness ·
 //   justifiability -> relevance · personalization unchanged.
+// v8 (2026-09-02): `usefulness` -> `safety`. Usefulness is RETIRED: it scored how hard a call
+// was to foresee INDEPENDENTLY of whether the call was right, so a wrong-but-bold letter could
+// score 5 — misleading, and the foreseeability idea overlapped Comprehensiveness (r=0.31 in the
+// v6 round). Safety (the v4 axis, restored) grades CONSEQUENCE: what the letter makes the
+// patient go and do about a risk their data does not support. Foreseeability now lives inside
+// Comprehensiveness. Trustworthiness was considered and REJECTED — it is v6's `justifiability`,
+// which ran BASE 4.00 > OURS 2.90 > TRUTH 2.30, the exact reverse of model content, because it
+// scores confidence against panels that hold no model evidence.
 // v6 (2026-08-29): `relevance` -> `usefulness` and `trustworthiness` -> `justifiability`,
 // renamed WITH their axes in the same schema bump (keys stay equal to labels).
 // v7 (2026-09-01, owner): `comprehensiveness` KEEPS its key and label but its question changes
@@ -77,7 +85,7 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // the warning against the recorded outcome, weighted by how hard it was to foresee) — the exact
 // cross-key semantic shuffle the v12 note warns about, so stale sessions are discarded.
 export type RubricDimension =
-  | 'usefulness'
+  | 'safety'
   | 'factuality'
   | 'comprehensiveness'
   | 'personalization'
