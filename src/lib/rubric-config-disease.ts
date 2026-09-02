@@ -165,45 +165,54 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'usefulness',
     label: 'Usefulness',
     question:
-      'If this patient had read only their own chart, how much would this response add to what they could already have worked out?',
+      'Reading only the Sleep panel and Prior medical history, how far does this response go beyond what you would already have expected?',
     howToScore:
-      'This axis is about FORESEEABILITY, not correctness — whether the response was right is ' +
-      'Factuality. Cover the Future risk panel. Read the Sleep panel and Prior medical history, ' +
-      'and ask what a careful reader would already expect. Then read the response and score how ' +
-      'far it goes beyond that expectation. A response can be wrong and still score 4 here if it ' +
-      'raised something the chart gave no reason to raise. Score the reach of the call, not its ' +
-      'outcome.',
+      'Ask what YOU would have predicted from the Sleep panel and Prior medical history alone. ' +
+      'Then read the response and score the distance between the two. This axis is about how far ' +
+      'the response reaches, not whether the reach was right — correctness is Factuality. A ' +
+      'response can name a condition the patient never developed and still score 4 here, if ' +
+      'nothing in those two panels pointed that way.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
+    example:
+      'A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic ' +
+      'and sleep-related (obesity, depression, OSA, insomnia, migraine). Response X: "the area to ' +
+      'watch most closely is **mental** ... points most strongly to new **Anxiety disorder**". Neither ' +
+      'panel points at the mental area as the NEW risk, so this reaches well past what you would have ' +
+      'expected — Very Useful (5). Response Y: "the area to watch most closely is **circulatory**, ' +
+      'because tonight’s recording showed mild repeated breathing interruptions ... while your history ' +
+      'includes the circulatory area." It restates the reading both panels already give — Of Little ' +
+      'Use (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y ' +
+      'would still be 2 here and would earn its credit under Factuality instead. ',
     anchors: [
       {
         value: 5,
         label: 'Very Useful',
         description:
-          'Raises a risk in a body system the chart gives no reason to look at (e.g. calls a respiratory risk for a patient whose history is entirely cardiac and metabolic), and says what in this recording sent it there. The patient could not have reached this alone.',
+          'Names a risk in a body area neither panel points to (e.g. calls the mental area for a patient whose Sleep panel is near-normal and whose history is metabolic and sleep-related), and says what in the recording sent it there.',
       },
       {
         value: 4,
         label: 'Useful',
         description:
-          'Sharpens a broad chart signal into something specific the patient could act on (e.g. from "poor sleep" to a named condition to watch for), or adds a concrete estimate the chart does not carry.',
+          'Sharpens a broad signal from the panels into something specific (e.g. from raised AHI to a named condition to watch for), or adds a concrete value neither panel carries.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Names the risk a careful reader of the chart would already reach, but adds a reason or a detail they would not have had.',
+          'Names the area you would already have expected from the two panels, but adds a reason or detail they do not give.',
       },
       {
         value: 2,
         label: 'Of Little Use',
         description:
-          'Restates the obvious chart reading (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and cardiac history) with nothing added.',
+          'Restates what the panels already say (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and a circulatory history), with nothing added.',
       },
       {
         value: 1,
         label: 'Useless',
         description:
-          'Tells the patient only what any adult would be told regardless of this recording, or nothing they could act on at all.',
+          'Says only what any adult would be told regardless of this recording, or nothing that could be acted on.',
       },
     ],
   },
@@ -219,8 +228,15 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Open the "Future risk" panel. It lists the **future diseases** this patient newly ' +
       'developed in the six years after the study. Check two things against it: the risk area the response ' +
       'commits to in bold, and the conditions it names. Closely related variants of one ' +
-      'problem count as one condition. The follow-up has already happened.',
-    // TODO example (v6): quote from the final clinician batch.
+      'problem count as one condition. The follow-up has already happened. Score ONLY whether the ' +
+      'response matched it — not how hard the call was, which is Usefulness.',
+    example:
+      'The outcome panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
+      'atherosclerosis**. Response X commits to the **circulatory** area and names both — right area, ' +
+      'recorded conditions named: Highly Accurate (5). Response Y commits to **circulatory** but names ' +
+      'only "high blood pressure" as the thing to watch: the area is right, the conditions inside it ' +
+      'are not — Neutral (3). A response calling the **respiratory** area here would be Highly ' +
+      'Inaccurate (1). ',
     anchors: [
       {
         value: 5,
@@ -264,16 +280,27 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'How much information does this response give the patient beyond the known information (e.g., the Sleep panel, Prior medical history)?',
     howToScore:
-      'Set the response against the two panels tagged Known info — the Sleep panel and ' +
-      'Prior medical history — and ask what it adds on top. Whether an addition is correct ' +
-      "belongs to Factuality, not here.",
+      'Count what the response carries that is NOT on the two Known info panels: a condition ' +
+      'neither panel names, an estimated value, a resemblance to a group of patients. Score how ' +
+      'much of the letter is that added content versus restatement of the panels. This axis is ' +
+      'about HOW MUCH is added; how far it reaches beyond the expected is Usefulness, and ' +
+      'whether it is correct is Factuality.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
+    example:
+      'Response X carries content neither Known info panel holds: it names **Coronary ' +
+      'atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, ' +
+      '"outside its stated reference range ... because no blood was drawn, this remains only an ' +
+      'estimate" — specific new concerns, each tied to what in the recording points there: Rich ' +
+      'Addition (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes ' +
+      '"your history already includes the circulatory area", and concludes these are worth watching. ' +
+      'Every fact in it is already on the two panels: Nothing New (1). Whether the HbA1c estimate or ' +
+      'the extra condition is CORRECT is not scored here. ',
     anchors: [
       {
         value: 5,
         label: 'Rich Addition',
         description:
-          'Carries named content absent from both Known info panels — a condition the chart never mentions, an estimated value, a medication resemblance — and states what in this recording points there.',
+          'Carries named content absent from both Known info panels — a condition neither panel mentions, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there.',
       },
       {
         value: 4,
@@ -317,13 +344,21 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'break because they name this ' +
       "patient's own findings are personalized. How valuable or novel the advice is belongs to " +
       'Usefulness; general wellness steps are not faulted here.',
-    // TODO example (v6): quote from the final clinician batch.
+    example:
+      'Both responses are for the same patient. Response X: "notice persistent changes in worry, ' +
+      'tension, mood, or sleep and bring them up at your next routine appointment; your history ' +
+      'records prior conditions in the mental area, so changes are worth describing clearly rather ' +
+      'than assuming they are unchanged." The suggestion is built from this patient’s own history and ' +
+      'would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep ' +
+      'finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive ' +
+      'habits and follow-up already recommended for you; the recording is a reason for awareness, not ' +
+      'alarm" — this survives being pasted into any patient’s letter unchanged: Highly Generic (1). ',
     anchors: [
       {
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Swapping in another patient's chart would make them read wrong.",
+          "Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Moved into another patient's letter unchanged, they would read wrong.",
       },
       {
         value: 4,
@@ -360,10 +395,20 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       "How much of this response attaches to this patient's future health risks, not the conditions they already have?",
     howToScore:
-      'Judge the analysis and the suggestions separately, then together. Existing conditions ' +
-      'may appear as evidence for a future risk; count them against the score only where ' +
-      'they are the point rather than the support.',
+      'This axis is about TIME DIRECTION only: forward to what could develop, or backward over ' +
+      'what the patient already has. Judge the "Detailed analysis" and the "What this means for ' +
+      'you" sections separately, then together. Existing conditions may appear as evidence for a ' +
+      'future risk — count them against the score only where they are the point rather than the ' +
+      'support. Do not score correctness, novelty or tailoring here.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
+    example:
+      'Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in ' +
+      'the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior ' +
+      'mental-area conditions appear only as grounds for the forward call — both halves work on future ' +
+      'risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory ' +
+      'and endocrine history and closes by asking "what practical prevention steps fit your existing ' +
+      'circulatory and endocrine/metabolic history" — the existing conditions are the point rather ' +
+      'than the support: Marginally Relevant (2). ',
     anchors: [
       {
         value: 5,

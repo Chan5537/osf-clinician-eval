@@ -3,32 +3,41 @@
 *Active 2026-09-02 · `rubric_version` v8-20260902 · SCHEMA_VERSION 18 · scores are NOT
 comparable with V7 or earlier.*
 
-You will read three responses per patient. For each response, score the five criteria below
-on a 1–5 scale. The patient panel on the left is your reference: **Sleep panel** and **Prior
-medical history** are tagged *Known info* (what was on record at the time of the study);
-**Auxiliary information** shows EHR records where they exist; **Future risk** (tagged *New
-onset risk*) is what the patient actually developed in the six years after the study.
+Score each response on the five criteria below, 1–5. The patient panel is your reference:
+**Sleep panel** and **Prior medical history** are tagged *Known info* (on record at the time of
+the study); **Future risk** (*New onset risk*) is what the patient actually developed in the six
+years after.
 
-> **The five criteria measure different things on purpose.** A response can be *wrong* yet
-> score well on Usefulness (it reached somewhere the chart never pointed), and *right* yet
-> score low (it only restated the chart). Score each axis on its own question — do not let
-> one carry another.
+> **The five axes are deliberately separable.** Each scores ONE property, and the guidance for
+> each says which properties belong to a different axis. A response can be *wrong* yet reach far
+> (high Usefulness, low Factuality), or *right* yet add nothing (high Factuality, low
+> Comprehensiveness). Do not let one axis carry another.
+
+| Axis | Scores | Against |
+|---|---|---|
+| Usefulness | how FAR past the expected it reaches | Sleep panel + Prior medical history |
+| Factuality | whether it MATCHED what happened | Future risk panel |
+| Comprehensiveness | how MUCH content beyond the panels | Known info panels |
+| Personalization | whether SUGGESTIONS are this patient's | 'What this means for you' |
+| Relevance | time DIRECTION: forward vs backward | whole letter |
 
 ---
 
 ## 1. Usefulness
 
-**If this patient had read only their own chart, how much would this response add to what they could already have worked out?**
+**Reading only the Sleep panel and Prior medical history, how far does this response go beyond what you would already have expected?**
 
-How to score: This axis is about FORESEEABILITY, not correctness — whether the response was right is Factuality. Cover the Future risk panel. Read the Sleep panel and Prior medical history, and ask what a careful reader would already expect. Then read the response and score how far it goes beyond that expectation. A response can be wrong and still score 4 here if it raised something the chart gave no reason to raise. Score the reach of the call, not its outcome.
+How to score: Ask what YOU would have predicted from the Sleep panel and Prior medical history alone. Then read the response and score the distance between the two. This axis is about how far the response reaches, not whether the reach was right — correctness is Factuality. A response can name a condition the patient never developed and still score 4 here, if nothing in those two panels pointed that way.
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Very Useful | Raises a risk in a body system the chart gives no reason to look at (e.g. calls a respiratory risk for a patient whose history is entirely cardiac and metabolic), and says what in this recording sent it there. The patient could not have reached this alone. |
-| 4 | Useful | Sharpens a broad chart signal into something specific the patient could act on (e.g. from "poor sleep" to a named condition to watch for), or adds a concrete estimate the chart does not carry. |
-| 3 | Neutral | Names the risk a careful reader of the chart would already reach, but adds a reason or a detail they would not have had. |
-| 2 | Of Little Use | Restates the obvious chart reading (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and cardiac history) with nothing added. |
-| 1 | Useless | Tells the patient only what any adult would be told regardless of this recording, or nothing they could act on at all. |
+| 5 | Very Useful | Names a risk in a body area neither panel points to (e.g. calls the mental area for a patient whose Sleep panel is near-normal and whose history is metabolic and sleep-related), and says what in the recording sent it there. |
+| 4 | Useful | Sharpens a broad signal from the panels into something specific (e.g. from raised AHI to a named condition to watch for), or adds a concrete value neither panel carries. |
+| 3 | Neutral | Names the area you would already have expected from the two panels, but adds a reason or detail they do not give. |
+| 2 | Of Little Use | Restates what the panels already say (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and a circulatory history), with nothing added. |
+| 1 | Useless | Says only what any adult would be told regardless of this recording, or nothing that could be acted on. |
+
+**Worked example.** A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic and sleep-related (obesity, depression, OSA, insomnia, migraine). Response X: "the area to watch most closely is **mental** ... points most strongly to new **Anxiety disorder**". Neither panel points at the mental area as the NEW risk, so this reaches well past what you would have expected — Very Useful (5). Response Y: "the area to watch most closely is **circulatory**, because tonight’s recording showed mild repeated breathing interruptions ... while your history includes the circulatory area." It restates the reading both panels already give — Of Little Use (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y would still be 2 here and would earn its credit under Factuality instead. 
 
 ---
 
@@ -36,7 +45,7 @@ How to score: This axis is about FORESEEABILITY, not correctness — whether the
 
 **Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?**
 
-How to score: Open the "Future risk" panel. It lists the **future diseases** this patient newly developed in the six years after the study. Check two things against it: the risk area the response commits to in bold, and the conditions it names. Closely related variants of one problem count as one condition. The follow-up has already happened.
+How to score: Open the "Future risk" panel. It lists the **future diseases** this patient newly developed in the six years after the study. Check two things against it: the risk area the response commits to in bold, and the conditions it names. Closely related variants of one problem count as one condition. The follow-up has already happened. Score ONLY whether the response matched it — not how hard the call was, which is Usefulness.
 
 | Score | Anchor | Meaning |
 |---|---|---|
@@ -46,21 +55,25 @@ How to score: Open the "Future risk" panel. It lists the **future diseases** thi
 | 2 | Inaccurate | The risk area is wrong, though something it names touches what the patient developed. |
 | 1 | Highly Inaccurate | Wrong risk area, and none of what the patient developed appears. |
 
+**Worked example.** The outcome panel for this patient records **Ischemic Heart Disease** and **Coronary atherosclerosis**. Response X commits to the **circulatory** area and names both — right area, recorded conditions named: Highly Accurate (5). Response Y commits to **circulatory** but names only "high blood pressure" as the thing to watch: the area is right, the conditions inside it are not — Neutral (3). A response calling the **respiratory** area here would be Highly Inaccurate (1). 
+
 ---
 
 ## 3. Comprehensiveness
 
 **How much information does this response give the patient beyond the known information (e.g., the Sleep panel, Prior medical history)?**
 
-How to score: Set the response against the two panels tagged Known info — the Sleep panel and Prior medical history — and ask what it adds on top. Whether an addition is correct belongs to Factuality, not here.
+How to score: Count what the response carries that is NOT on the two Known info panels: a condition neither panel names, an estimated value, a resemblance to a group of patients. Score how much of the letter is that added content versus restatement of the panels. This axis is about HOW MUCH is added; how far it reaches beyond the expected is Usefulness, and whether it is correct is Factuality.
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Rich Addition | Carries named content absent from both Known info panels — a condition the chart never mentions, an estimated value, a medication resemblance — and states what in this recording points there. |
+| 5 | Rich Addition | Carries named content absent from both Known info panels — a condition neither panel mentions, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. |
 | 4 | Clear Addition | Mostly information beyond the known information, with some space spent restating it. |
 | 3 | Neutral | Something new is in there, wrapped in about as much recital of the known information. |
 | 2 | Thin | Mostly repackages the known information as future risk; little rests on this recording. |
 | 1 | Nothing New | Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself. |
+
+**Worked example.** Response X carries content neither Known info panel holds: it names **Coronary atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, "outside its stated reference range ... because no blood was drawn, this remains only an estimate" — specific new concerns, each tied to what in the recording points there: Rich Addition (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes "your history already includes the circulatory area", and concludes these are worth watching. Every fact in it is already on the two panels: Nothing New (1). Whether the HbA1c estimate or the extra condition is CORRECT is not scored here. 
 
 ---
 
@@ -72,11 +85,13 @@ How to score: Score the SUGGESTIONS only — the "What this means for you" secti
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Highly Personalized | Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Swapping in another patient's chart would make them read wrong. |
+| 5 | Highly Personalized | Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Moved into another patient's letter unchanged, they would read wrong. |
 | 4 | Personalized | At least one named finding of this patient's is tied to a specific suggestion (e.g. quotes their own N3% or AHI and says what to raise because of it). General advice sits alongside. |
 | 3 | Neutral | About half patient-specific, half generic. |
 | 2 | Generic | Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout. |
 | 1 | Highly Generic | One-size-fits-all advice. It ignores the data and reads like a health leaflet. |
+
+**Worked example.** Both responses are for the same patient. Response X: "notice persistent changes in worry, tension, mood, or sleep and bring them up at your next routine appointment; your history records prior conditions in the mental area, so changes are worth describing clearly rather than assuming they are unchanged." The suggestion is built from this patient’s own history and would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive habits and follow-up already recommended for you; the recording is a reason for awareness, not alarm" — this survives being pasted into any patient’s letter unchanged: Highly Generic (1). 
 
 ---
 
@@ -84,7 +99,7 @@ How to score: Score the SUGGESTIONS only — the "What this means for you" secti
 
 **How much of this response attaches to this patient's future health risks, not the conditions they already have?**
 
-How to score: Judge the analysis and the suggestions separately, then together. Existing conditions may appear as evidence for a future risk; count them against the score only where they are the point rather than the support.
+How to score: This axis is about TIME DIRECTION only: forward to what could develop, or backward over what the patient already has. Judge the "Detailed analysis" and the "What this means for you" sections separately, then together. Existing conditions may appear as evidence for a future risk — count them against the score only where they are the point rather than the support. Do not score correctness, novelty or tailoring here.
 
 | Score | Anchor | Meaning |
 |---|---|---|
@@ -94,13 +109,15 @@ How to score: Judge the analysis and the suggestions separately, then together. 
 | 2 | Marginally Relevant | The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought. |
 | 1 | Irrelevant | Reads as a review of conditions the patient already has. Nothing in it looks forward. |
 
+**Worked example.** Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior mental-area conditions appear only as grounds for the forward call — both halves work on future risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory and endocrine history and closes by asking "what practical prevention steps fit your existing circulatory and endocrine/metabolic history" — the existing conditions are the point rather than the support: Marginally Relevant (2). 
+
 ---
 
-*What changed from V7: **Usefulness is no longer nested inside Factuality.* Its V7 anchors
-required a correct call to score 3+ and a wrong one to score 2-, so Factuality mechanically set
-its floor and the two axes could not disagree. It now scores how far past the chart the response
-reaches, independent of whether the reach was right. **Personalization is re-scoped to the
-suggestions block** and judged by a swap test, because in the clinician round it correlated
-r=0.80 with Usefulness — the rater was scoring one thing twice. **Anchors that demanded
-perfection were replaced with observable moves**: Personalization was never once scored 5 across
-30 responses because its top anchor asked for *every* suggestion to be patient-specific.*
+*Changed from V7: **Usefulness de-nested from Factuality** (V7 required a correct call to
+score 3+, so the two axes could not disagree) and reworded to name the panels instead of "the
+chart". **Worked examples restored to the UI** — dropped 2026-09-01, but a rater cannot infer a
+criterion's intent from its stem; all five quote real letters of the loaded v60 batch.
+**Explicit boundaries** added to Factuality, Comprehensiveness and Relevance naming what belongs
+to another axis. **Personalization re-scoped** to the suggestions block by a swap test (it
+correlated r=0.80 with Usefulness in the clinician round). **Unreachable anchors replaced** with
+observable moves — Personalization was never once scored 5 across 30 responses.*
