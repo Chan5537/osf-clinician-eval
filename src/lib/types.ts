@@ -45,6 +45,10 @@ export interface Demographics {
 
 export interface DemoCase {
   case_id: string
+  // Batch watermark stamped by the exporter (e.g. "v60_gap60"). The review CSV carries it in
+  // place of the arm column, so a returned file maps back to the exact letters it scored —
+  // and to that batch's arm key, which stays on the generation side.
+  batch?: string
   // Organ category the case is scoped to (canonical, e.g. "circulatory system"). Drives the Patient
   // Panel's category-filtered sleep-vitals chart. Emitted by the exporter from the record's `group`.
   category: string
