@@ -308,8 +308,10 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               </p>
               <div className="space-y-3 text-sm">
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Medication
+                  <p className="mb-1.5">
+                    <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+                      Medication
+                    </span>
                   </p>
                   {context.ehrRecords.medications.length > 0 ? (
                     <ul className="flex flex-wrap gap-1.5">
@@ -329,8 +331,10 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
                   )}
                 </div>
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Lab test (HbA1c)
+                  <p className="mb-1.5">
+                    <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+                      Lab test (HbA1c)
+                    </span>
                   </p>
                   {(() => {
                     const a1c = context.ehrRecords.labs.find((l) => /hba1c/i.test(l.name))
