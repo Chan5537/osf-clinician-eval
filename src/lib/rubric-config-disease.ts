@@ -181,8 +181,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'panel points at the mental area as the NEW risk, so this reaches well past what you would have ' +
       'expected — Very Useful (5). Response Y: "the area to watch most closely is **circulatory**, ' +
       'because tonight’s recording showed mild repeated breathing interruptions ... while your history ' +
-      'includes the circulatory area." It restates the reading both panels already give — Of Little ' +
-      'Use (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y ' +
+      'includes the circulatory area." It restates the reading both panels already give — Not ' +
+      'Useful (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y ' +
       'would still be 2 here and would earn its credit under Factuality instead. ',
     anchors: [
       {
@@ -205,13 +205,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       },
       {
         value: 2,
-        label: 'Of Little Use',
+        label: 'Not Useful',
         description:
           'Restates what the panels already say (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and a circulatory history), with nothing added.',
       },
       {
         value: 1,
-        label: 'Useless',
+        label: 'Not Useful At All',
         description:
           'Says only what any adult would be told regardless of this recording, or nothing that could be acted on.',
       },
@@ -291,21 +291,21 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'Response X carries content neither Known info panel holds: it names **Coronary ' +
       'atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, ' +
       '"outside its stated reference range ... because no blood was drawn, this remains only an ' +
-      'estimate" — specific new concerns, each tied to what in the recording points there: Rich ' +
-      'Addition (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes ' +
+      'estimate" — specific new concerns, each tied to what in the recording points there: Very ' +
+      'Comprehensive (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes ' +
       '"your history already includes the circulatory area", and concludes these are worth watching. ' +
-      'Every fact in it is already on the two panels: Nothing New (1). Whether the HbA1c estimate or ' +
+      'Every fact in it is already on the two panels: Not Comprehensive At All (1). Whether the HbA1c estimate or ' +
       'the extra condition is CORRECT is not scored here. ',
     anchors: [
       {
         value: 5,
-        label: 'Rich Addition',
+        label: 'Very Comprehensive',
         description:
           'Carries named content absent from both Known info panels — a condition neither panel mentions, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there.',
       },
       {
         value: 4,
-        label: 'Clear Addition',
+        label: 'Comprehensive',
         description:
           'Mostly information beyond the known information, with some space spent restating it.',
       },
@@ -317,13 +317,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       },
       {
         value: 2,
-        label: 'Thin',
+        label: 'Not Comprehensive',
         description:
           'Mostly repackages the known information as future risk; little rests on this recording.',
       },
       {
         value: 1,
-        label: 'Nothing New',
+        label: 'Not Comprehensive At All',
         description:
           'Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself.',
       },
@@ -353,7 +353,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep ' +
       'finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive ' +
       'habits and follow-up already recommended for you; the recording is a reason for awareness, not ' +
-      'alarm" — this survives being pasted into any patient’s letter unchanged: Highly Generic (1). ',
+      'alarm" — this survives being pasted into any patient’s letter unchanged: Not Personalized At All (1). ',
     anchors: [
       {
         value: 5,
@@ -374,13 +374,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       },
       {
         value: 2,
-        label: 'Generic',
+        label: 'Not Personalized',
         description:
           "Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout.",
       },
       {
         value: 1,
-        label: 'Highly Generic',
+        label: 'Not Personalized At All',
         description:
           'One-size-fits-all advice. It ignores the data and reads like a health leaflet.',
       },
@@ -409,7 +409,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory ' +
       'and endocrine history and closes by asking "what practical prevention steps fit your existing ' +
       'circulatory and endocrine/metabolic history" — the existing conditions are the point rather ' +
-      'than the support: Marginally Relevant (2). ',
+      'than the support: Not Relevant (2). ',
     anchors: [
       {
         value: 5,
@@ -431,13 +431,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       },
       {
         value: 2,
-        label: 'Marginally Relevant',
+        label: 'Not Relevant',
         description:
           'The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought.',
       },
       {
         value: 1,
-        label: 'Irrelevant',
+        label: 'Not Relevant At All',
         description:
           "Reads as a review of conditions the patient already has. Nothing in it looks forward.",
       },

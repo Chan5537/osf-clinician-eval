@@ -13,6 +13,10 @@ years after.
 > (high Usefulness, low Factuality), or *right* yet add nothing (high Factuality, low
 > Comprehensiveness). Do not let one axis carry another.
 
+> **Scale labels are uniform**: every criterion runs *Very X · X · Neutral · Not X · Not X At
+> All*, where X is that criterion's own adjective. Factuality is the one exception, keeping its
+> Accurate/Inaccurate ladder.
+
 | Axis | Scores | Against |
 |---|---|---|
 | Usefulness | how FAR past the foreseeable it reaches | Sleep panel + Prior medical history |
@@ -34,10 +38,10 @@ How to score: "Hard to foresee" means hard to foresee FROM THE KNOWN INFORMATION
 | 5 | Very Useful | Names a risk in a body area neither panel points to (e.g. calls the mental area for a patient whose Sleep panel is near-normal and whose history is metabolic and sleep-related), and says what in the recording sent it there. |
 | 4 | Useful | Sharpens a broad signal from the panels into something specific (e.g. from raised AHI to a named condition to watch for), or adds a concrete value neither panel carries. |
 | 3 | Neutral | Names the area you would already have expected from the two panels, but adds a reason or detail they do not give. |
-| 2 | Of Little Use | Restates what the panels already say (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and a circulatory history), with nothing added. |
-| 1 | Useless | Says only what any adult would be told regardless of this recording, or nothing that could be acted on. |
+| 2 | Not Useful | Restates what the panels already say (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and a circulatory history), with nothing added. |
+| 1 | Not Useful At All | Says only what any adult would be told regardless of this recording, or nothing that could be acted on. |
 
-**Worked example.** A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic and sleep-related (obesity, depression, OSA, insomnia, migraine). Response X: "the area to watch most closely is **mental** ... points most strongly to new **Anxiety disorder**". Neither panel points at the mental area as the NEW risk, so this reaches well past what you would have expected — Very Useful (5). Response Y: "the area to watch most closely is **circulatory**, because tonight’s recording showed mild repeated breathing interruptions ... while your history includes the circulatory area." It restates the reading both panels already give — Of Little Use (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y would still be 2 here and would earn its credit under Factuality instead. 
+**Worked example.** A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic and sleep-related (obesity, depression, OSA, insomnia, migraine). Response X: "the area to watch most closely is **mental** ... points most strongly to new **Anxiety disorder**". Neither panel points at the mental area as the NEW risk, so this reaches well past what you would have expected — Very Useful (5). Response Y: "the area to watch most closely is **circulatory**, because tonight’s recording showed mild repeated breathing interruptions ... while your history includes the circulatory area." It restates the reading both panels already give — Not Useful (2). Score the reach, not the outcome: if the recorded outcome had been circulatory, Y would still be 2 here and would earn its credit under Factuality instead. 
 
 ---
 
@@ -67,13 +71,13 @@ How to score: Count what the response carries that is NOT on the two Known info 
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Rich Addition | Carries named content absent from both Known info panels — a condition neither panel mentions, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. |
-| 4 | Clear Addition | Mostly information beyond the known information, with some space spent restating it. |
+| 5 | Very Comprehensive | Carries named content absent from both Known info panels — a condition neither panel mentions, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. |
+| 4 | Comprehensive | Mostly information beyond the known information, with some space spent restating it. |
 | 3 | Neutral | Something new is in there, wrapped in about as much recital of the known information. |
-| 2 | Thin | Mostly repackages the known information as future risk; little rests on this recording. |
-| 1 | Nothing New | Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself. |
+| 2 | Not Comprehensive | Mostly repackages the known information as future risk; little rests on this recording. |
+| 1 | Not Comprehensive At All | Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself. |
 
-**Worked example.** Response X carries content neither Known info panel holds: it names **Coronary atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, "outside its stated reference range ... because no blood was drawn, this remains only an estimate" — specific new concerns, each tied to what in the recording points there: Rich Addition (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes "your history already includes the circulatory area", and concludes these are worth watching. Every fact in it is already on the two panels: Nothing New (1). Whether the HbA1c estimate or the extra condition is CORRECT is not scored here. 
+**Worked example.** Response X carries content neither Known info panel holds: it names **Coronary atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, "outside its stated reference range ... because no blood was drawn, this remains only an estimate" — specific new concerns, each tied to what in the recording points there: Very Comprehensive (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes "your history already includes the circulatory area", and concludes these are worth watching. Every fact in it is already on the two panels: Not Comprehensive At All (1). Whether the HbA1c estimate or the extra condition is CORRECT is not scored here. 
 
 ---
 
@@ -88,10 +92,10 @@ How to score: Score the SUGGESTIONS only — the "What this means for you" secti
 | 5 | Highly Personalized | Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Moved into another patient's letter unchanged, they would read wrong. |
 | 4 | Personalized | At least one named finding of this patient's is tied to a specific suggestion (e.g. quotes their own N3% or AHI and says what to raise because of it). General advice sits alongside. |
 | 3 | Neutral | About half patient-specific, half generic. |
-| 2 | Generic | Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout. |
-| 1 | Highly Generic | One-size-fits-all advice. It ignores the data and reads like a health leaflet. |
+| 2 | Not Personalized | Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout. |
+| 1 | Not Personalized At All | One-size-fits-all advice. It ignores the data and reads like a health leaflet. |
 
-**Worked example.** Both responses are for the same patient. Response X: "notice persistent changes in worry, tension, mood, or sleep and bring them up at your next routine appointment; your history records prior conditions in the mental area, so changes are worth describing clearly rather than assuming they are unchanged." The suggestion is built from this patient’s own history and would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive habits and follow-up already recommended for you; the recording is a reason for awareness, not alarm" — this survives being pasted into any patient’s letter unchanged: Highly Generic (1). 
+**Worked example.** Both responses are for the same patient. Response X: "notice persistent changes in worry, tension, mood, or sleep and bring them up at your next routine appointment; your history records prior conditions in the mental area, so changes are worth describing clearly rather than assuming they are unchanged." The suggestion is built from this patient’s own history and would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive habits and follow-up already recommended for you; the recording is a reason for awareness, not alarm" — this survives being pasted into any patient’s letter unchanged: Not Personalized At All (1). 
 
 ---
 
@@ -106,18 +110,19 @@ How to score: This axis is about TIME DIRECTION only: forward to what could deve
 | 5 | Highly Relevant | Both the analysis and the suggestions are about what could develop next. Existing conditions appear only as grounds for that. |
 | 4 | Relevant | Mostly future-focused. Existing conditions appear only as evidence. |
 | 3 | Neutral | One part looks forward, the other goes back over what the patient already has. |
-| 2 | Marginally Relevant | The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought. |
-| 1 | Irrelevant | Reads as a review of conditions the patient already has. Nothing in it looks forward. |
+| 2 | Not Relevant | The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought. |
+| 1 | Not Relevant At All | Reads as a review of conditions the patient already has. Nothing in it looks forward. |
 
-**Worked example.** Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior mental-area conditions appear only as grounds for the forward call — both halves work on future risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory and endocrine history and closes by asking "what practical prevention steps fit your existing circulatory and endocrine/metabolic history" — the existing conditions are the point rather than the support: Marginally Relevant (2). 
+**Worked example.** Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior mental-area conditions appear only as grounds for the forward call — both halves work on future risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory and endocrine history and closes by asking "what practical prevention steps fit your existing circulatory and endocrine/metabolic history" — the existing conditions are the point rather than the support: Not Relevant (2). 
 
 ---
 
-*Changed from V7: **all five stems now read "To what extent..."** for consistency.
-**Usefulness de-nested from Factuality** (V7 required a correct call to score 3+, so the two
-axes could not disagree); its guidance defines "hard to foresee" as hard to foresee from the
-Known info panels. **Worked examples restored to the UI** — dropped 2026-09-01, but a rater
-cannot infer a criterion's intent from its stem; all five quote real letters of the loaded v60
-batch. **Explicit boundaries** added naming what belongs to another axis. **Personalization
+*Changed from V7: **all five stems open "To what extent..."** and **all scale labels follow
+[degree] + the criterion's own adjective** (Factuality excepted) — V7 mixed synonyms such as
+"Rich Addition", "Thin" and "Of Little Use", which made raters map different words onto the
+same point. **Usefulness de-nested from Factuality** (V7 required a correct call to score 3+, so
+the two axes could not disagree); its guidance defines "hard to foresee" as hard to foresee from
+the Known info panels. **Worked examples restored to the UI**, all quoting real letters of the
+loaded v60 batch. **Explicit boundaries** name what belongs to another axis. **Personalization
 re-scoped** to the suggestions block by a swap test (r=0.80 with Usefulness in the clinician
 round). **Unreachable anchors replaced** with observable moves.*
