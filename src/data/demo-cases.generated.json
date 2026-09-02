@@ -1,6 +1,7 @@
 [
   {
     "case_id": "HSP_v7_000",
+    "batch": "v60_gap60",
     "category": "circulatory system",
     "demographics": {
       "age": 73,
@@ -43,6 +44,7 @@
   },
   {
     "case_id": "HSP_v7_001",
+    "batch": "v60_gap60",
     "category": "endocrine/metabolic",
     "demographics": {
       "age": 62,
@@ -83,6 +85,7 @@
   },
   {
     "case_id": "HSP_v7_002",
+    "batch": "v60_gap60",
     "category": "mental disorders",
     "demographics": {
       "age": 40,
@@ -125,6 +128,7 @@
   },
   {
     "case_id": "HSP_v7_003",
+    "batch": "v60_gap60",
     "category": "neurological",
     "demographics": {
       "age": 71,
@@ -163,6 +167,7 @@
   },
   {
     "case_id": "HSP_v7_004",
+    "batch": "v60_gap60",
     "category": "respiratory",
     "demographics": {
       "age": 59,
@@ -204,6 +209,7 @@
   },
   {
     "case_id": "HSP_v7_005",
+    "batch": "v60_gap60",
     "category": "circulatory system",
     "demographics": {
       "age": 26,
@@ -246,6 +252,7 @@
   },
   {
     "case_id": "HSP_v7_006",
+    "batch": "v60_gap60",
     "category": "endocrine/metabolic",
     "demographics": {
       "age": 70,
@@ -287,6 +294,7 @@
   },
   {
     "case_id": "HSP_v7_007",
+    "batch": "v60_gap60",
     "category": "mental disorders",
     "demographics": {
       "age": 54,
@@ -317,6 +325,7 @@
   },
   {
     "case_id": "HSP_v7_008",
+    "batch": "v60_gap60",
     "category": "neurological",
     "demographics": {
       "age": 66,
@@ -358,6 +367,7 @@
   },
   {
     "case_id": "HSP_v7_009",
+    "batch": "v60_gap60",
     "category": "respiratory",
     "demographics": {
       "age": 55,
