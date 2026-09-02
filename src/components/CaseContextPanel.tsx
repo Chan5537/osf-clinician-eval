@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, FlaskConical, Moon, Pill, TrendingUp, UserRound } from 'lucide-react'
+import { ClipboardList, FlaskConical, Moon, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -48,6 +48,11 @@ const SLEEP_STYLE: SectionStyle = {
 const HISTORY_STYLE: SectionStyle = {
   rail: 'border-l-slate-400 dark:border-l-slate-500',
   icon: 'text-slate-500 dark:text-slate-400',
+}
+// Auxiliary information (model-relevant med/lab) — amber, the "unknown" hue.
+const AUX_STYLE: SectionStyle = {
+  rail: 'border-l-amber-500',
+  icon: 'text-amber-600 dark:text-amber-400',
 }
 const OUTCOME_STYLE: SectionStyle = {
   rail: 'border-l-indigo-500',
@@ -259,83 +264,6 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionContent>
         </AccordionItem>
 
-        {/* EHR sections (owner 2026-09-01): REAL chart records, not model output — model
-            values in the shared panel would leak the ours arm's information as reference
-            truth. Always rendered when the sidecar carries them; an empty window reads
-            "EHR no records" (the common case), never a vanished section. */}
-        {context?.ehrRecords && (
-          <AccordionItem value="ehr-medication" className={itemClass(HISTORY_STYLE)}>
-            <AccordionTrigger className={TRIGGER_CLASS}>
-              <SectionHeader
-                icon={Pill}
-                style={HISTORY_STYLE}
-                title="Medication"
-                meta={
-                  context.ehrRecords.medications.length > 0
-                    ? plural(context.ehrRecords.medications.length, 'prescription')
-                    : 'no records'
-                }
-              />
-            </AccordionTrigger>
-            <AccordionContent>
-              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                EHR prescriptions in the 30 days before the study
-              </p>
-              {context.ehrRecords.medications.length > 0 ? (
-                <ul className="flex flex-wrap gap-1.5">
-                  {context.ehrRecords.medications.map((m) => (
-                    <li
-                      key={m}
-                      className="inline-flex items-center rounded-md border bg-muted px-2 py-0.5 text-sm capitalize text-foreground"
-                    >
-                      {m}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-muted-foreground">Not recorded in the EHR, but may be predictable.</p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        )}
-
-        {context?.ehrRecords && (
-          <AccordionItem value="ehr-labtest" className={itemClass(HISTORY_STYLE)}>
-            <AccordionTrigger className={TRIGGER_CLASS}>
-              <SectionHeader
-                icon={FlaskConical}
-                style={HISTORY_STYLE}
-                title="Lab test"
-                meta={
-                  context.ehrRecords.labs.length > 0
-                    ? plural(context.ehrRecords.labs.length, 'analyte')
-                    : 'no records'
-                }
-              />
-            </AccordionTrigger>
-            <AccordionContent>
-              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                EHR lab results in the 90 days around the study
-              </p>
-              {context.ehrRecords.labs.length > 0 ? (
-                <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-                  {context.ehrRecords.labs.map((l) => (
-                    <div key={l.name} className="flex items-baseline justify-between gap-3">
-                      <dt className="text-foreground">{l.name}</dt>
-                      <dd className={l.abnormal ? 'font-semibold text-amber-700 dark:text-amber-400' : 'text-foreground'}>
-                        {l.value}
-                        {l.abnormal ? ' ⚠' : ''}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <p className="text-sm text-muted-foreground">Not recorded in the EHR, but may be predictable.</p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        )}
-
         <AccordionItem value="medical-history" className={itemClass(HISTORY_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
@@ -353,6 +281,76 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
             />
           </AccordionContent>
         </AccordionItem>
+
+        {/* Auxiliary information (owner 2026-09-02): ONE panel, tagged Unknown, after the
+            history. Medication and lab are the study's ADDED information — mostly absent
+            from the EHR, predictable from the recording. Presenting them as top-level
+            chart panels over-guided raters; folded here they read as "what the chart
+            usually lacks". The lab sub-block shows HbA1c only — the one analyte the
+            letters may carry — never the full w90 panel. EHR records still display when
+            they exist (data logic unchanged). */}
+        {context?.ehrRecords && (
+          <AccordionItem value="auxiliary-info" className={itemClass(AUX_STYLE)}>
+            <AccordionTrigger className={TRIGGER_CLASS}>
+              <SectionHeader
+                icon={FlaskConical}
+                style={AUX_STYLE}
+                title="Auxiliary information"
+                tag="Unknown"
+                tagClass="border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
+                meta="medication · lab test"
+              />
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="mb-2.5 text-xs text-muted-foreground">
+                Mostly missing from the EHR for these patients, but may be predictable from
+                the sleep recording.
+              </p>
+              <div className="space-y-3 text-sm">
+                <div>
+                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Medication
+                  </p>
+                  {context.ehrRecords.medications.length > 0 ? (
+                    <ul className="flex flex-wrap gap-1.5">
+                      {context.ehrRecords.medications.map((m) => (
+                        <li
+                          key={m}
+                          className="inline-flex items-center rounded-md border bg-muted px-2 py-0.5 text-sm capitalize text-foreground"
+                        >
+                          {m}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted-foreground">
+                      No EHR prescription in the 30 days before the study.
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Lab test (HbA1c)
+                  </p>
+                  {(() => {
+                    const a1c = context.ehrRecords.labs.find((l) => /hba1c/i.test(l.name))
+                    return a1c ? (
+                      <p className="text-foreground">
+                        {a1c.value}
+                        {' %'}
+                        {a1c.abnormal ? ' — abnormal per the recording site' : ''}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground">
+                        No EHR HbA1c in the 90 days around the study.
+                      </p>
+                    )
+                  })()}
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        )}
 
       </Accordion>
     </section>
