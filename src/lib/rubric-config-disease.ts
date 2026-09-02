@@ -167,12 +167,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response reveal useful information about this patient corresponding to their health condition, especially where it was hard to foresee?',
     howToScore:
-      '"Hard to foresee" means hard to foresee FROM THE KNOWN INFORMATION: ask what you yourself ' +
-      'would have predicted from the Sleep panel and Prior medical history alone, then score how ' +
-      'far this response goes beyond that. Information that is useful but already implied by ' +
-      'those panels sits in the middle. Score the reach, not whether the reach was right — ' +
-      'correctness is Factuality, so a response may name a condition the patient never developed ' +
-      'and still score well here if nothing in the two panels pointed that way.',
+      'Judge against the Known info panels: how much of this could the patient not have worked out ' +
+      'from them? Score the reach, not whether it was right — correctness is Factuality.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     example:
       'A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic ' +
@@ -226,11 +222,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
     howToScore:
-      'Open the "Future risk" panel. It lists the **future diseases** this patient newly ' +
-      'developed in the six years after the study. Check two things against it: the risk area the response ' +
-      'commits to in bold, and the conditions it names. Closely related variants of one ' +
-      'problem count as one condition. The follow-up has already happened. Score ONLY whether the ' +
-      'response matched it — not how hard the call was, which is Usefulness.',
+      'Check the "Future risk" panel: the risk area the response commits to, and the conditions it ' +
+      'names. Closely related variants count as one condition.',
     example:
       'The outcome panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
       'atherosclerosis**. Response X commits to the **circulatory** area and names both — right area, ' +
@@ -281,11 +274,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response give the patient information beyond the known information (e.g., the Sleep panel, Prior medical history)?',
     howToScore:
-      'Count what the response carries that is NOT on the two Known info panels: a condition ' +
-      'neither panel names, an estimated value, a resemblance to a group of patients. Score how ' +
-      'much of the letter is that added content versus restatement of the panels. This axis is ' +
-      'about HOW MUCH is added; how far it reaches beyond the expected is Usefulness, and ' +
-      'whether it is correct is Factuality.',
+      'Weigh what the response adds against what it restates from the Known info panels. Whether an ' +
+      'addition is correct is Factuality, not here.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     example:
       'Response X carries content neither Known info panel holds: it names **Coronary ' +
@@ -337,52 +327,51 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // whether each suggestion comes from THIS letter's findings is.
     key: 'personalization',
     label: 'Personalization',
-    question: "To what extent are this response's suggestions specific to this patient?",
+    question:
+      'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular) to this patient?',
     howToScore:
-      'Score the SUGGESTIONS only — the "What this means for you" section — not the analysis ' +
-      'above it. Ask one question of each suggestion: could it be lifted into another ' +
-      "patient's letter unchanged? Suggestions that survive the swap are generic; those that " +
-      'break because they name this ' +
-      "patient's own findings are personalized. How valuable or novel the advice is belongs to " +
-      'Usefulness; general wellness steps are not faulted here.',
+      'Judge the whole response — the analysis and the suggestions. Ask whether it could be moved ' +
+      'into another patient\'s letter unchanged.',
     example:
-      'Both responses are for the same patient. Response X: "notice persistent changes in worry, ' +
-      'tension, mood, or sleep and bring them up at your next routine appointment; your history ' +
-      'records prior conditions in the mental area, so changes are worth describing clearly rather ' +
-      'than assuming they are unchanged." The suggestion is built from this patient’s own history and ' +
-      'would read wrong in anyone else’s letter — Personalized (4); had it also tied a specific sleep ' +
-      'finding to a specific thing to raise, 5. Response Y closes "continue the routine preventive ' +
-      'habits and follow-up already recommended for you; the recording is a reason for awareness, not ' +
-      'alarm" — this survives being pasted into any patient’s letter unchanged: Not Personalized At All (1). ',
+      'Both responses are for the same patient. Response X ties the recording to their own history ' +
+      'in the analysis — "your history records prior conditions in the mental area without ' +
+      'identifying this specific new condition" — and carries that into what to do: "notice ' +
+      'persistent changes in worry, tension, mood, or sleep and bring them up at your next routine ' +
+      'appointment." Analysis and suggestions are both built from this patient: Personalized (4); ' +
+      'synthesizing a further aspect, such as tying a specific sleep finding in as well, would ' +
+      'reach 5. Response Y reports numbers and closes "continue the routine preventive habits and ' +
+      'follow-up already recommended for you" — surface-level stats plus advice that fits anyone: ' +
+      'Not Personalized (2).',
     anchors: [
       {
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Moved into another patient's letter unchanged, they would read wrong.",
+          "Deeply synthesizes multiple distinct aspects of this patient's profile (e.g. a specific sleep finding, a named condition in their history, their demographics), and carries that synthesis into what it tells them to watch, raise, or do. Reads as written for this person alone.",
       },
       {
         value: 4,
         label: 'Personalized',
         description:
-          "At least one named finding of this patient's is tied to a specific suggestion (e.g. quotes their own N3% or AHI and says what to raise because of it). General advice sits alongside.",
+          "Goes beyond surface-level reporting by connecting specific aspects of this patient's profile (e.g. linking one of their own findings to a condition in their history, or to a specific thing to raise). Some general advice sits alongside.",
       },
       {
         value: 3,
         label: 'Neutral',
-        description: 'About half patient-specific, half generic.',
+        description:
+          'Split evenly between generic and somewhat personalized health context.',
       },
       {
         value: 2,
         label: 'Not Personalized',
         description:
-          "Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout.",
+          'Mentions surface-level stats (e.g. basic demographics or isolated sleep numbers) that remain broad and could apply to a wide population with similar baseline values.',
       },
       {
         value: 1,
         label: 'Not Personalized At All',
         description:
-          'One-size-fits-all advice. It ignores the data and reads like a health leaflet.',
+          'One-size-fits-all, boilerplate content. It ignores the provided data and reads like a generic health article.',
       },
     ],
   },
@@ -396,11 +385,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       "To what extent does this response attach to this patient's future health risks, rather than the conditions they already have?",
     howToScore:
-      'This axis is about TIME DIRECTION only: forward to what could develop, or backward over ' +
-      'what the patient already has. Judge the "Detailed analysis" and the "What this means for ' +
-      'you" sections separately, then together. Existing conditions may appear as evidence for a ' +
-      'future risk — count them against the score only where they are the point rather than the ' +
-      'support. Do not score correctness, novelty or tailoring here.',
+      'Judge time direction: forward to what could develop, or back over what the patient already ' +
+      'has. Existing conditions may appear as evidence for a future risk.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     example:
       'Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in ' +
