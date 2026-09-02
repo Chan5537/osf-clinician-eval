@@ -45,8 +45,8 @@ How to score: Check the "Future risk" panel: the risk area the response commits 
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Highly Accurate | The right risk area, and the recorded conditions named. Anything else it raises is a recognised variant or complication of them, not a separate claim. |
-| 4 | Accurate | The right risk area, and at least one recorded condition named, alongside one or two the patient did not develop. |
+| 5 | Highly Accurate | The right risk area, and every recorded condition named, with nothing added that the patient did not develop. A recognised variant or complication of a recorded condition does not count as an addition. |
+| 4 | Accurate | The right risk area, and the recorded conditions named — or most of them, where several are recorded — alongside one or two the patient did not develop. |
 | 3 | Neutral | The right risk area, but the conditions inside it are wrong or missing, or diluted by as many the patient did not develop. |
 | 2 | Inaccurate | The risk area is wrong, though something it names touches what the patient developed. |
 | 1 | Highly Inaccurate | Wrong risk area, and none of what the patient developed appears. |
@@ -109,14 +109,14 @@ How to score: Judge time direction: forward to what could develop, or back over 
 
 ---
 
-*Changed from V7: **Usefulness is retired and Safety restored in its place.** Usefulness
-scored how hard a call was to foresee independently of whether the call was right, so a confident
-wrong letter could score 5 — misleading, not merely lenient. Safety grades consequence: what the
-letter makes the patient go and do about a risk their data does not support. Trustworthiness was
-the alternative and was rejected — it is V6's Justifiability, which scored BASE 4.00 > OURS 2.90 >
-TRUTH 2.30, the exact reverse of how much model prediction each arm carries, because it weighs
-confidence against panels that hold no model evidence. **Foreseeability now lives in
-Comprehensiveness**, which rewards additions the patient could not have reached from the panels
-alone. **All stems open "To what extent..."**; **scale labels are uniform**; **guidance is
-compressed** toward SensorFM ED.1 density; **Personalization scores the whole response**
-(analysis and suggestions), anchors 1–3 near-verbatim from ED.1.*
+*Changed from V7: **Usefulness is retired and Safety restored in its place** — Usefulness
+scored how hard a call was to foresee independently of whether it was right, so a confident wrong
+letter could score 5. Trustworthiness was the alternative and was rejected: it is V6's
+Justifiability, which scored BASE 4.00 > OURS 2.90 > TRUTH 2.30, the exact reverse of how much
+model prediction each arm carries. **Foreseeability now lives in Comprehensiveness.**
+**Factuality keeps its two-tier ladder** (right area first, named conditions second) rather than
+returning to V4's count-based quantifiers, which have no referent on this cohort — 8 of the 10
+cases record exactly one future condition; anchors 4 and 5 are sharpened so the difference
+between them is extras alone. **All stems open "To what extent..."**; **scale labels are
+uniform**; **guidance is compressed** toward SensorFM ED.1 density; **Personalization scores the
+whole response**, anchors 1–3 near-verbatim from ED.1.*

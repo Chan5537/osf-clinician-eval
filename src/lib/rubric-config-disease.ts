@@ -221,6 +221,15 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
+    // ⛔ WHY NOT THE v4/v5 QUANTIFIER LADDER ("all / most / about half / few / none")? It cannot
+    //    be applied to this cohort: 8 of the 10 loaded cases record exactly ONE future condition
+    //    (2 record two), so "most", "about half" and "few" have no referent — a rater either
+    //    catches the one condition or does not. Counting also failed on its own terms once
+    //    before: 841b214 removed the tally instruction because it "asked for a tally the rater
+    //    then had to convert into a 1-5 judgement with no stated conversion". The two-tier
+    //    structure below carries the same ordering (area, then conditions, then extras) using
+    //    distinctions that survive n=1. Quantifiers are kept where they still degrade
+    //    gracefully: anchor 4 says "or most of them, where several are recorded".
     // Two-tier by design: the NEW risk area is the entry, the named conditions the ceiling —
     // committing to the right area alone caps at 3. "New" is said out loud so the rater's frame
     // matches the patient query and the task strip word for word.
@@ -243,13 +252,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Accurate',
         description:
-          'The right risk area, and the recorded conditions named. Anything else it raises is a recognised variant or complication of them, not a separate claim.',
+          'The right risk area, and every recorded condition named, with nothing added that the patient did not develop. A recognised variant or complication of a recorded condition does not count as an addition.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'The right risk area, and at least one recorded condition named, alongside one or two the patient did not develop.',
+          'The right risk area, and the recorded conditions named — or most of them, where several are recorded — alongside one or two the patient did not develop.',
       },
       {
         value: 3,
