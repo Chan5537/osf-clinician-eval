@@ -24,12 +24,26 @@ export interface CaseSelection {
   stratum: string // short_tst | high_ahi | low_n3 | circulatory | endocrine_metabolic | ...
 }
 
+// EHR records for the rater panel (v58, owner 2026-09-01). Real chart data — model
+// readouts were withdrawn (they leaked the ours arm's information as reference truth).
+// Empty arrays are honest "no EHR record in-window" states.
+export interface EhrLabRow {
+  name: string
+  value: number
+  abnormal: boolean | null
+}
+export interface EhrRecords {
+  medications: string[]
+  labs: EhrLabRow[]
+}
+
 export interface CaseContextEntry {
   sessionId: string
   sourceIndex: number
   sleepIndex: SleepIndex
   futureDiseaseGroundTruth: string[]
   selection?: CaseSelection // absent for pre-v12.1 sidecars
+  ehrRecords?: EhrRecords // absent on pre-v58 sidecars
 }
 
 // Clinician-readable stratum names (the raw keys are internal selector labels).
