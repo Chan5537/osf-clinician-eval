@@ -52,6 +52,9 @@ import { advance, touch, park, resume } from './timing'
 //       under the old keys ("A__harm") and would all read as unanswered — and worse, any code
 //       still writing old keys would silently split answers across two vocabularies: discard
 //       stale sessions. Axis wording is UNCHANGED from v5.
+// v19 = disease rubric v8 (2026-09-02): Usefulness RETIRED, Safety restored on the new `safety`
+//       key; foreseeability folded into Comprehensiveness. A renamed key cannot be read back
+//       from a v18 session, so stale sessions are discarded.
 // v16 = disease rubric v6 (2026-08-29, owner): Usefulness replaces Relevance (key `usefulness`),
 //       Justifiability replaces Trustworthiness (key `justifiability`), Factuality goes
 //       two-tier, Personalization re-anchored on findings-linked suggestions, Usefulness moves
@@ -63,7 +66,7 @@ import { advance, touch, park, resume } from './timing'
 //       warning against the recorded outcome, weighted by foreseeability). A v16 session
 //       would present old-usefulness answers under the new question: discard stale sessions.
 //       ⛔ v7 scores are NOT comparable with v6 or earlier — report separately.
-export const SCHEMA_VERSION = 18
+export const SCHEMA_VERSION = 19
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
