@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, Moon, TrendingUp, UserRound } from 'lucide-react'
+import { ClipboardList, FlaskConical, Moon, Pill, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -85,17 +85,32 @@ function SectionHeader({
   style,
   title,
   meta,
+  tag,
+  tagClass,
 }: {
   icon: LucideIcon
   style: SectionStyle
   title: string
   meta: string
+  tag?: string
+  tagClass?: string
 }) {
   return (
     <span className="flex flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1 pr-2">
       <span className="flex items-center gap-2">
         <Icon className={cn('size-4 shrink-0', style.icon)} aria-hidden="true" />
         <span className="text-base font-semibold text-foreground">{title}</span>
+        {tag && (
+          <span
+            className={cn(
+              'inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-xs font-medium',
+              tagClass ??
+                'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300',
+            )}
+          >
+            {tag}
+          </span>
+        )}
       </span>
       <span className="flex items-center gap-2.5">
         <span className="text-sm font-normal text-muted-foreground">{meta}</span>
@@ -199,6 +214,8 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               // this panel BY NAME — keep them in step (rubric-config-disease.ts, Factuality).
               // ⛔ Still avoids the blinding-gate phrases: no "ground truth", no "oracle".
               title="Future risk"
+              tag="New onset risk"
+              tagClass="border-indigo-300 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"
               // Meta trimmed 2026-08-29 (owner): the long form read as generated scaffolding.
               // "6-year follow-up" keeps the recorded-not-predicted cue in two clinical words;
               // the full statement lives in Factuality's howToScore.
@@ -211,10 +228,12 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionTrigger>
           <AccordionContent>
             {context ? (
-              <FutureRiskGrid
-                conditions={futureGt}
-                emptyLabel="No new-onset condition recorded in the 6-year window."
-              />
+              <>
+                <FutureRiskGrid
+                  conditions={futureGt}
+                  emptyLabel="No new-onset condition recorded in the 6-year window."
+                />
+              </>
             ) : (
               <p className="text-sm text-muted-foreground">Unavailable.</p>
             )}
@@ -227,6 +246,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               icon={Moon}
               style={SLEEP_STYLE}
               title="Sleep panel"
+              tag="Known info"
               meta={plural(sleepMetricCount, 'metric')}
             />
           </AccordionTrigger>
@@ -239,12 +259,90 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionContent>
         </AccordionItem>
 
+        {/* EHR sections (owner 2026-09-01): REAL chart records, not model output — model
+            values in the shared panel would leak the ours arm's information as reference
+            truth. Always rendered when the sidecar carries them; an empty window reads
+            "EHR no records" (the common case), never a vanished section. */}
+        {context?.ehrRecords && (
+          <AccordionItem value="ehr-medication" className={itemClass(HISTORY_STYLE)}>
+            <AccordionTrigger className={TRIGGER_CLASS}>
+              <SectionHeader
+                icon={Pill}
+                style={HISTORY_STYLE}
+                title="Medication"
+                meta={
+                  context.ehrRecords.medications.length > 0
+                    ? plural(context.ehrRecords.medications.length, 'prescription')
+                    : 'no records'
+                }
+              />
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                EHR prescriptions in the 30 days before the study
+              </p>
+              {context.ehrRecords.medications.length > 0 ? (
+                <ul className="flex flex-wrap gap-1.5">
+                  {context.ehrRecords.medications.map((m) => (
+                    <li
+                      key={m}
+                      className="inline-flex items-center rounded-md border bg-muted px-2 py-0.5 text-sm capitalize text-foreground"
+                    >
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">Not recorded in the EHR, but may be predictable.</p>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        )}
+
+        {context?.ehrRecords && (
+          <AccordionItem value="ehr-labtest" className={itemClass(HISTORY_STYLE)}>
+            <AccordionTrigger className={TRIGGER_CLASS}>
+              <SectionHeader
+                icon={FlaskConical}
+                style={HISTORY_STYLE}
+                title="Lab test"
+                meta={
+                  context.ehrRecords.labs.length > 0
+                    ? plural(context.ehrRecords.labs.length, 'analyte')
+                    : 'no records'
+                }
+              />
+            </AccordionTrigger>
+            <AccordionContent>
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                EHR lab results in the 90 days around the study
+              </p>
+              {context.ehrRecords.labs.length > 0 ? (
+                <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+                  {context.ehrRecords.labs.map((l) => (
+                    <div key={l.name} className="flex items-baseline justify-between gap-3">
+                      <dt className="text-foreground">{l.name}</dt>
+                      <dd className={l.abnormal ? 'font-semibold text-amber-700 dark:text-amber-400' : 'text-foreground'}>
+                        {l.value}
+                        {l.abnormal ? ' ⚠' : ''}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="text-sm text-muted-foreground">Not recorded in the EHR, but may be predictable.</p>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        )}
+
         <AccordionItem value="medical-history" className={itemClass(HISTORY_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
               icon={ClipboardList}
               style={HISTORY_STYLE}
               title="Prior medical history"
+              tag="Known info"
               meta={plural(ehrHistory.length, 'condition')}
             />
           </AccordionTrigger>
