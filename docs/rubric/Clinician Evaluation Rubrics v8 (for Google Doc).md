@@ -15,7 +15,7 @@ years after.
 
 | Axis | Scores | Against |
 |---|---|---|
-| Usefulness | how FAR past the expected it reaches | Sleep panel + Prior medical history |
+| Usefulness | how FAR past the foreseeable it reaches | Sleep panel + Prior medical history |
 | Factuality | whether it MATCHED what happened | Future risk panel |
 | Comprehensiveness | how MUCH content beyond the panels | Known info panels |
 | Personalization | whether SUGGESTIONS are this patient's | 'What this means for you' |
@@ -25,9 +25,9 @@ years after.
 
 ## 1. Usefulness
 
-**Reading only the Sleep panel and Prior medical history, how far does this response go beyond what you would already have expected?**
+**To what extent does this response reveal useful information about this patient corresponding to their health condition, especially where it was hard to foresee?**
 
-How to score: Ask what YOU would have predicted from the Sleep panel and Prior medical history alone. Then read the response and score the distance between the two. This axis is about how far the response reaches, not whether the reach was right — correctness is Factuality. A response can name a condition the patient never developed and still score 4 here, if nothing in those two panels pointed that way.
+How to score: "Hard to foresee" means hard to foresee FROM THE KNOWN INFORMATION: ask what you yourself would have predicted from the Sleep panel and Prior medical history alone, then score how far this response goes beyond that. Information that is useful but already implied by those panels sits in the middle. Score the reach, not whether the reach was right — correctness is Factuality, so a response may name a condition the patient never developed and still score well here if nothing in the two panels pointed that way.
 
 | Score | Anchor | Meaning |
 |---|---|---|
@@ -43,7 +43,7 @@ How to score: Ask what YOU would have predicted from the Sleep panel and Prior m
 
 ## 2. Factuality
 
-**Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?**
+**To what extent does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?**
 
 How to score: Open the "Future risk" panel. It lists the **future diseases** this patient newly developed in the six years after the study. Check two things against it: the risk area the response commits to in bold, and the conditions it names. Closely related variants of one problem count as one condition. The follow-up has already happened. Score ONLY whether the response matched it — not how hard the call was, which is Usefulness.
 
@@ -61,7 +61,7 @@ How to score: Open the "Future risk" panel. It lists the **future diseases** thi
 
 ## 3. Comprehensiveness
 
-**How much information does this response give the patient beyond the known information (e.g., the Sleep panel, Prior medical history)?**
+**To what extent does this response give the patient information beyond the known information (e.g., the Sleep panel, Prior medical history)?**
 
 How to score: Count what the response carries that is NOT on the two Known info panels: a condition neither panel names, an estimated value, a resemblance to a group of patients. Score how much of the letter is that added content versus restatement of the panels. This axis is about HOW MUCH is added; how far it reaches beyond the expected is Usefulness, and whether it is correct is Factuality.
 
@@ -97,7 +97,7 @@ How to score: Score the SUGGESTIONS only — the "What this means for you" secti
 
 ## 5. Relevance
 
-**How much of this response attaches to this patient's future health risks, not the conditions they already have?**
+**To what extent does this response attach to this patient's future health risks, rather than the conditions they already have?**
 
 How to score: This axis is about TIME DIRECTION only: forward to what could develop, or backward over what the patient already has. Judge the "Detailed analysis" and the "What this means for you" sections separately, then together. Existing conditions may appear as evidence for a future risk — count them against the score only where they are the point rather than the support. Do not score correctness, novelty or tailoring here.
 
@@ -113,11 +113,11 @@ How to score: This axis is about TIME DIRECTION only: forward to what could deve
 
 ---
 
-*Changed from V7: **Usefulness de-nested from Factuality** (V7 required a correct call to
-score 3+, so the two axes could not disagree) and reworded to name the panels instead of "the
-chart". **Worked examples restored to the UI** — dropped 2026-09-01, but a rater cannot infer a
-criterion's intent from its stem; all five quote real letters of the loaded v60 batch.
-**Explicit boundaries** added to Factuality, Comprehensiveness and Relevance naming what belongs
-to another axis. **Personalization re-scoped** to the suggestions block by a swap test (it
-correlated r=0.80 with Usefulness in the clinician round). **Unreachable anchors replaced** with
-observable moves — Personalization was never once scored 5 across 30 responses.*
+*Changed from V7: **all five stems now read "To what extent..."** for consistency.
+**Usefulness de-nested from Factuality** (V7 required a correct call to score 3+, so the two
+axes could not disagree); its guidance defines "hard to foresee" as hard to foresee from the
+Known info panels. **Worked examples restored to the UI** — dropped 2026-09-01, but a rater
+cannot infer a criterion's intent from its stem; all five quote real letters of the loaded v60
+batch. **Explicit boundaries** added naming what belongs to another axis. **Personalization
+re-scoped** to the suggestions block by a swap test (r=0.80 with Usefulness in the clinician
+round). **Unreachable anchors replaced** with observable moves.*

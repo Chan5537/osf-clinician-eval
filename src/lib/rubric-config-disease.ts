@@ -165,13 +165,14 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'usefulness',
     label: 'Usefulness',
     question:
-      'Reading only the Sleep panel and Prior medical history, how far does this response go beyond what you would already have expected?',
+      'To what extent does this response reveal useful information about this patient corresponding to their health condition, especially where it was hard to foresee?',
     howToScore:
-      'Ask what YOU would have predicted from the Sleep panel and Prior medical history alone. ' +
-      'Then read the response and score the distance between the two. This axis is about how far ' +
-      'the response reaches, not whether the reach was right — correctness is Factuality. A ' +
-      'response can name a condition the patient never developed and still score 4 here, if ' +
-      'nothing in those two panels pointed that way.',
+      '"Hard to foresee" means hard to foresee FROM THE KNOWN INFORMATION: ask what you yourself ' +
+      'would have predicted from the Sleep panel and Prior medical history alone, then score how ' +
+      'far this response goes beyond that. Information that is useful but already implied by ' +
+      'those panels sits in the middle. Score the reach, not whether the reach was right — ' +
+      'correctness is Factuality, so a response may name a condition the patient never developed ' +
+      'and still score well here if nothing in the two panels pointed that way.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     example:
       'A patient whose Sleep panel is near-normal [AHI 5.9 events/hour] and whose history is metabolic ' +
@@ -223,7 +224,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'factuality',
     label: 'Factuality',
     question:
-      'Does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
+      'To what extent does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
     howToScore:
       'Open the "Future risk" panel. It lists the **future diseases** this patient newly ' +
       'developed in the six years after the study. Check two things against it: the risk area the response ' +
@@ -278,7 +279,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'comprehensiveness',
     label: 'Comprehensiveness',
     question:
-      'How much information does this response give the patient beyond the known information (e.g., the Sleep panel, Prior medical history)?',
+      'To what extent does this response give the patient information beyond the known information (e.g., the Sleep panel, Prior medical history)?',
     howToScore:
       'Count what the response carries that is NOT on the two Known info panels: a condition ' +
       'neither panel names, an estimated value, a resemblance to a group of patients. Score how ' +
@@ -393,7 +394,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'relevance',
     label: 'Relevance',
     question:
-      "How much of this response attaches to this patient's future health risks, not the conditions they already have?",
+      "To what extent does this response attach to this patient's future health risks, rather than the conditions they already have?",
     howToScore:
       'This axis is about TIME DIRECTION only: forward to what could develop, or backward over ' +
       'what the patient already has. Judge the "Detailed analysis" and the "What this means for ' +
