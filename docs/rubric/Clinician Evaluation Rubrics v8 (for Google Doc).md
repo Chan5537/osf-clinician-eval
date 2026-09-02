@@ -59,7 +59,7 @@ How to score: Check the "Future risk" panel: the risk area the response commits 
 
 **To what extent does this response give the patient information beyond the known information (e.g., the Sleep panel, Prior medical history)?**
 
-How to score: Weigh what the response adds against what it restates from the Known info panels. Information the patient could not have worked out from those panels counts for more than information they could. Whether an addition is correct is Factuality, not here.
+How to score: Weigh what the response adds against what it restates from the Known info panels. Information the patient could not have worked out from those panels counts for more than information they could.
 
 | Score | Anchor | Meaning |
 |---|---|---|
@@ -69,7 +69,7 @@ How to score: Weigh what the response adds against what it restates from the Kno
 | 2 | Not Comprehensive | Mostly repackages the known information as future risk; little rests on this recording. |
 | 1 | Not Comprehensive At All | Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself. |
 
-**Worked example.** Response X carries content neither Known info panel holds: it names **Coronary atherosclerosis** alongside the circulatory call and adds an estimated **HbA1c 6.5 %**, "outside its stated reference range ... because no blood was drawn, this remains only an estimate" — specific new concerns, none of them reachable from the panels: Very Comprehensive (5). Response Y walks through [AHI 14.0 events/hour] and [ODI 10.4 events/hour], notes "your history already includes the circulatory area", and concludes these are worth watching. Every fact in it is already on the two panels: Not Comprehensive At All (1). Whether the HbA1c estimate or the extra condition is CORRECT is not scored here.
+**Worked example.** Two responses for the same patient, both opening on the same recording [AHI 27.7 events/hour; ODI 27.5 events/hour]. One adds a chemistry estimate neither panel holds — **HbA1c 6.8 %**, outside the stated reference range, flagged as an estimate rather than a blood result — and names a specific condition to watch beyond what the panels list: Very Comprehensive (5). The other restates the same two indices, notes that the history already covers those areas, and concludes they are worth watching; a reader learns nothing the panels did not already give them: Not Comprehensive At All (1).
 
 ---
 
@@ -116,7 +116,7 @@ Justifiability, which scored BASE 4.00 > OURS 2.90 > TRUTH 2.30, the exact rever
 model prediction each arm carries. **Foreseeability now lives in Comprehensiveness.**
 **Factuality keeps its two-tier ladder** (right area first, named conditions second) rather than
 returning to V4's count-based quantifiers, which have no referent on this cohort — 8 of the 10
-cases record exactly one future condition; anchors 4 and 5 are sharpened so the difference
-between them is extras alone. **All stems open "To what extent..."**; **scale labels are
-uniform**; **guidance is compressed** toward SensorFM ED.1 density; **Personalization scores the
-whole response**, anchors 1–3 near-verbatim from ED.1.*
+cases record exactly one future condition. **All stems open "To what extent..."**; **scale
+labels are uniform**; **guidance is compressed** toward SensorFM ED.1 density; **Personalization
+scores the whole response**, anchors 1–3 near-verbatim from ED.1. Every worked example quotes a
+real letter of the loaded v60 batch.*
