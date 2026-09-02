@@ -326,13 +326,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     anchors: [
       {
         value: 5,
-        label: 'Fully On-Target',
+        label: 'Highly Relevant',
         description:
           'Both the analysis and the suggestions work on future risks.',
       },
       {
         value: 4,
-        label: 'On-Target',
+        label: 'Relevant',
         description:
           'Mostly future-focused. Existing conditions appear only as evidence.',
       },
@@ -344,13 +344,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       },
       {
         value: 2,
-        label: 'Off-Target',
+        label: 'Marginally Relevant',
         description:
           'The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought.',
       },
       {
         value: 1,
-        label: 'Fully Off-Target',
+        label: 'Irrelevant',
         description:
           "Neither the analysis nor the suggestions engage the patient's future risk.",
       },
