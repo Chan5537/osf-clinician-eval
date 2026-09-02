@@ -194,19 +194,34 @@ export function LikertDimensions({
                 example was judged enough. If the clinician round shows raters scoring Factuality
                 without opening the outcome panel (the only outcome-keyed axis since rubric v5),
                 this is the first thing to revisit. */}
-            {/* Examples dropped from the UI (owner 2026-09-01): the v7 questions are
-                self-contained; worked examples live in the rubric doc. */}
+            {/* Examples RESTORED to the UI (Chan, 2026-09-02, v8). They were dropped on
+                2026-09-01 on the grounds that the v7 questions were self-contained; the axes
+                proved not to be — Usefulness r=0.80 with Personalization in the clinician
+                round — and a rater cannot infer a criterion's INTENT from a stem alone. They
+                sit under "How to score" in the same toggletip, so the scoring page stays as
+                dense as it was. Every example quotes a real letter of the LOADED batch
+                (2026-08-25 rule); if the batch is replaced, the examples must be rewritten. */}
             {dim.howToScore && (
               <AxisHelp
                 label={dim.label}
-                cta="How to score"
+                cta="How to score · example"
                 text={
-                  <p className="text-[13px] leading-snug">
-                    <span className="font-semibold">How to score it: </span>
-                    <span className="text-muted-foreground">
-                      <InlineEmphasis text={dim.howToScore} />
-                    </span>
-                  </p>
+                  <div className="space-y-2 text-[13px] leading-snug">
+                    <p>
+                      <span className="font-semibold">How to score it: </span>
+                      <span className="text-muted-foreground">
+                        <InlineEmphasis text={dim.howToScore} />
+                      </span>
+                    </p>
+                    {dim.example && (
+                      <p>
+                        <span className="font-semibold">Example: </span>
+                        <span className="text-muted-foreground">
+                          <InlineEmphasis text={dim.example} />
+                        </span>
+                      </p>
+                    )}
+                  </div>
                 }
               />
             )}
