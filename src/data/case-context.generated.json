@@ -144,6 +144,10 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "circulatory"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": []
       }
     },
     "HSP_v7_001": {
@@ -172,6 +176,10 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "endocrine_metabolic"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": []
       }
     },
     "HSP_v7_002": {
@@ -200,6 +208,91 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "mental"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": [
+          {
+            "name": "Alt",
+            "value": 20.0,
+            "abnormal": false
+          },
+          {
+            "name": "Bicarbonate",
+            "value": 26.0,
+            "abnormal": false
+          },
+          {
+            "name": "Calcium",
+            "value": 8.9,
+            "abnormal": false
+          },
+          {
+            "name": "Chloride",
+            "value": 103.0,
+            "abnormal": false
+          },
+          {
+            "name": "Creatinine",
+            "value": 0.68,
+            "abnormal": true
+          },
+          {
+            "name": "Glucose",
+            "value": 86.0,
+            "abnormal": false
+          },
+          {
+            "name": "Hdl",
+            "value": 81.0,
+            "abnormal": true
+          },
+          {
+            "name": "Hematocrit",
+            "value": 36.9,
+            "abnormal": false
+          },
+          {
+            "name": "Hemoglobin",
+            "value": 12.2,
+            "abnormal": false
+          },
+          {
+            "name": "Platelet",
+            "value": 345.0,
+            "abnormal": true
+          },
+          {
+            "name": "Potassium",
+            "value": 4.3,
+            "abnormal": false
+          },
+          {
+            "name": "Sodium",
+            "value": 137.0,
+            "abnormal": false
+          },
+          {
+            "name": "Triglycerides",
+            "value": 155.0,
+            "abnormal": false
+          },
+          {
+            "name": "Tsh",
+            "value": 3.69,
+            "abnormal": false
+          },
+          {
+            "name": "Urea Nitrogen",
+            "value": 11.0,
+            "abnormal": false
+          },
+          {
+            "name": "Wbc",
+            "value": 9.3,
+            "abnormal": false
+          }
+        ]
       }
     },
     "HSP_v7_003": {
@@ -228,6 +321,10 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "neurological"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": []
       }
     },
     "HSP_v7_004": {
@@ -256,6 +353,96 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "respiratory"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": [
+          {
+            "name": "Alt",
+            "value": 41.0,
+            "abnormal": false
+          },
+          {
+            "name": "Bicarbonate",
+            "value": 31.0,
+            "abnormal": true
+          },
+          {
+            "name": "Calcium",
+            "value": 9.7,
+            "abnormal": false
+          },
+          {
+            "name": "Chloride",
+            "value": 105.0,
+            "abnormal": false
+          },
+          {
+            "name": "Cholesterol Total",
+            "value": 246.0,
+            "abnormal": true
+          },
+          {
+            "name": "Creatinine",
+            "value": 1.1,
+            "abnormal": null
+          },
+          {
+            "name": "Glucose",
+            "value": 98.0,
+            "abnormal": false
+          },
+          {
+            "name": "Hdl",
+            "value": 92.0,
+            "abnormal": true
+          },
+          {
+            "name": "Hematocrit",
+            "value": 35.5,
+            "abnormal": false
+          },
+          {
+            "name": "Hemoglobin",
+            "value": 11.8,
+            "abnormal": false
+          },
+          {
+            "name": "Platelet",
+            "value": 280.0,
+            "abnormal": false
+          },
+          {
+            "name": "Potassium",
+            "value": 5.2,
+            "abnormal": false
+          },
+          {
+            "name": "Sodium",
+            "value": 139.0,
+            "abnormal": false
+          },
+          {
+            "name": "Triglycerides",
+            "value": 293.0,
+            "abnormal": true
+          },
+          {
+            "name": "Tsh",
+            "value": 2.82,
+            "abnormal": false
+          },
+          {
+            "name": "Urea Nitrogen",
+            "value": 21.0,
+            "abnormal": false
+          },
+          {
+            "name": "Wbc",
+            "value": 5.2,
+            "abnormal": false
+          }
+        ]
       }
     },
     "HSP_v7_005": {
@@ -284,6 +471,12 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "circulatory"
+      },
+      "ehrRecords": {
+        "medications": [
+          "furosemide"
+        ],
+        "labs": []
       }
     },
     "HSP_v7_006": {
@@ -313,6 +506,63 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "endocrine_metabolic"
+      },
+      "ehrRecords": {
+        "medications": [
+          "furosemide"
+        ],
+        "labs": [
+          {
+            "name": "Alt",
+            "value": 25.0,
+            "abnormal": false
+          },
+          {
+            "name": "Bicarbonate",
+            "value": 29.0,
+            "abnormal": false
+          },
+          {
+            "name": "Calcium",
+            "value": 9.2,
+            "abnormal": false
+          },
+          {
+            "name": "Chloride",
+            "value": 104.0,
+            "abnormal": false
+          },
+          {
+            "name": "Creatinine",
+            "value": 1.1,
+            "abnormal": null
+          },
+          {
+            "name": "Glucose",
+            "value": 106.0,
+            "abnormal": true
+          },
+          {
+            "name": "Potassium",
+            "value": 5.1,
+            "abnormal": false
+          },
+          {
+            "name": "Sodium",
+            "value": 140.0,
+            "abnormal": false
+          },
+          {
+            "name": "Tsh",
+            "value": 1.2,
+            "abnormal": false
+          },
+          {
+            "name": "Urea Nitrogen",
+            "value": 19.0,
+            "abnormal": false
+          }
+        ]
       }
     },
     "HSP_v7_007": {
@@ -339,6 +589,81 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "mental"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": [
+          {
+            "name": "Alt",
+            "value": 11.0,
+            "abnormal": true
+          },
+          {
+            "name": "Bicarbonate",
+            "value": 24.0,
+            "abnormal": false
+          },
+          {
+            "name": "Calcium",
+            "value": 9.1,
+            "abnormal": false
+          },
+          {
+            "name": "Chloride",
+            "value": 108.0,
+            "abnormal": false
+          },
+          {
+            "name": "Creatinine",
+            "value": 0.78,
+            "abnormal": null
+          },
+          {
+            "name": "Glucose",
+            "value": 97.0,
+            "abnormal": false
+          },
+          {
+            "name": "Hematocrit",
+            "value": 43.4,
+            "abnormal": false
+          },
+          {
+            "name": "Hemoglobin",
+            "value": 15.0,
+            "abnormal": false
+          },
+          {
+            "name": "Platelet",
+            "value": 332.0,
+            "abnormal": false
+          },
+          {
+            "name": "Potassium",
+            "value": 3.9,
+            "abnormal": false
+          },
+          {
+            "name": "Sodium",
+            "value": 138.0,
+            "abnormal": false
+          },
+          {
+            "name": "Tsh",
+            "value": 1.77,
+            "abnormal": false
+          },
+          {
+            "name": "Urea Nitrogen",
+            "value": 9.0,
+            "abnormal": null
+          },
+          {
+            "name": "Wbc",
+            "value": 4.1,
+            "abnormal": false
+          }
+        ]
       }
     },
     "HSP_v7_008": {
@@ -369,6 +694,91 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "neurological"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": [
+          {
+            "name": "Alt",
+            "value": 13.0,
+            "abnormal": false
+          },
+          {
+            "name": "Bicarbonate",
+            "value": 26.0,
+            "abnormal": false
+          },
+          {
+            "name": "Chloride",
+            "value": 88.0,
+            "abnormal": true
+          },
+          {
+            "name": "Cholesterol Total",
+            "value": 304.0,
+            "abnormal": true
+          },
+          {
+            "name": "Creatinine",
+            "value": 11.7,
+            "abnormal": true
+          },
+          {
+            "name": "Glucose",
+            "value": 114.0,
+            "abnormal": true
+          },
+          {
+            "name": "Hba1C",
+            "value": 7.3,
+            "abnormal": true
+          },
+          {
+            "name": "Hematocrit",
+            "value": 40.0,
+            "abnormal": false
+          },
+          {
+            "name": "Hemoglobin",
+            "value": 13.1,
+            "abnormal": true
+          },
+          {
+            "name": "Platelet",
+            "value": 169.0,
+            "abnormal": false
+          },
+          {
+            "name": "Potassium",
+            "value": 5.6,
+            "abnormal": true
+          },
+          {
+            "name": "Sodium",
+            "value": 136.0,
+            "abnormal": false
+          },
+          {
+            "name": "Triglycerides",
+            "value": 837.0,
+            "abnormal": true
+          },
+          {
+            "name": "Tsh",
+            "value": 0.7,
+            "abnormal": false
+          },
+          {
+            "name": "Urea Nitrogen",
+            "value": 77.0,
+            "abnormal": true
+          },
+          {
+            "name": "Wbc",
+            "value": 8.8,
+            "abnormal": false
+          }
+        ]
       }
     },
     "HSP_v7_009": {
@@ -395,6 +805,26 @@
       "selection": {
         "cohortGroup": "risky",
         "stratum": "respiratory"
+      },
+      "ehrRecords": {
+        "medications": [],
+        "labs": [
+          {
+            "name": "Hematocrit",
+            "value": 48.0,
+            "abnormal": true
+          },
+          {
+            "name": "Hemoglobin",
+            "value": 16.6,
+            "abnormal": false
+          },
+          {
+            "name": "Wbc",
+            "value": 5.8,
+            "abnormal": false
+          }
+        ]
       }
     }
   }
