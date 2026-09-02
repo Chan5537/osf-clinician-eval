@@ -1,4 +1,41 @@
-// DISEASE rubric v6 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+// DISEASE rubric v8 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+//
+// v8 (2026-09-02, Chan; ask from Zitao: "can the rubrics now better assess response quality").
+// TWO structural repairs and one wording pass, all driven by the v6 clinician round
+// (human_eval/clinician_round/clinician-ratings-2026-09-01.csv, n=150, ONE rater "ML"):
+//
+//   1. ⛔ USEFULNESS WAS NESTED INSIDE FACTUALITY and is now de-nested. The v7 anchors read
+//      "points to what they went on to develop" at 5/4/3 and "points elsewhere/away" at 2/1,
+//      so scores 3-5 REQUIRED a correct call and 1-2 REQUIRED a wrong one: Factuality
+//      mechanically set Usefulness's floor, and the truth arm was pinned >=3 in every case by
+//      construction rather than by judgement. Two of five axes would have moved together by
+//      definition, double-weighting the one axis that carries arm separation (+1.00 in the
+//      2026-08-24 judge run) while presenting it as two independent pieces of evidence.
+//      v8 asks FORESEEABILITY instead — how far past the chart the response reaches — which is
+//      conditionally independent of whether the reach was correct. A wrong-but-bold call can
+//      now score 4 on Usefulness and 1 on Factuality, which is the whole point: those are
+//      different properties and the instrument must be able to say so.
+//
+//   2. PERSONALIZATION CORRELATED r=0.80 WITH USEFULNESS across the 30 v6 responses — the
+//      rater was not scoring two things. Kept as an axis (owner's call 2026-09-02: no better
+//      alternative on offer) but re-scoped to be separable: it now grades the SUGGESTIONS
+//      block alone, by a swap test (would this line survive being pasted into another
+//      patient's letter?), with novelty/value explicitly assigned to Usefulness. If the
+//      internal round repeats r>0.7, retire it on evidence.
+//
+//   3. ABSOLUTE QUANTIFIERS REPLACED WITH OBSERVABLE MOVES. Personalization's 5 demanded
+//      "EVERY suggestion ... written for this person alone" and Factuality's 5 "nothing added"
+//      — unreachable ceilings, and the data shows it: across 30 responses Personalization was
+//      NEVER once scored 5 and used 4/5 levels (sd 0.85). An anchor a rater cannot reach is a
+//      scale point that does not exist. Each anchor now names a move that can be observed in
+//      the text (per Zitao: the SensorFM ED.1 style, "linking a unique biomarker to a distinct
+//      lifestyle habit"), so 5 is attainable and the ladder is evenly spaced.
+//
+//   ⛔ v8 scores are NOT comparable with v7 or earlier. This costs nothing: no v7 ratings were
+//      ever collected (the clinician round ran on v6), so the break is free and is being taken
+//      NOW, before the internal round, rather than after it.
+//
+// v6 (2026-08-29, owner; wording settled in-session against the live v56 letters): the axis SET
 //
 // v6 (2026-08-29, owner; wording settled in-session against the live v56 letters): the axis SET
 // is rebuilt around what the clinician round showed raters actually doing.
@@ -118,7 +155,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v7-20260901'
+export const RUBRIC_VERSION = 'v8-20260902'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -128,43 +165,45 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'usefulness',
     label: 'Usefulness',
     question:
-      'How much does this response really tell this patient about what they went on to develop, especially where it was hard to foresee?',
+      'If this patient had read only their own chart, how much would this response add to what they could already have worked out?',
     howToScore:
-      'Open the Future risk panel and set the warning against what was recorded. Then ask ' +
-      'whether the known information (Prior medical history, the Sleep panel) already points ' +
-      'the same way: a correct call that was hard to identify from it is worth the most; one ' +
-      'it already points to sits in the middle; a wrong direction scores low.',
+      'This axis is about FORESEEABILITY, not correctness — whether the response was right is ' +
+      'Factuality. Cover the Future risk panel. Read the Sleep panel and Prior medical history, ' +
+      'and ask what a careful reader would already expect. Then read the response and score how ' +
+      'far it goes beyond that expectation. A response can be wrong and still score 4 here if it ' +
+      'raised something the chart gave no reason to raise. Score the reach of the call, not its ' +
+      'outcome.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     anchors: [
       {
         value: 5,
         label: 'Very Useful',
         description:
-          'Points to what the patient went on to develop, where it was hard to identify from the known information alone. The warning does real work.',
+          'Raises a risk in a body system the chart gives no reason to look at (e.g. calls a respiratory risk for a patient whose history is entirely cardiac and metabolic), and says what in this recording sent it there. The patient could not have reached this alone.',
       },
       {
         value: 4,
         label: 'Useful',
         description:
-          'Points to what they went on to develop. The known information partly hints at it.',
+          'Sharpens a broad chart signal into something specific the patient could act on (e.g. from "poor sleep" to a named condition to watch for), or adds a concrete estimate the chart does not carry.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Points to what they went on to develop, but it is easy to identify from the known information. Right, yet adds little.',
+          'Names the risk a careful reader of the chart would already reach, but adds a reason or a detail they would not have had.',
       },
       {
         value: 2,
         label: 'Of Little Use',
         description:
-          'Points elsewhere, or flags only what is easy to identify from the known information.',
+          'Restates the obvious chart reading (e.g. "your apnea puts your heart at risk" for a patient with recorded apnea and cardiac history) with nothing added.',
       },
       {
         value: 1,
         label: 'Useless',
         description:
-          'Points away from what happened and would have misdirected attention.',
+          'Tells the patient only what any adult would be told regardless of this recording, or nothing they could act on at all.',
       },
     ],
   },
@@ -187,13 +226,13 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Accurate',
         description:
-          'The right risk area, and the recorded conditions named — nothing added that the patient did not develop.',
+          'The right risk area, and the recorded conditions named. Anything else it raises is a recognised variant or complication of them, not a separate claim.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'The right risk area and most recorded conditions, with one or two named that the patient did not develop.',
+          'The right risk area, and at least one recorded condition named, alongside one or two the patient did not develop.',
       },
       {
         value: 3,
@@ -234,7 +273,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Rich Addition',
         description:
-          'The patient learns specific new concerns they could not take from the known information, and the response says what in this recording points there.',
+          'Carries named content absent from both Known info panels — a condition the chart never mentions, an estimated value, a medication resemblance — and states what in this recording points there.',
       },
       {
         value: 4,
@@ -258,7 +297,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 1,
         label: 'Nothing New',
         description:
-          'Nothing here needed the recording: the whole message could be written from the known information alone.',
+          'Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself.',
       },
     ],
   },
@@ -272,23 +311,25 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Personalization',
     question: "To what extent are this response's suggestions specific to this patient?",
     howToScore:
-      'Read the "What this means for you" section. Check where its suggestions come from: ' +
-      "this patient's own findings, or advice anyone with similar numbers could receive. " +
-      'General wellness steps are not faulted. Score how much of the guidance is this ' +
-      "patient's rather than anyone's.",
+      'Score the SUGGESTIONS only — the "What this means for you" section — not the analysis ' +
+      'above it. Ask one question of each suggestion: could it be lifted into another ' +
+      "patient's letter unchanged? Suggestions that survive the swap are generic; those that " +
+      'break because they name this ' +
+      "patient's own findings are personalized. How valuable or novel the advice is belongs to " +
+      'Usefulness; general wellness steps are not faulted here.',
     // TODO example (v6): quote from the final clinician batch.
     anchors: [
       {
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Every suggestion is built from this patient's own findings. Each result is tied to something to watch, raise, or do. It reads as written for this person alone.",
+          "Suggestions join two or more distinct parts of this patient together (e.g. links a specific sleep finding to a named condition in their history, or to their medication or lab record) and turn that link into something to watch, raise, or do. Swapping in another patient's chart would make them read wrong.",
       },
       {
         value: 4,
         label: 'Personalized',
         description:
-          'Specific findings are tied to specific suggestions. Some general advice sits alongside.',
+          "At least one named finding of this patient's is tied to a specific suggestion (e.g. quotes their own N3% or AHI and says what to raise because of it). General advice sits alongside.",
       },
       {
         value: 3,
@@ -299,7 +340,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 2,
         label: 'Generic',
         description:
-          'Mentions a few of the patient\'s numbers, but the advice would fit anyone with similar values.',
+          "Quotes the patient's numbers in the analysis, but the suggestions never refer back to them — the same advice would follow from any similar readout.",
       },
       {
         value: 1,
@@ -328,7 +369,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Relevant',
         description:
-          'Both the analysis and the suggestions work on future risks.',
+          'Both the analysis and the suggestions are about what could develop next. Existing conditions appear only as grounds for that.',
       },
       {
         value: 4,
@@ -352,7 +393,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 1,
         label: 'Irrelevant',
         description:
-          "Neither the analysis nor the suggestions engage the patient's future risk.",
+          "Reads as a review of conditions the patient already has. Nothing in it looks forward.",
       },
     ],
   },
