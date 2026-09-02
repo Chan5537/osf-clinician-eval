@@ -127,44 +127,44 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // tells the patient what anyone of their age and history would be told anyway.
     key: 'usefulness',
     label: 'Usefulness',
-    question: 'How much does this response tell the patient that they could not already know?',
+    question:
+      'How much does this response really tell this patient about what they went on to develop, especially where it was hard to foresee?',
     howToScore:
-      'Read the response **against** the Prior medical history and demographics. Ask what the ' +
-      'patient learns. A useful response surfaces a specific new concern, grounded in the ' +
-      'patient profile or in predictive evidence from the overnight recording. Restating the ' +
-      'chart scores low: a known condition repackaged as a future risk, or a risk anyone of ' +
-      'this age and history would be told anyway.',
-    // TODO example (v6): quote from the final clinician batch.
+      'Open the Future risk panel and set the warning against what was recorded. Then ask ' +
+      'whether the known information (Prior medical history, the Sleep panel) already points ' +
+      'the same way: a correct call that was hard to identify from it is worth the most; one ' +
+      'it already points to sits in the middle; a wrong direction scores low.',
+    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     anchors: [
       {
         value: 5,
         label: 'Very Useful',
         description:
-          'The patient learns a specific new concern they could not have taken from their own chart, and the response says what in this recording points there.',
+          'Points to what the patient went on to develop, where it was hard to identify from the known information alone. The warning does real work.',
       },
       {
         value: 4,
         label: 'Useful',
         description:
-          'Mostly new information, with some space spent restating what the patient already knows.',
+          'Points to what they went on to develop. The known information partly hints at it.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'A new signal is in there, wrapped in about as much recital of known conditions and general truisms.',
+          'Points to what they went on to develop, but it is easy to identify from the known information. Right, yet adds little.',
       },
       {
         value: 2,
         label: 'Of Little Use',
         description:
-          "Mostly repackages the patient's known conditions or their age-and-history profile as future risk; little rests on this recording.",
+          'Points elsewhere, or flags only what is easy to identify from the known information.',
       },
       {
         value: 1,
         label: 'Useless',
         description:
-          'Nothing here needed the recording: the whole message could have been written from the chart alone.',
+          'Points away from what happened and would have misdirected attention.',
       },
     ],
   },
@@ -215,46 +215,50 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // Integration, not coverage: the target is the ARGUMENT, so counting aspects is not a
-    // strategy a rater can even apply (the same root-cause fix Factuality got on 2026-08-25).
+    // v7 (owner 2026-09-01): the coverage framing is retired — it rewarded
+    // chart-tour letters and put the truth arm LOWEST, the reverse of the eval's purpose.
+    // The name stays Comprehensiveness (owner 2026-09-01) but the axis now measures the
+    // increment directly; "known information" is the exact wording
+    // the panel's Known info tags carry, so the question and the screen point at each other.
     key: 'comprehensiveness',
     label: 'Comprehensiveness',
     question:
-      "How well does this response's analysis bring the different aspects of this patient's health together into its conclusion?",
+      'How much information does this response give the patient beyond the known information (e.g., the Sleep panel, Prior medical history)?',
     howToScore:
-      'Read the "Detailed analysis" section against the Sleep panel, Prior medical history and ' +
-      'demographics. Judge the argument it builds. A strong response analyzes more aspects ' +
-      "of this patient's health, each interpreted and connected into the conclusion. A weak " +
-      'one argues from a single thread and recites the rest.',
-    // TODO example (v6): quote from the final clinician batch.
+      'Set the response against the two panels tagged Known info — the Sleep panel and ' +
+      'Prior medical history — and ask what it adds on top. Whether an addition is correct ' +
+      "belongs to Factuality, not here.",
+    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     anchors: [
       {
         value: 5,
-        label: 'Highly Comprehensive',
+        label: 'Rich Addition',
         description:
-          "The conclusion is built from several aspects of this patient's health reasoned together; everything raised plays a part in it.",
+          'The patient learns specific new concerns they could not take from the known information, and the response says what in this recording points there.',
       },
       {
         value: 4,
-        label: 'Comprehensive',
+        label: 'Clear Addition',
         description:
-          'The conclusion draws on much of what matters for this patient, most of it genuinely argued rather than mentioned.',
+          'Mostly information beyond the known information, with some space spent restating it.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'The analysis touches several aspects but argues from only one; the rest sits alongside as description.',
+          'Something new is in there, wrapped in about as much recital of the known information.',
       },
       {
         value: 2,
-        label: 'Narrow',
-        description: "The analysis works a single thread of this patient's health.",
+        label: 'Thin',
+        description:
+          'Mostly repackages the known information as future risk; little rests on this recording.',
       },
       {
         value: 1,
-        label: 'Highly Narrow',
-        description: 'Values are restated; no argument is built on them.',
+        label: 'Nothing New',
+        description:
+          'Nothing here needed the recording: the whole message could be written from the known information alone.',
       },
     ],
   },
@@ -278,80 +282,77 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Personalized',
         description:
-          "The suggestions are built from this patient's own findings — each specific result linked to something to watch, raise, or do — and read as written for this individual alone.",
+          "Every suggestion is built from this patient's own findings. Each result is tied to something to watch, raise, or do. It reads as written for this person alone.",
       },
       {
         value: 4,
         label: 'Personalized',
         description:
-          'Goes beyond general guidance by connecting specific findings of this individual to specific suggestions (e.g., linking one result to one habit or check). Some general advice alongside.',
+          'Specific findings are tied to specific suggestions. Some general advice sits alongside.',
       },
       {
         value: 3,
         label: 'Neutral',
-        description: 'Split about evenly between patient-specific and generic suggestions.',
+        description: 'About half patient-specific, half generic.',
       },
       {
         value: 2,
         label: 'Generic',
         description:
-          'Mentions surface-level stats (e.g., basic demographics or isolated values), but the advice remains broad and could easily apply to a wide population with similar baseline numbers.',
+          'Mentions a few of the patient\'s numbers, but the advice would fit anyone with similar values.',
       },
       {
         value: 1,
         label: 'Highly Generic',
         description:
-          'Provides one-size-fits-all, boilerplate advice. It ignores the provided data and reads like a generic health article.',
+          'One-size-fits-all advice. It ignores the data and reads like a health leaflet.',
       },
     ],
   },
   {
-    // The GUARD axis — the one a strong arm can still lose. Reference: the evidence THE
-    // RESPONSE GIVES, never the visible panels alone — a panel-only reference punished any arm
-    // whose grounds the rater cannot see, and made the procedure impossible to complete on
-    // those letters. Quoted values are still checked against the record. Known gamble, accepted:
-    // a letter could dress thin grounds in firm language about an unverifiable source; the tone
-    // of over-claim is still caught here, and the facts are Factuality's job.
-    key: 'justifiability',
-    label: 'Justifiability',
+    // v7 (owner 2026-09-01): Justifiability retired — raters read "justified" as
+    // justified-by-the-chart and scored any ground they could not see as ungrounded
+    // ("can only use medical history"), no matter how the howToScore framed it. Relevance
+    // asks a judgement clinicians make without a manual: is this letter about the future?
+    key: 'relevance',
+    label: 'Relevance',
     question:
-      "To what extent are this response's conclusions justified by the evidence it presents?",
+      "How much of this response attaches to this patient's future health risks, not the conditions they already have?",
     howToScore:
-      'Read each conclusion against the grounds the response gives for it. Check anything it ' +
-      'quotes against the Sleep panel and Prior medical history. A justified conclusion names ' +
-      'its grounds: a recorded finding, an estimate from the recording, an inference. It also ' +
-      'addresses the findings that point the other way.',
-    // TODO example (v6): quote from the final clinician batch.
+      'Judge the analysis and the suggestions separately, then together. Existing conditions ' +
+      'may appear as evidence for a future risk; count them against the score only where ' +
+      'they are the point rather than the support.',
+    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
     anchors: [
       {
         value: 5,
-        label: 'Very Justifiable',
+        label: 'Fully On-Target',
         description:
-          'Every conclusion is grounded: the response says what each claim rests on, the grounds bear the claim out, and findings pointing the other way are addressed. Nothing it quotes disagrees with the record.',
+          'Both the analysis and the suggestions work on future risks.',
       },
       {
         value: 4,
-        label: 'Justifiable',
+        label: 'On-Target',
         description:
-          'The conclusions are grounded, with one claim resting on thinner grounds than stated, or one contrary finding passed over.',
+          'Mostly future-focused. Existing conditions appear only as evidence.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Grounded in places and not in others: some claims outrun the grounds given, or inconvenient findings go unmentioned.',
+          'One part looks forward, the other goes back over what the patient already has.',
       },
       {
         value: 2,
-        label: 'Unjustifiable',
+        label: 'Off-Target',
         description:
-          "Conclusions rest on weak or incidental findings while the stronger signals in the patient's own record go unaddressed, or the argument is built by leaving out what points the other way.",
+          'The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought.',
       },
       {
         value: 1,
-        label: 'Very Unjustifiable',
+        label: 'Fully Off-Target',
         description:
-          'The conclusions rest on grounds the response never gives, or on quoted findings the record contradicts.',
+          "Neither the analysis nor the suggestions engage the patient's future risk.",
       },
     ],
   },

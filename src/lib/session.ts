@@ -56,7 +56,14 @@ import { advance, touch, park, resume } from './timing'
 //       Justifiability replaces Trustworthiness (key `justifiability`), Factuality goes
 //       two-tier, Personalization re-anchored on findings-linked suggestions, Usefulness moves
 //       to the front. Questions, anchors, keys and order all changed: discard stale sessions.
-export const SCHEMA_VERSION = 16
+// v17 = disease rubric v7 (owner, 2026-09-01). `comprehensiveness` keeps its key/label but
+//       its question changes meaning (added-information increment, not coverage);
+//       Justifiability -> relevance; `usefulness` keeps its KEY while its question
+//       changes meaning (novelty moved to comprehensiveness; usefulness now scores the
+//       warning against the recorded outcome, weighted by foreseeability). A v16 session
+//       would present old-usefulness answers under the new question: discard stale sessions.
+//       ⛔ v7 scores are NOT comparable with v6 or earlier — report separately.
+export const SCHEMA_VERSION = 17
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

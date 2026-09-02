@@ -50,15 +50,15 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-teal-500/15 ring-1 ring-inset ring-teal-500/40',
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
-  // Relevance (added 2026-08-15, schema v7) — rose hue, distinct from blue/violet/teal/amber.
-  justifiability: {
+  // Relevance — rose hue, distinct from blue/violet/teal/amber.
+  relevance: {
     rail: 'border-l-rose-500',
     bg: 'bg-rose-500/[0.04] dark:bg-rose-400/[0.06]',
     header: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',
     selected: 'bg-rose-500/15 ring-1 ring-inset ring-rose-500/40',
     selectedText: 'text-rose-800 dark:text-rose-200',
   },
-  // Verbatim SensorFM "Harm" scale — amber, the safety hue used across the app.
+  // Comprehensiveness (v7: the added-information axis) — amber.
   comprehensiveness: {
     rail: 'border-l-amber-500',
     bg: 'bg-amber-500/[0.05] dark:bg-amber-400/[0.07]',
@@ -194,29 +194,19 @@ export function LikertDimensions({
                 example was judged enough. If the clinician round shows raters scoring Factuality
                 without opening the outcome panel (the only outcome-keyed axis since rubric v5),
                 this is the first thing to revisit. */}
-            {(dim.howToScore || dim.example) && (
+            {/* Examples dropped from the UI (owner 2026-09-01): the v7 questions are
+                self-contained; worked examples live in the rubric doc. */}
+            {dim.howToScore && (
               <AxisHelp
                 label={dim.label}
-                cta="How to score · example"
+                cta="How to score"
                 text={
-                  <div className="space-y-2">
-                    {dim.howToScore && (
-                      <p className="text-[13px] leading-snug">
-                        <span className="font-semibold">How to score it: </span>
-                        <span className="text-muted-foreground">
-                          <InlineEmphasis text={dim.howToScore} />
-                        </span>
-                      </p>
-                    )}
-                    {dim.example && (
-                      <p className="text-[13px] leading-snug">
-                        <span className="font-semibold">Example: </span>
-                        <span className="italic text-muted-foreground">
-                          <InlineEmphasis text={dim.example} />
-                        </span>
-                      </p>
-                    )}
-                  </div>
+                  <p className="text-[13px] leading-snug">
+                    <span className="font-semibold">How to score it: </span>
+                    <span className="text-muted-foreground">
+                      <InlineEmphasis text={dim.howToScore} />
+                    </span>
+                  </p>
                 }
               />
             )}
