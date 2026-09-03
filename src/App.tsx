@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { DEMO_CASES } from '@/data/demo-cases'
+import { DEMO_CASES, BLOCK, TOTAL_BLOCKS, BLOCK_SIZE } from '@/data/demo-cases'
 import {
   sessionReducer,
   initialSessionState,
@@ -9,10 +9,12 @@ import {
 import type { SessionState, SessionAction } from '@/lib/session'
 import type { RubricAction } from '@/lib/types'
 import { load, save, clear } from '@/lib/storage'
+import { toCSV, toJSON, downloadText } from '@/lib/export'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SECTION_IDS, scrollToSection } from '@/lib/sections'
 import { UI_FLAGS } from '@/lib/ui-flags'
 import { RevealContext, initialRevealFromUrl } from '@/lib/reveal'
-import { TaskStrip } from '@/components/TaskStrip'
+import { FutureRiskStrip } from '@/components/FutureRiskStrip'
 import { ClipboardCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LandingScreen } from '@/components/LandingScreen'
@@ -154,6 +156,8 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const submittedCount = session.cases.filter((c) => c.submitted).length
+
   return (
     <RevealContext.Provider value={reveal}>
     <div className="flex min-h-screen flex-col bg-muted/30">
@@ -177,6 +181,71 @@ function App() {
               submitted={session.cases.map((c) => c.submitted)}
               onGoto={(idx) => dispatch({ type: 'GOTO_CASE', caseIndex: idx })}
             />
+            {BLOCK > 0 && (
+              <span
+                className="hidden shrink-0 rounded-md border bg-muted px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-flex"
+                title={`Cases ${(BLOCK - 1) * BLOCK_SIZE + 1}-${(BLOCK - 1) * BLOCK_SIZE + DEMO_CASES.length} of the batch`}
+              >
+                Block {BLOCK}/{TOTAL_BLOCKS}
+              </span>
+            )}
+            {/* Download at ANY time, in either format (2026-09-02 / -09-03). It used to live
+                only on the completion screen, so a rater who stopped at case 60 of 100 left us
+                nothing. Rows are emitted for touched cases only, so a partial file is simply a
+                shorter file. Two formats because they answer different questions: CSV is what
+                analysis reads, JSON is what "Restore from file" accepts. Naming them by purpose
+                rather than by extension is the difference between a rater picking the right one
+                and picking the first one. */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  title="Download your answers so far. Progress is also saved in this browser automatically."
+                >
+                  Download progress
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-72 space-y-2 text-sm">
+                <p className="text-xs text-muted-foreground">
+                  {submittedCount} of {DEMO_CASES.length} case(s) submitted
+                  {BLOCK > 0 ? ` in block ${BLOCK}` : ''}. Cases you have not touched are left out.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    downloadText(
+                      `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.csv`,
+                      'text/csv',
+                      toCSV(session),
+                    )
+                    toast.success('CSV downloaded')
+                  }}
+                >
+                  CSV — send this in
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    downloadText(
+                      `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.json`,
+                      'application/json',
+                      toJSON(session),
+                    )
+                    toast.success('JSON downloaded — keep it to resume on another machine')
+                  }}
+                >
+                  JSON — to resume later
+                </Button>
+              </PopoverContent>
+            </Popover>
             <Button
               type="button"
               variant={reveal ? 'default' : 'outline'}
@@ -210,7 +279,11 @@ function App() {
       </header>
 
       {UI_FLAGS.taskStrip && (
-        <TaskStrip responseCount={demoCase.responses.length} onGoToScoring={goToScoring} />
+        <FutureRiskStrip
+          caseId={demoCase.case_id}
+          responseCount={demoCase.responses.length}
+          onGoToScoring={goToScoring}
+        />
       )}
 
       {/* Section anchors drive the step rail and the submit bar's "Go to scoring" jump; the

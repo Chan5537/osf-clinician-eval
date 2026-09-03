@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, FlaskConical, Moon, TrendingUp, UserRound } from 'lucide-react'
+import { ClipboardList, FlaskConical, Moon, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -7,9 +7,8 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import { ConditionList } from '@/components/ConditionList'
-import { FutureRiskGrid } from '@/components/FutureRiskGrid'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext, inPanel23 } from '@/lib/case-context'
+import { caseContext } from '@/lib/case-context'
 import { withGivenFieldsOnly } from '@/lib/given-inputs'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
@@ -53,10 +52,6 @@ const HISTORY_STYLE: SectionStyle = {
 const AUX_STYLE: SectionStyle = {
   rail: 'border-l-amber-500',
   icon: 'text-amber-600 dark:text-amber-400',
-}
-const OUTCOME_STYLE: SectionStyle = {
-  rail: 'border-l-indigo-500',
-  icon: 'text-indigo-600 dark:text-indigo-400',
 }
 // REMOVED 2026-08-22 (owner): the "Patient group" / "Patient future risk" card and its teal style.
 // It named the COHORT SAMPLING criterion while reading as a claim about this patient's prognosis,
@@ -159,10 +154,6 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
   void bp
   if (race && race !== 'Unknown') demoItems.push({ label: 'Race', value: race })
 
-  const futureGt = context?.futureDiseaseGroundTruth ?? []
-  // The header count matches what the block actually lists — it is scoped to the 23-disease panel
-  // (see FutureRiskGrid), so counting the raw recorded list would promise rows that are not there.
-  const futureGtInPanel = futureGt.filter(inPanel23)
 
   // The sleep panel shows ONLY what the system was given (owner 2026-08-22). Filtering here — at
   // the one place the sidecar's index enters the UI — means the numeric grid, the severity bars,
@@ -206,45 +197,12 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           re-deriving their own (cardiovascular) prediction — doing the letters' job instead of
           judging it against what actually happened. The reference belongs on screen before the
           material it grades. Sleep and history still start collapsed. */}
-      <Accordion type="multiple" defaultValue={['future-disease']}>
-        <AccordionItem value="future-disease" className={itemClass(OUTCOME_STYLE)}>
-          <AccordionTrigger className={TRIGGER_CLASS}>
-            <SectionHeader
-              icon={TrendingUp}
-              style={OUTCOME_STYLE}
-              // Renamed "Future risk" 2026-08-28 (owner). The 08-22 rationale required the
-              // label to carry NOT-A-PREDICTION and the 6-year window; the short name carries
-              // neither, so both move to the meta text ("recorded in the 6 years after the
-              // study" — past-tense fact, window stated). Rubric howToScore strings reference
-              // this panel BY NAME — keep them in step (rubric-config-disease.ts, Factuality).
-              // ⛔ Still avoids the blinding-gate phrases: no "ground truth", no "oracle".
-              title="Future risk"
-              tag="New onset risk"
-              tagClass="border-indigo-300 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300"
-              // Meta trimmed 2026-08-29 (owner): the long form read as generated scaffolding.
-              // "6-year follow-up" keeps the recorded-not-predicted cue in two clinical words;
-              // the full statement lives in Factuality's howToScore.
-              meta={
-                context
-                  ? `${plural(futureGtInPanel.length, 'condition')} · 6-year follow-up`
-                  : 'unavailable'
-              }
-            />
-          </AccordionTrigger>
-          <AccordionContent>
-            {context ? (
-              <>
-                <FutureRiskGrid
-                  conditions={futureGt}
-                  emptyLabel="No new-onset condition recorded in the 6-year window."
-                />
-              </>
-            ) : (
-              <p className="text-sm text-muted-foreground">Unavailable.</p>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-
+      <Accordion type="multiple">
+        {/* The recorded outcome moved OUT of this panel (owner 2026-09-03): it is now pinned
+            above the page as FutureRiskStrip, on screen for the whole case instead of scrolling
+            away exactly when the responses are being judged. Repeating it here would put the
+            same two lines on screen twice. The strip keeps the "Future risk" name and the
+            "New onset risk" tag, so the rubric guidance that names this panel still resolves. */}
         <AccordionItem value="sleep-indices" className={itemClass(SLEEP_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
