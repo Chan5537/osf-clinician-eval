@@ -89,7 +89,7 @@ export type RubricDimension =
   | 'factuality'
   | 'comprehensiveness'
   | 'personalization'
-  | 'relevance'
+  | 'trustworthiness'
 
 // Likert key: `${label}__${dimension}` (e.g. "A__comprehensiveness"). Built per case from the
 // present response labels × the fixed dimensions.

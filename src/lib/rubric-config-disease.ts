@@ -161,7 +161,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v8-20260902'
+export const RUBRIC_VERSION = 'v9-20260903'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -337,56 +337,67 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // v7 (owner 2026-09-01): Justifiability retired — raters read "justified" as
-    // justified-by-the-chart and scored any ground they could not see as ungrounded
-    // ("can only use medical history"), no matter how the howToScore framed it. Relevance
-    // asks a judgement clinicians make without a manual: is this letter about the future?
-    key: 'relevance',
-    label: 'Relevance',
+    // TRUSTWORTHINESS — reinstated 2026-09-03 (Chan + Zitao), replacing Relevance.
+    //
+    // Motivation: Zitao, reviewing the v61.1 letters, flagged base/HSP_v7_001 closing "but these
+    // findings do not by themselves point to a specific additional future condition" — a hedge that
+    // reads as a disclaimer. No other axis grades that, and Relevance now largely duplicates what the
+    // interface's Future risk panel already steers the rater toward.
+    //
+    // ⚠️ KNOWN FAILURE MODE, ACCEPTED WITH EYES OPEN. This axis is v6's `justifiability` under a new
+    //    name. In the v6 clinician round it ran BASE 4.00 > OURS 2.90 > TRUTH 2.30 — the exact
+    //    REVERSE of how much model prediction each arm carries — because raters weighed confidence
+    //    against panels holding no model evidence, so any arm whose grounds they could not see
+    //    scored as unsupported. v7 retired it for that reason.
+    //    The anchors below are written to invert that pressure: HEDGING scores LOW and a committed,
+    //    grounded call scores HIGH, which is the direction Zitao's observation points. Whether that
+    //    is enough is an empirical question — CHECK THE ARM ORDER in the internal round before this
+    //    ships to clinicians. If base again outranks truth on this axis, retire it again.
+    key: 'trustworthiness',
+    label: 'Trustworthiness',
     question:
-      "To what extent does this response attach to this patient's future health risks, rather than the conditions they already have?",
+      'To what extent would you rely on this response as a starting point for this patient?',
     howToScore:
-      'Judge time direction: forward to what could develop, or back over what the patient already ' +
-      'has. Existing conditions may appear as evidence for a future risk.',
-    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
+      'Weigh whether the response commits to a call and shows what it rests on. A response that ' +
+      'hedges, disclaims, or leaves you unsure what it is actually claiming is less trustworthy ' +
+      'than one that states a risk and the grounds for it — even where those grounds come from ' +
+      'a source you cannot inspect. Do not reward caution that avoids saying anything.',
     example:
-      'Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in ' +
-      'the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior ' +
-      'mental-area conditions appear only as grounds for the forward call — both halves work on future ' +
-      'risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory ' +
-      'and endocrine history and closes by asking "what practical prevention steps fit your existing ' +
-      'circulatory and endocrine/metabolic history" — the existing conditions are the point rather ' +
-      'than the support: Not Relevant (2). ',
+      'Response X names the area, says which finding points there, and carries that into what to ' +
+      'raise at the next appointment — you know what it claims and why: Trustworthy (4). Response Y ' +
+      'reports the same findings and closes "but these findings do not by themselves point to a ' +
+      'specific additional future condition" — after reading it you still do not know what it is ' +
+      'telling the patient to watch for: Not Trustworthy (2).',
     anchors: [
       {
         value: 5,
-        label: 'Highly Relevant',
+        label: 'Highly Trustworthy',
         description:
-          'Both the analysis and the suggestions are about what could develop next. Existing conditions appear only as grounds for that.',
+          'Commits to a clear call and makes the grounds for it visible. You would act on it as a starting point without first checking it.',
       },
       {
         value: 4,
-        label: 'Relevant',
+        label: 'Trustworthy',
         description:
-          'Mostly future-focused. Existing conditions appear only as evidence.',
+          'States what it claims and what that rests on. Minor gaps, but you know where you stand.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'One part looks forward, the other goes back over what the patient already has.',
+          'Makes a call but leaves parts of it unsupported, or qualifies it enough that you would verify before relying on it.',
       },
       {
         value: 2,
-        label: 'Not Relevant',
+        label: 'Not Trustworthy',
         description:
-          'The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought.',
+          'Hedges or disclaims to the point that the actual claim is unclear, or asserts more than anything in the letter supports.',
       },
       {
         value: 1,
-        label: 'Not Relevant At All',
+        label: 'Not Trustworthy At All',
         description:
-          "Reads as a review of conditions the patient already has. Nothing in it looks forward.",
+          'You would not rely on any part of it — either it says nothing usable, or what it does say is unsupported.',
       },
     ],
   },
