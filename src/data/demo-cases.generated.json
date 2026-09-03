@@ -1,135 +1,44 @@
 [
   {
     "case_id": "HSP_v7_000",
-    "batch": "v60_gap60",
+    "batch": "v61_ui4",
     "category": "circulatory system",
     "demographics": {
-      "age": 73,
-      "sex": "M",
+      "age": 65,
+      "sex": "F",
       "bmi": 0,
-      "race": "white",
-      "bp": "164/78"
+      "race": "white"
     },
     "ehr_history": [
+      "Vitamin D deficiency",
       "Hyperlipidemia",
-      "Acute posthemorrhagic anemia",
+      "Iron deficiency anemias, unspecified or not due to blood loss",
+      "Anxiety disorder",
       "Tobacco use disorder",
       "Sleep disorders",
       "Obstructive sleep apnea",
       "Insomnia",
-      "pc_327.41_dx",
-      "Sleep related movement disorders",
-      "Nonrheumatic mitral valve disorders",
-      "Essential hypertension"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The main new area to watch is **circulatory**, because the predictive profile computed from this recording points to **Ischemic Heart Disease** in the years ahead.\n\n**Detailed analysis:** Tonight's recording showed mild breathing disruption, including an AHI of 14.0 events/hour and an ODI of 10.4 events/hour, which provides context for the profile's circulatory signal. The predictive profile computed from this recording also points to **Coronary atherosclerosis**. Your history includes prior conditions in the circulatory, endocrine/metabolic, mental, and neurological areas, but the profile's conditions are described as new rather than conditions you have today. The estimated chemistry from tonight's recording gave **HbA1c 6.5 %**, outside its stated reference range, which is an additional reason to watch endocrine/metabolic health and **Type 2 diabetes**; because no blood was drawn, this remains only an estimate.\n\n**What this means for you:** At your next routine appointment, raise the profile's circulatory concerns and ask for a review of prevention, and mention the estimated **HbA1c 6.5 %** for confirmation. Also, tonight's recording resembles those of patients on **oral steroids**, so that resemblance is worth getting checked and mentioning at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to watch most closely is **circulatory**, because the predictive profile computed from this recording points to **Coronary atherosclerosis** in the years ahead.\n\n**Detailed analysis:** Tonight\u2019s recording showed mild breathing disruption, with [AHI 14 events/hour] and [ODI 10.4 events/hour], along with repeated sleep interruptions [ArI 16.9 events/hour]. These findings come from tonight\u2019s recording and do not by themselves establish either future condition. The predictive profile computed from this recording is the strongest evidence here: it points to both **Coronary atherosclerosis** and **Ischemic Heart Disease**. Your history includes prior conditions in the circulatory, endocrine/metabolic, mental, and neurological areas, so the recording and profile should be interpreted alongside what is already known.\n\n**What this means for you:** At your next routine appointment, raise the two conditions named by the predictive profile computed from this recording. Ask for a review of the factors that can influence circulatory risk, including blood pressure, cholesterol, blood sugar, weight, tobacco exposure, eating patterns, and physical activity, and clarify which are already covered by your history. Keeping track of changes discussed at that appointment can help you and your clinician notice whether your risk-management plan remains appropriate over time.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording showed repeated breathing interruptions [AHI 14.0 events/hour] with oxygen dips [ODI 10.4 events/hour].\n\n**Detailed analysis:** Tonight\u2019s recording described the breathing disturbance as mild, but its repeated events and [ODI 10.4 events/hour] make future circulatory conditions\u2014particularly high blood pressure\u2014worth watching. Your history already includes the circulatory area, so this means watching for a new problem within that area, not assuming that one is present now. The respiratory area is a reasonable alternative because tonight\u2019s recording showed [AHI 14.0 events/hour].\n\n**What this means for you:** At your next routine appointment, raise the overnight AHI and oxygen-desaturation findings and ask how your circulatory risk should be monitored over time. Your history\u2019s circulatory area and tonight\u2019s recording are both worth reviewing together. Continue the routine preventive habits and follow-up already recommended for you; the recording is a reason for awareness, not alarm.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_001",
-    "batch": "v60_gap60",
-    "category": "endocrine/metabolic",
-    "demographics": {
-      "age": 62,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white",
-      "bp": "101/69"
-    },
-    "ehr_history": [
-      "Obesity",
-      "Depression",
-      "pc_296.22_dx",
-      "Anxiety disorder",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Peripheral enthesopathies and allied syndromes",
-      "Enthesopathy"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording showed frequent oxygen desaturations [ODI 37.8 events/h].\n\n**Detailed analysis:** Tonight\u2019s recording also showed severe sleep-related breathing disruption [AHI 41.1 events/h]. These findings make future high blood pressure, heart disease, or stroke the circulatory conditions most worth watching. Your medical history includes endocrine/metabolic, mental, and neurological areas, so those areas are not new concerns for you, although they remain relevant to your overall health. Respiratory conditions are a reasonable alternative consideration because of the breathing disruption shown on tonight\u2019s recording, but the strongest future-health signal is circulatory.\n\n**What this means for you:** At your next routine appointment, raise the severe breathing disruption and oxygen desaturations shown on tonight\u2019s recording, and ask that your blood pressure and overall circulatory risk be reviewed. Your medical history should be considered alongside tonight\u2019s recording when deciding what follow-up is appropriate. In the meantime, avoiding tobacco, moderating alcohol, staying physically active, and maintaining a healthy weight are practical ways to support circulatory health; these steps address the circulatory risk suggested by tonight\u2019s recording.\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The **endocrine/metabolic** area is the main one to watch in the years ahead, because the predictive profile computed from this recording points to **Hyperlipidemia**.\n\n**Detailed analysis:** Tonight\u2019s recording showed severe sleep-related breathing disruption, including [AHI 41.1 events/hour] and [ODI 37.8 events/hour]. The predictive profile computed from this recording nevertheless points specifically to **Hyperlipidemia**, rather than to a new respiratory, circulatory, mental, or neurological condition. Your history includes endocrine/metabolic, mental, and neurological areas, but your history does not provide a more specific condition that changes this assessment.\n\n**What this means for you:** The predictive profile computed from this recording makes cholesterol-related health worth keeping on your routine-care agenda. At your next routine appointment, raise the profile\u2019s **Hyperlipidemia** signal and discuss practical prevention habits involving food choices, activity, weight, and your broader endocrine/metabolic history. Tonight\u2019s recording is also worth mentioning so its severe breathing-disruption findings can be considered alongside your overall risk review.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch is **endocrine/metabolic**, because the predictive profile computed from tonight\u2019s recording points most strongly to new **Hyperlipidemia** in the years ahead.\n\n**Detailed analysis:** Your history includes endocrine/metabolic, mental, and neurological areas, but the predictive profile identifies **Hyperlipidemia** as the condition to focus on for the future. Tonight\u2019s recording showed severe sleep-related breathing disturbance [AHI 41.1 events/hour] and frequent oxygen drops [ODI 37.8 events/hour]; these findings make the profile\u2019s longer-term health signal worth discussing without meaning that you have the predicted condition now.\n\n**What this means for you:** The predictive profile supports bringing **Hyperlipidemia** up at your next routine appointment and asking which practical steps best fit your overall health for reducing metabolic risk. Mention tonight\u2019s severe breathing findings and your relevant history so the clinician can consider them together. The medication resemblance from tonight\u2019s recording is that this recording resembles those of patients on **non-tricyclic antidepressants** \u2014 worth bringing up at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_002",
-    "batch": "v60_gap60",
-    "category": "mental disorders",
-    "demographics": {
-      "age": 40,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white",
-      "bp": "134/96"
-    },
-    "ehr_history": [
-      "Obesity",
-      "pc_278.11_dx",
-      "Depression",
-      "Sleep disorders",
-      "Hypersomnia",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "pc_327.41_dx",
       "Migraine",
-      "Essential hypertension"
+      "Epilepsy"
     ],
     "query_id": "Based on my overnight sl",
     "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
     "responses": [
       {
-        "markdown": "The area to watch most closely is **mental**, because the predictive profile computed from this recording points most strongly to new **Anxiety disorder** in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording points to **Anxiety disorder** more strongly than the other listed conditions, while your history records prior conditions in the mental area without identifying this specific new condition. Tonight\u2019s recording showed mild breathing disturbance [AHI 5.9 events/hour], but the predictive profile computed from this recording still points most strongly toward the mental area rather than the circulatory, endocrine/metabolic, or respiratory areas.\n\n**What this means for you:** Based on the predictive profile computed from this recording, notice persistent changes in worry, tension, mood, or sleep and bring them up at your next routine appointment; your history records prior conditions in the mental area, so changes are worth describing clearly rather than assuming they are unchanged. Regular sleep and daily routines are reasonable practical steps to support your wellbeing. Tonight\u2019s recording resembles those of patients on **benzodiazepines** \u2014 worth bringing up at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
+        "markdown": "The new condition to watch most closely is **Essential hypertension** in the **circulatory** area, because tonight's recording showed severe sleep-disordered breathing [AHI 31.6 events/hour], a pattern associated with blood-pressure risk [1].\n\n**Detailed analysis:** Your demographics show you are 65, and your history includes the circulatory area, making future blood-pressure changes especially worth tracking. Tonight's recording showed frequent sleep disruption [ArI 25.9 events/hour] alongside severe breathing disturbance, which supports the predictive profile's focus on **Essential hypertension** [1]. The profile also estimates your **HbA1c at 6.43 %**, in the prediabetic range, which means **Type 2 diabetes** is another condition worth watching, particularly because your history includes the endocrine/metabolic area [2]. This is a prediction so take it with caution and confirm with a real lab test. Your profile also looks similar to other patients who later went on to take **oral steroids**; tonight's recording showed substantial breathing-related arousals, a finding consistent with the profile's medication resemblance and relevant to the blood-pressure risk.\n\n**What this means for you:** At your next routine appointment, raise the future risk of **Essential hypertension**, review your blood-pressure trend, and discuss the HbA1c estimate. Regular physical activity, a balanced eating pattern, avoiding tobacco, and keeping alcohol moderate are sensible ways to support circulatory and metabolic health.\n\n## References\n\n1. Obstructive Sleep Apnea and Hypertension: Updates to a Critical Relationship \u2014 Current Hypertension Reports 2022. https://pubmed.ncbi.nlm.nih.gov/35246797/\n2. Classification and Diagnosis of Diabetes \u2014 2018. https://pubmed.ncbi.nlm.nih.gov/33651569/\n\n*Clinical decision support, not a diagnosis.*",
+        "arm": "B",
         "atoms": [],
         "label": "A"
       },
       {
-        "markdown": "The area to watch most closely is **circulatory**, because tonight's recording showed mild repeated breathing interruptions and oxygen dips [AHI 5.9 events/h; ODI 5.7 events/h], while your history includes the circulatory area.\n\n**Detailed analysis:** Tonight's recording showed mild sleep-related breathing disturbance, reflected by [AHI 5.9 events/h] and [ODI 5.7 events/h]. These findings make future circulatory problems\u2014especially raised blood pressure\u2014worth monitoring. Your history includes circulatory, endocrine/metabolic, mental, neurological, and respiratory areas, so this is a monitoring priority rather than a prediction that a new illness will develop.\n\n**What this means for you:** At your next routine appointment, raise tonight's recording and ask whether your blood pressure and overall circulatory risk are being kept under review; that is especially reasonable given your circulatory history and the mild breathing-related changes on tonight's recording. Ask what practical prevention steps fit your existing circulatory and endocrine/metabolic history, and keep routine follow-up current because your history includes those areas.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
+        "markdown": "The new area to watch is **circulatory**, because the predictive profile computed from this recording points specifically to **Hypertensive heart and/or renal disease** within six years.\n\n**Detailed analysis:** Tonight\u2019s recording showed severe breathing-related sleep disruption [AHI 31.6 events/hour] and frequent sleep arousals [ArI 25.9 events/hour]. Your history includes the circulatory area, and your demographics show that you are 65, so these findings converge on a future blood-pressure-related circulatory concern rather than a new endocrine/metabolic, mental, neurological, or respiratory condition. Research describes obstructive sleep apnea as a cardiometabolic risk and links blood-pressure control in people with obstructive sleep apnea to longer-term cardiovascular outcomes [1]. The predictive profile computed from this recording identifies **Hypertensive heart and/or renal disease** as the condition to watch.\n\n**What this means for you:** At your next routine appointment, share this prediction and ask how your blood pressure and kidney-related health should be followed over time. Keeping track of blood-pressure readings, if you already do so, can help you and your clinician notice a sustained change; the importance of blood-pressure control in this setting is supported by cardiovascular-outcome research [1].\n\n## References\n\n1. The association between blood pressure control and long-term cardiovascular outcomes in Hypertension coexistent with obstructive sleep apnea \u2014 BMC Cardiovascular Disorders 2023. https://pubmed.ncbi.nlm.nih.gov/37990168/\n\n*clinical decision support, not a diagnosis*",
+        "arm": "C",
         "atoms": [],
         "label": "B"
       },
       {
-        "markdown": "The area to watch most closely is **mental**, because the predictive profile computed from this recording points to **Anxiety disorder** in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording identifies **Anxiety disorder** as the condition to watch over the next several years. Your history includes prior conditions in the mental area, which makes changes in worry, mood, or coping especially worth noticing without changing where the profile points. Tonight\u2019s recording showed mild sleep-related breathing disruption [AHI 5.9 events/hour] and [ODI 5.7 events/hour]. Those findings give useful context about your sleep but are not the main reason for the profile\u2019s mental-area signal.\n\n**What this means for you:** Based on the predictive profile and your history, keep track of persistent worry, panic, irritability, low mood, or sleep-related distress and how these affect daily life. At your next routine appointment, raise any lasting or worsening symptoms, changes in coping, and whether your sleep quality is affecting daytime functioning. The recording also supports prioritizing regular sleep timing, daily movement, supportive relationships, and practical stress-reduction habits as part of watching this risk over time.\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "TRUTH",
+        "markdown": "The area to watch is **circulatory**, because tonight's recording showed severe sleep-disordered breathing [AHI 31.6 events/hour], a pattern associated with future cardiovascular disease [1].\n\n**Detailed analysis:** Tonight's recording showed repeated sleep disruption [ArI 25.9 events/hour] and oxygen drops [ODI 12.8 events/hour] alongside the severe event rate, supporting concern about future high blood pressure and other circulatory conditions [1]. Your history includes circulatory conditions, so changes in blood pressure, heart rhythm, or neurologic function are especially worth monitoring rather than assuming they are unrelated. Atrial fibrillation is another condition to watch because sleep-disordered breathing and atrial fibrillation commonly interact [2]. Your age of 65 adds to the importance of keeping these circulatory risks visible in routine care, without meaning that you have any of these new conditions now.\n\n**What this means for you:** At your next routine appointment, raise the sleep-study findings and ask how your blood pressure and heart rhythm should be followed over time; consensus guidance recognizes the cardiovascular importance of sleep-disordered breathing [3]. Also mention new palpitations, persistent rises in blood pressure, chest discomfort, or sudden neurologic changes promptly, because these can signal circulatory problems described in cardiovascular guidance [1].\n\n## References\n\n1. Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association \u2014 Circulation 2021. https://pubmed.ncbi.nlm.nih.gov/34148375/\n2. Obstructive Sleep Apnea and Atrial Fibrillation \u2014 Journal of Clinical Medicine 2022. https://pubmed.ncbi.nlm.nih.gov/35268335/\n3. International Consensus Statement on Obstructive Sleep Apnea \u2014 International Forum of Allergy & Rhinology 2023. https://pubmed.ncbi.nlm.nih.gov/36068685/\n\n*clinical decision support, not a diagnosis*",
+        "arm": "A",
         "atoms": [],
         "label": "C"
       }
@@ -137,297 +46,44 @@
   },
   {
     "case_id": "HSP_v7_003",
-    "batch": "v60_gap60",
+    "batch": "v61_ui4",
     "category": "neurological",
-    "demographics": {
-      "age": 71,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Type 2 diabetes",
-      "Hyperlipidemia",
-      "Essential hypertension",
-      "Ischemic Heart Disease",
-      "Coronary atherosclerosis",
-      "Peripheral enthesopathies and allied syndromes",
-      "Osteoarthritis; localized"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The area to watch most closely is **neurological**, because the predictive profile computed from this recording points to **Sleep disorders** in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording is the clearest forward-looking signal and identifies **Sleep disorders** as the condition to watch. Tonight\u2019s recording showed limited consolidated sleep [sleep efficiency 57.2 percent] and very little deep sleep [N3 ratio 0.4 percent of TST], which makes a continuing sleep-related pattern worth monitoring. Your history includes circulatory and endocrine/metabolic areas, but the predictive profile computed from this recording points elsewhere. As reassurance, tonight\u2019s recording showed normal breathing measures [AHI 4.0 events/hour] and [ODI 0.0 events/hour], so it did not point strongly toward a breathing-related sleep problem.\n\n**What this means for you:** Based on tonight\u2019s recording, pay attention over the coming years to recurring difficulty falling or staying asleep, persistently unrefreshing sleep, or troublesome daytime tiredness. Keep a regular sleep-wake routine and note whether these concerns become persistent. At your next routine appointment, raise any continuing change in sleep quality, duration, or daytime functioning and mention that tonight\u2019s recording showed poor sleep consolidation.\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to watch most closely is **neurological**, because the predictive profile computed from this recording points to future **Obstructive sleep apnea**.\n\n**Detailed analysis:** The predictive profile computed from this recording points to **Obstructive sleep apnea** in the years ahead. Tonight\u2019s recording was reassuring about breathing, showing [AHI 4.0 events/hour] and [ODI 0.0 events/hour]. It did show reduced overall sleep quality, with [Sleep Efficiency 57.2 percent] and [Deep Sleep (N3) ratio 0.4 percent of TST]; the predictive profile also points toward **Sleep disorders**, which fits that aspect of tonight\u2019s recording.\n\n**What this means for you:** At your next routine appointment, raise the predictive profile\u2019s **Obstructive sleep apnea** signal, the reassuring breathing measurements from tonight\u2019s recording, and the reduced sleep quality shown by the study. Your history includes circulatory and endocrine/metabolic areas, so keeping those areas under routine review is sensible. The predictive profile computed from this recording says this recording resembles those of patients on **oral steroids**, so that resemblance is worth getting checked and mentioning at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch is **mental**, because tonight\u2019s recording showed markedly poor sleep efficiency [SE 57.2%].\n\n**Detailed analysis:** Tonight\u2019s recording also showed very little deep sleep [N3 0.4% of TST], suggesting that sleep quality was limited even though the recording did not show a breathing-related problem. The normal [AHI 4.0 events/h] and [ODI 0.0 events/h] make a new respiratory condition less prominent. These findings do not predict that you will develop a mental condition, but repeated poor sleep can make changes in mood, worry, concentration, or daytime functioning worth noticing. Tonight\u2019s recording was only one night, so persistent patterns matter more than this result alone.\n\n**What this means for you:** Based on tonight\u2019s recording, notice whether short or unrefreshing sleep continues and whether it is followed by persistent low mood, excessive worry, irritability, concentration problems, or reduced daytime functioning. Keeping brief notes about sleep and daytime effects can help show whether a pattern is developing. At your next routine appointment, raise ongoing poor sleep or any new mental or daytime changes, especially if they persist or interfere with ordinary activities. Your existing circulatory and endocrine/metabolic history remains relevant to routine health monitoring, but tonight\u2019s recording most clearly points to sleep quality and mental wellbeing as the area to watch.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_004",
-    "batch": "v60_gap60",
-    "category": "respiratory",
-    "demographics": {
-      "age": 59,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Type 2 diabetes",
-      "Hyperlipidemia",
-      "pc_272.11_dx",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Delirium dementia and amnestic and other cognitive disorders",
-      "Memory loss",
-      "Altered mental status",
-      "Bipolar",
-      "Depression",
-      "pc_296.22_dx"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The main new area to watch is **respiratory**, because the predictive profile computed from this recording points to **Asthma** developing within the next six years.\n\n**Detailed analysis:** Your history lists prior conditions in the circulatory, endocrine/metabolic, mental, and neurological areas, but not the respiratory area. Tonight\u2019s recording showed [AHI 1.1 events/hour] and [ODI 0.3 events/hour], both normal. The predictive profile computed from this recording nevertheless resembles the recordings of patients who went on to develop **Asthma**, making that the clearest condition to keep in mind.\n\n**What this means for you:** At your next routine appointment, raise this respiratory risk signal and mention any new wheeze, recurring cough, chest tightness, or breathlessness, including when these symptoms occur. Based on the predictive profile computed from this recording, it is reasonable to discuss practical ways to limit smoke or other respiratory irritants. Tonight\u2019s recording is reassuring about oxygen drops and breathing pauses during sleep, based on its normal AHI and ODI.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to keep in mind is **neurological**, because tonight\u2019s recording showed low deep and REM sleep despite normal breathing measures.\n\n**Detailed analysis:** Tonight\u2019s recording showed [N3 ratio 6.4 percent] and [REM ratio 2.3 percent], the only notable findings beyond normal sleep breathing. These sleep-stage proportions alone cannot predict a future neurological condition. Tonight\u2019s recording showed [AHI 1.1 events/h] and [ODI 0.3 events/h], so a new respiratory condition does not stand out from this study. Your medical history includes the neurological area, which makes new changes there worth mentioning rather than assuming they are caused by sleep.\n\n**What this means for you:** At your next routine appointment, raise the low deep- and REM-sleep proportions and mention any new or worsening memory, thinking, balance, movement, or daytime-function changes. Your medical history includes circulatory, endocrine/metabolic, mental, and neurological areas, so ask how those existing areas should shape prevention and monitoring.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch is **respiratory**, because the predictive profile computed from this recording points most strongly to **Allergic rhinitis** in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording points toward **Allergic rhinitis**. Tonight\u2019s recording was reassuring for sleep-related breathing problems, with an AHI of 1.1 events/hour and an ODI of 0.3 events/hour, both in the normal range. Your history lists prior conditions in the circulatory, endocrine/metabolic, mental, and neurological areas, but not the respiratory area.\n\n**What this means for you:** Based on the predictive profile computed from this recording, pay attention to new or persistent nasal symptoms and mention them at your next routine appointment; avoiding smoke and other personally recognized airborne irritants is a reasonable preventive step. This recording resembles those of patients on **non-tricyclic antidepressants**, so this is something to get checked and worth mentioning at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_005",
-    "batch": "v60_gap60",
-    "category": "circulatory system",
-    "demographics": {
-      "age": 26,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white",
-      "bp": "126/87"
-    },
-    "ehr_history": [
-      "Vitamin D deficiency",
-      "Obesity",
-      "pc_278.11_dx",
-      "Abnormal weight gain",
-      "Sleep disorders",
-      "Hypersomnia",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "pc_327.41_dx",
-      "Parasomnia"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "**circulatory** is the area to watch most closely, because the predictive profile points to **Nonrheumatic tricuspid valve disorders** in the years ahead.\n\n**Detailed analysis:** The predictive profile identifies **Nonrheumatic tricuspid valve disorders** as the condition that stands out for you; its other listed conditions are not flagged. Tonight\u2019s recording showed mild breathing disturbance [AHI 6.5 events/h], but the oxygen pattern was reassuring [ODI 4.1 events/h], and the arousal index was normal at 3.6 events/hour. Your history includes endocrine/metabolic and neurological areas, but that history does not change the profile\u2019s circulatory signal.\n\n**What this means for you:** At your next routine appointment, raise this profile result and discuss whether your usual reviews of blood pressure, cholesterol, blood sugar, heart symptoms, and tobacco exposure remain appropriate. For prevention, focus on regular physical activity, balanced eating, and avoiding tobacco. Keep a note of new or persistent breathlessness, ankle swelling, unusual fatigue, chest discomfort, or a racing heartbeat, and mention those promptly; these are practical symptoms to discuss rather than signs that a condition is present.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to watch most closely is **mental**, because the predictive profile computed from this recording points most strongly to **Depression** in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording points to **Depression** as the main new condition to watch. Your history includes endocrine/metabolic and neurological areas, but not the mental area, so this represents a different area of future health attention according to the profile. Tonight\u2019s recording showed reduced sleep efficiency [sleep efficiency 83.3 percent] and unusually little REM sleep [REM sleep ratio 2.5 percent of TST]. Tonight\u2019s recording also showed mild breathing disturbance [AHI 6.5 events/hour], while oxygen desaturation and arousals were normal; this makes a respiratory concern less central to the profile\u2019s message.\n\n**What this means for you:** Protecting regular, restorative sleep is a sensible way to support mental wellbeing in light of tonight\u2019s recording. At your next routine appointment, raise any persistent low mood, loss of interest, sleep-related mood change, or difficulty functioning, and ask for the profile\u2019s mental-health concern to be checked. At the same visit, it is worth getting checked and mentioning that tonight\u2019s recording resembles those of patients on **non-tricyclic antidepressants**.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording showed repeated breathing events [AHI 6.5 events/hour], which can be associated with later high blood pressure or other cardiovascular problems.\n\n**Detailed analysis:** Tonight\u2019s recording showed a mild event burden, making future circulatory health the most relevant area to keep in view rather than predicting a definite condition. The same recording is reassuring in that oxygen desaturations remained normal [ODI 4.1 events/hour] and sleep disruptions were not excessive [ArI 3.6 events/hour], so it does not suggest a high immediate risk from the overnight findings alone. The recording\u2019s low REM proportion is less useful for predicting a new long-term condition because the other measures provide stronger context.\n\n**What this means for you:** Because tonight\u2019s recording is the reason for this focus, at your next routine appointment raise whether your blood pressure and overall circulatory risk should be reviewed over time. The recording also supports discussing practical, sustainable habits that protect circulatory health, including regular movement, balanced eating, avoiding tobacco exposure, and keeping a consistent sleep routine. Your history includes endocrine/metabolic and neurological areas, so any changes in those areas should also be mentioned during ordinary care rather than assumed to be caused by tonight\u2019s recording.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_006",
-    "batch": "v60_gap60",
-    "category": "endocrine/metabolic",
-    "demographics": {
-      "age": 70,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Hyperlipidemia",
-      "pc_272.11_dx",
-      "Abnormal weight gain",
-      "Bipolar",
-      "Depression",
-      "pc_296.22_dx",
-      "Anxiety disorder",
-      "pc_300.11_dx",
-      "Tobacco use disorder",
-      "Sleep disorders"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The main area to watch is **endocrine/metabolic**, because the predictive profile computed from this recording points to new **Obesity** in the years ahead.\n\n**Detailed analysis:** Tonight's recording showed moderate sleep-related breathing disturbance, including [AHI 27.7 events/hour] and [ODI 27.5 events/hour]. Those findings provide important context for the profile's concern, while your history lists prior conditions in the circulatory, endocrine/metabolic, mental, and neurological areas. The predictive profile, rather than the sleep measurements alone, is what specifically points to **Obesity** as the condition to watch.\n\n**What this means for you:** Based on the predictive profile, keep track of your weight trend and waist measurement over time, and discuss sustainable eating and activity habits at your next routine appointment. The predictive profile also makes it worthwhile to ask whether your overall metabolic health and blood-sugar trend should be reviewed during routine care. Mention the sleep-study findings at that appointment so they can be considered alongside your history and future weight changes.\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording found repeated breathing interruptions with moderate oxygen drops [AHI 27.7 events/hour; ODI 27.5 events/hour].\n\n**Detailed analysis:** Tonight\u2019s recording shows a substantial burden of disrupted breathing and oxygen fluctuation during sleep, making future circulatory health the most important area to keep under routine observation. Its combination of [AHI 27.7 events/hour] and [ODI 27.5 events/hour] gives a reasonable basis for discussing longer-term risk. Your history already includes circulatory, endocrine/metabolic, mental, and neurological areas, so those areas are not \u201cnew\u201d simply because they are relevant; the recording most clearly adds a reason to watch circulatory health closely.\n\n**What this means for you:** At your next routine appointment, bring up tonight\u2019s recorded breathing interruptions and oxygen drops and ask how your circulatory risk should be followed over time. Your history includes the circulatory and endocrine/metabolic areas, so sharing the sleep findings may help place routine blood-pressure and overall risk monitoring in context.\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch is **circulatory**, because the predictive profile computed from this recording points most strongly to **Ischemic Heart Disease** in the years ahead.\n\n**Detailed analysis:** Tonight's recording showed moderate overnight breathing disruption [AHI 27.7 events/hour] and oxygen desaturation [ODI 27.5 events/hour], which helps explain why the predictive profile points toward a future circulatory condition. The chemistry estimate from tonight's recording also showed **HbA1c 6.8 %**, outside the stated reference range; this adds an endocrine/metabolic signal, but it is only an estimate rather than a blood result. Your history includes circulatory, endocrine/metabolic, mental, and neurological areas, while the profile is pointing to a new condition within the circulatory area.\n\n**What this means for you:** The predictive profile's circulatory concern makes it worthwhile to keep up health habits that support circulation, including regular movement and a balanced eating pattern, and to raise the profile's concern and the **HbA1c 6.8 %** estimate at your next routine appointment. Tonight's recording resembles those of patients on **inhaled steroids**; this is something to get checked and worth mentioning at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_007",
-    "batch": "v60_gap60",
-    "category": "mental disorders",
     "demographics": {
       "age": 54,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The area to watch most closely is **mental**, because the predictive profile computed from this recording points to **Depression** in the years ahead.\n\n**Detailed analysis:** Your history records no significant prior diagnoses. Tonight\u2019s recording showed [AHI 12.5 events/hour], described as mild, along with reduced sleep efficiency and very little deep sleep. Those findings make it reasonable to pay attention to sleep quality and mood together, while the predictive profile remains the strongest reason for focusing on **Depression**. The profile does not point to a new condition in the other listed areas.\n\n**What this means for you:** Based on the predictive profile, watch for persistent low mood, loss of interest, hopelessness, reduced energy, or a lasting change in sleep or appetite. Because tonight\u2019s recording showed some sleep disruption, keeping a steady sleep schedule and noting whether poor sleep coincides with mood changes may help you describe the pattern. At your next routine appointment, raise any persistent mood or sleep changes and ask how to reduce factors that may worsen them.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The main area to watch is **neurological**, because the predictive profile computed from this recording points most strongly to **Obstructive sleep apnea** developing in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording says that tonight's recording resembles those of patients who later developed **Obstructive sleep apnea**. Tonight's recording showed [AHI 12.5 events/hour], which is in the mild range, and also showed very little deep sleep [N3 ratio 1.0 percent of total sleep time]; together, these findings support paying attention to this risk. The profile also points to **Sleep disorders**, but that is a broader alternative than the specific condition above. Your history records no significant prior diagnoses, so this would be a new condition to watch for.\n\n**What this means for you:** At your next routine appointment, mention the predictive profile's concern about **Obstructive sleep apnea** and the AHI from tonight's recording. The predictive profile computed from this recording supports keeping regular sleep habits and watching for persistent sleep-related symptoms, while your history gives no established condition that changes these priorities. The medication resemblance in the predictive profile computed from this recording is \u2014 worth bringing up at the same visit: this recording resembles those of patients on **oral steroids**.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording showed mild sleep-related breathing disturbance [AHI 12.5 events/hour], which can be associated with future blood-pressure and cardiovascular problems.\n\n**Detailed analysis:** Your history records no significant prior diagnoses, so circulatory changes would be new concerns rather than conditions already listed. Tonight\u2019s recording showed mild breathing disruption, making future elevated blood pressure or other circulatory problems the clearest area to monitor. The reduced sleep efficiency and low deep-sleep proportion were also findings from tonight\u2019s recording, but they are nonspecific and do not point as strongly to a particular future disease area. Endocrine/metabolic risk is a reasonable alternative associated with breathing disruption in tonight\u2019s recording.\n\n**What this means for you:** In light of tonight\u2019s recording, keep circulatory health in view over the coming years. At your next routine appointment, raise the sleep-study result and ask how your overall circulatory risk and blood pressure should be followed. For prevention, focus on regular physical activity, balanced eating, avoiding tobacco, moderating alcohol, and maintaining a consistent sleep schedule; these steps are especially sensible given the breathing disturbance and reduced sleep quality shown tonight.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_008",
-    "batch": "v60_gap60",
-    "category": "neurological",
-    "demographics": {
-      "age": 66,
       "sex": "M",
       "bmi": 0,
       "race": "white"
     },
     "ehr_history": [
       "Type 2 diabetes",
-      "pc_250.22_dx",
-      "pc_250.24_dx",
-      "Diabetic retinopathy",
-      "Vitamin D deficiency",
       "Hyperlipidemia",
-      "pc_272.11_dx",
-      "pc_272.13_dx",
       "Obesity",
-      "pc_278.11_dx"
+      "Anxiety disorder",
+      "Tobacco use disorder",
+      "Epilepsy",
+      "Essential hypertension",
+      "Paroxysmal tachycardia, unspecified",
+      "Cerebral ischemia",
+      "Asthma"
     ],
     "query_id": "Based on my overnight sl",
     "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
     "responses": [
       {
-        "markdown": "The main new area to watch is **circulatory**, because tonight\u2019s recording showed repeated breathing disruptions with moderate oxygen desaturation.\n\n**Detailed analysis:** Tonight\u2019s recording showed [AHI 27.4 events/hour] and [ODI 19.3 events/hour], meaning that breathing interruptions and oxygen drops occurred repeatedly during sleep. That pattern makes future high blood pressure, heart-rhythm problems, or other circulation-related conditions worth watching, even though the history already includes circulatory and endocrine/metabolic areas. A breathing-related condition is the strongest alternative because the recording directly measured these events, but the longer-term concern most worth monitoring is circulatory.\n\n**What this means for you:** At your next routine appointment, raise tonight\u2019s AHI and ODI and ask how your blood pressure, pulse or rhythm, and other circulatory risks should be followed over time; this recommendation is based on tonight\u2019s recording. Because your history includes circulatory and endocrine/metabolic areas, maintaining the prevention habits already discussed for those areas\u2014regular activity, balanced eating, healthy weight, and avoiding tobacco\u2014is sensible. Seek prompt medical attention for new chest pressure, fainting, severe breathlessness, or sudden weakness; these warning symptoms relate to circulatory risk.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
+        "markdown": "The **neurological** area is the main one to watch because the predictive profile computed from this recording points to future **Insomnia** and **Sleep disorders**.\n\n**Detailed analysis:** Tonight\u2019s recording showed short sleep [TST 176.5 minutes], poor sleep efficiency [SE 46.6 percent], and frequent arousals [ArI 31.3 events/hour], findings that make future persistent sleep difficulty worth watching; this interpretation is supported by literature on objective sleep quality and sleep complaints [1]. Your history includes the neurological area, which gives additional reason to monitor sleep-related changes, and your age of 54 years is a demographic context in which sleep disorders merit attention [2]. The predictive profile computed from this recording is the strongest strand because it specifically identifies **Insomnia** and **Sleep disorders**, rather than a new respiratory or circulatory condition.\n\n**What this means for you:** At your next routine appointment, discuss the recording\u2019s short sleep, low sleep efficiency, and frequent arousals, along with any ongoing difficulty falling asleep, staying asleep, waking too early, or impaired daytime functioning; those symptoms help identify clinically important insomnia [2]. Keeping a consistent sleep schedule, protecting a quiet wind-down period, and tracking sleep patterns are reasonable prevention steps, while evidence supports structured behavioral approaches for chronic insomnia [3].\n\n## References\n\n1. Objective sleep quality predicts subjective sleep ratings \u2014 Scientific Reports 2024. https://pubmed.ncbi.nlm.nih.gov/38467694/\n2. Common Sleep Disorders Affecting Older Adults \u2014 The Permanente Journal 2023. https://pubmed.ncbi.nlm.nih.gov/36503403/\n3. Cognitive Behavioral Therapy for Chronic Insomnia: A Systematic Review and Meta-analysis \u2014 Annals of Internal Medicine 2015. https://pubmed.ncbi.nlm.nih.gov/26054060/\n\n*clinical decision support, not a diagnosis*",
+        "arm": "C",
         "atoms": [],
         "label": "A"
       },
       {
-        "markdown": "The area to watch most closely is **neurological**, because the predictive profile computed from this recording points most strongly to **Sleep disorders** in the years ahead.\n\n**Detailed analysis:** Tonight\u2019s recording showed moderate breathing-related disruption, with [AHI 27.4 events/hour]. Your history includes circulatory and endocrine/metabolic areas, which remain relevant background when discussing this risk. The chemistry estimated from this sleep study was **HbA1c 7.1 %**, outside the listed range; because no blood was drawn, this is only an estimate, but it points toward the endocrine/metabolic area and is worth confirming at your next routine appointment.\n\n**What this means for you:** To reduce the risk highlighted by the predictive profile computed from this recording, keep a regular sleep-wake schedule, avoid tobacco exposure, and mention any persistent change in sleep quality or daytime function at your next routine appointment. Also raise the estimated chemistry value and ask whether it should be confirmed. The recording resembles those of patients on **non-tricyclic antidepressants**; this is something to get checked and worth mentioning at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
+        "markdown": "The condition to watch most closely in the years ahead is **neurological**, because the predictive profile points most strongly to **Sleep disorders**.\n\n**Detailed analysis:** Tonight\u2019s recording showed poor sleep efficiency [SE 46.6%] and frequent disruptions [ArI 31.3 events/hour], findings that support watching for **Sleep disorders**, particularly **Insomnia**; objective sleep disturbance is clinically relevant in insomnia research [1]. Your age of 54 years and male sex, together with your history in the circulatory, endocrine/metabolic, mental, and respiratory areas, add context for monitoring sleep as part of your wider health. The profile estimates your HbA1c at **5.87 %**, in the prediabetic range, which points to an additional endocrine/metabolic risk worth discussing because prediabetes thresholds and follow-up approaches vary across guidelines [2]. This is a prediction so take it with caution and confirm with a real lab test. Your profile also looks similar to other patients who later went on to take **benzodiazepines**, a resemblance consistent with the disrupted sleep pattern seen in tonight\u2019s recording.\n\n**What this means for you:** At your next routine appointment, raise the frequent nighttime disruptions, shortened sleep, and any ongoing difficulty falling or staying asleep, because tonight\u2019s recording showed these sleep-quality concerns. Also raise the estimated HbA1c because the profile places it in the prediabetic range, and keep track of changes in sleep, daytime alertness, mood, and metabolic health through your usual care.\n\n## References\n\n1. Objective sleep disturbance is associated with poor response to cognitive and behavioral treatments for insomnia in postmenopausal women \u2014 Sleep Medicine 2020. https://pubmed.ncbi.nlm.nih.gov/32799029/\n2. Divergence in prediabetes guidelines - A global perspective \u2014 Diabetes Research and Clinical Practice 2025. https://pubmed.ncbi.nlm.nih.gov/40157611/\n\n*clinical decision support, not a diagnosis*",
+        "arm": "B",
         "atoms": [],
         "label": "B"
       },
       {
-        "markdown": "The area to watch most closely is **neurological**, because the predictive profile computed from this recording points to **Insomnia** and **Sleep disorders** in the years ahead.\n\n**Detailed analysis:** Tonight\u2019s recording showed moderate sleep-related breathing disruption, including [AHI 27.4 events/h] and [ODI 19.3 events/h], which may make sleep less restorative and could contribute to difficulty sleeping. However, the predictive profile computed from this recording points specifically to **Insomnia** and **Sleep disorders**, while not pointing to obstructive sleep apnea or the listed respiratory conditions. Your history in the circulatory and endocrine/metabolic areas is important background, but the predictive profile gives the clearest direction for what to watch for.\n\n**What this means for you:** To address the risk identified by the predictive profile computed from this recording, keep a consistent sleep and wake schedule, protect enough time for sleep, and note ongoing difficulty falling asleep, staying asleep, or functioning during the day. At your next routine appointment, raise the profile\u2019s prediction of **Insomnia** and **Sleep disorders**, together with tonight\u2019s recording and your history in the circulatory and endocrine/metabolic areas.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "TRUTH",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_009",
-    "batch": "v60_gap60",
-    "category": "respiratory",
-    "demographics": {
-      "age": 55,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Bipolar",
-      "Spinal stenosis",
-      "Spondylosis without myelopathy",
-      "Displacement of intervertebral disc",
-      "Degeneration of intervertebral disc",
-      "Peripheral enthesopathies and allied syndromes"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The area to watch most closely is **neurological**, because the predictive profile computed from this recording points most strongly to **Sleep disorders** for the years ahead.\n\n**Detailed analysis:** Your history records no significant prior diagnoses. Tonight\u2019s recording showed moderate sleep-disordered breathing, with [AHI 26.4 events/hour], alongside poor sleep efficiency and no recorded deep sleep; these features support the concern identified by the predictive profile computed from this recording. That profile also points to **Obstructive sleep apnea**, which fits tonight\u2019s recording, although the broader profile signal is **Sleep disorders**.\n\n**What this means for you:** Based on tonight\u2019s recording, protect regular, sufficient sleep and pay attention to persistent unrefreshing sleep, nighttime breathing concerns, or daytime sleepiness. At your next routine appointment, raise the predictive profile\u2019s **Sleep disorders** concern and review the implications of the recording\u2019s AHI. The medication resemblance from tonight\u2019s recording is to patients on **oral steroids**; please get that possibility checked and mention it at the same visit.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "OURS",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Based on tonight\u2019s recording, **circulatory** health is the main area to watch, because it showed repeated breathing interruptions at [AHI 26.4 events/h].\n\n**Detailed analysis:** Tonight\u2019s recording showed a moderate level of breathing interruption, which can place recurring strain on circulation over time; future high blood pressure and other circulatory problems are therefore worth watching. The recording also showed poor sleep efficiency [63.2 percent], indicating disrupted sleep, although the AHI is the stronger reason for choosing this area. Your medical history records no significant prior diagnoses, so these would be new concerns rather than conditions already listed.\n\n**What this means for you:** At your next routine appointment, raise tonight\u2019s AHI and discuss your personal blood pressure, cholesterol, glucose, weight, activity, tobacco exposure, and alcohol use in relation to circulatory prevention. These factors are worth reviewing because tonight\u2019s recording showed repeated breathing interruptions. Healthy activity, avoiding tobacco, moderating alcohol, and working toward a healthy weight are reasonable prevention priorities for the circulatory risk suggested by tonight\u2019s recording.\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "BASE",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "**respiratory** is the area to watch most closely, because the predictive profile computed from this recording points to **Asthma** developing in the years ahead.\n\n**Detailed analysis:** The predictive profile computed from this recording identifies **Asthma** as the condition to watch, while it does not point to the other listed future conditions. Your history records no significant prior diagnoses, so this would represent a new health concern if it develops. Tonight\u2019s recording also found [AHI 26.4 events/hour], categorized in the recording as moderate, along with poor sleep efficiency and no recorded deep sleep.\n\n**What this means for you:** At your next routine appointment, raise the predictive profile\u2019s **Asthma** signal and mention any recurring wheeze, cough, chest tightness, or breathlessness. Based on the predictive profile, avoiding tobacco smoke and other noticeable breathing irritants, and keeping track of when symptoms occur, are sensible preventive and monitoring steps.\n\n*clinical decision support, not a diagnosis*",
-        "arm": "TRUTH",
+        "markdown": "The area to watch is **mental**, because tonight\u2019s recording showed frequent sleep disruption [ArI 31.3 events/hour], which, together with your mental-area history, supports watching for future anxiety or depression [1].\n\n**Detailed analysis:** Tonight\u2019s recording showed poor sleep continuity [SE 46.6 percent] and frequent arousals [ArI 31.3 events/hour], indicating substantial overnight disruption. It also showed low REM sleep [REM ratio 9.6 percent], a sleep feature discussed in relation to emotional regulation. Your history includes the mental area, so mood and anxiety changes are especially worth noticing over time. Your demographics show that you are 54, and these findings together support monitoring for new depression or anxiety rather than treating tonight\u2019s recording as a diagnosis [1].\n\n**What this means for you:** At your next routine appointment, raise persistent fragmented sleep, low mood, loss of interest, unusual irritability, or ongoing worry, because sleep and psychiatric symptoms can influence one another [2]. Note whether these changes persist or interfere with daily life so you can discuss the pattern.\n\n## References\n\n1. Chronic insomnia, REM sleep instability and emotional dysregulation: A pathway to anxiety and depression? \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/38811745/\n2. Sleep disorders in psychiatry \u2014 PubMed 2006. https://pubmed.ncbi.nlm.nih.gov/16979426/\n\n*clinical decision support, not a diagnosis*",
+        "arm": "A",
         "atoms": [],
         "label": "C"
       }
