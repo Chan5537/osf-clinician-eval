@@ -337,67 +337,65 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // TRUSTWORTHINESS — reinstated 2026-09-03 (Chan + Zitao), replacing Relevance.
+    // USEFULNESS — VERBATIM SensorFM (Survey ED.1), adopted 2026-09-03 (Chan), replacing Relevance.
     //
-    // Motivation: Zitao, reviewing the v61.1 letters, flagged base/HSP_v7_001 closing "but these
-    // findings do not by themselves point to a specific additional future condition" — a hedge that
-    // reads as a disclaimer. No other axis grades that, and Relevance now largely duplicates what the
-    // interface's Future risk panel already steers the rater toward.
+    // The question, the five anchor labels and their descriptions below are SensorFM's own words,
+    // unedited. That is the point: an axis we did not author cannot be accused of being shaped to
+    // our result, and it makes our radar directly comparable to theirs.
     //
-    // ⚠️ KNOWN FAILURE MODE, ACCEPTED WITH EYES OPEN. This axis is v6's `justifiability` under a new
-    //    name. In the v6 clinician round it ran BASE 4.00 > OURS 2.90 > TRUTH 2.30 — the exact
-    //    REVERSE of how much model prediction each arm carries — because raters weighed confidence
-    //    against panels holding no model evidence, so any arm whose grounds they could not see
-    //    scored as unsupported. v7 retired it for that reason.
-    //    The anchors below are written to invert that pressure: HEDGING scores LOW and a committed,
-    //    grounded call scores HIGH, which is the direction Zitao's observation points. Whether that
-    //    is enough is an empirical question — CHECK THE ARM ORDER in the internal round before this
-    //    ships to clinicians. If base again outranks truth on this axis, retire it again.
-    key: 'trustworthiness',
-    label: 'Trustworthiness',
+    // Chosen over Trustworthiness, which was the other candidate for this slot. Trustworthiness is
+    // v6's `justifiability` renamed, and in the v6 clinician round that axis ran BASE 4.00 > OURS
+    // 2.90 > TRUTH 2.30 — the exact REVERSE of how much model prediction each arm carries, because
+    // raters weighed confidence against panels holding no model evidence and scored any ground they
+    // could not see as unsupported.
+    //
+    // ⚠️ NOTE THE EARLIER, DIFFERENT USEFULNESS. v7 carried an axis of the same name that was
+    //    retired in v8; it scored how hard a call was to FORESEE, independently of whether it was
+    //    right, so a confident wrong letter could score 5, and its novelty half overlapped
+    //    Comprehensiveness. This is NOT that axis. SensorFM's Usefulness asks whether the response
+    //    is a useful summary TO A PROVIDER — clinical coherence and decision-readiness — which no
+    //    other axis in this set measures.
+    key: 'usefulness',
+    label: 'Usefulness',
     question:
-      'To what extent would you rely on this response as a starting point for this patient?',
+      'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
     howToScore:
-      'Weigh whether the response commits to a call and shows what it rests on. A response that ' +
-      'hedges, disclaims, or leaves you unsure what it is actually claiming is less trustworthy ' +
-      'than one that states a risk and the grounds for it — even where those grounds come from ' +
-      'a source you cannot inspect. Do not reward caution that avoids saying anything.',
+      'Judge the response as a summary handed to a provider: is it clinically coherent, organized, ' +
+      'and something they could act on for next steps?',
     example:
-      'Response X names the area, says which finding points there, and carries that into what to ' +
-      'raise at the next appointment — you know what it claims and why: Trustworthy (4). Response Y ' +
-      'reports the same findings and closes "but these findings do not by themselves point to a ' +
-      'specific additional future condition" — after reading it you still do not know what it is ' +
-      'telling the patient to watch for: Not Trustworthy (2).',
+      'A response that names the area to watch, ties it to specific findings, and closes with what ' +
+      'to raise at the next appointment gives a provider something to act on: Useful (4). A response ' +
+      'that reports findings and closes "but these findings do not by themselves point to a specific ' +
+      'additional future condition" leaves the provider without a next step: Useless (2).',
     anchors: [
       {
         value: 5,
-        label: 'Highly Trustworthy',
+        label: 'Very Useful',
         description:
-          'Commits to a clear call and makes the grounds for it visible. You would act on it as a starting point without first checking it.',
+          'Provides highly actionable, well-organized information that a provider can directly utilize for clinical decision-making and next steps.',
       },
       {
         value: 4,
-        label: 'Trustworthy',
+        label: 'Useful',
         description:
-          'States what it claims and what that rests on. Minor gaps, but you know where you stand.',
+          "Provides clinically coherent and relevant information that clearly communicates the patient's status to the provider.",
       },
       {
         value: 3,
         label: 'Neutral',
-        description:
-          'Makes a call but leaves parts of it unsupported, or qualifies it enough that you would verify before relying on it.',
+        description: 'Information is split evenly between being useful and irrelevant.',
       },
       {
         value: 2,
-        label: 'Not Trustworthy',
+        label: 'Useless',
         description:
-          'Hedges or disclaims to the point that the actual claim is unclear, or asserts more than anything in the letter supports.',
+          'Provides tangential or unactionable information that offers no clinical value to the provider.',
       },
       {
         value: 1,
-        label: 'Not Trustworthy At All',
+        label: 'Very Useless',
         description:
-          'You would not rely on any part of it — either it says nothing usable, or what it does say is unsupported.',
+          'Provides highly irrelevant or distracting information that would waste clinical time or frustrate the provider.',
       },
     ],
   },

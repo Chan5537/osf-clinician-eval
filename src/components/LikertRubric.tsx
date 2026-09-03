@@ -50,8 +50,8 @@ const DIM_COLORS: Record<RubricDimension, DimColor> = {
     selected: 'bg-teal-500/15 ring-1 ring-inset ring-teal-500/40',
     selectedText: 'text-teal-800 dark:text-teal-200',
   },
-  // Trustworthiness (v9: replaces Relevance) — rose hue, distinct from blue/violet/teal/amber.
-  trustworthiness: {
+  // Usefulness (v9: SensorFM verbatim, replaces Relevance) — rose hue, distinct from the others.
+  usefulness: {
     rail: 'border-l-rose-500',
     bg: 'bg-rose-500/[0.04] dark:bg-rose-400/[0.06]',
     header: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',
