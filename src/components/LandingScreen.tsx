@@ -8,7 +8,10 @@ import { AppFooter } from '@/components/AppFooter'
 import { requiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
-import { DEMO_CASES } from '@/data/demo-cases'
+import { DEMO_CASES, BLOCK, BLOCK_SIZE, TOTAL_BLOCKS } from '@/data/demo-cases'
+import { blockProgress, restoreFromExport } from '@/lib/storage'
+import { useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 interface Props {
   reviewer: string
@@ -20,6 +23,8 @@ interface Props {
 // rubric-config so the audited blinding copy is never retyped) + optional
 // initials. The word "tool" never appears; no agent architecture is revealed.
 export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
   const total = DEMO_CASES.length
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
@@ -115,13 +120,81 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
               />
             </div>
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              Your progress is saved in this browser, so you can close the page and
-              resume later.
-            </p>
+            {/* BLOCKS (2026-09-02). A full batch is too long for one sitting, so it is served
+                in blocks of BLOCK_SIZE. Whoever arrives without ?block= picks one here, and
+                sees what this browser already holds for each — so "where was I" is answerable
+                before committing to a block. */}
+            {TOTAL_BLOCKS > 1 && BLOCK === 0 && (
+              <div className="space-y-2">
+                <Label>Choose a block</Label>
+                <p className="text-xs text-muted-foreground">
+                  The batch is split into blocks of {BLOCK_SIZE} cases. Each block is scored and
+                  downloaded on its own; you can do them in any order, on any day.
+                </p>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {blocks.map((b) => (
+                    <Button
+                      key={b.block}
+                      type="button"
+                      variant="outline"
+                      className="h-auto flex-col items-start gap-0.5 py-2"
+                      onClick={() => {
+                        const u = new URL(window.location.href)
+                        u.searchParams.set('block', String(b.block))
+                        window.location.href = u.toString()
+                      }}
+                    >
+                      <span className="text-sm font-semibold">Block {b.block}</span>
+                      <span className="text-xs font-normal text-muted-foreground">
+                        Cases {b.first}–{b.last}
+                      </span>
+                      <span className="text-xs font-normal text-muted-foreground">
+                        {b.submitted > 0 ? `${b.submitted}/${b.size} done` : 'not started'}
+                      </span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Your progress is saved in this browser as you go, so you can close the page and
+                resume later. You can also download it at any time from the header, and put that
+                file back with <strong>Restore from file</strong> — on another machine, or after
+                clearing your browser.
+              </p>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0]
+                  e.target.value = '' // let the same file be picked again after a failure
+                  if (!f) return
+                  try {
+                    const msg = restoreFromExport(await f.text())
+                    toast.success(msg)
+                    window.setTimeout(() => window.location.reload(), 600)
+                  } catch (err) {
+                    toast.error(err instanceof Error ? err.message : 'Could not read that file.')
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => fileRef.current?.click()}
+              >
+                Restore from file
+              </Button>
+            </div>
 
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
-              Begin evaluation
+              {BLOCK > 0 ? `Begin block ${BLOCK}` : 'Begin evaluation'}
             </Button>
           </CardContent>
         </Card>
