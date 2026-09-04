@@ -16,6 +16,12 @@ const KEY = `clinician-eval-session::${BLOCK_ID}`
 
 interface Envelope {
   version: number
+  // Monotonic client revision, bumped on every save(). Compared against
+  // session_state.client_rev to break a reconcile tie when both sides hold the
+  // same number of submitted cases. Wall-clock timestamps are NOT usable for
+  // this: two machines' clocks disagree, and the most recently *touched* device
+  // is not the one with the most work on it.
+  rev?: number
   // Which letter set the answers were given to. case_ids restart at HSP_v7_000 in every
   // batch, so answers from another batch describe different letters and must not be reused.
   batch?: string
@@ -136,11 +142,61 @@ export function save(session: SessionState): void {
       version: SCHEMA_VERSION,
       batch: BATCH,
       caseIds: DEMO_CASES.map((c) => c.case_id),
+      rev: nextRev(),
       session,
     }
     localStorage.setItem(KEY, JSON.stringify(env))
   } catch {
     /* quota / private mode — best effort; in-memory state stays correct */
+  }
+}
+
+// ---- revision counter -------------------------------------------------------------------
+// Read once at module load, then advanced in memory. Reading storage on every save would
+// cost a JSON.parse per keystroke, and a stale read is harmless here: the counter only has
+// to be MONOTONIC WITHIN A DEVICE, never comparable across devices.
+let revCounter: number | null = null
+
+function nextRev(): number {
+  if (revCounter === null) revCounter = readRev()
+  revCounter += 1
+  return revCounter
+}
+
+function readRev(): number {
+  try {
+    const raw = localStorage.getItem(KEY)
+    if (!raw) return 0
+    const env = JSON.parse(raw) as Envelope
+    return typeof env?.rev === 'number' && Number.isFinite(env.rev) && env.rev >= 0 ? env.rev : 0
+  } catch {
+    return 0
+  }
+}
+
+/** The stored session PLUS its revision — what reconcile() needs. `load()` is unchanged. */
+export function loadEnvelope(): { session: SessionState; rev: number } | null {
+  const session = load()
+  if (!session) return null
+  return { session, rev: readRev() }
+}
+
+/**
+ * Park a session that reconcile() is about to overwrite.
+ *
+ * Costs four lines and turns a wrong reconcile from terminal into recoverable: the
+ * losing side is still on disk, under a timestamped key, for as long as the browser
+ * keeps it. Never throws — a full quota must not block the sign-in that triggered it.
+ */
+export function stashSuperseded(session: SessionState): void {
+  try {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-')
+    localStorage.setItem(
+      `${KEY}::superseded-${stamp}`,
+      JSON.stringify({ version: SCHEMA_VERSION, batch: BATCH, session }),
+    )
+  } catch {
+    /* best effort — losing the backup must never block the round */
   }
 }
 
