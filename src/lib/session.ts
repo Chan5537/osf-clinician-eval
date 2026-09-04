@@ -66,7 +66,7 @@ import { advance, touch, park, resume } from './timing'
 //       warning against the recorded outcome, weighted by foreseeability). A v16 session
 //       would present old-usefulness answers under the new question: discard stale sessions.
 //       ⛔ v7 scores are NOT comparable with v6 or earlier — report separately.
-export const SCHEMA_VERSION = 19
+export const SCHEMA_VERSION = 20
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
