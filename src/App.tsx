@@ -8,7 +8,13 @@ import {
 } from '@/lib/session'
 import type { SessionState, SessionAction } from '@/lib/session'
 import type { RubricAction } from '@/lib/types'
-import { load, save, clear } from '@/lib/storage'
+import { load, save, clear, loadEnvelope, stashSuperseded } from '@/lib/storage'
+import { useAuth } from '@/lib/auth'
+import { SUPABASE_ENABLED } from '@/lib/supabase'
+import { hydrate, reconcile, queueSessionSync, queueCaseSubmit, flushNow } from '@/lib/sync'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
+import { SignInScreen } from '@/components/SignInScreen'
+import { SyncStatus } from '@/components/SyncStatus'
 import { toCSV, toJSON, downloadText } from '@/lib/export'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SECTION_IDS, scrollToSection } from '@/lib/sections'
@@ -39,15 +45,55 @@ function App() {
   // INTERNAL: arm-reveal switch (not persisted, not exported); see lib/reveal.ts
   const [reveal, setReveal] = useState<boolean>(initialRevealFromUrl)
   const debounceRef = useRef<number | null>(null)
+  const auth = useAuth()
+  const raterId = auth.raterId
 
-  // Debounced persist; coalesces note keystrokes.
+  // Local persist (300ms), then the network mirror (2s). Two timers on purpose:
+  // localStorage is free and must stay tight, a round-trip per keystroke is not.
+  // ORDER MATTERS — local first, always. If the tab dies between them, the work is
+  // still on disk and the next boot re-mirrors it.
   useEffect(() => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current)
-    debounceRef.current = window.setTimeout(() => save(session), 300)
+    debounceRef.current = window.setTimeout(() => {
+      save(session)
+      if (raterId) queueSessionSync(raterId, session, loadEnvelope()?.rev ?? 0)
+    }, 300)
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current)
     }
-  }, [session])
+  }, [session, raterId])
+
+  // Pull this rater's server session exactly once per sign-in, and let
+  // reconcile() decide which side the round continues from.
+  const hydrated = useRef<string | null>(null)
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !raterId || hydrated.current === raterId) return
+    hydrated.current = raterId
+    let cancelled = false
+    void (async () => {
+      const server = await hydrate(raterId) // never throws; null on any failure
+      if (cancelled || !server) return
+      const env = loadEnvelope()
+      const r = reconcile(env?.session ?? null, env?.rev ?? 0, server)
+      if (r.source !== 'server' || !r.state) return
+      // Diverged = both machines hold submitted work. Only the rater can say which
+      // is right, so ask rather than silently choosing.
+      if (r.diverged) {
+        const ok = window.confirm(
+          `Found progress from another device: ${r.serverSubmitted} of ${DEMO_CASES.length} cases scored there, ` +
+            `${r.localSubmitted} here.\n\nContinue with the ${r.serverSubmitted}-case version? ` +
+            `Your ${r.localSubmitted}-case version is kept as a backup.`,
+        )
+        if (!ok) return
+      }
+      if (env?.session) stashSuperseded(env.session) // never destroy the loser
+      dispatch({ type: 'HYDRATE', state: r.state })
+      save(r.state)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [raterId])
 
   // Re-stamp the clock baseline for the case being resumed. storage.load() deliberately drops
   // every live baseline (a persisted one would bill the whole overnight gap to the case), so
@@ -65,7 +111,10 @@ function App() {
   useEffect(() => {
     const onVisibility = () =>
       dispatch({ type: 'VISIBILITY', hidden: document.hidden, at: Date.now() })
-    const onHide = () => dispatch({ type: 'VISIBILITY', hidden: true, at: Date.now() })
+    const onHide = () => {
+      dispatch({ type: 'VISIBILITY', hidden: true, at: Date.now() })
+      void flushNow() // best-effort drain; the localStorage queue is the real durability
+    }
     document.addEventListener('visibilitychange', onVisibility)
     window.addEventListener('pagehide', onHide)
     return () => {
@@ -81,9 +130,28 @@ function App() {
     save(next)
   }
 
+  // AUTH GATE. Sits ABOVE the existing SessionView switch, which already acts as
+  // the router — no react-router needed.
+  //
+  // The 'loading' hold matters: detectSessionInUrl parses the magic-link fragment
+  // asynchronously, so without it a rater who just clicked their link would see
+  // the sign-in screen flash for ~200ms immediately after clicking it.
+  if (auth.status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted/30">
+        <span className="text-sm text-muted-foreground">Loading…</span>
+      </div>
+    )
+  }
+  if (auth.status === 'signed-out') {
+    return <SignInScreen onSignIn={auth.signIn} />
+  }
+
   if (session.view === 'landing') {
     return (
       <LandingScreen
+        signedInAs={auth.email}
+        onSignOut={() => void auth.signOut()}
         reviewer={session.reviewer}
         onReviewerChange={(r) => dispatch({ type: 'SET_REVIEWER', reviewer: r })}
         onBegin={() => dispatch({ type: 'BEGIN' })}
@@ -151,7 +219,10 @@ function App() {
     const next = sessionReducer(afterSubmit, navAction)
     dispatch(submitAction)
     dispatch(navAction)
-    flush(next) // persist the post-nav state synchronously
+    flush(next) // persist the post-nav state synchronously — ALWAYS before the network
+    // B8: this case's 15 rating rows go to the server now, not at the end of the
+    // round. A rater who stops at case 6 still leaves us six cases of data.
+    if (raterId) queueCaseSubmit(raterId, next, i, loadEnvelope()?.rev ?? 0)
     toast.success('Submitted ✓')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -181,6 +252,7 @@ function App() {
               submitted={session.cases.map((c) => c.submitted)}
               onGoto={(idx) => dispatch({ type: 'GOTO_CASE', caseIndex: idx })}
             />
+            <SyncStatus />
             {BLOCK > 0 && (
               <span
                 className="hidden shrink-0 rounded-md border bg-muted px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-flex"
@@ -246,34 +318,42 @@ function App() {
                 </Button>
               </PopoverContent>
             </Popover>
-            <Button
-              type="button"
-              variant={reveal ? 'default' : 'outline'}
-              size="sm"
-              title="Internal review only — show which arm (base / ours / ground truth) each response is. Not saved, not exported."
-              className={reveal ? 'bg-amber-600 text-white hover:bg-amber-700' : 'border-dashed text-muted-foreground'}
-              onClick={() => setReveal((v) => !v)}
-            >
-              {reveal ? 'Arms revealed' : 'Reveal arms'}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'Start over? This clears all your answers for every pair.',
-                  )
-                ) {
-                  clear()
-                  dispatch({ type: 'RESET_ALL' })
-                }
-              }}
-            >
-              Start over
-            </Button>
+            {/* A3 (Yang 6:22): the reveal button must not exist in the clinician
+                build. IS_DEV_BUILD is a build-time constant, so this whole subtree
+                — and the ArmBadge it drives — is eliminated from that bundle. */}
+            {IS_DEV_BUILD && (
+              <Button
+                type="button"
+                variant={reveal ? 'default' : 'outline'}
+                size="sm"
+                title="Internal review only — show which arm (base / ours / ground truth) each response is. Not saved, not exported."
+                className={reveal ? 'bg-amber-600 text-white hover:bg-amber-700' : 'border-dashed text-muted-foreground'}
+                onClick={() => setReveal((v) => !v)}
+              >
+                {reveal ? 'Arms revealed' : 'Reveal arms'}
+              </Button>
+            )}
+            {/* A3: one mis-click behind one confirm wipes an entire round. Dev only. */}
+            {IS_DEV_BUILD && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      'Start over? This clears all your answers for every pair.',
+                    )
+                  ) {
+                    clear()
+                    dispatch({ type: 'RESET_ALL' })
+                  }
+                }}
+              >
+                Start over
+              </Button>
+            )}
           </div>
         </div>
       </header>

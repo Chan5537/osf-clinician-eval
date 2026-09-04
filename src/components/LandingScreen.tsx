@@ -17,12 +17,21 @@ interface Props {
   reviewer: string
   onReviewerChange: (value: string) => void
   onBegin: () => void
+  /** Authenticated email, when a backend is configured. Null = no auth (kill switch). */
+  signedInAs?: string | null
+  onSignOut?: () => void
 }
 
 // Opening screen: task explanation + axis overview (labels imported from
 // rubric-config so the audited blinding copy is never retyped) + optional
 // initials. The word "tool" never appears; no agent architecture is revealed.
-export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
+export function LandingScreen({
+  reviewer,
+  onReviewerChange,
+  onBegin,
+  signedInAs,
+  onSignOut,
+}: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
   const total = DEMO_CASES.length
@@ -108,17 +117,37 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
               </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="reviewer">Your initials (optional)</Label>
-              <Input
-                id="reviewer"
-                value={reviewer}
-                onChange={(e) => onReviewerChange(e.target.value)}
-                placeholder="e.g. JS"
-                className="max-w-[12rem]"
-                autoComplete="off"
-              />
-            </div>
+            {/* Identity. With a backend, WHO you are comes from the sign-in, not a
+                free-text box — it is the key your progress and answers are stored
+                under. The initials input survives only for the no-backend build
+                (kill switch), where nothing else records a rater. */}
+            {signedInAs ? (
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border bg-muted/40 px-3 py-2">
+                <span className="text-sm text-muted-foreground">Signed in as</span>
+                <span className="text-sm font-medium">{signedInAs}</span>
+                {onSignOut && (
+                  <button
+                    type="button"
+                    onClick={onSignOut}
+                    className="ml-auto cursor-pointer text-xs font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                  >
+                    Sign out
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="reviewer">Your initials (optional)</Label>
+                <Input
+                  id="reviewer"
+                  value={reviewer}
+                  onChange={(e) => onReviewerChange(e.target.value)}
+                  placeholder="e.g. JS"
+                  className="max-w-[12rem]"
+                  autoComplete="off"
+                />
+              </div>
+            )}
 
             {/* BLOCKS (2026-09-02). A full batch is too long for one sitting, so it is served
                 in blocks of BLOCK_SIZE. Whoever arrives without ?block= picks one here, and
@@ -159,10 +188,20 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
 
             <div className="space-y-2">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Your progress is saved in this browser as you go, so you can close the page and
-                resume later. You can also download it at any time from the header, and put that
-                file back with <strong>Restore from file</strong> — on another machine, or after
-                clearing your browser.
+                {signedInAs ? (
+                  <>
+                    Your progress is saved to your account as you go, so you can close the page
+                    and <strong>resume on any computer</strong>. You can also download a copy at
+                    any time from the header.
+                  </>
+                ) : (
+                  <>
+                    Your progress is saved in this browser as you go, so you can close the page
+                    and resume later. You can also download it at any time from the header, and
+                    put that file back with <strong>Restore from file</strong> — on another
+                    machine, or after clearing your browser.
+                  </>
+                )}
               </p>
               <input
                 ref={fileRef}

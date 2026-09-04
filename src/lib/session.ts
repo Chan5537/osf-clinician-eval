@@ -165,6 +165,12 @@ export type SessionAction =
   | { type: 'FINISH' }
   | { type: 'RESET_ALL' }
   | { type: 'ENTER_CASE'; at: number } // stamps caseEnteredAt + starts the case's active clock
+  // Replace the whole session with one restored from the server (sync.hydrate +
+  // reconcile). The ONLY way server state enters the reducer; nothing else may
+  // wholesale-replace a session. SCHEMA_VERSION is deliberately NOT bumped for
+  // this: the stored shape is unchanged, so a rater with work already in progress
+  // on the live site keeps it.
+  | { type: 'HYDRATE'; state: SessionState }
   | { type: 'REVEAL_CASE'; caseIndex: number } // mark streaming reveal as played (once)
   | { type: 'SET_LAYOUT_MODE'; mode: LayoutMode } // focus/compare toggle
   // Tab hidden/visible. Drives the idle split; `at` is the caller's Date.now().
@@ -278,6 +284,8 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
       return { ...s, view: 'completion' }
     case 'RESET_ALL':
       return initialSessionState()
+    case 'HYDRATE':
+      return a.state
     case 'ENTER_CASE':
       // Now actually dispatched (App mount/resume). Pre-v8 this action existed but nothing sent it,
       // so a reloaded session had caseEnteredAt=null and reported a null duration.

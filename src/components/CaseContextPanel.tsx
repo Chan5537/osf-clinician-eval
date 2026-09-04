@@ -6,6 +6,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
 import { caseContext } from '@/lib/case-context'
@@ -184,11 +185,24 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
 
       {/* A missing sidecar entry must be LOUD, not silent: without it two of the four sections
           would quietly render empty and read as a patient with no findings. */}
+      {/* A3: the fault must stay loud in BOTH builds — silently empty sections would
+          read as "this patient has no findings", which is worse than an error. What
+          changes is the audience: a clinician gets something they can act on, not the
+          name of an internal Python script. */}
       {!context && (
         <p className="border-b bg-destructive/5 px-4 py-2.5 text-sm text-destructive">
-          No case-context record for <span className="font-mono">{caseId}</span> — sleep indices
-          and the future-disease outcome are unavailable. Re-run{' '}
-          <span className="font-mono">scripts/build_case_context.py</span>.
+          {IS_DEV_BUILD ? (
+            <>
+              No case-context record for <span className="font-mono">{caseId}</span> — sleep
+              indices and the future-disease outcome are unavailable. Re-run{' '}
+              <span className="font-mono">scripts/build_case_context.py</span>.
+            </>
+          ) : (
+            <>
+              This case is missing some of its data, so the sleep and outcome sections cannot
+              be shown. Please skip it and let the study team know.
+            </>
+          )}
         </p>
       )}
 

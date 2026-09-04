@@ -33,7 +33,28 @@ jobs:
       - name: Build
         env:
           VITE_BASE: /osf-clinician-eval/ # MUST equal '/<repo-name>/' — edit to match the repo
+          # Strips the developer affordances (Reveal arms, Start over) AND the `arm`
+          # un-blinding key from the bundle. See src/lib/app-mode.ts.
+          VITE_APP_MODE: clinician
+          # The anon key is public by design — it ships in the bundle either way, and
+          # RLS is the security boundary. Repo secrets are for easy rotation, not secrecy.
+          # LEAVE VITE_SUPABASE_URL UNSET/EMPTY to disable the backend entirely: the app
+          # falls back to localStorage + manual download, with no code change. That is
+          # the ~90 second rollback.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
+
+      - name: Guard — the clinician bundle must not carry the arm key
+        # The un-blinding key must be absent from the shipped JS, not merely unrendered.
+        # Before this branch the deployed bundle contained 30 "arm" keys on a PUBLIC repo,
+        # so anyone could read which response came from which system.
+        run: |
+          if grep -l '"arm"' dist/assets/*.js >/dev/null 2>&1; then
+            echo "::error::arm key found in the clinician bundle — blinding would be broken"
+            exit 1
+          fi
+          echo "OK: no arm key in the bundle"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

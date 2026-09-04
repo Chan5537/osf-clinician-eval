@@ -1,9 +1,12 @@
+import { useSyncExternalStore } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Download, Pencil } from 'lucide-react'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
+import { getSyncStatus, onSyncStatus } from '@/lib/sync'
 import type { SessionState } from '@/lib/session'
 import type { DemoCase } from '@/lib/types'
 import { pickCount } from '@/lib/reducer'
@@ -24,6 +27,12 @@ function isoDate(): string {
 // left_is_agent, never query_id, never which side was cited. Offers the
 // JSON/CSV download (the only place the un-blinding export is reachable).
 export function CompletionScreen({ session, cases, onReview, onResetAll }: Props) {
+  // Live upload backlog. A rater who closes the tab while rows are still queued
+  // would leave those cases unsent, so the closing message holds until it clears.
+  const sync = useSyncExternalStore(onSyncStatus, getSyncStatus, getSyncStatus)
+  const uploadPending =
+    sync.kind === 'queued' || sync.kind === 'error' ? sync.pending : 0
+
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 py-10">
@@ -105,18 +114,36 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
                   Download CSV
                 </Button>
               </div>
+              {/* This paragraph used to read "your answers are not transmitted
+                  automatically" and ask the rater to email the file. With the backend
+                  live that is FALSE, and acting on it would have clinicians sending us
+                  files we already have. The download stays — as their own copy, and as
+                  the recovery path if an upload never lands. */}
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Please download your ratings and send the file to the research team
-                (your answers are not transmitted automatically). The export includes
-                an internal key for the research team.
+                {uploadPending > 0 ? (
+                  <>
+                    Your ratings are saved. <strong>{uploadPending}</strong> still to upload —
+                    please keep this page open until the header reads “Saved”. You can also
+                    download a copy for your records.
+                  </>
+                ) : (
+                  <>
+                    Your ratings have been saved to the study database — there is nothing you
+                    need to send us. You may download a copy for your own records.
+                  </>
+                )}
               </p>
             </div>
 
-            <div className="border-t pt-4">
-              <Button type="button" variant="ghost" size="sm" onClick={onResetAll}>
-                Start over
-              </Button>
-            </div>
+            {/* A3: dev only. Note this copy had NO confirm dialog at all, unlike the
+                header's — one click ended a completed round. */}
+            {IS_DEV_BUILD && (
+              <div className="border-t pt-4">
+                <Button type="button" variant="ghost" size="sm" onClick={onResetAll}>
+                  Start over
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>
