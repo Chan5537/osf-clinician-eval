@@ -161,7 +161,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v8-20260902'
+export const RUBRIC_VERSION = 'v9-20260903'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -337,56 +337,65 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // v7 (owner 2026-09-01): Justifiability retired — raters read "justified" as
-    // justified-by-the-chart and scored any ground they could not see as ungrounded
-    // ("can only use medical history"), no matter how the howToScore framed it. Relevance
-    // asks a judgement clinicians make without a manual: is this letter about the future?
-    key: 'relevance',
-    label: 'Relevance',
+    // USEFULNESS — VERBATIM SensorFM (Survey ED.1), adopted 2026-09-03 (Chan), replacing Relevance.
+    //
+    // The question, the five anchor labels and their descriptions below are SensorFM's own words,
+    // unedited. That is the point: an axis we did not author cannot be accused of being shaped to
+    // our result, and it makes our radar directly comparable to theirs.
+    //
+    // Chosen over Trustworthiness, which was the other candidate for this slot. Trustworthiness is
+    // v6's `justifiability` renamed, and in the v6 clinician round that axis ran BASE 4.00 > OURS
+    // 2.90 > TRUTH 2.30 — the exact REVERSE of how much model prediction each arm carries, because
+    // raters weighed confidence against panels holding no model evidence and scored any ground they
+    // could not see as unsupported.
+    //
+    // ⚠️ NOTE THE EARLIER, DIFFERENT USEFULNESS. v7 carried an axis of the same name that was
+    //    retired in v8; it scored how hard a call was to FORESEE, independently of whether it was
+    //    right, so a confident wrong letter could score 5, and its novelty half overlapped
+    //    Comprehensiveness. This is NOT that axis. SensorFM's Usefulness asks whether the response
+    //    is a useful summary TO A PROVIDER — clinical coherence and decision-readiness — which no
+    //    other axis in this set measures.
+    key: 'usefulness',
+    label: 'Usefulness',
     question:
-      "To what extent does this response attach to this patient's future health risks, rather than the conditions they already have?",
+      'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
     howToScore:
-      'Judge time direction: forward to what could develop, or back over what the patient already ' +
-      'has. Existing conditions may appear as evidence for a future risk.',
-    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
+      'Judge the response as a summary handed to a provider: is it clinically coherent, organized, ' +
+      'and something they could act on for next steps?',
     example:
-      'Response X: "The area to watch most closely is **mental** ... points to **Anxiety disorder** in ' +
-      'the years ahead", and its suggestions are about tracking new symptoms and raising them. Prior ' +
-      'mental-area conditions appear only as grounds for the forward call — both halves work on future ' +
-      'risk: Highly Relevant (5). Response Y spends its analysis on the patient’s existing circulatory ' +
-      'and endocrine history and closes by asking "what practical prevention steps fit your existing ' +
-      'circulatory and endocrine/metabolic history" — the existing conditions are the point rather ' +
-      'than the support: Not Relevant (2). ',
+      'A response that names the area to watch, ties it to specific findings, and closes with what ' +
+      'to raise at the next appointment gives a provider something to act on: Useful (4). A response ' +
+      'that reports findings and closes "but these findings do not by themselves point to a specific ' +
+      'additional future condition" leaves the provider without a next step: Useless (2).',
     anchors: [
       {
         value: 5,
-        label: 'Highly Relevant',
+        label: 'Very Useful',
         description:
-          'Both the analysis and the suggestions are about what could develop next. Existing conditions appear only as grounds for that.',
+          'Provides highly actionable, well-organized information that a provider can directly utilize for clinical decision-making and next steps.',
       },
       {
         value: 4,
-        label: 'Relevant',
+        label: 'Useful',
         description:
-          'Mostly future-focused. Existing conditions appear only as evidence.',
+          "Provides clinically coherent and relevant information that clearly communicates the patient's status to the provider.",
       },
       {
         value: 3,
         label: 'Neutral',
-        description:
-          'One part looks forward, the other goes back over what the patient already has.',
+        description: 'Information is split evenly between being useful and irrelevant.',
       },
       {
         value: 2,
-        label: 'Not Relevant',
+        label: 'Useless',
         description:
-          'The analysis or the suggestions mostly go over existing conditions. Future risk is an afterthought.',
+          'Provides tangential or unactionable information that offers no clinical value to the provider.',
       },
       {
         value: 1,
-        label: 'Not Relevant At All',
+        label: 'Very Useless',
         description:
-          "Reads as a review of conditions the patient already has. Nothing in it looks forward.",
+          'Provides highly irrelevant or distracting information that would waste clinical time or frustrate the provider.',
       },
     ],
   },
