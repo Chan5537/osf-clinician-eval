@@ -43,10 +43,19 @@ create policy rater_update_self on public.rater
 -- UPDATE is open so a rater can set their own display_name — but that would
 -- also let them flip is_researcher and read the arm key. This trigger closes
 -- that hole.
+-- BOOTSTRAP: `auth.uid()` is NULL when the statement comes from the SQL editor,
+-- a migration, or the service-role key rather than a signed-in user. Those callers
+-- are already trusted (they bypass RLS entirely), and without this exemption the
+-- rule deadlocks: the FIRST researcher can never be created, because granting the
+-- flag requires already holding it.
+--
+-- The guard still does its real job — a signed-in clinician (auth.uid() is not
+-- null, is_researcher false) cannot grant themselves access to the arm key.
 create or replace function public.guard_rater_privilege()
 returns trigger language plpgsql as $$
 begin
   if new.is_researcher is distinct from old.is_researcher
+     and auth.uid() is not null
      and not public.is_researcher() then
     raise exception 'is_researcher is not self-assignable';
   end if;
