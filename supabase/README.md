@@ -271,7 +271,13 @@ guide said Edge Functions → Schedules; that tab no longer exists.)
 3. Then fill in:
    - Name: `drain-notification-outbox` (cannot be renamed later)
    - Schedule: `*/5 * * * *`
-   - Type: **Supabase Edge Function** → `notify-completions` → method POST
+   - Type: **Supabase Edge Function** → `notify-completions` → method **POST**
+   - **Timeout: `10000`** — the field defaults to `1000`, which is ONE SECOND in
+     milliseconds. The function makes a network call to Resend; a 1s budget will often
+     abort mid-send and record a timeout instead of delivering.
+   - **HTTP Request Body: `{}`** — the function ignores the body, but an empty one can
+     upset content-type handling.
+   - Headers: leave empty; the dashboard supplies auth for its own Edge Functions.
 
 The UI supplies the auth header itself, so no service-role key is pasted anywhere. Prefer
 this over Option B for that reason.
