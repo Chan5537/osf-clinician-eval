@@ -296,56 +296,61 @@ function App() {
                 analysis reads, JSON is what "Restore from file" accepts. Naming them by purpose
                 rather than by extension is the difference between a rater picking the right one
                 and picking the first one. */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  title="Download your answers so far. Progress is also saved in this browser automatically."
-                >
-                  Download progress
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-72 space-y-2 text-sm">
-                <p className="text-xs text-muted-foreground">
-                  {submittedCount} of {DEMO_CASES.length} case(s) submitted
-                  {BLOCK > 0 ? ` in block ${BLOCK}` : ''}. Cases you have not touched are left out.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    downloadText(
-                      `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.csv`,
-                      'text/csv',
-                      toCSV(session),
-                    )
-                    toast.success('CSV downloaded')
-                  }}
-                >
-                  CSV — send this in
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    downloadText(
-                      `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.json`,
-                      'application/json',
-                      toJSON(session),
-                    )
-                    toast.success('JSON downloaded — keep it to resume on another machine')
-                  }}
-                >
-                  JSON — to resume later
-                </Button>
-              </PopoverContent>
-            </Popover>
+            {/* Dev-only (Yang, 2026-09-08): a clinician has no use for the export —
+                their answers are already in the database — and it carries the response
+                text and join keys. Kept in the dev build as the recovery path. */}
+            {IS_DEV_BUILD && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    title="Download your answers so far. Progress is also saved in this browser automatically."
+                  >
+                    Download progress
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-72 space-y-2 text-sm">
+                  <p className="text-xs text-muted-foreground">
+                    {submittedCount} of {DEMO_CASES.length} case(s) submitted
+                    {BLOCK > 0 ? ` in block ${BLOCK}` : ''}. Cases you have not touched are left out.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      downloadText(
+                        `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.csv`,
+                        'text/csv',
+                        toCSV(session),
+                      )
+                      toast.success('CSV downloaded')
+                    }}
+                  >
+                    CSV — send this in
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      downloadText(
+                        `clinician-review-${session.reviewer || 'anon'}${BLOCK > 0 ? `-b${BLOCK}` : ''}.json`,
+                        'application/json',
+                        toJSON(session),
+                      )
+                      toast.success('JSON downloaded — keep it to resume on another machine')
+                    }}
+                  >
+                    JSON — to resume later
+                  </Button>
+                </PopoverContent>
+              </Popover>
+            )}
             {/* A3 (Yang 6:22): the reveal button must not exist in the clinician
                 build. IS_DEV_BUILD is a build-time constant, so this whole subtree
                 — and the ArmBadge it drives — is eliminated from that bundle. */}

@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { requiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
@@ -191,45 +192,58 @@ export function LandingScreen({
                 {signedInAs ? (
                   <>
                     Your progress is saved to your account as you go, so you can close the page
-                    and <strong>resume on any computer</strong>. You can also download a copy at
-                    any time from the header.
+                    and <strong>resume on any computer</strong>. There is nothing to download
+                    and nothing to send us.
                   </>
                 ) : (
                   <>
                     Your progress is saved in this browser as you go, so you can close the page
-                    and resume later. You can also download it at any time from the header, and
-                    put that file back with <strong>Restore from file</strong> — on another
-                    machine, or after clearing your browser.
+                    and resume later.
+                    {IS_DEV_BUILD && (
+                      <>
+                        {' '}
+                        You can also download it at any time from the header, and put that file
+                        back with <strong>Restore from file</strong> — on another machine, or
+                        after clearing your browser.
+                      </>
+                    )}
                   </>
                 )}
               </p>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="application/json,.json"
-                className="hidden"
-                onChange={async (e) => {
-                  const f = e.target.files?.[0]
-                  e.target.value = '' // let the same file be picked again after a failure
-                  if (!f) return
-                  try {
-                    const msg = restoreFromExport(await f.text())
-                    toast.success(msg)
-                    window.setTimeout(() => window.location.reload(), 600)
-                  } catch (err) {
-                    toast.error(err instanceof Error ? err.message : 'Could not read that file.')
-                  }
-                }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground"
-                onClick={() => fileRef.current?.click()}
-              >
-                Restore from file
-              </Button>
+              {/* Dev-only (Yang, 2026-09-08). With downloads gone from the clinician
+                  build there is no file for them to restore FROM, and resume now comes
+                  from their account automatically. Kept in dev as the recovery path. */}
+              {IS_DEV_BUILD && (
+                <>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0]
+                    e.target.value = '' // let the same file be picked again after a failure
+                    if (!f) return
+                    try {
+                      const msg = restoreFromExport(await f.text())
+                      toast.success(msg)
+                      window.setTimeout(() => window.location.reload(), 600)
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : 'Could not read that file.')
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                  onClick={() => fileRef.current?.click()}
+                >
+                  Restore from file
+                </Button>
+                </>
+              )}
             </div>
 
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
