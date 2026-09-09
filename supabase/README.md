@@ -357,12 +357,20 @@ select * from public.completion_status;
 
 One row, `sent_at` still null.
 
-**3. Send without waiting for the schedule:**
+**3. Send without waiting for the schedule.**
+
+Easiest: **Dashboard → Edge Functions → `notify-completions` → Test → Send**. No terminal,
+no key.
+
+Or, **in a terminal** (a ```bash block never goes in the SQL editor — pasting `curl` there
+gives `syntax error at or near "curl"`):
 
 ```bash
 curl -X POST "https://mypuldhldvfomboheczx.supabase.co/functions/v1/notify-completions" \
      -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY"
 ```
+
+Or just wait: cron drains it within 5 minutes.
 
 ✅ **Expect:** `{"sent":1,"failed":0,"failures":[]}` — and an email.
 
