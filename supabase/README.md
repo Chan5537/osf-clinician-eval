@@ -253,12 +253,43 @@ functions locally; deploying builds on Supabase's servers.
 
 ## Step 6 — Run it on a schedule
 
-**Dashboard → Edge Functions → `notify-completions` → Schedules → Add schedule**
+The function works the moment it is deployed; a schedule just means you do not have to
+trigger it yourself. Two ways, depending on what your dashboard offers.
 
-- Name: `drain-outbox`
-- Cron: `*/5 * * * *`  (every 5 minutes)
+### Option A — the Cron UI (if present)
 
-That is the whole setup.
+**Dashboard → Integrations → Cron → Create job**
+
+- Name: `drain-notification-outbox`
+- Schedule: `*/5 * * * *`
+- Type: **Supabase Edge Function** → `notify-completions` → POST
+
+(This lives under *Integrations*, not on the Edge Functions page. Older guides — and an
+earlier version of this one — said Edge Functions → Schedules, which no longer exists.)
+
+### Option B — SQL (works everywhere)
+
+```bash
+pbcopy < supabase/migrations/004_schedule_notify.sql
+```
+
+Paste into the SQL Editor, **replace `<SERVICE_ROLE_KEY>` with the real key**, then run.
+The placeholder is there because this file is committed; never paste the real key back
+into it.
+
+Confirm:
+
+```sql
+select jobname, schedule, active from cron.job;
+```
+
+### Option C — skip it
+
+With 3–5 raters finishing once each, you can simply run the curl from the testing section
+when you want to check, or press **Test** on the function page in the dashboard. The
+outbox holds pending notifications indefinitely, so nothing is lost by draining it late.
+
+Scheduling is convenience, not correctness.
 
 ---
 
