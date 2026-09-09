@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
-import { IS_DEV_BUILD } from '@/lib/app-mode'
+import { ALLOW_PASSWORD_SIGNIN } from '@/lib/app-mode'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 
@@ -128,7 +128,7 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                 {/* DEV ONLY. IS_DEV_BUILD is a build-time constant, so none of this
                     exists in the clinician bundle — there is no password field for a
                     clinician to be confused by, and no password path to attack. */}
-                {IS_DEV_BUILD && onSignInWithPassword && usePassword && (
+                {ALLOW_PASSWORD_SIGNIN && onSignInWithPassword && usePassword && (
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
                     <Input
@@ -157,7 +157,7 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                       : 'Email me a sign-in link'}
                 </Button>
 
-                {IS_DEV_BUILD && onSignInWithPassword && (
+                {ALLOW_PASSWORD_SIGNIN && onSignInWithPassword && (
                   <button
                     type="button"
                     onClick={() => {
@@ -168,7 +168,7 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                   >
                     {usePassword
                       ? 'Use an email link instead'
-                      : 'Dev: sign in with a password (no email)'}
+                      : 'Sign in with a password instead'}
                   </button>
                 )}
               </form>

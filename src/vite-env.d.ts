@@ -9,6 +9,8 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_ANON_KEY?: string
   /** 'clinician' strips developer affordances at build time; anything else = dev. */
   readonly VITE_APP_MODE?: string
+  /** '1' offers password sign-in alongside the email link. Never set by deploy.yml. */
+  readonly VITE_ALLOW_PASSWORD_SIGNIN?: string
   /** Dev-only: serve just the first N cases (`VITE_CASE_LIMIT=3 npm run dev`). */
   readonly VITE_CASE_LIMIT?: string
 }
