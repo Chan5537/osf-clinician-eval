@@ -112,7 +112,7 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                     autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@hospital.org"
+                    placeholder="email@institution.edu"
                   />
                 </div>
 
@@ -138,7 +138,6 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                       autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Set in Authentication → Users"
                     />
                   </div>
                 )}
