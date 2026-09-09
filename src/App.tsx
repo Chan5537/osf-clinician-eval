@@ -11,8 +11,15 @@ import type { RubricAction } from '@/lib/types'
 import { load, save, clear, loadEnvelope, stashSuperseded } from '@/lib/storage'
 import { useAuth } from '@/lib/auth'
 import { SUPABASE_ENABLED } from '@/lib/supabase'
-import { hydrate, reconcile, queueSessionSync, queueCaseSubmit, flushNow } from '@/lib/sync'
-import { IS_DEV_BUILD, ALLOW_PASSWORD_SIGNIN } from '@/lib/app-mode'
+import {
+  hydrate,
+  reconcile,
+  queueSessionSync,
+  queueCaseSubmit,
+  flushNow,
+  resetServerSession,
+} from '@/lib/sync'
+import { IS_DEV_BUILD, ALLOW_PASSWORD_SIGNIN, ALLOW_RESET } from '@/lib/app-mode'
 import { SignInScreen } from '@/components/SignInScreen'
 import { SyncStatus } from '@/components/SyncStatus'
 import { toCSV, toJSON, downloadText } from '@/lib/export'
@@ -175,6 +182,7 @@ function App() {
         onResetAll={() => {
           clear()
           dispatch({ type: 'RESET_ALL' })
+          if (raterId) void resetServerSession(raterId).then(() => location.reload())
         }}
       />
     )
@@ -366,8 +374,10 @@ function App() {
                 {reveal ? 'Arms revealed' : 'Reveal arms'}
               </Button>
             )}
-            {/* A3: one mis-click behind one confirm wipes an entire round. Dev only. */}
-            {IS_DEV_BUILD && (
+            {/* A3: one mis-click behind one confirm wipes an entire round, so it is
+                never in the deployed build — but a tester needs a way back to the
+                start, so it follows the testing flag rather than the dev flag. */}
+            {ALLOW_RESET && (
               <Button
                 type="button"
                 variant="ghost"
@@ -381,6 +391,9 @@ function App() {
                   ) {
                     clear()
                     dispatch({ type: 'RESET_ALL' })
+                    // Clear the SERVER copy too, then reload. Without this, hydrate()
+                    // restores the session we just deleted and the button looks broken.
+                    if (raterId) void resetServerSession(raterId).then(() => location.reload())
                   }
                 }}
               >

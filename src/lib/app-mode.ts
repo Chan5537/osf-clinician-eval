@@ -45,3 +45,19 @@ export const IS_DEV_BUILD: boolean = APP_MODE === 'dev'
  */
 export const ALLOW_PASSWORD_SIGNIN: boolean =
   import.meta.env.VITE_ALLOW_PASSWORD_SIGNIN === '1' || IS_DEV_BUILD
+
+/**
+ * Whether "Start over" (clear this session and return to the beginning) is offered.
+ *
+ * Same reasoning as ALLOW_PASSWORD_SIGNIN, and it travels with it. A clinician must
+ * not have a one-click wipe of a finished round — but someone TESTING the clinician
+ * build has no other way back to the start, and would otherwise be stranded on the
+ * completion screen with nothing but devtools to escape it.
+ *
+ *   VITE_ALLOW_PASSWORD_SIGNIN=1 VITE_APP_MODE=clinician npm run dev
+ *
+ * Reuses that variable rather than adding a second one: both answer the same
+ * question — "is this a person testing the build, or a clinician using it?"
+ * deploy.yml sets neither, so the deployed site offers no reset.
+ */
+export const ALLOW_RESET: boolean = ALLOW_PASSWORD_SIGNIN

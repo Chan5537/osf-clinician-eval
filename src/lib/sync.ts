@@ -249,6 +249,31 @@ export function queueCaseSubmit(
   enqueue({ id: `s-${Date.now()}`, kind: 'session', raterId, session, rev })
 }
 
+/**
+ * Delete this rater's SERVER session for the current batch, and drop any queued ops.
+ *
+ * "Start over" used to clear localStorage only. With the backend live that is not a
+ * reset at all: hydrate() pulls the server copy straight back on the next load, so the
+ * button appears to do nothing. Anything calling itself "start over" has to clear both
+ * sides or it is lying.
+ *
+ * Ratings are deliberately NOT deleted — they are the collected data. Clear those from
+ * the SQL editor when you actually mean to discard a round.
+ */
+export async function resetServerSession(raterId: string): Promise<void> {
+  if (!SUPABASE_ENABLED || !supabase || !raterId) return
+  loadQueue()
+  queue = []
+  persistQueue()
+  if (sessionTimer) window.clearTimeout(sessionTimer)
+  try {
+    await supabase.from('session_state').delete().eq('rater_id', raterId).eq('batch', BATCH)
+  } catch {
+    /* best effort: the local clear still happened, and the caller reloads */
+  }
+  setStatus({ kind: 'idle' })
+}
+
 /** Drain now, ignoring backoff. The Retry button and pagehide both use this. */
 export async function flushNow(): Promise<void> {
   nextAttemptAt = 0

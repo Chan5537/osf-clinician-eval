@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Download, Pencil } from 'lucide-react'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
-import { IS_DEV_BUILD } from '@/lib/app-mode'
+import { IS_DEV_BUILD, ALLOW_RESET } from '@/lib/app-mode'
 import { getSyncStatus, onSyncStatus } from '@/lib/sync'
 import type { SessionState } from '@/lib/session'
 import type { DemoCase } from '@/lib/types'
@@ -151,9 +151,10 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
               )}
             </p>
 
-            {/* A3: dev only. Note this copy had NO confirm dialog at all, unlike the
-                header's — one click ended a completed round. */}
-            {IS_DEV_BUILD && (
+            {/* Follows the testing flag, not the dev flag: this is the screen a tester
+                is most likely to be stranded on. NOTE it has no confirm dialog, unlike
+                the header's — which is precisely why it must never ship to clinicians. */}
+            {ALLOW_RESET && (
               <div className="border-t pt-4">
                 <Button type="button" variant="ghost" size="sm" onClick={onResetAll}>
                   Start over
