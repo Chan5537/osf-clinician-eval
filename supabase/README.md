@@ -210,6 +210,12 @@ supabase --version    # 2.117.0
 
 ## Step 4 — Connect the CLI to your project
 
+⚠️ **Every `supabase` command must be run from `app/`** — the directory holding
+`supabase/`. The CLI resolves paths relative to the working directory, so running from
+one level up (`clinician_sleepfm_eval_interface/`) fails with
+`Entrypoint path does not exist ... /supabase/functions/notify-completions/index.ts`.
+Check with `pwd`; it must end in `/app`.
+
 ```bash
 cd "/Users/chanyeong/Desktop/Research/UCLA Health Intelligence Lab/sleep_foundation_model/clinician_sleepfm_eval_interface/app"
 
@@ -237,7 +243,11 @@ supabase functions deploy notify-completions
 
 ✅ **Expect:** `Deployed Function notify-completions`
 
-Secrets live on Supabase's servers, never in the repo.
+Secrets live on Supabase's servers, never in the repo. Confirm with `supabase secrets list`
+— you should see `RESEND_API_KEY`, `NOTIFY_TO` and `NOTIFY_FROM`.
+
+**`WARNING: Docker is not running` is harmless here.** Docker is only needed to run
+functions locally; deploying builds on Supabase's servers.
 
 ---
 
@@ -310,7 +320,9 @@ batch)` constraint doing its job.
 | Row exists, `sent_at` null | Function never ran | Run the curl in step 3; read `last_error` |
 | `last_error` mentions 403 | Bad or missing Resend key | Re-run `supabase secrets set` |
 | `last_error` mentions "not allowed to send" | Sender not verified | Use `onboarding@resend.dev`, and send to your Resend signup address |
-| Function deploy fails | Not linked | Re-run `supabase link` |
+| `Entrypoint path does not exist` | Ran from the wrong directory | `cd` into `app/` (`pwd` must end in `/app`) and retry |
+| Function deploy fails | Not linked | Re-run `supabase link` **from `app/`** |
+| `WARNING: Docker is not running` | — | Ignore; only needed for local function runs |
 
 Read errors with:
 
