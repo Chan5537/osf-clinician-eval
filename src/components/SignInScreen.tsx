@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import { Mail, MailCheck } from 'lucide-react'
+import { KeyRound, Mail, MailCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 
 interface Props {
   onSignIn: (email: string) => Promise<void>
+  /** DEV BUILD ONLY — bypasses email entirely. See the note in lib/auth.ts. */
+  onSignInWithPassword?: (email: string, password: string) => Promise<void>
 }
 
 // Sign-in gate. No password: the rater enters the address the invitation went to
@@ -17,11 +20,13 @@ interface Props {
 // Passwordless is the right call for 3-5 external clinicians — nothing to reset,
 // nothing to store, and no support burden on us. Signups are disabled in the
 // Supabase dashboard, so the invite list IS the access control.
-export function SignInScreen({ onSignIn }: Props) {
+export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [password, setPassword] = useState('')
+  const [usePassword, setUsePassword] = useState(false)
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -29,6 +34,10 @@ export function SignInScreen({ onSignIn }: Props) {
     setBusy(true)
     setError(null)
     try {
+      if (usePassword && onSignInWithPassword) {
+        await onSignInWithPassword(email, password)
+        return // onAuthStateChange swaps the screen; no "check your email" step
+      }
       await onSignIn(email)
       setSent(true)
     } catch (err) {
@@ -116,10 +125,53 @@ export function SignInScreen({ onSignIn }: Props) {
                   </p>
                 )}
 
+                {/* DEV ONLY. IS_DEV_BUILD is a build-time constant, so none of this
+                    exists in the clinician bundle — there is no password field for a
+                    clinician to be confused by, and no password path to attack. */}
+                {IS_DEV_BUILD && onSignInWithPassword && usePassword && (
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      required
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Set in Authentication → Users"
+                    />
+                  </div>
+                )}
+
                 <Button type="submit" size="lg" className="w-full" disabled={busy}>
-                  <Mail className="size-4" aria-hidden="true" />
-                  {busy ? 'Sending…' : 'Email me a sign-in link'}
+                  {usePassword ? (
+                    <KeyRound className="size-4" aria-hidden="true" />
+                  ) : (
+                    <Mail className="size-4" aria-hidden="true" />
+                  )}
+                  {busy
+                    ? usePassword
+                      ? 'Signing in…'
+                      : 'Sending…'
+                    : usePassword
+                      ? 'Sign in'
+                      : 'Email me a sign-in link'}
                 </Button>
+
+                {IS_DEV_BUILD && onSignInWithPassword && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUsePassword((v) => !v)
+                      setError(null)
+                    }}
+                    className="w-full cursor-pointer text-center text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                  >
+                    {usePassword
+                      ? 'Use an email link instead'
+                      : 'Dev: sign in with a password (no email)'}
+                  </button>
+                )}
               </form>
             )}
           </CardContent>
