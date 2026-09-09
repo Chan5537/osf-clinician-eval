@@ -161,6 +161,26 @@ about five.
 No domain setup needed. The sender `onboarding@resend.dev` works immediately — it can
 only deliver to your own signup address, which is exactly what you want.
 
+### Where the key goes — and where it must NOT
+
+Resend's quickstart shows the key pasted inline in JavaScript. **Do not do that here.**
+Anything under `src/` is compiled into a public bundle served from a public GitHub repo,
+so a key there is world-readable. The same goes for `.env.local`: every `VITE_*` value is
+inlined into that bundle by design.
+
+The Resend key belongs on Supabase's servers, set in Step 5. It never enters this repo.
+
+| Key | Lives in | Why |
+|---|---|---|
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | `.env.local` (gitignored) | Public by design — RLS is what protects the data |
+| `RESEND_API_KEY` | `supabase secrets set` | Secret. Sends mail as you |
+| `SUPABASE_SERVICE_ROLE_KEY` | Your shell, for one command | Bypasses RLS entirely — full database access |
+
+**If a key is ever pasted somewhere it should not be** — a chat, a commit, a screenshot —
+treat it as compromised and rotate it: Resend → API Keys → delete → create a new one, then
+re-run `supabase secrets set`. Rotating costs a minute; assuming it was fine can cost your
+sending domain's reputation.
+
 ---
 
 ## Step 3 — Install the Supabase CLI
