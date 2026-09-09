@@ -144,7 +144,14 @@ function App() {
     )
   }
   if (auth.status === 'signed-out') {
-    return <SignInScreen onSignIn={auth.signIn} />
+    return (
+      <SignInScreen
+        onSignIn={auth.signIn}
+        // Dev builds only: the prop is undefined in the clinician bundle, so the
+        // password path is unreachable there even before dead-code elimination.
+        onSignInWithPassword={IS_DEV_BUILD ? auth.signInWithPassword : undefined}
+      />
+    )
   }
 
   if (session.view === 'landing') {

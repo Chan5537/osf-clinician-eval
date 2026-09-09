@@ -15,6 +15,19 @@ export interface AuthState {
   email: string | null
   /** Send a magic link. Resolves on success; rejects with a displayable message. */
   signIn: (email: string) => Promise<void>
+  /**
+   * DEV BUILD ONLY — password sign-in, for testing without email.
+   *
+   * Supabase's built-in SMTP is rate limited to a few messages an hour, shared
+   * across the project, and it is trivially exhausted while setting a round up.
+   * Worse, "Generate link" in the dashboard routes through the SAME limiter, so
+   * hitting the cap locks you out of your own project entirely.
+   *
+   * Create the account with Authentication -> Users -> Add user -> Create new
+   * user, with "Auto Confirm User" ticked, then sign in here. Never reachable in
+   * the clinician build (see app-mode.ts).
+   */
+  signInWithPassword: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -83,6 +96,15 @@ export function useAuth(): AuthState {
     }
   }, [])
 
+  const signInWithPassword = useCallback(async (email: string, password: string) => {
+    if (!supabase) throw new Error('Sign-in is not available in this build.')
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    if (error) throw new Error(error.message)
+  }, [])
+
   const signOut = useCallback(async () => {
     if (!supabase) return
     await supabase.auth.signOut()
@@ -94,6 +116,7 @@ export function useAuth(): AuthState {
     raterId: user?.id ?? null,
     email: user?.email ?? null,
     signIn,
+    signInWithPassword,
     signOut,
   }
 }
