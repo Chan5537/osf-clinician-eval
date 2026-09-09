@@ -121,6 +121,17 @@ download with no code change. Collected rows stay in Postgres and remain extract
 Six steps, about 20 minutes. Do them in order. Steps 1–2 are safe on their own; nothing
 sends until step 5.
 
+> **Step 1 is a SQL step and the rest are terminal/dashboard steps — it is the easy one to
+> skip.** Without it there is no outbox table and no trigger, so nothing is ever recorded
+> and no email can ever send, even with the function deployed and cron running. Confirm it
+> before moving on:
+>
+> ```sql
+> select count(*) from public.notification_outbox;   -- 0, not an error
+> ```
+>
+> `relation "public.notification_outbox" does not exist` means Step 1 has not run.
+
 ---
 
 ## Step 1 — Run the migration
@@ -330,6 +341,14 @@ delete from public.batch_response
 
 Restore afterwards with `python3 scripts/data/seed_batch.py`.
 
+⚠️ **The trigger only runs when a `rating` row is written.** Changing the batch size (or
+running the migration late) does not retroactively fire it. If the threshold became true
+without a rating write, nudge the rows — this rewrites them in place and changes no answer:
+
+```sql
+update public.rating set updated_at = now() where case_id = 'HSP_v7_026';
+```
+
 **2. Check the trigger fired:**
 
 ```sql
@@ -362,6 +381,8 @@ batch)` constraint doing its job.
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| `relation "notification_outbox" does not exist` | Step 1 never ran | Run `migrations/003_completion_notify.sql` |
+| `completion_status` empty after 003 | No rating write since the trigger existed | `update public.rating set updated_at = now();` |
 | `completion_status` empty | Round not actually complete | `select count(*) from rating where submitted_at is not null;` — needs to equal responses × dimensions (150 for the full batch) |
 | Row exists, `sent_at` null | Function never ran | Run the curl in step 3; read `last_error` |
 | `last_error` mentions 403 | Bad or missing Resend key | Re-run `supabase secrets set` |
