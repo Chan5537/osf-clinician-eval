@@ -180,9 +180,30 @@ function App() {
     )
   }
 
-  const i = session.currentCaseIndex
+  // Clamp at the point of use. sanitizeSession() already bounds the index on both the
+  // local and server paths, so this is belt-and-braces — but the failure mode it guards
+  // is a WHITE SCREEN with the session intact but unreachable, which is the worst thing
+  // that can happen to a clinician mid-round. A clamp is a cheap price for never seeing
+  // it again, whatever future path sets the index.
+  const i =
+    Number.isInteger(session.currentCaseIndex) &&
+    session.currentCaseIndex >= 0 &&
+    session.currentCaseIndex < DEMO_CASES.length
+      ? session.currentCaseIndex
+      : 0
   const demoCase = DEMO_CASES[i]
   const caseRubric = session.cases[i]
+
+  // Nothing renderable at all (an empty batch). Say so rather than crashing.
+  if (!demoCase || !caseRubric) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+        <p className="max-w-md text-center text-sm text-muted-foreground">
+          No cases are available in this build. Please contact the study team.
+        </p>
+      </div>
+    )
+  }
 
   // Adapter: forward the flat RubricAction into the session reducer, so the
   // rubric components keep their existing Dispatch<RubricAction> prop type.

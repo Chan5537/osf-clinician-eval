@@ -174,6 +174,59 @@ function readRev(): number {
   }
 }
 
+/**
+ * Re-shape an arbitrary SessionState against the CURRENT batch.
+ *
+ * `load()` has always done this for localStorage — rebuilding `cases` per case_id and
+ * clamping `currentCaseIndex` — but a session arriving from the SERVER used to skip it.
+ * That is a real crash: a session recorded against 10 cases, restored while a shorter
+ * batch is served, leaves currentCaseIndex past the end of DEMO_CASES, and App reads
+ * `demoCase.case_id` on undefined and white-screens.
+ *
+ * Reachable in production, not just behind VITE_CASE_LIMIT: any batch that loses a case
+ * between two of a rater's sittings does the same thing.
+ *
+ * Keeps every answer whose case_id still exists; anything else starts empty.
+ */
+export function sanitizeSession(s: SessionState): SessionState {
+  const fresh = initialSessionState()
+  const byId = new Map<string, CaseRubric>()
+  if (Array.isArray(s.cases)) {
+    // Positional: a stored session's cases[] is parallel to the DEMO_CASES it was
+    // written against. We cannot know that older list, so index against the current
+    // one — the same assumption load() makes on the pre-2026-09-02 envelope path.
+    DEMO_CASES.forEach((dc, i) => {
+      const c = s.cases[i]
+      if (c) byId.set(dc.case_id, c)
+    })
+  }
+  const cases: CaseRubric[] = DEMO_CASES.map((dc, i) => {
+    const c = byId.get(dc.case_id) ?? fresh.cases[i]
+    return {
+      state: sanitizeRubric(c?.state, dc),
+      submitted: !!c?.submitted,
+      submittedAt: typeof c?.submittedAt === 'string' ? c.submittedAt : null,
+      durationSeconds: typeof c?.durationSeconds === 'number' ? c.durationSeconds : null,
+      revealed: !!c?.revealed,
+      timing: sanitizeTiming(c?.timing),
+    }
+  })
+  return {
+    view: s.view === 'completion' || s.view === 'cycle' ? s.view : 'landing',
+    currentCaseIndex:
+      Number.isInteger(s.currentCaseIndex) &&
+      s.currentCaseIndex >= 0 &&
+      s.currentCaseIndex < DEMO_CASES.length
+        ? s.currentCaseIndex
+        : 0,
+    cases,
+    reviewer: typeof s.reviewer === 'string' ? s.reviewer : '',
+    caseEnteredAt: null, // never trust a persisted clock baseline
+    layoutMode: s.layoutMode === 'compare' ? 'compare' : 'focus',
+    hiddenAt: null,
+  }
+}
+
 /** The stored session PLUS its revision — what reconcile() needs. `load()` is unchanged. */
 export function loadEnvelope(): { session: SessionState; rev: number } | null {
   const session = load()
