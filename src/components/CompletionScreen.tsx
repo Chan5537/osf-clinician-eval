@@ -43,9 +43,22 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
               <h1 className="text-xl font-semibold tracking-tight">
                 Evaluation complete — thank you!
               </h1>
+              {/* The clinician sentence must not advertise affordances their build does
+                  not have: downloads and "start over" are dev-only now. Reviewing a case
+                  IS still available to them, and is worth naming. */}
               <p className="text-sm leading-relaxed text-muted-foreground">
-                You have reviewed all {cases.length} cases. You can download your
-                ratings, review or edit any case, or start over.
+                {IS_DEV_BUILD ? (
+                  <>
+                    You have reviewed all {cases.length} cases. You can download your
+                    ratings, review or edit any case, or start over.
+                  </>
+                ) : (
+                  <>
+                    You have reviewed all {cases.length} cases, and your ratings have been
+                    recorded. You may go back and revise any case below, or simply close
+                    this page — we truly appreciate your time.
+                  </>
+                )}
               </p>
             </div>
 
@@ -82,58 +95,61 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
               })}
             </ul>
 
-            <div className="space-y-2">
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
-                  type="button"
-                  className="flex-1"
-                  onClick={() =>
-                    downloadText(
-                      `clinician-ratings-${isoDate()}.json`,
-                      'application/json',
-                      toJSON(session),
-                    )
-                  }
-                >
-                  <Download className="size-4" />
-                  Download JSON
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() =>
-                    downloadText(
-                      `clinician-ratings-${isoDate()}.csv`,
-                      'text/csv;charset=utf-8',
-                      toCSV(session),
-                    )
-                  }
-                >
-                  <Download className="size-4" />
-                  Download CSV
-                </Button>
+            {/* DOWNLOADS ARE DEV-ONLY (Prof. Yang, 2026-09-08).
+                A clinician has no use for the file — their answers are already in the
+                study database — and every export carries the response text plus the
+                internal keys the analysis joins on. The rater-facing ending is a thank
+                you and nothing else. The dev build keeps the buttons as the recovery
+                path if an upload never lands. */}
+            {IS_DEV_BUILD && (
+              <div className="space-y-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    type="button"
+                    className="flex-1"
+                    onClick={() =>
+                      downloadText(
+                        `clinician-ratings-${isoDate()}.json`,
+                        'application/json',
+                        toJSON(session),
+                      )
+                    }
+                  >
+                    <Download className="size-4" />
+                    Download JSON
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() =>
+                      downloadText(
+                        `clinician-ratings-${isoDate()}.csv`,
+                        'text/csv;charset=utf-8',
+                        toCSV(session),
+                      )
+                    }
+                  >
+                    <Download className="size-4" />
+                    Download CSV
+                  </Button>
+                </div>
               </div>
-              {/* This paragraph used to read "your answers are not transmitted
-                  automatically" and ask the rater to email the file. With the backend
-                  live that is FALSE, and acting on it would have clinicians sending us
-                  files we already have. The download stays — as their own copy, and as
-                  the recovery path if an upload never lands. */}
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {uploadPending > 0 ? (
-                  <>
-                    Your ratings are saved. <strong>{uploadPending}</strong> still to upload —
-                    please keep this page open until the header reads “Saved”. You can also
-                    download a copy for your records.
-                  </>
-                ) : (
-                  <>
-                    Your ratings have been saved to the study database — there is nothing you
-                    need to send us. You may download a copy for your own records.
-                  </>
-                )}
-              </p>
-            </div>
+            )}
+
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {uploadPending > 0 ? (
+                <>
+                  Your ratings are saved. <strong>{uploadPending}</strong> still to upload —
+                  please keep this page open until the header reads “Saved”.
+                </>
+              ) : (
+                <>
+                  Your ratings have been recorded. There is nothing further you need to do,
+                  and nothing to send us.
+                </>
+              )}
+            </p>
 
             {/* A3: dev only. Note this copy had NO confirm dialog at all, unlike the
                 header's — one click ended a completed round. */}
