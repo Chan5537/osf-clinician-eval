@@ -17,6 +17,7 @@ import { SCHEMA_VERSION } from './session'
 import { RUBRIC_VERSION } from './rubric-config'
 import { BATCH } from '@/data/demo-cases'
 import { supabase, SUPABASE_ENABLED } from './supabase'
+import { sanitizeSession } from './storage'
 import { ratingRowsForCase, type RatingRow } from './sync-rows'
 
 // ---------------------------------------------------------------- status ----
@@ -303,8 +304,13 @@ export async function hydrate(raterId: string): Promise<ServerSession | null> {
     if (data.schema_version !== SCHEMA_VERSION || data.rubric_version !== RUBRIC_VERSION) {
       return null
     }
-    const state = data.state as unknown as SessionState
-    if (!state || !Array.isArray(state.cases)) return null
+    const raw = data.state as unknown as SessionState
+    if (!raw || !Array.isArray(raw.cases)) return null
+    // Re-shape against the CURRENT batch before it reaches the reducer. Without this a
+    // session recorded against a longer batch restores an out-of-range currentCaseIndex
+    // and App white-screens on `demoCase.case_id`. localStorage has always been
+    // sanitised on read; the server path must be too.
+    const state = sanitizeSession(raw)
     return {
       state,
       clientRev: typeof data.client_rev === 'number' ? data.client_rev : 0,
