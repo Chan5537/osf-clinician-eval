@@ -12,7 +12,7 @@ import { load, save, clear, loadEnvelope, stashSuperseded } from '@/lib/storage'
 import { useAuth } from '@/lib/auth'
 import { SUPABASE_ENABLED } from '@/lib/supabase'
 import { hydrate, reconcile, queueSessionSync, queueCaseSubmit, flushNow } from '@/lib/sync'
-import { IS_DEV_BUILD } from '@/lib/app-mode'
+import { IS_DEV_BUILD, ALLOW_PASSWORD_SIGNIN } from '@/lib/app-mode'
 import { SignInScreen } from '@/components/SignInScreen'
 import { SyncStatus } from '@/components/SyncStatus'
 import { toCSV, toJSON, downloadText } from '@/lib/export'
@@ -147,9 +147,9 @@ function App() {
     return (
       <SignInScreen
         onSignIn={auth.signIn}
-        // Dev builds only: the prop is undefined in the clinician bundle, so the
-        // password path is unreachable there even before dead-code elimination.
-        onSignInWithPassword={IS_DEV_BUILD ? auth.signInWithPassword : undefined}
+        // Undefined unless password sign-in is enabled for this build, so the path
+        // is unreachable in the deployed site even before dead-code elimination.
+        onSignInWithPassword={ALLOW_PASSWORD_SIGNIN ? auth.signInWithPassword : undefined}
       />
     )
   }
