@@ -185,10 +185,26 @@ sending domain's reputation.
 
 ## Step 3 — Install the Supabase CLI
 
+Download the prebuilt binary. No Homebrew, no Xcode:
+
 ```bash
-brew install supabase/tap/supabase
-supabase --version
+mkdir -p ~/.local/bin
+cd /tmp
+curl -sL -o supabase.tar.gz \
+  https://github.com/supabase/cli/releases/download/v2.117.0/supabase_darwin_arm64.tar.gz
+tar -xzf supabase.tar.gz && mv supabase ~/.local/bin/ && chmod +x ~/.local/bin/supabase
+
+# once, if ~/.local/bin is not already on PATH:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+
+supabase --version    # 2.117.0
 ```
+
+(Apple Silicon. For Intel, swap `darwin_arm64` for `darwin_amd64`.)
+
+> **Why not `brew install supabase/tap/supabase`?** Homebrew builds it from source and
+> fails with *"Your Command Line Tools are too outdated"*, demanding a multi-GB Xcode
+> update the CLI itself does not need. The release binary is the same v2.117.0.
 
 ---
 
