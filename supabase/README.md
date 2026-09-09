@@ -256,16 +256,25 @@ functions locally; deploying builds on Supabase's servers.
 The function works the moment it is deployed; a schedule just means you do not have to
 trigger it yourself. Two ways, depending on what your dashboard offers.
 
-### Option A — the Cron UI (if present)
+### Option A — the Cron UI (recommended)
 
-**Dashboard → Integrations → Cron → Create job**
+**Dashboard → Integrations → Cron → Jobs → Create job**
 
-- Name: `drain-notification-outbox`
-- Schedule: `*/5 * * * *`
-- Type: **Supabase Edge Function** → `notify-completions` → POST
+(It lives under *Integrations*, not on the Edge Functions page. Earlier versions of this
+guide said Edge Functions → Schedules; that tab no longer exists.)
 
-(This lives under *Integrations*, not on the Edge Functions page. Older guides — and an
-earlier version of this one — said Edge Functions → Schedules, which no longer exists.)
+1. **Install the Cron integration** if it is not already listed as Installed.
+2. The Type options **Supabase Edge Function** and **HTTP Request** will be greyed out
+   with *"pg_net needs to be installed"*. Click **Install pg_net extension** in that
+   same form — `pg_net` is what lets Postgres make HTTP calls, which is how cron reaches
+   an Edge Function.
+3. Then fill in:
+   - Name: `drain-notification-outbox` (cannot be renamed later)
+   - Schedule: `*/5 * * * *`
+   - Type: **Supabase Edge Function** → `notify-completions` → method POST
+
+The UI supplies the auth header itself, so no service-role key is pasted anywhere. Prefer
+this over Option B for that reason.
 
 ### Option B — SQL (works everywhere)
 
