@@ -112,35 +112,85 @@ download with no code change. Collected rows stay in Postgres and remain extract
 
 ---
 
-## Completion notifications
+---
 
-One email to the study operator when a clinician finishes the **whole** set — not per
-case. At 10 cases x 3-5 raters, per-case mail is ~50 messages, which get filtered and
-stop being read; "this rater is done" is 3-5 messages and is the signal that matters.
+# Email notifications — step by step
 
-**Shape:** a trigger writes to `notification_outbox`; an Edge Function drains it and
-sends. The database never calls an email provider itself — otherwise a clinician's
-submission would depend on that provider being up, and a slow provider would slow their
-UI. If sending fails, the row stays pending and is retried.
+**Goal:** one email to you, only when a clinician has finished *all* the cases.
 
-**The email carries no rating data.** Its button opens a login-protected view, so
-nothing sensitive is in the message and forwarding it leaks nothing.
+Six steps, about 20 minutes. Do them in order. Steps 1–2 are safe on their own; nothing
+sends until step 5.
 
-### Setup
+---
 
-**1. Migration** — run `migrations/003_completion_notify.sql` in the SQL editor.
+## Step 1 — Run the migration
 
-**2. Resend** — sign up at [resend.com](https://resend.com), create an API key. The
-sandbox sender `onboarding@resend.dev` works immediately and only delivers to your own
-address, which is all this needs. (Verifying a domain also lifts the Supabase auth email
-rate limit — see the note below.)
-
-**3. Deploy the function** (needs the Supabase CLI, `brew install supabase/tap/supabase`):
+This creates the outbox table and the trigger that watches for a finished rater.
 
 ```bash
-supabase login
-supabase link --project-ref mypuldhldvfomboheczx
+pbcopy < supabase/migrations/003_completion_notify.sql
+```
 
+Then: **SQL Editor** → ⌘A → ⌘V → ⌘↵.
+
+You may get the "destructive operation" warning again — that is the `drop trigger if
+exists` line that makes the file re-runnable. Run it.
+
+✅ **Expect:** `Success. No rows returned`
+
+Confirm it landed:
+
+```sql
+select count(*) as outbox_table from public.notification_outbox;
+select tgname from pg_trigger where tgname = 'rating_completion_notify';
+```
+
+`0` and one row named `rating_completion_notify`.
+
+---
+
+## Step 2 — Get a Resend account and API key
+
+Resend is the service that actually sends the mail. Free tier is 3,000/month; you need
+about five.
+
+1. Go to **[resend.com](https://resend.com)** → sign up
+2. **API Keys** → **Create API Key** → name it `osf-clinician-eval`
+3. Copy the key (starts `re_`). **It is shown once.**
+
+No domain setup needed. The sender `onboarding@resend.dev` works immediately — it can
+only deliver to your own signup address, which is exactly what you want.
+
+---
+
+## Step 3 — Install the Supabase CLI
+
+```bash
+brew install supabase/tap/supabase
+supabase --version
+```
+
+---
+
+## Step 4 — Connect the CLI to your project
+
+```bash
+cd "/Users/chanyeong/Desktop/Research/UCLA Health Intelligence Lab/sleep_foundation_model/clinician_sleepfm_eval_interface/app"
+
+supabase login          # opens a browser
+supabase link --project-ref mypuldhldvfomboheczx
+```
+
+`link` will ask for your **database password** — the one set when the project was
+created. If you do not have it: **Settings → Database → Reset database password**.
+
+---
+
+## Step 5 — Deploy the emailer
+
+Two commands. Replace `re_xxxxxxxx` with your key from step 2.
+
+```bash
 supabase secrets set \
   RESEND_API_KEY=re_xxxxxxxx \
   NOTIFY_TO=parkchanyeong5537@gmail.com \
@@ -149,40 +199,145 @@ supabase secrets set \
 supabase functions deploy notify-completions
 ```
 
-**4. Schedule it** — Dashboard → Edge Functions → `notify-completions` → Schedules →
-every 5 minutes. (Or `select cron.schedule(...)` if you prefer pg_cron.)
+✅ **Expect:** `Deployed Function notify-completions`
 
-### Checking it
+Secrets live on Supabase's servers, never in the repo.
 
-```sql
--- who has finished, and did the mail go out?
-select * from public.completion_status;
+---
 
--- still pending?
-select id, kind, attempts, last_error
-  from public.notification_outbox where sent_at is null;
+## Step 6 — Run it on a schedule
+
+**Dashboard → Edge Functions → `notify-completions` → Schedules → Add schedule**
+
+- Name: `drain-outbox`
+- Cron: `*/5 * * * *`  (every 5 minutes)
+
+That is the whole setup.
+
+---
+
+# Testing it end to end
+
+Nothing has been proven until an email actually arrives.
+
+**1. Complete a round.** Sign in and score every case. Use one case to keep it short:
+
+```bash
+VITE_APP_MODE=clinician VITE_ALLOW_PASSWORD_SIGNIN=1 VITE_CASE_LIMIT=1 npm run dev
 ```
 
-Force a send without waiting for the schedule:
+⚠️ With `VITE_CASE_LIMIT=1` the app serves 1 case, but the trigger counts against the
+**full 30-response batch in the database** — so it will not fire. To test the trigger
+itself, either run all 10 cases, or temporarily narrow the batch:
+
+```sql
+-- TEMPORARY: pretend the batch is one case, so 15 ratings counts as complete
+delete from public.batch_response
+ where batch = 'v611_r10' and case_id <> 'HSP_v7_026';
+```
+
+Restore afterwards with `python3 scripts/data/seed_batch.py`.
+
+**2. Check the trigger fired:**
+
+```sql
+select * from public.completion_status;
+```
+
+One row, `sent_at` still null.
+
+**3. Send without waiting for the schedule:**
 
 ```bash
 curl -X POST "https://mypuldhldvfomboheczx.supabase.co/functions/v1/notify-completions" \
      -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY"
 ```
 
-To re-test a notification that already sent, clear the row and re-cross the threshold:
+✅ **Expect:** `{"sent":1,"failed":0,"failures":[]}` — and an email.
+
+**4. Confirm it will not send twice:**
+
+```sql
+select email, sent_at from public.completion_status;   -- sent_at now filled
+```
+
+Revise an answer in the app; no second email. That is the `unique (kind, rater_id,
+batch)` constraint doing its job.
+
+---
+
+# If something goes wrong
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `completion_status` empty | Round not actually complete | `select count(*) from rating where submitted_at is not null;` — needs to equal responses × dimensions (150 for the full batch) |
+| Row exists, `sent_at` null | Function never ran | Run the curl in step 3; read `last_error` |
+| `last_error` mentions 403 | Bad or missing Resend key | Re-run `supabase secrets set` |
+| `last_error` mentions "not allowed to send" | Sender not verified | Use `onboarding@resend.dev`, and send to your Resend signup address |
+| Function deploy fails | Not linked | Re-run `supabase link` |
+
+Read errors with:
+
+```sql
+select id, attempts, last_error, created_at
+  from public.notification_outbox where sent_at is null;
+```
+
+Reset a notification to test again:
 
 ```sql
 delete from public.notification_outbox where kind = 'rater_completed';
 ```
 
-### Note: this also fixes the auth email rate limit
+---
 
-Supabase's built-in SMTP allows only a few messages an hour **project-wide**, and
-"Generate link" in the dashboard spends from the same budget — exhausting it locks the
-operator out too (it did, on 2026-09-08). Setting the same Resend credentials under
-**Authentication → Emails → SMTP Settings** raises that to thousands a day.
+# While you are here: fix the auth email limit
 
-Do this before inviting clinicians. Three to five raters requesting links, plus re-sends,
-will otherwise hit the cap during the round — and a rate-limited clinician sees nothing
-at all.
+**Do this before inviting clinicians.**
+
+Supabase's built-in email allows only a few messages an hour *project-wide*, and
+"Generate link" in the dashboard spends from the same budget. Exhausting it locks out
+the operator too — it did, on 2026-09-08.
+
+With 3–5 clinicians requesting sign-in links, plus re-sends, you will hit it during the
+round, and a rate-limited clinician sees nothing at all.
+
+**Fix** — reuse the Resend credentials from step 2:
+
+**Authentication → Emails → SMTP Settings** → Enable custom SMTP
+
+```
+Host:     smtp.resend.com
+Port:     465
+Username: resend
+Password: <your RESEND_API_KEY>
+Sender:   onboarding@resend.dev   (or a verified domain)
+```
+
+⚠️ `onboarding@resend.dev` only delivers to your own address. **To email real
+clinicians you must verify a domain in Resend** (Domains → Add Domain, add the DNS
+records). Worth doing before the round opens.
+
+---
+
+# How it works, briefly
+
+```
+clinician submits last case
+        ↓
+trigger counts their submitted ratings
+        ↓  (only when every case is done)
+row written to notification_outbox        ← unique per rater: fires once, ever
+        ↓
+Edge Function, every 5 min, drains it
+        ↓
+Resend → your inbox
+```
+
+The database never calls Resend directly. If it did, a clinician's submission would
+depend on an email provider being up, and a slow provider would slow their screen. The
+trigger only writes a local row; sending happens separately and retries on failure.
+
+**The email contains no rating data** — just counts and a button to a login-protected
+view. Emails get forwarded and indexed, and ratings can be joined back to the arm key,
+so putting the data in the message would be a quiet un-blinding risk.
