@@ -15,13 +15,32 @@ results exported as JSON/CSV.
 React 19 · Vite · TypeScript · Tailwind CSS v4 · shadcn/ui · react-markdown. State is a single
 `useReducer`; no router, no network.
 
-## Develop
+## Run it
 
 ```bash
-npm install
-npm run dev      # http://localhost:5173/osf-clinician-eval/
+npm start                  # exactly what a clinician sees, all 10 cases
+npm start -- 2             # same, but only the first 2 cases
+npm run start:dev          # internal build: reveal arms, downloads, start over
+npm run start:fresh        # wipe test data + restore the batch first
+```
+
+`npm start` checks `.env.local`, frees port 5173 (a stale server is why a changed
+`VITE_*` can appear to do nothing), prints which build is running, and starts Vite.
+
+`start:fresh` needs the service-role key in the shell:
+
+```bash
+export SUPABASE_SERVICE_ROLE_KEY=<Settings -> API Keys>
+```
+
+Raw equivalents, if you want them:
+
+```bash
+npm run dev      # vite, dev build, no checks
 npm run build    # type-check + production build to dist/
 ```
+
+Backend setup, SQL and troubleshooting live in [supabase/README.md](supabase/README.md).
 
 ## How it works
 
