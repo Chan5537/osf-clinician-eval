@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { KeyRound, Mail, MailCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -29,9 +29,19 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [password, setPassword] = useState('')
   const [usePassword, setUsePassword] = useState(false)
+  // Seconds until another link may be requested. Links are single-use and mail systems
+  // routinely consume them in transit, so re-sending is a NORMAL action here, not an
+  // error path — but an unthrottled button invites a rater to spend the project-wide
+  // hourly quota on themselves in ten seconds.
+  const [cooldown, setCooldown] = useState(0)
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
+  useEffect(() => {
+    if (cooldown <= 0) return
+    const t = window.setTimeout(() => setCooldown((n) => n - 1), 1000)
+    return () => window.clearTimeout(t)
+  }, [cooldown])
+
+  async function send() {
     if (busy) return
     setBusy(true)
     setError(null)
@@ -42,11 +52,19 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
       }
       await onSignIn(email)
       setSent(true)
+      setCooldown(30)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not send the link.')
+      // Stay on the form so the address is still there to correct or retry.
+      setSent(false)
     } finally {
       setBusy(false)
     }
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    await send()
   }
 
   return (
@@ -75,18 +93,47 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                   which can use the link up before you click it — if it says the link is
                   invalid or expired, just request a new one.
                 </p>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground"
-                  onClick={() => {
-                    setSent(false)
-                    setError(null)
-                  }}
-                >
-                  Use a different address
-                </Button>
+                {error && (
+                  <p
+                    className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
+                    role="alert"
+                  >
+                    {error}
+                  </p>
+                )}
+
+                {/* Re-sending is the primary recovery here — a scanned-away link is the
+                    single most common reason a rater is stuck on this screen — so it is a
+                    real button, not a footnote. */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={busy || cooldown > 0}
+                    onClick={() => void send()}
+                  >
+                    <Mail className="size-4" aria-hidden="true" />
+                    {busy
+                      ? 'Sending…'
+                      : cooldown > 0
+                        ? `Send again in ${cooldown}s`
+                        : 'Send another link'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground"
+                    onClick={() => {
+                      setSent(false)
+                      setError(null)
+                      setCooldown(0)
+                    }}
+                  >
+                    Use a different address
+                  </Button>
+                </div>
               </div>
             ) : (
               <form onSubmit={submit} className="space-y-5">

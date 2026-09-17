@@ -165,7 +165,22 @@ function App() {
     return (
       <LandingScreen
         signedInAs={auth.email}
-        onSignOut={() => void auth.signOut()}
+        onSignOut={() => {
+          // Drain first: anything still queued belongs to THIS rater, and after sign-out
+          // the token to send it is gone.
+          void flushNow()
+            .catch(() => {})
+            .finally(() => {
+              // Clear the local session too. Without this the answers stay in
+              // localStorage, and the NEXT person to sign in on this machine has them
+              // reconciled against their own server session — one rater's work
+              // appearing under another's name. The server copy is untouched, so the
+              // rater who just left loses nothing and resumes on their next sign-in.
+              clear()
+              dispatch({ type: 'RESET_ALL' })
+              void auth.signOut()
+            })
+        }}
         reviewer={session.reviewer}
         onReviewerChange={(r) => dispatch({ type: 'SET_REVIEWER', reviewer: r })}
         onBegin={() => dispatch({ type: 'BEGIN' })}
