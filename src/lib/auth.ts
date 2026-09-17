@@ -39,7 +39,7 @@ export interface AuthState {
    * the clinician build (see app-mode.ts).
    */
   signInWithPassword: (email: string, password: string) => Promise<void>
-  /** Exchange the emailed 6-digit code for a session. */
+  /** Exchange the emailed sign-in code for a session. */
   verifyCode: (email: string, token: string) => Promise<void>
   signOut: () => Promise<void>
 }
@@ -177,7 +177,13 @@ export function useAuth(): AuthState {
   const verifyCode = useCallback(async (email: string, token: string) => {
     if (!supabase) throw new Error('Sign-in is not available in this build.')
     const code = token.replace(/\D/g, '') // tolerate spaces/dashes as pasted from mail
-    if (code.length !== 6) throw new Error('Please enter the 6-digit code from your email.')
+    // Supabase's OTP length is a PROJECT SETTING (6-10 digits), not a constant. This
+    // project is currently on 8. Hardcoding 6 truncated real codes to their first six
+    // digits and made sign-in impossible, so accept the whole documented range and let
+    // the server be the judge of correctness.
+    if (code.length < 6 || code.length > 10) {
+      throw new Error('Please enter the code from your email.')
+    }
     const { error } = await supabase.auth.verifyOtp({
       email: email.trim(),
       token: code,
