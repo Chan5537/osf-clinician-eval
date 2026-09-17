@@ -94,13 +94,37 @@ export function useAuth(): AuthState {
       },
     })
     if (error) {
-      // Rate limiting is still the most likely failure even with the project limit
-      // raised, because it is counted PROJECT-WIDE rather than per rater. The raw
-      // wording gives a clinician nothing to act on.
-      const msg = /rate limit|too many/i.test(error.message)
-        ? 'Too many sign-in emails have been sent in the last hour. Please wait a few minutes and try again.'
-        : error.message
-      throw new Error(msg)
+      // Supabase does not always populate `message` — a 500 from the mailer can arrive
+      // as a bare object, which `${error.message}` renders as "{}" and tells the rater
+      // nothing. Dig for whatever the payload actually carries, and keep the status
+      // code so a screenshot is diagnosable.
+      const raw =
+        error.message ||
+        (error as { error_description?: string }).error_description ||
+        (error as { error?: string }).error ||
+        ''
+      const status = (error as { status?: number }).status
+      // eslint-disable-next-line no-console
+      console.error('[auth] signInWithOtp failed', { status, error })
+
+      if (/rate limit|too many/i.test(raw)) {
+        throw new Error(
+          'Too many sign-in emails have been sent recently. Please wait a few minutes and try again.',
+        )
+      }
+      if (/signups? not allowed|disabled/i.test(raw)) {
+        throw new Error(
+          'Sign-up is currently closed. Please contact the study team so they can add you.',
+        )
+      }
+      // A 500 here is the mail server refusing, not anything the rater did wrong.
+      if (status === 500 || !raw) {
+        throw new Error(
+          'We could not send the sign-in email just now — this is a problem on our side, ' +
+            'not with your address. Please try again in a moment, or contact the study team.',
+        )
+      }
+      throw new Error(raw)
     }
   }, [])
 
