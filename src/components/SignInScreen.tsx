@@ -136,9 +136,13 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     autoFocus
-                    maxLength={7}
+                    maxLength={6}
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    // Normalise on the way IN rather than validating on the way out: strip
+                    // anything that is not a digit (mail clients wrap codes in spaces, and
+                    // a pasted "482 917" is otherwise silently rejected) and cap at six.
+                    // What is in the box is then exactly what gets submitted.
+                    onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
                     placeholder="123456"
                     className="max-w-[10rem] text-center text-lg tracking-[0.35em] tabular-nums"
                   />
@@ -157,7 +161,7 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
                   type="submit"
                   size="lg"
                   className="w-full"
-                  disabled={busy || code.replace(/\D/g, '').length !== 6}
+                  disabled={busy || code.length !== 6}
                 >
                   {busy ? 'Verifying…' : 'Continue'}
                 </Button>
