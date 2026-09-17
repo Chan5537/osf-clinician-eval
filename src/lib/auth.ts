@@ -107,6 +107,18 @@ export function useAuth(): AuthState {
       // eslint-disable-next-line no-console
       console.error('[auth] signInWithOtp failed', { status, error })
 
+      // Supabase throttles repeat sends to the SAME address (60s by default) and phrases
+      // it as "For security purposes, you can only request this after N seconds" — which
+      // reads like an accusation to someone who simply signed out and back in. Say what
+      // is happening and that waiting is all that is required.
+      const after = raw.match(/after (\d+) seconds?/i)
+      if (after || /for security purposes/i.test(raw)) {
+        const secs = after ? Number(after[1]) : 60
+        throw new Error(
+          `A sign-in link was just sent to this address. You can request another in ${secs} ` +
+            `second${secs === 1 ? '' : 's'} — or use the link already in your inbox.`,
+        )
+      }
       if (/rate limit|too many/i.test(raw)) {
         throw new Error(
           'Too many sign-in emails have been sent recently. Please wait a few minutes and try again.',

@@ -54,6 +54,9 @@ function App() {
   const debounceRef = useRef<number | null>(null)
   const auth = useAuth()
   const raterId = auth.raterId
+  // Whether the sign-in screen is showing. Only ever set by pressing "Begin" while
+  // signed out; cleared on Back or once signed in.
+  const [showSignIn, setShowSignIn] = useState(false)
 
   // Local persist (300ms), then the network mirror (2s). Two timers on purpose:
   // localStorage is free and must stay tight, a round-trip per keystroke is not.
@@ -76,6 +79,7 @@ function App() {
   useEffect(() => {
     if (!SUPABASE_ENABLED || !raterId || hydrated.current === raterId) return
     hydrated.current = raterId
+    setShowSignIn(false) // signed in — leave the sign-in screen behind
     let cancelled = false
     void (async () => {
       const server = await hydrate(raterId) // never throws; null on any failure
@@ -150,10 +154,22 @@ function App() {
       </div>
     )
   }
-  if (auth.status === 'signed-out') {
+  // Sign-in is NOT a wall in front of the app (revised 2026-09-17, owner).
+  //
+  // It used to be: an unauthenticated visitor met an email form and nothing else — no
+  // statement of what the study is, what they would be asked to do, or how long it takes,
+  // before being asked for their address. Everything that answers those questions already
+  // lives on the landing screen, which was sitting BEHIND the gate.
+  //
+  // So the landing screen is now public, and identity is required only at the point it is
+  // actually needed: pressing "Begin", which is when answers start being recorded against
+  // a person. A rater can read the whole brief, open the rubric docs, and decide to take
+  // part before typing anything.
+  if (auth.status === 'signed-out' && showSignIn) {
     return (
       <SignInScreen
         onSignIn={auth.signIn}
+        onBack={() => setShowSignIn(false)}
         // Undefined unless password sign-in is enabled for this build, so the path
         // is unreachable in the deployed site even before dead-code elimination.
         onSignInWithPassword={ALLOW_PASSWORD_SIGNIN ? auth.signInWithPassword : undefined}
@@ -165,6 +181,7 @@ function App() {
     return (
       <LandingScreen
         signedInAs={auth.email}
+        requiresSignIn={SUPABASE_ENABLED}
         onSignOut={() => {
           // Drain first: anything still queued belongs to THIS rater, and after sign-out
           // the token to send it is gone.
@@ -178,12 +195,22 @@ function App() {
               // rater who just left loses nothing and resumes on their next sign-in.
               clear()
               dispatch({ type: 'RESET_ALL' })
+              // Forget that this rater was hydrated. Without this, signing back in as the
+              // SAME person is a no-op for the hydrate effect (the ref still holds their
+              // id), so their server progress is never re-fetched and the freshly cleared
+              // local session stands in for it.
+              hydrated.current = null
               void auth.signOut()
             })
         }}
         reviewer={session.reviewer}
         onReviewerChange={(r) => dispatch({ type: 'SET_REVIEWER', reviewer: r })}
-        onBegin={() => dispatch({ type: 'BEGIN' })}
+        // Begin is the commitment point: from here answers are recorded against a person,
+        // so this is where identity is required — not at the door.
+        onBegin={() => {
+          if (SUPABASE_ENABLED && !auth.raterId) setShowSignIn(true)
+          else dispatch({ type: 'BEGIN' })
+        }}
       />
     )
   }

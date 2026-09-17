@@ -21,6 +21,8 @@ interface Props {
   /** Authenticated email, when a backend is configured. Null = no auth (kill switch). */
   signedInAs?: string | null
   onSignOut?: () => void
+  /** True when a backend is configured, so Begin will require sign-in. */
+  requiresSignIn?: boolean
 }
 
 // Opening screen: task explanation + axis overview (labels imported from
@@ -32,6 +34,7 @@ export function LandingScreen({
   onBegin,
   signedInAs,
   onSignOut,
+  requiresSignIn = false,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
@@ -122,7 +125,15 @@ export function LandingScreen({
                 free-text box — it is the key your progress and answers are stored
                 under. The initials input survives only for the no-backend build
                 (kill switch), where nothing else records a rater. */}
-            {signedInAs ? (
+            {!signedInAs && requiresSignIn ? (
+              /* Signed out. Say plainly what pressing Begin will ask for, so the sign-in
+                 screen is never a surprise — but do not put a form here: the point of this
+                 screen is to let someone read the brief before committing. */
+              <p className="rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                You will be asked for your email address when you begin, so your progress
+                can be saved and you can continue on any computer.
+              </p>
+            ) : signedInAs ? (
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border bg-muted/40 px-3 py-2">
                 <span className="text-sm text-muted-foreground">Signed in as</span>
                 <span className="text-sm font-medium">{signedInAs}</span>
@@ -189,7 +200,7 @@ export function LandingScreen({
 
             <div className="space-y-2">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                {signedInAs ? (
+                {signedInAs || requiresSignIn ? (
                   <>
                     Your progress is saved to your account as you go, so you can close the page
                     and <strong>resume on any computer</strong>. There is nothing to download
@@ -247,7 +258,11 @@ export function LandingScreen({
             </div>
 
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
-              {BLOCK > 0 ? `Begin block ${BLOCK}` : 'Begin evaluation'}
+              {!signedInAs && requiresSignIn
+                ? 'Sign in and begin'
+                : BLOCK > 0
+                  ? `Begin block ${BLOCK}`
+                  : 'Begin evaluation'}
             </Button>
           </CardContent>
         </Card>

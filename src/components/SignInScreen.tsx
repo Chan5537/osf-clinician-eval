@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { KeyRound, Mail, MailCheck } from 'lucide-react'
+import { ArrowLeft, KeyRound, Mail, MailCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,6 +10,8 @@ import { AppFooter } from '@/components/AppFooter'
 
 interface Props {
   onSignIn: (email: string) => Promise<void>
+  /** Return to the landing screen without signing in. */
+  onBack?: () => void
   /** DEV BUILD ONLY — bypasses email entirely. See the note in lib/auth.ts. */
   onSignInWithPassword?: (email: string, password: string) => Promise<void>
 }
@@ -22,7 +24,7 @@ interface Props {
 // Passwordless suits 3-5 external clinicians: nothing to reset, nothing to store, no
 // support burden. The same address is both sign-up and sign-in, so there is no
 // "register vs log in" choice to get wrong.
-export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
+export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -137,9 +139,19 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
               </div>
             ) : (
               <form onSubmit={submit} className="space-y-5">
+                {onBack && (
+                  <button
+                    type="button"
+                    onClick={onBack}
+                    className="-ml-1 inline-flex cursor-pointer items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <ArrowLeft className="size-4" aria-hidden="true" />
+                    Back
+                  </button>
+                )}
                 <div className="space-y-2">
                   <h1 className="text-xl font-semibold tracking-tight">
-                    Clinician Evaluation Study
+                    Sign in to begin
                   </h1>
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     Enter your email address and we will send you a sign-in link. There is no
