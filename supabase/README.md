@@ -221,6 +221,19 @@ supabase --version    # 2.117.0
 
 ## Step 4 — Connect the CLI to your project
 
+> **Two places use the Resend key, and they are set differently.** `supabase secrets set`
+> configures the *Edge Function* (notifications). The *auth* emails (sign-in links) read
+> their key from the SMTP form in the dashboard, which the CLI never touches. Rotating the
+> key means updating BOTH, or one of them silently stops working.
+>
+> Confirm the function's copy with `supabase secrets list` — it prints hashes and
+> `updated_at`, so a recent timestamp is the evidence the new key landed.
+>
+> If `secrets list` reports `Cannot find project ref`, the CLI is looking for
+> `supabase/.temp/project-ref`. An older `link` may have written only
+> `linked-project.json`; `printf '<project-ref>' > supabase/.temp/project-ref` fixes it
+> without re-linking.
+
 ⚠️ **Every `supabase` command must be run from `app/`** — the directory holding
 `supabase/`. The CLI resolves paths relative to the working directory, so running from
 one level up (`clinician_sleepfm_eval_interface/`) fails with
