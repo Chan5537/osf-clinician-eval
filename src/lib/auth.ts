@@ -7,14 +7,25 @@ import { supabase, SUPABASE_ENABLED, authRedirectTo } from './supabase'
 
 export type AuthStatus = 'loading' | 'signed-out' | 'signed-in'
 
+/** `throttledFor` = seconds until another send is allowed; a link is already out. */
+export interface SignInResult {
+  throttledFor?: number
+}
+
 export interface AuthState {
   status: AuthStatus
   user: User | null
   /** auth.users.id — the rater_id every server row is keyed by. Null until signed in. */
   raterId: string | null
   email: string | null
-  /** Send a magic link. Resolves on success; rejects with a displayable message. */
-  signIn: (email: string) => Promise<void>
+  /**
+   * Send a magic link. Rejects with a displayable message on real failure.
+   *
+   * Resolves with `throttledFor` when Supabase declined because a link went to this
+   * address moments ago — a link IS in the inbox, so the caller should treat it as a
+   * send, not an error.
+   */
+  signIn: (email: string) => Promise<SignInResult>
   /**
    * DEV BUILD ONLY — password sign-in, for testing without email.
    *
@@ -73,7 +84,7 @@ export function useAuth(): AuthState {
     }
   }, [])
 
-  const signIn = useCallback(async (email: string) => {
+  const signIn = useCallback(async (email: string): Promise<SignInResult> => {
     if (!supabase) throw new Error('Sign-in is not available in this build.')
     const address = email.trim()
     if (!address) throw new Error('Enter your email address.')
@@ -107,17 +118,16 @@ export function useAuth(): AuthState {
       // eslint-disable-next-line no-console
       console.error('[auth] signInWithOtp failed', { status, error })
 
-      // Supabase throttles repeat sends to the SAME address (60s by default) and phrases
-      // it as "For security purposes, you can only request this after N seconds" — which
-      // reads like an accusation to someone who simply signed out and back in. Say what
-      // is happening and that waiting is all that is required.
+      // Supabase throttles repeat sends to the SAME address (60s by default).
+      //
+      // This is NOT a failure: it means a link was already sent and is sitting in the
+      // rater's inbox. Throwing here put them in front of a red error box with a dead
+      // button for a minute, which reads as "the system is broken" when the correct
+      // action is "go read your email". Resolve instead, and let the caller show the
+      // same "check your email" screen it would show after a fresh send.
       const after = raw.match(/after (\d+) seconds?/i)
-      if (after || /for security purposes/i.test(raw)) {
-        const secs = after ? Number(after[1]) : 60
-        throw new Error(
-          `A sign-in link was just sent to this address. You can request another in ${secs} ` +
-            `second${secs === 1 ? '' : 's'} — or use the link already in your inbox.`,
-        )
+      if (after || /for security purposes|only request this after/i.test(raw)) {
+        return { throttledFor: after ? Number(after[1]) : 60 }
       }
       if (/rate limit|too many/i.test(raw)) {
         throw new Error(
@@ -147,6 +157,7 @@ export function useAuth(): AuthState {
       }
       throw new Error(raw)
     }
+    return {}
   }, [])
 
   const signInWithPassword = useCallback(async (email: string, password: string) => {

@@ -9,7 +9,7 @@ import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 
 interface Props {
-  onSignIn: (email: string) => Promise<void>
+  onSignIn: (email: string) => Promise<{ throttledFor?: number }>
   /** Return to the landing screen without signing in. */
   onBack?: () => void
   /** DEV BUILD ONLY — bypasses email entirely. See the note in lib/auth.ts. */
@@ -36,6 +36,8 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
   // error path — but an unthrottled button invites a rater to spend the project-wide
   // hourly quota on themselves in ten seconds.
   const [cooldown, setCooldown] = useState(0)
+  // True when the last request was throttled: a link exists but is not newly sent.
+  const [alreadySent, setAlreadySent] = useState(false)
 
   useEffect(() => {
     if (cooldown <= 0) return
@@ -52,9 +54,12 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
         await onSignInWithPassword(email, password)
         return // onAuthStateChange swaps the screen; no "check your email" step
       }
-      await onSignIn(email)
+      const res = await onSignIn(email)
       setSent(true)
-      setCooldown(30)
+      // Throttled means a link is ALREADY in their inbox — same destination screen,
+      // just a longer wait before another send is allowed.
+      setCooldown(res?.throttledFor ?? 30)
+      setAlreadySent(Boolean(res?.throttledFor))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not send the link.')
       // Stay on the form so the address is still there to correct or retry.
@@ -83,11 +88,22 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
                     className="size-5 text-emerald-600 dark:text-emerald-400"
                     aria-hidden="true"
                   />
-                  <h1 className="text-lg font-semibold tracking-tight">Check your email</h1>
+                  <h1 className="text-lg font-semibold tracking-tight">
+                    {alreadySent ? 'Check your inbox' : 'Check your email'}
+                  </h1>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  We sent a sign-in link to <strong>{email}</strong>. Open it on this device to
-                  begin. The link is valid for 24 hours.
+                  {alreadySent ? (
+                    <>
+                      A sign-in link was sent to <strong>{email}</strong> a moment ago — it is
+                      still valid, so please use that one. Open it on this device to begin.
+                    </>
+                  ) : (
+                    <>
+                      We sent a sign-in link to <strong>{email}</strong>. Open it on this device
+                      to begin. The link is valid for 24 hours.
+                    </>
+                  )}
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   If it has not arrived within a minute or two, please check your spam or junk
@@ -131,6 +147,7 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
                       setSent(false)
                       setError(null)
                       setCooldown(0)
+                      setAlreadySent(false)
                     }}
                   >
                     Use a different address
