@@ -61,3 +61,23 @@ export const ALLOW_PASSWORD_SIGNIN: boolean =
  * deploy.yml sets neither, so the deployed site offers no reset.
  */
 export const ALLOW_RESET: boolean = ALLOW_PASSWORD_SIGNIN
+
+/**
+ * Whether the "fill every case" test button exists.
+ *
+ * Reaching the end of a round by hand is 150 radio clicks, which makes the completion
+ * screen, the completion trigger and the notification email expensive to test even once.
+ * This button fills them all with random scores and submits.
+ *
+ * Its own flag, NOT folded into IS_DEV_BUILD, because the build you most need it in is
+ * the CLINICIAN build — that is the UI actually being verified. Opt in explicitly:
+ *
+ *   VITE_ALLOW_TEST_AUTOFILL=1 VITE_APP_MODE=clinician npm run dev
+ *
+ * deploy.yml never sets it, so the deployed site cannot fabricate answers.
+ *
+ * ⚠️ The rows it writes are indistinguishable from real ones in `rating` apart from being
+ *    random. Clear them before a real round: scripts/checks/reset_round.sql.
+ */
+export const ALLOW_TEST_AUTOFILL: boolean =
+  import.meta.env.VITE_ALLOW_TEST_AUTOFILL === '1'

@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "start": "./scripts/dev.sh",
     "start:dev": "./scripts/dev.sh --dev",
-    "start:fresh": "./scripts/dev.sh --reset --reseed"
+    "start:fresh": "./scripts/dev.sh --reset --reseed",
+    "start:test": "VITE_ALLOW_TEST_AUTOFILL=1 ./scripts/dev.sh"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",

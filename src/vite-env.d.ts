@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_APP_MODE?: string
   /** '1' offers password sign-in alongside the email link. Never set by deploy.yml. */
   readonly VITE_ALLOW_PASSWORD_SIGNIN?: string
+  /** '1' shows the test-only "fill every case" button. Never set by deploy.yml. */
+  readonly VITE_ALLOW_TEST_AUTOFILL?: string
   /** Dev-only: serve just the first N cases (`VITE_CASE_LIMIT=3 npm run dev`). */
   readonly VITE_CASE_LIMIT?: string
 }

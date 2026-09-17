@@ -19,7 +19,12 @@ import {
   flushNow,
   resetServerSession,
 } from '@/lib/sync'
-import { IS_DEV_BUILD, ALLOW_PASSWORD_SIGNIN, ALLOW_RESET } from '@/lib/app-mode'
+import {
+  IS_DEV_BUILD,
+  ALLOW_PASSWORD_SIGNIN,
+  ALLOW_RESET,
+  ALLOW_TEST_AUTOFILL,
+} from '@/lib/app-mode'
 import { SignInScreen } from '@/components/SignInScreen'
 import { SyncStatus } from '@/components/SyncStatus'
 import { toCSV, toJSON, downloadText } from '@/lib/export'
@@ -402,6 +407,43 @@ function App() {
                 </PopoverContent>
               </Popover>
             )}
+            {/* TEST FIXTURE. Fills and submits every case so the completion screen, the
+                completion trigger and the notification email are reachable without 150
+                hand-clicks. Gated on its own flag; absent from the deployed build. */}
+            {ALLOW_TEST_AUTOFILL && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="border-dashed border-amber-500 text-amber-700 dark:text-amber-300"
+                title="Testing only — fills every case with random scores and submits them."
+                onClick={() => {
+                  if (
+                    !window.confirm(
+                      'Fill ALL cases with random scores and submit them?\n\n' +
+                        'This writes fabricated ratings to the database. Testing only.',
+                    )
+                  )
+                    return
+                  const at = new Date().toISOString()
+                  const action: SessionAction = { type: 'AUTOFILL_ALL', at }
+                  const next = sessionReducer(session, action)
+                  dispatch(action)
+                  flush(next)
+                  // Push EVERY case, not just the current one: the completion trigger
+                  // counts rows in the database, so a local-only fill would never fire it.
+                  if (raterId) {
+                    DEMO_CASES.forEach((_, idx) =>
+                      queueCaseSubmit(raterId, next, idx, loadEnvelope()?.rev ?? 0),
+                    )
+                  }
+                  toast.success(`Filled and submitted ${DEMO_CASES.length} case(s)`)
+                }}
+              >
+                Fill all (test)
+              </Button>
+            )}
+
             {/* A3 (Yang 6:22): the reveal button must not exist in the clinician
                 build. IS_DEV_BUILD is a build-time constant, so this whole subtree
                 — and the ArmBadge it drives — is eliminated from that bundle. */}
