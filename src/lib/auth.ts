@@ -117,6 +117,15 @@ export function useAuth(): AuthState {
           'Sign-up is currently closed. Please contact the study team so they can add you.',
         )
       }
+      // 504 = Supabase connected to the mail server and then hung waiting for it.
+      // Distinct from 500 (refused) and worth its own wording, because for a rater the
+      // right action is simply to retry — the request may even have gone out.
+      if (status === 504 || status === 408) {
+        throw new Error(
+          'The email server did not respond in time. Please try again — if the message ' +
+            'does arrive, you can ignore the extra one.',
+        )
+      }
       // A 500 here is the mail server refusing, not anything the rater did wrong.
       if (status === 500 || !raw) {
         throw new Error(
