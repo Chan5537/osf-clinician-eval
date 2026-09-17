@@ -23,8 +23,42 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
 const NOTIFY_TO = Deno.env.get('NOTIFY_TO')!            // the operator's address
 const NOTIFY_FROM = Deno.env.get('NOTIFY_FROM') ?? 'onboarding@resend.dev'
 // Where the button goes: the project's rating table, behind a dashboard login.
-const REVIEW_URL = Deno.env.get('REVIEW_URL') ??
-  `https://supabase.com/dashboard/project/${SUPABASE_URL.split('//')[1]?.split('.')[0]}/editor`
+const PROJECT_REF = SUPABASE_URL.split('//')[1]?.split('.')[0] ?? ''
+
+/**
+ * Deep link into the SQL editor with this rater's responses already queried.
+ *
+ * The dashboard accepts `?content=<url-encoded SQL>` on /sql/new, so the operator lands
+ * on a populated editor and presses Run — rather than the bare editor they then have to
+ * write a query into.
+ *
+ * Deliberately a QUERY, not the JSON itself: the result requires a dashboard login, so
+ * nothing sensitive travels in the email and forwarding it leaks nothing. Ratings can be
+ * joined back to the arm key, so a public JSON URL would be a quiet un-blinding vector.
+ */
+function reviewUrl(email: string, batch: string): string {
+  const sql = `-- Responses from ${email} (${batch})
+select r.case_id,
+       r.response_label,
+       br.arm_name                       as arm,
+       r.dimension,
+       r.value,
+       r.submitted_at,
+       r.duration_seconds,
+       r.active_seconds
+  from public.rating r
+  join public.rater ra on ra.id = r.rater_id
+  join public.batch_response br
+    on br.batch = r.batch and br.case_id = r.case_id
+   and br.response_label = r.response_label
+ where ra.email = '${email.replace(/'/g, "''")}'
+   and r.batch = '${batch.replace(/'/g, "''")}'
+ order by br.case_position, r.response_label, r.dimension;
+
+-- Same rows as a single JSON document (click the cell to expand):
+-- select jsonb_agg(t) from (<the select above>) t;`
+  return `https://supabase.com/dashboard/project/${PROJECT_REF}/sql/new?content=${encodeURIComponent(sql)}`
+}
 
 const MAX_ATTEMPTS = 5
 
@@ -61,14 +95,15 @@ function body(r: OutboxRow): { subject: string; html: string } {
             p.completed_at ? new Date(p.completed_at).toLocaleString() : '—'
           }</td></tr>
         </table>
-        <a href="${REVIEW_URL}"
+        <a href="${reviewUrl(p.email ?? '', p.batch ?? r.batch)}"
            style="display:inline-block;background:#2563eb;color:#fff;text-decoration:none;
                   padding:10px 18px;border-radius:6px;font-size:14px;font-weight:600">
           View their responses
         </a>
         <p style="margin:16px 0 0;color:#888;font-size:12px">
-          Opens the Supabase editor — you will need to be signed in. The ratings
-          themselves are not included in this email.
+          Opens the Supabase SQL editor with their responses already queried — press Run.
+          You will need to be signed in. The ratings themselves are deliberately not
+          included in this email.
         </p>
       </div>`,
   }
