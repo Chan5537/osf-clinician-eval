@@ -42,6 +42,10 @@ join public.rater ra
   on ra.id = r.rater_id
 where r.batch          = 'v611_r10'
   and r.rubric_version = 'v9-20260903'   -- ALWAYS pin: past renames crossed over
+  -- ⚠️ SIGN-UP IS OPEN (2026-09-17): anyone reaching the public URL can create an
+  -- account, and their rows are indistinguishable from a recruited clinician's. Before
+  -- analysis, restrict to the raters you actually recruited — uncomment and fill in:
+  -- and ra.email in ('clinician1@example.org', 'clinician2@example.org')
   and r.submitted_at is not null         -- submitted cases only
   and r.response_sha   = br.response_sha -- integrity tripwire (see audit 1)
 order by reviewer, br.case_position, r.response_label, r.dimension;

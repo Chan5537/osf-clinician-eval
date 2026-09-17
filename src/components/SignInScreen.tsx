@@ -14,12 +14,14 @@ interface Props {
   onSignInWithPassword?: (email: string, password: string) => Promise<void>
 }
 
-// Sign-in gate. No password: the rater enters the address the invitation went to
-// and gets a one-time link.
+// Sign-in gate. No password: the rater enters their email and gets a one-time link.
 //
-// Passwordless is the right call for 3-5 external clinicians — nothing to reset,
-// nothing to store, and no support burden on us. Signups are disabled in the
-// Supabase dashboard, so the invite list IS the access control.
+// OPEN SIGNUP (owner, 2026-09-17): no roster, no invitations. A clinician who reaches
+// the site enrols themselves, and a mistyped address cannot lock anyone out.
+//
+// Passwordless suits 3-5 external clinicians: nothing to reset, nothing to store, no
+// support burden. The same address is both sign-up and sign-in, so there is no
+// "register vs log in" choice to get wrong.
 export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
@@ -69,7 +71,9 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                 </p>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   If it has not arrived within a minute or two, please check your spam or junk
-                  folder.
+                  folder. Some email systems open links automatically for security scanning,
+                  which can use the link up before you click it — if it says the link is
+                  invalid or expired, just request a new one.
                 </p>
                 <Button
                   type="button"
@@ -91,8 +95,9 @@ export function SignInScreen({ onSignIn, onSignInWithPassword }: Props) {
                     Clinician Evaluation Study
                   </h1>
                   <p className="text-sm leading-relaxed text-muted-foreground">
-                    Please sign in with the email address your invitation was sent to. We will
-                    email you a link — there is no password to remember.
+                    Enter your email address and we will send you a sign-in link. There is no
+                    password to remember, and no account to set up — the same address works
+                    every time you come back.
                   </p>
                   {/* The reason signing in matters, in the rater's terms: it is what
                       lets them stop and come back on any computer. */}
