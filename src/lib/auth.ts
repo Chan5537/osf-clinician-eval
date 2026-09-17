@@ -81,16 +81,24 @@ export function useAuth(): AuthState {
       email: address,
       options: {
         emailRedirectTo: authRedirectTo(),
-        // Signups are DISABLED in the dashboard, so this is belt-and-braces: an
-        // address that was never invited gets no link and no account.
-        shouldCreateUser: false,
+        // OPEN SIGNUP (owner, 2026-09-17). A rater who reaches the site can enrol
+        // themselves; there is no roster to maintain and no lockout when someone
+        // mistypes the address we expected.
+        //
+        // The trade accepted with it: the site is public, so anyone with the URL can
+        // create an account. Their rows are indistinguishable from a real clinician's
+        // in `rating`, so before analysis, filter on the rater addresses you actually
+        // recruited — see supabase/extract.sql, which pins the batch and rubric version
+        // but NOT the set of raters.
+        shouldCreateUser: true,
       },
     })
     if (error) {
-      // Supabase says "Signups not allowed for otp" for an uninvited address.
-      // A clinician cannot act on that wording; say what they should do instead.
-      const msg = /signups not allowed/i.test(error.message)
-        ? 'That address is not on the study list. Please use the address the invitation was sent to.'
+      // Rate limiting is still the most likely failure even with the project limit
+      // raised, because it is counted PROJECT-WIDE rather than per rater. The raw
+      // wording gives a clinician nothing to act on.
+      const msg = /rate limit|too many/i.test(error.message)
+        ? 'Too many sign-in emails have been sent in the last hour. Please wait a few minutes and try again.'
         : error.message
       throw new Error(msg)
     }

@@ -440,13 +440,18 @@ so clinician invites would have been accepted and silently dropped anyway.
 Routing auth email through Resend is only worth revisiting **with a verified sending
 domain**. Without one there is nothing to gain.
 
-What this costs: the built-in sender is capped at roughly **4 emails/hour project-wide**.
-For 3-5 clinicians signing in once or twice, that is about 10 emails for the whole round,
-so it should hold. The cap was exhausted during setup only because "Generate link" was
-being used repeatedly for testing — real raters will not do that.
+What this costs: the built-in sender's default cap is roughly **4 emails/hour
+project-wide** — the limit that locked the operator out on 2026-09-08.
 
-⚠️ If two clinicians request links minutes apart and hit the cap, one sees an error and
-cannot self-recover. Watch for that during the first day of the round.
+**Check the live value before the round:** Authentication → Rate Limits → "Rate limit for
+sending emails". It was raised to 300 while custom SMTP was enabled; Supabase may revert it
+to the default now that custom SMTP is off, since the cap exists to protect *their* shared
+sender. If it reads ~4, raise it as far as the dashboard allows.
+
+⚠️ The limit is **project-wide, not per rater**. With open signup, every sign-in request
+from anyone — including a stray visitor to the public URL — spends from the same budget. If
+it is exhausted, a real clinician sees an error and cannot self-recover. Worth watching on
+the first day of the round.
 
 **Completion notifications are unaffected.** They call Resend's HTTP API from the Edge
 Function — not SMTP — and go only to the operator, which is exactly what
