@@ -427,6 +427,35 @@ delete from public.notification_outbox where kind = 'rater_completed';
 
 ---
 
+# ⚠️ Required: the email template must show the CODE
+
+Sign-in uses a **6-digit code**, not a clickable link — the rater stays on the page and
+types it. Supabase decides which to send from whether the app passes a redirect URL; the
+app passes none, so a code is generated. **But the default email template only renders
+`{{ .ConfirmationURL }}`**, so unless the template is changed the rater receives a link and
+no code, and there is nothing they can type.
+
+**Authentication → Emails → Magic Link** — replace the body with:
+
+```html
+<h2>Your sign-in code</h2>
+<p>Enter this code on the evaluation page to continue:</p>
+<p style="font-size:28px;font-weight:700;letter-spacing:6px;font-family:monospace">
+  {{ .Token }}
+</p>
+<p>The code is valid for 1 hour. If you did not request it, you can ignore this email.</p>
+```
+
+`{{ .Token }}` is the 6-digit code. Send yourself one and confirm a number arrives.
+
+**Why a code rather than a link:** links are single-use, and corporate mail scanners fetch
+them on arrival — consuming the link before the human clicks. Gmail did this on 2026-09-08
+during setup; Microsoft Defender, which most hospitals run, is more aggressive. A scanner
+cannot type a code into a form. It also keeps first-time sign-in on one page instead of
+sending the rater out to their inbox and back.
+
+---
+
 # Sign-in email: what we settled on
 
 **Decision (2026-09-17): custom SMTP is OFF. Auth emails use Supabase's built-in sender.**

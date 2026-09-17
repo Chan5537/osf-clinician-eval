@@ -169,6 +169,7 @@ function App() {
     return (
       <SignInScreen
         onSignIn={auth.signIn}
+        onVerifyCode={auth.verifyCode}
         onBack={() => setShowSignIn(false)}
         // Undefined unless password sign-in is enabled for this build, so the path
         // is unreachable in the deployed site even before dead-code elimination.

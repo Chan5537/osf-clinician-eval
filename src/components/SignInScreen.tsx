@@ -10,6 +10,8 @@ import { AppFooter } from '@/components/AppFooter'
 
 interface Props {
   onSignIn: (email: string) => Promise<{ throttledFor?: number }>
+  /** Exchange the emailed 6-digit code for a session. */
+  onVerifyCode: (email: string, code: string) => Promise<void>
   /** Return to the landing screen without signing in. */
   onBack?: () => void
   /** DEV BUILD ONLY — bypasses email entirely. See the note in lib/auth.ts. */
@@ -24,7 +26,7 @@ interface Props {
 // Passwordless suits 3-5 external clinicians: nothing to reset, nothing to store, no
 // support burden. The same address is both sign-up and sign-in, so there is no
 // "register vs log in" choice to get wrong.
-export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) {
+export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassword }: Props) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -38,6 +40,7 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
   const [cooldown, setCooldown] = useState(0)
   // True when the last request was throttled: a link exists but is not newly sent.
   const [alreadySent, setAlreadySent] = useState(false)
+  const [code, setCode] = useState('')
 
   useEffect(() => {
     if (cooldown <= 0) return
@@ -82,35 +85,65 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
             <LogoLockup />
 
             {sent ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <MailCheck
-                    className="size-5 text-emerald-600 dark:text-emerald-400"
-                    aria-hidden="true"
-                  />
-                  <h1 className="text-lg font-semibold tracking-tight">
-                    {alreadySent ? 'Check your inbox' : 'Check your email'}
-                  </h1>
+              /* CODE ENTRY. The rater never leaves this page: the email carries a number,
+                 not a link, so there is no round trip through the inbox and nothing for a
+                 mail scanner to consume. */
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault()
+                  if (busy) return
+                  setBusy(true)
+                  setError(null)
+                  try {
+                    await onVerifyCode(email, code)
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : 'Could not verify that code.')
+                  } finally {
+                    setBusy(false)
+                  }
+                }}
+                className="space-y-5"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <MailCheck
+                      className="size-5 text-emerald-600 dark:text-emerald-400"
+                      aria-hidden="true"
+                    />
+                    <h1 className="text-lg font-semibold tracking-tight">
+                      {alreadySent ? 'Check your inbox' : 'Check your email'}
+                    </h1>
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {alreadySent ? (
+                      <>
+                        A code was sent to <strong>{email}</strong> a moment ago and is still
+                        valid — enter that one below.
+                      </>
+                    ) : (
+                      <>
+                        We sent a 6-digit code to <strong>{email}</strong>. Enter it below to
+                        continue.
+                      </>
+                    )}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {alreadySent ? (
-                    <>
-                      A sign-in link was sent to <strong>{email}</strong> a moment ago — it is
-                      still valid, so please use that one. Open it on this device to begin.
-                    </>
-                  ) : (
-                    <>
-                      We sent a sign-in link to <strong>{email}</strong>. Open it on this device
-                      to begin. The link is valid for 24 hours.
-                    </>
-                  )}
-                </p>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  If it has not arrived within a minute or two, please check your spam or junk
-                  folder. Some email systems open links automatically for security scanning,
-                  which can use the link up before you click it — if it says the link is
-                  invalid or expired, just request a new one.
-                </p>
+
+                <div className="space-y-2">
+                  <Label htmlFor="code">6-digit code</Label>
+                  <Input
+                    id="code"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    autoFocus
+                    maxLength={7}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="123456"
+                    className="max-w-[10rem] text-center text-lg tracking-[0.35em] tabular-nums"
+                  />
+                </div>
+
                 {error && (
                   <p
                     className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
@@ -120,9 +153,15 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
                   </p>
                 )}
 
-                {/* Re-sending is the primary recovery here — a scanned-away link is the
-                    single most common reason a rater is stuck on this screen — so it is a
-                    real button, not a footnote. */}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full"
+                  disabled={busy || code.replace(/\D/g, '').length !== 6}
+                >
+                  {busy ? 'Verifying…' : 'Continue'}
+                </Button>
+
                 <div className="flex flex-wrap items-center gap-2">
                   <Button
                     type="button"
@@ -132,11 +171,7 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
                     onClick={() => void send()}
                   >
                     <Mail className="size-4" aria-hidden="true" />
-                    {busy
-                      ? 'Sending…'
-                      : cooldown > 0
-                        ? `Send again in ${cooldown}s`
-                        : 'Send another link'}
+                    {cooldown > 0 ? `Send again in ${cooldown}s` : 'Send a new code'}
                   </Button>
                   <Button
                     type="button"
@@ -148,12 +183,13 @@ export function SignInScreen({ onSignIn, onBack, onSignInWithPassword }: Props) 
                       setError(null)
                       setCooldown(0)
                       setAlreadySent(false)
+                      setCode('')
                     }}
                   >
                     Use a different address
                   </Button>
                 </div>
-              </div>
+              </form>
             ) : (
               <form onSubmit={submit} className="space-y-5">
                 {onBack && (
