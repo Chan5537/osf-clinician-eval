@@ -427,9 +427,36 @@ delete from public.notification_outbox where kind = 'rater_completed';
 
 ---
 
-# While you are here: fix the auth email limit
+# Sign-in email: what we settled on
 
-**Do this before inviting clinicians.**
+**Decision (2026-09-17): custom SMTP is OFF. Auth emails use Supabase's built-in sender.**
+
+The attempt to route sign-in email through Resend failed with a 500 on every try, and
+Resend's logs showed *zero* inbound requests — so Supabase was never reaching Resend at
+all. That was worth abandoning rather than debugging, because fixing it would not have
+helped: `onboarding@resend.dev` only delivers to the Resend account's own signup address,
+so clinician invites would have been accepted and silently dropped anyway.
+
+Routing auth email through Resend is only worth revisiting **with a verified sending
+domain**. Without one there is nothing to gain.
+
+What this costs: the built-in sender is capped at roughly **4 emails/hour project-wide**.
+For 3-5 clinicians signing in once or twice, that is about 10 emails for the whole round,
+so it should hold. The cap was exhausted during setup only because "Generate link" was
+being used repeatedly for testing — real raters will not do that.
+
+⚠️ If two clinicians request links minutes apart and hit the cap, one sees an error and
+cannot self-recover. Watch for that during the first day of the round.
+
+**Completion notifications are unaffected.** They call Resend's HTTP API from the Edge
+Function — not SMTP — and go only to the operator, which is exactly what
+`onboarding@resend.dev` supports. That path is verified working.
+
+---
+
+# Reference: if you later verify a domain
+
+**Only relevant once a sending domain is verified in Resend.**
 
 Supabase's built-in email allows only a few messages an hour *project-wide*, and
 "Generate link" in the dashboard spends from the same budget. Exhausting it locks out
