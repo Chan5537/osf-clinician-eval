@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
-import { supabase, SUPABASE_ENABLED, authRedirectTo } from './supabase'
+import { supabase, SUPABASE_ENABLED } from './supabase'
 
 export type AuthStatus = 'loading' | 'signed-out' | 'signed-in'
 
@@ -39,6 +39,8 @@ export interface AuthState {
    * the clinician build (see app-mode.ts).
    */
   signInWithPassword: (email: string, password: string) => Promise<void>
+  /** Exchange the emailed 6-digit code for a session. */
+  verifyCode: (email: string, token: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -91,7 +93,19 @@ export function useAuth(): AuthState {
     const { error } = await supabase.auth.signInWithOtp({
       email: address,
       options: {
-        emailRedirectTo: authRedirectTo(),
+        // NO emailRedirectTo — that is the switch. With a redirect URL Supabase mails a
+        // clickable link; without one it mails a 6-DIGIT CODE, which the rater types on
+        // the page they are already on.
+        //
+        // Two reasons this is the better shape here (owner, 2026-09-17):
+        //   * A link makes first-time sign-in leave the site: page -> inbox -> click ->
+        //     back. A code keeps the whole flow in one tab.
+        //   * Links are single-use, and corporate mail scanners (Gmail did this on
+        //     2026-09-08; Microsoft Defender is worse) FETCH them on arrival, consuming
+        //     the link before the human clicks it. A scanner cannot type a code into a
+        //     form, so this failure mode disappears.
+        //
+        // The template must also carry the code — see supabase/README.md.
         // OPEN SIGNUP (owner, 2026-09-17). A rater who reaches the site can enrol
         // themselves; there is no roster to maintain and no lockout when someone
         // mistypes the address we expected.
@@ -160,6 +174,28 @@ export function useAuth(): AuthState {
     return {}
   }, [])
 
+  const verifyCode = useCallback(async (email: string, token: string) => {
+    if (!supabase) throw new Error('Sign-in is not available in this build.')
+    const code = token.replace(/\D/g, '') // tolerate spaces/dashes as pasted from mail
+    if (code.length !== 6) throw new Error('Please enter the 6-digit code from your email.')
+    const { error } = await supabase.auth.verifyOtp({
+      email: email.trim(),
+      token: code,
+      type: 'email',
+    })
+    if (error) {
+      const raw = error.message || ''
+      if (/expired/i.test(raw)) {
+        throw new Error('That code has expired. Request a new one below.')
+      }
+      if (/invalid|incorrect/i.test(raw)) {
+        throw new Error('That code is not right. Please check the email and try again.')
+      }
+      throw new Error(raw || 'Could not verify that code.')
+    }
+    // onAuthStateChange swaps the screen; nothing else to do here.
+  }, [])
+
   const signInWithPassword = useCallback(async (email: string, password: string) => {
     if (!supabase) throw new Error('Sign-in is not available in this build.')
     const { error } = await supabase.auth.signInWithPassword({
@@ -181,6 +217,7 @@ export function useAuth(): AuthState {
     email: user?.email ?? null,
     signIn,
     signInWithPassword,
+    verifyCode,
     signOut,
   }
 }
