@@ -430,12 +430,38 @@ round, and a rate-limited clinician sees nothing at all.
 **Authentication → Emails → SMTP Settings** → Enable custom SMTP
 
 ```
-Host:     smtp.resend.com
-Port:     465
-Username: resend
-Password: <your RESEND_API_KEY>
-Sender:   onboarding@resend.dev   (or a verified domain)
+Host:             smtp.resend.com
+Port:             587                  <- STARTTLS, not 465
+Username:         resend               <- literally this word
+Password:         <your RESEND_API_KEY>  (the re_... value, NOT your account password)
+Sender email:     onboarding@resend.dev  (or an address at a verified domain)
+Sender name:      UCLA Health Intelligence Lab
+Minimum interval: 60
 ```
+
+⚠️ **Use 587, not 465.** Resend accepts both, but Supabase's sender expects STARTTLS;
+against 465 (implicit TLS) it fails with a 500 and the unhelpful message
+*"Error sending magic link email"*. An earlier version of this file said 465 — that was
+wrong, and this is what it looks like when it bites.
+
+If 587 still fails, check in this order:
+
+1. **Resend → Logs.** Nothing there at all = Supabase never reached Resend (host, port or
+   credentials). An entry with an error = Resend will name the reason.
+2. **Password** is the API key (`re_...`), not the Resend account password — and not a key
+   you have since revoked.
+3. **Username** is the literal word `resend`, not an email address.
+4. **Sender** is `onboarding@resend.dev` or an address at a domain you have verified.
+
+Supabase raises the email rate limit from ~4/hour to 300/hour automatically once custom
+SMTP is enabled, so there is nothing to change under Authentication → Rate Limits for
+sending. The two worth raising are the **IP-based** ones — hospitals commonly NAT an
+entire site behind one address, so several clinicians can look like one IP:
+
+| Setting | Default | Suggested |
+|---|---|---|
+| Rate limit for token verifications | 30 / 5 min | 60 |
+| Rate limit for sign-ups and sign-ins | 30 / 5 min | 60 |
 
 ⚠️ `onboarding@resend.dev` only delivers to your own address. **To email real
 clinicians you must verify a domain in Resend** (Domains → Add Domain, add the DNS
