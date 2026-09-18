@@ -10,7 +10,7 @@ import type { SessionState, SessionAction } from '@/lib/session'
 import type { RubricAction } from '@/lib/types'
 import { load, save, clear, loadEnvelope, stashSuperseded } from '@/lib/storage'
 import { useAuth } from '@/lib/auth'
-import { SUPABASE_ENABLED } from '@/lib/supabase'
+import { SUPABASE_ENABLED, supabase } from '@/lib/supabase'
 import {
   hydrate,
   reconcile,
@@ -57,13 +57,42 @@ function initSession(): SessionState {
 //
 // The completion screen is a dead end by design: a clinician must not be able to wipe a
 // finished round, so "Start over" is gated behind the testing flag. That leaves whoever is
-// REHEARSING the clinician build with no way back, and `localStorage` survives a server-side
-// delete — so clearing the tables and reloading just re-uploads the same session.
+// REHEARSING the clinician build with no way back.
 //
-// Order matters and is why this exists as one call: browser first, then server.
+// It clears BOTH SIDES, in the only order that works. Deleting the server rows alone does
+// nothing: localStorage still holds the session and the next sync uploads it straight back,
+// which looks exactly like "the delete did not work". Clearing the browser alone is no
+// better — the next sign-in hydrates it again from the server. Doing it in one call removes
+// the ordering trap entirely.
+//
 //   In the console:  __evalReset()
 if (typeof window !== 'undefined') {
-  ;(window as unknown as Record<string, unknown>).__evalReset = () => {
+  ;(window as unknown as Record<string, unknown>).__evalReset = async () => {
+    // 1. Stop the queue first, or a pending upload re-creates rows mid-delete.
+    try {
+      await flushNow()
+    } catch {
+      /* ignore: we are about to discard this state anyway */
+    }
+
+    // 2. Server. Uses the signed-in rater's own token, so RLS limits it to their rows —
+    //    exactly the scope a tester wants, and nothing they should not already be able to.
+    let serverMsg = 'skipped (not signed in)'
+    try {
+      if (supabase) {
+        const { data } = await supabase.auth.getUser()
+        const uid = data.user?.id
+        if (uid) {
+          await supabase.from('rating').delete().eq('rater_id', uid)
+          await supabase.from('session_state').delete().eq('rater_id', uid)
+          serverMsg = 'cleared for ' + (data.user?.email ?? uid)
+        }
+      }
+    } catch (e) {
+      serverMsg = 'FAILED — ' + String(e)
+    }
+
+    // 3. Browser, last: nothing left to re-upload.
     try {
       Object.keys(localStorage)
         .filter((k) => k.startsWith('clinician-eval-'))
@@ -71,12 +100,13 @@ if (typeof window !== 'undefined') {
     } catch {
       /* private mode: nothing to clear */
     }
+
     // eslint-disable-next-line no-console
     console.info(
-      'Local session cleared. Now clear the server too, or it will restore on next sign-in:\n' +
-        '  delete from public.rating;\n' +
-        '  delete from public.session_state;\n' +
-        '  delete from public.notification_outbox;',
+      'Local session cleared. Server: ' +
+        serverMsg +
+        '\n(notification_outbox is NOT touched — clear it in SQL if you want to re-test ' +
+        'the completion email.)',
     )
     location.reload()
   }
