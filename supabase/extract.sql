@@ -47,7 +47,7 @@ where r.batch          = 'v611_r10'
   -- still join (the letters did not change, so response_sha is stable) — they are simply in a
   -- different rubric partition. Switch the pin to read them; never pool the two on
   -- trustworthiness, whose howToScore changed in v11.
-  and r.rubric_version = 'v11-20260918'  -- ALWAYS pin: past renames crossed over
+  and r.rubric_version = 'v12-20260918'  -- ALWAYS pin: past renames crossed over
   -- ⚠️ SIGN-UP IS OPEN (2026-09-17): anyone reaching the public URL can create an
   -- account, and their rows are indistinguishable from a recruited clinician's. Before
   -- analysis, restrict to the raters you actually recruited — uncomment and fill in:

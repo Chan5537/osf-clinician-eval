@@ -1,20 +1,20 @@
-# Clinical Evaluation Rubrics — V11
+# Clinical Evaluation Rubrics — V12
 
-*Active 2026-09-18 · `rubric_version` v11-20260918 · SCHEMA_VERSION 22 · scores are NOT
-comparable with V10 or earlier.*
+*Active 2026-09-18 · `rubric_version` v12-20260918 · SCHEMA_VERSION 23 · scores are NOT
+comparable with V11 or earlier.*
 
 Score each response on the five criteria below, 1–5, then rank the three responses at the
 end of each case. The patient panel is your reference: **Sleep panel** and **Prior medical
-history** are tagged *Known info* (on record at the time of the study); **Future risk**
+history** are tagged *Ground-truth* (on record at the time of the study); **Future risk**
 (*New onset risk*) is what the patient actually developed in the six years after.
 
-> **WHAT CHANGED IN V11.** One clarification only, after the first rater round:
-> Trustworthiness now says explicitly that the grounds for a conclusion may come from the
-> overnight findings, the demographics, the prior conditions, or how these bear on one
-> another — prior history is **not** privileged among them. Everything else in the
-> instrument is unchanged from V10. The patient panel now opens with the Sleep panel and
-> Prior medical history expanded, and a **Supplementary information** section shows
-> estimated medication and HbA1c values where available.
+> **WHAT CHANGED IN V12.** Trustworthiness is now explicitly **two-part**: whether the
+> statements are grounded in evidence — check facts on record against the panels — and whether
+> the conclusions are substantiated by coherent reasoning. Note that a forward-looking claim is
+> NOT a fact on record: no panel contains what the patient went on to develop, so predictions are
+> judged on the reasoning given, not on whether you can verify them. The Sleep panel and Prior
+> medical history tags now read **Ground-truth** (previously "Known info").
+
 
 > **Carried over from V10.** Two axes are new. **Accuracy** replaces Factuality: it still asks
 > whether the response called the right future risk, but that is now one of four things it
@@ -61,11 +61,11 @@ How to score: Check the "Future risk" panel for the conditions this patient went
 
 **To what extent does this response give the patient information beyond the known information (e.g., the Sleep panel, Prior medical history)?**
 
-How to score: Weigh what the response adds against what it restates from the Known info panels. Information the patient could not have worked out from those panels counts for more than information they could.
+How to score: Weigh what the response adds against what it restates from the Ground-truth panels. Information the patient could not have worked out from those panels counts for more than information they could.
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Very Comprehensive | Carries named content absent from both Known info panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone. |
+| 5 | Very Comprehensive | Carries named content absent from both Ground-truth panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone. |
 | 4 | Comprehensive | Mostly information beyond the known information, though the panels already hint at where it lands. Some space spent restating them. |
 | 3 | Neutral | Something new is in there, wrapped in about as much recital of the known information. |
 | 2 | Not Comprehensive | Mostly repackages the known information as future risk; little rests on this recording. |
@@ -113,19 +113,19 @@ How to score: Judge the response as a summary handed to a provider: is it clinic
 
 ## 5. Trustworthiness
 
-**To what extent are the conclusions in this response substantiated by the reasoning it presents?**
+**To what extent are the statements in this response grounded in evidence (check the Ground-truth panels) and substantiated with coherent reasoning?**
 
-How to score: Trace each conclusion to the reasoning offered in support of it, and assess whether that reasoning is sufficient to sustain the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them, and a conclusion reasoned from the recording is not less substantiated for not resting on the history. Evaluate the response on the evidence it presents: do not penalize a claim solely because its underlying basis is not contained in the Known info panels. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
+How to score: Two things are being judged. First, GROUNDING: where the response states a fact that is on record — a sleep value, a prior condition — check it against the Ground-truth panels; a misquoted or invented value is not grounded. Second, REASONING: trace each conclusion to the support offered for it and assess whether that support sustains the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them. ⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient will develop, so a prediction cannot be checked against one. Judge those on the reasoning given, and do not mark a claim down merely because its basis is not visible to you. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Highly Trustworthy | Every conclusion is explicitly substantiated by the findings the response sets out, and none is stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently. |
-| 4 | Trustworthy | Conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports. |
-| 3 | Neutral | Substantiation is uneven: some conclusions are supported by the reasoning presented and others are asserted without it, such that parts would require verification before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here. |
-| 2 | Not Trustworthy | Conclusions are largely unsubstantiated by the reasoning presented, or are asserted with a confidence that the stated basis does not support. |
+| 5 | Highly Trustworthy | Facts on record are stated accurately, and every conclusion drawn from them is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently. |
+| 4 | Trustworthy | Facts on record are stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one recorded value reported loosely. |
+| 3 | Neutral | Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a fact on record is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here. |
+| 2 | Not Trustworthy | Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the Ground-truth panels. |
 | 1 | Not Trustworthy At All | Recommends consequential action on a concern for which no supporting reasoning is presented, or advises a course that would be contraindicated given this patient's existing care or prior medical conditions. |
 
-**Worked example.** Response X identifies a metabolic risk and sets out the basis for it: it cites the specific overnight findings it relies upon, states what they indicate, and its recommendations follow from that chain of reasoning. Not every possibility it raises will be borne out, but each is substantiated by reasoning the reader can trace and appraise: Highly Trustworthy (5). Response Y asserts the same risk with equal confidence, but presents nothing connecting it to this patient — the conclusion is stated without supporting reasoning: Not Trustworthy (2). Response Z reports the findings and concludes "these findings do not by themselves point to a specific additional future condition"; nothing is overstated, but no conclusion is reached, so there is nothing to appraise: Neutral (3).
+**Worked example.** Response X quotes this patient's overnight findings as the Sleep panel records them, states what they indicate, and its recommendations follow from that chain of reasoning. Not every possibility it raises will be borne out, but the facts are right and each conclusion is substantiated by reasoning the reader can trace: Highly Trustworthy (5). Response Y reaches a similar conclusion but reports an AHI the Sleep panel does not support — the reasoning may read well, yet it is built on a value that is not what the panel records: Neutral (3), or Not Trustworthy (2) where the conclusion rests on that value. Response Z asserts the risk with equal confidence but presents nothing connecting it to this patient: Not Trustworthy (2). Response W reports the findings and concludes "these findings do not by themselves point to a specific additional future condition"; nothing is overstated, but no conclusion is reached, so there is nothing to appraise: Neutral (3).
 
 ---
 

@@ -186,7 +186,11 @@
 //    in a script over the batch, reported alongside the Likert means.
 //
 // BLINDING CONSTRAINTS carry over unchanged: no reference to architecture (tools, ReAct, SleepFM,
-// "the model", a specific arm), no naming of a condition or group, no "ground truth" / "oracle"
+// "the model", a specific arm), no naming of a condition or group, no "oracle"
+// anywhere in rater-facing text. ⚠️ "Ground-truth" IS now used, as the Sleep panel / Prior
+// medical history tag (owner 2026-09-18, replacing "Known info"): it labels the RECORDED
+// INPUTS a rater can verify. It must never be used of an ARM or of the Future risk outcome —
+// the strip says "What this patient actually developed" in plain words for that reason.
 // anywhere in rater-facing text. The panel is called "Future risk" (renamed 2026-08-28, owner;
 // previously "Future disease(s) patient developed in 6 years" — keep the howToScore strings
 // below in step with it; the recorded-outcome meaning now lives in the panel's meta line).
@@ -194,7 +198,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v11-20260918'
+export const RUBRIC_VERSION = 'v12-20260918'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -305,14 +309,14 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // chart-tour letters and put the truth arm LOWEST, the reverse of the eval's purpose.
     // The name stays Comprehensiveness (owner 2026-09-01) but the axis now measures the
     // increment directly; "known information" is the exact wording
-    // the panel's Known info tags carry, so the question and the screen point at each other.
+    // the panel's Ground-truth tags carry, so the question and the screen point at each other.
     key: 'comprehensiveness',
     label: 'Comprehensiveness',
     question:
       'To what extent does this response give the patient information beyond the known information ' +
       '(e.g., the Sleep panel, Prior medical history)?',
     howToScore:
-      'Weigh what the response adds against what it restates from the Known info panels. ' +
+      'Weigh what the response adds against what it restates from the Ground-truth panels. ' +
       'Information the patient could not have worked out from those panels counts for more than ' +
       'information they could.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
@@ -329,7 +333,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Very Comprehensive',
         description:
-          'Carries named content absent from both Known info panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone.',
+          'Carries named content absent from both Ground-truth panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone.',
       },
       {
         value: 4,
@@ -602,56 +606,84 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     //    GENERATOR — the letters should state their grounds — and sharpening the instrument to
     //    punish it would score the prediction arms down for a fixable writing problem.
     //
+    // v12 (2026-09-18, owner): the stem becomes TWO-PART — grounded in evidence (panels named
+    //    explicitly) AND substantiated with coherent reasoning. Owner's wording, adopted as asked.
+    //    Anchors 5/4/3/2 now grade both halves; anchor 1 is unchanged.
+    //
+    // ⛔⛔ THE PANEL CHECK IS THE EXACT MECHANISM THAT INVERTED THIS AXIS IN v6. Recorded so the
+    //    risk is not forgotten: as `justifiability` it ran BASE 4.00 > OURS 2.90 > TRUTH 2.30 —
+    //    the reverse of how much prediction each arm carries — because raters checked claims
+    //    against panels that hold no model evidence, so any arm whose grounds they could not
+    //    inspect scored as unsupported and the hedging baseline won. The owner has directed that
+    //    "(check the Ground-truth panels)" appear in the stem regardless; these are the guards:
+    //      - howToScore SPLITS the judgement: the panel check is scoped to FACTS ON RECORD (a
+    //        sleep value, a prior condition), which are the only things a panel can settle;
+    //      - a ⚠️ sentence states outright that a forward-looking claim is NOT a fact on record,
+    //        that no panel contains what the patient will develop, and that such claims must be
+    //        judged on the reasoning given — "do not mark a claim down merely because its basis
+    //        is not visible to you". This is the v6 antidote, reworded to fit the new stem.
+    //      - anchors 5/4 lead with "facts on record are stated accurately", so the panel check
+    //        reads as a floor on accuracy, not as the whole axis;
+    //      - anchor 3's no-conclusion clause is UNTOUCHED, so the hedging arm is still capped at 3.
+    //    ⚠️ WATCH THIS ONE ABOVE ALL OTHERS IN THE NEXT ROUND. If BASE again outranks OURS here,
+    //    the v10 stopping rule applies and the axis retires — the panel reference will have
+    //    re-created the v6 failure despite the guards.
+    //
     key: 'trustworthiness',
     label: 'Trustworthiness',
     question:
-      'To what extent are the conclusions in this response substantiated by the reasoning it ' +
-      'presents?',
+      'To what extent are the statements in this response grounded in evidence (check the ' +
+      'Ground-truth panels) and substantiated with coherent reasoning?',
     howToScore:
-      'Trace each conclusion to the reasoning offered in support of it, and assess whether that ' +
-      'reasoning is sufficient to sustain the claim as stated. Grounds may legitimately come from ' +
-      "the overnight findings, this patient's demographics, their prior conditions, or the way " +
-      'these bear on one another; prior history is not privileged among them, and a conclusion ' +
-      'reasoned from the recording is not less substantiated for not resting on the history. ' +
-      'Evaluate the response on the ' +
-      'evidence it presents: do not penalize a claim solely because its underlying basis is not ' +
-      'contained in the Known info panels. A response that identifies a genuine concern and sets ' +
+      'Two things are being judged. First, GROUNDING: where the response states a fact that is on ' +
+      'record — a sleep value, a prior condition — check it against the Ground-truth panels; a ' +
+      'misquoted or invented value is not grounded. Second, REASONING: trace each conclusion to ' +
+      'the support offered for it and assess whether that support sustains the claim as stated. ' +
+      'Grounds may legitimately come from the overnight findings, this ' +
+      "patient's demographics, their prior conditions, or the way these bear on one another; " +
+      'prior history is not privileged among them. ' +
+      '⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient ' +
+      'will develop, so a prediction cannot be checked against one. Judge those on the reasoning ' +
+      'given, and do not mark a claim down merely because its basis is not visible to you. ' +
+      'A response that identifies a genuine concern and sets ' +
       'out the findings leading to it is well substantiated, irrespective of whether other ' +
       'possibilities it raises are subsequently borne out.',
     example:
-      'Response X identifies a metabolic risk and sets out the basis for it: it cites the specific ' +
-      'overnight findings it relies upon, states what they indicate, and its recommendations follow ' +
-      'from that chain of reasoning. Not every possibility it raises will be borne out, but each is ' +
-      'substantiated by reasoning the reader can trace and appraise: Highly Trustworthy (5). ' +
-      'Response Y asserts the same risk with equal confidence, but presents nothing connecting it ' +
-      'to this patient — the conclusion is stated without supporting reasoning: Not Trustworthy (2). ' +
-      'Response Z reports the findings and concludes "these findings do not by themselves point to ' +
-      'a specific additional future condition"; nothing is overstated, but no conclusion is reached, ' +
-      'so there is nothing to appraise: Neutral (3).',
+      'Response X quotes this patient\'s overnight findings as the Sleep panel records them, states ' +
+      'what they indicate, and its recommendations follow from that chain of reasoning. Not every ' +
+      'possibility it raises will be borne out, but the facts are right and each conclusion is ' +
+      'substantiated by reasoning the reader can trace: Highly Trustworthy (5). Response Y reaches ' +
+      'a similar conclusion but reports an AHI the Sleep panel does not support — the reasoning may ' +
+      'read well, yet it is built on a value that is not what the panel records: Neutral (3), or ' +
+      'Not Trustworthy (2) where the conclusion rests on that value. Response Z asserts the risk ' +
+      'with equal confidence but presents nothing connecting it to this patient: Not Trustworthy ' +
+      '(2). Response W reports the findings and concludes "these findings do not by themselves ' +
+      'point to a specific additional future condition"; nothing is overstated, but no conclusion ' +
+      'is reached, so there is nothing to appraise: Neutral (3).',
     anchors: [
       {
         value: 5,
         label: 'Highly Trustworthy',
         description:
-          'Every conclusion is explicitly substantiated by the findings the response sets out, and none is stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
+          'Facts on record are stated accurately, and every conclusion drawn from them is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
       },
       {
         value: 4,
         label: 'Trustworthy',
         description:
-          'Conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports.',
+          'Facts on record are stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one recorded value reported loosely.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Substantiation is uneven: some conclusions are supported by the reasoning presented and others are asserted without it, such that parts would require verification before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
+          'Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a fact on record is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
       },
       {
         value: 2,
         label: 'Not Trustworthy',
         description:
-          'Conclusions are largely unsubstantiated by the reasoning presented, or are asserted with a confidence that the stated basis does not support.',
+          'Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the Ground-truth panels.',
       },
       {
         value: 1,
