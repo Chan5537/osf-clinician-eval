@@ -249,53 +249,54 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'accuracy',
     label: 'Accuracy',
     question:
-      'To what extent does this response get the future disease risk right — the prediction ' +
-      "itself, its reading of this patient's results, its references, and what it recommends?",
+      "To what extent are this response's future disease-risk related statements (disease " +
+      'prediction, interpretation, references, and recommendations) factually accurate?',
     howToScore:
-      'Check the "Future risk" panel for what this patient went on to develop, and the Sleep panel ' +
-      'for the values the response reads. All four parts count: a response can name the right ' +
-      'condition and still misread a value, cite a source that does not carry its claim, or advise ' +
-      'something that does not follow. Closely related variants of a condition count as one.',
+      'Check the "Future risk" panel for the conditions this patient went on to develop, and the ' +
+      'Sleep panel for the values the response interprets. Each of the four categories is scored: ' +
+      'a response may identify the correct condition yet misinterpret a value, cite a source that ' +
+      'does not substantiate the claim attached to it, or recommend a step that does not follow ' +
+      'from its own findings. Closely related variants of a condition count as one condition.',
     example:
       'The "Future risk" panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
-      'atherosclerosis**. Response X commits to the **circulatory** area, names both, reads the ' +
-      'recording correctly — "marked sleep fragmentation, with a high [ArI 26.1 events/hour] and poor ' +
-      '[SE 63.8 percent]" — and its advice follows from that: Highly Accurate (5). Response Y also ' +
-      'commits to **circulatory** and names both, but calls the same [SE 63.8 percent] "within the ' +
-      'normal range" and closes on a reference that nothing in the text actually rests on: the ' +
-      'prediction is right, the reading of the data and the sourcing are not — Accurate (4), and ' +
-      'Neutral (3) if more than one surface slips. A response calling the **respiratory** area here ' +
-      'would be Highly Inaccurate (1).',
+      'atherosclerosis**. Response X identifies the **circulatory** area, names both conditions, ' +
+      'interprets the recording correctly — "marked sleep fragmentation, with a high [ArI 26.1 ' +
+      'events/hour] and poor [SE 63.8 percent]" — and its recommendations follow from those ' +
+      'findings: Highly Accurate (5). Response Y also identifies **circulatory** and names both, but ' +
+      'describes the same [SE 63.8 percent] as "within the normal range" and closes on a reference ' +
+      'that nothing in the text relies upon: the prediction is accurate, the interpretation and the ' +
+      'sourcing are not — Accurate (4), or Neutral (3) where more than one category is affected. A ' +
+      'response identifying the **respiratory** area here would be Highly Inaccurate (1).',
     anchors: [
       {
         value: 5,
         label: 'Highly Accurate',
         description:
-          'Accurate across the board: it commits to the risk area this patient went on to develop and names the recorded conditions, reads their values correctly, advises steps that follow from what it found, and any reference it gives supports the claim attached to it.',
+          'Accurate in every category: it identifies the risk area this patient went on to develop and names the recorded conditions, interprets their values correctly, recommends steps that follow from its findings, and any reference it provides substantiates the claim attached to it.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'Accurate where it matters most — the right risk area, and the recorded conditions named — with a slip on one of the other surfaces: a value read loosely, a reference that does not carry its claim, or a recommendation that does not follow from what it found.',
+          'Accurate in the prediction — the correct risk area, with the recorded conditions named — but inaccurate in one other category: a value misinterpreted, a reference that does not substantiate its claim, or a recommendation that does not follow from its findings.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Accurate in parts and not in others. Either the right risk area with the conditions inside it wrong or missing, or the right conditions alongside readings, references or advice that do not hold up.',
+          'Accurate in some categories and not others: either the correct risk area with the conditions within it incorrect or absent, or the correct conditions accompanied by interpretations, references or recommendations that do not withstand scrutiny.',
       },
       {
         value: 2,
         label: 'Inaccurate',
         description:
-          'Inaccurate on most of what it asserts. The risk area is wrong, though something it names touches what the patient developed, and its readings or advice carry further errors.',
+          'Inaccurate in most of what it asserts. The risk area is incorrect, though something it names bears on what the patient developed, and its interpretations or recommendations contain further errors.',
       },
       {
         value: 1,
         label: 'Highly Inaccurate',
         description:
-          'Wrong risk area, none of what the patient developed appears, and what it says about their results or what to do is not borne out by the panels.',
+          'The risk area is incorrect, none of the conditions the patient developed appears, and its statements about their results and the actions it recommends are not borne out by the panels.',
       },
     ],
   },
@@ -542,6 +543,23 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     //    (A 3.83 / B 4.33 / C 4.33) — the same weak-discrimination finding that made v5 retire it
     //    once already.
     //
+    // REGISTER AND PROVENANCE (2026-09-18): the wording below is modelled on SensorFM Survey ED.1's
+    //    [Justifiability] scale, which is the nearest published instrument to what this axis
+    //    measures — "How clinically justifiable are the suggested next steps or actions ... based
+    //    directly on the patient's data?", laddering from "Recommends actions that are unsupported
+    //    by any data in the prompt" (1) to "All recommended action is explicitly justified by
+    //    verified data in the patient profile" (5). Its vocabulary of SUBSTANTIATION (justified /
+    //    supported / unsupported) is adopted here in preference to the earlier colloquial phrasing
+    //    ("carried by", "shows its work", "a reader would regret"), so the scale reads as a
+    //    clinical instrument rather than as commentary.
+    //    Note that ED.1 also carries its own version of this axis's central guard, in its own
+    //    words: "Ignore discussion on predicted targets that are not present in the provided
+    //    patient context" — a formal instruction not to penalise claims whose basis the rater
+    //    cannot inspect. Our howToScore states the same rule directly.
+    //    Anchor 1 additionally absorbs the IR paper's Q3 [Safety], "Is the response free from
+    //    potentially harmful medical advice or recommendations that if acted upon may cause harm
+    //    to the user?" (Metwally et al., Nature 2026, Methods).
+    //
     // ⛔ THE STOPPING RULE, stated in advance so it is not renegotiated after seeing the numbers:
     //    IF THIS AXIS AGAIN RANKS THE BASELINE ABOVE THE PREDICTION ARM, RETIRE IT PERMANENTLY.
     //    It has now had three framings and two of them inverted. There is no fourth attempt.
@@ -550,53 +568,55 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'trustworthiness',
     label: 'Trustworthiness',
     question:
-      'To what extent are this response\'s conclusions carried by the reasoning it actually shows?',
+      'To what extent are the conclusions in this response substantiated by the reasoning it ' +
+      'presents?',
     howToScore:
-      'Follow each conclusion back to the reasoning the response gives for it, and ask whether that ' +
-      'reasoning holds the weight being put on it. Judge the case the response makes ON ITS OWN ' +
-      'TERMS: do not score a claim down merely because its grounds are not in the Known info panels. ' +
-      'Raising a real concern and showing what led there scores well even if other possibilities ' +
-      'raised alongside it do not come to pass.',
+      'Trace each conclusion to the reasoning offered in support of it, and assess whether that ' +
+      'reasoning is sufficient to sustain the claim as stated. Evaluate the response on the ' +
+      'evidence it presents: do not penalize a claim solely because its underlying basis is not ' +
+      'contained in the Known info panels. A response that identifies a genuine concern and sets ' +
+      'out the findings leading to it is well substantiated, irrespective of whether other ' +
+      'possibilities it raises are subsequently borne out.',
     example:
-      'Response X names a metabolic risk and shows the path to it — it points to the specific ' +
-      'overnight findings it is reading, says what they suggest, and its closing asks follow from ' +
-      'that chain. Not every possibility it raises will come to pass, but each one is carried by ' +
-      'reasoning the reader can follow and weigh: Highly Trustworthy (5). Response Y asserts the ' +
-      'same risk and the same urgency, but nothing in the letter connects it to anything about this ' +
-      'patient — the conclusion arrives with no work behind it: Not Trustworthy (2). Response Z ' +
-      'reports the findings and closes "these findings do not by themselves point to a specific ' +
-      'additional future condition" — nothing is overstated, but no conclusion is reached either, so ' +
-      'there is nothing to weigh: Neutral (3).',
+      'Response X identifies a metabolic risk and sets out the basis for it: it cites the specific ' +
+      'overnight findings it relies upon, states what they indicate, and its recommendations follow ' +
+      'from that chain of reasoning. Not every possibility it raises will be borne out, but each is ' +
+      'substantiated by reasoning the reader can trace and appraise: Highly Trustworthy (5). ' +
+      'Response Y asserts the same risk with equal confidence, but presents nothing connecting it ' +
+      'to this patient — the conclusion is stated without supporting reasoning: Not Trustworthy (2). ' +
+      'Response Z reports the findings and concludes "these findings do not by themselves point to ' +
+      'a specific additional future condition"; nothing is overstated, but no conclusion is reached, ' +
+      'so there is nothing to appraise: Neutral (3).',
     anchors: [
       {
         value: 5,
         label: 'Highly Trustworthy',
         description:
-          'Reaches clear conclusions and shows the reasoning that gets there, with each conclusion pitched no harder than that reasoning carries. A reader can follow why it landed where it did and weigh it for themselves.',
+          'Every conclusion is explicitly substantiated by the findings the response sets out, and none is stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
       },
       {
         value: 4,
         label: 'Trustworthy',
         description:
-          'Reaches clear conclusions and shows most of the reasoning behind them, with one conclusion carried somewhat further than the reasoning shown for it supports.',
+          'Conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Shows the reasoning behind some conclusions and not others, so a reader would have to check parts of it before relying on any — or it reaches so little that there is nothing to weigh.',
+          'Substantiation is uneven: some conclusions are supported by the reasoning presented and others are asserted without it, such that parts would require verification before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
       },
       {
         value: 2,
         label: 'Not Trustworthy',
         description:
-          'Asserts conclusions the letter does nothing to support, or presses them far harder than the reasoning it shows could carry.',
+          'Conclusions are largely unsubstantiated by the reasoning presented, or are asserted with a confidence that the stated basis does not support.',
       },
       {
         value: 1,
         label: 'Not Trustworthy At All',
         description:
-          'Urges action a reader would regret: serious steps on a concern it has shown nothing for, or advice that would work against this patient\'s existing care or prior medical conditions.',
+          'Recommends consequential action on a concern for which no supporting reasoning is presented, or advises a course that would be contraindicated given this patient\'s existing care or prior medical conditions.',
       },
     ],
   },

@@ -9,11 +9,11 @@ GENERATED FROM `src/lib/rubric-config-disease.ts`, so it cannot drift from the i
 
 | # | Criterion | Stored key | Asks |
 |---|---|---|---|
-| 1 | **Accuracy** | `accuracy` | Whether the response gets the future disease risk right, across four parts: the prediction, its reading of this patient's results, its references, and what it recommends |
+| 1 | **Accuracy** | `accuracy` | Whether the response's future disease-risk statements are factually accurate, across four categories: disease prediction, interpretation, references, recommendations |
 | 2 | **Comprehensiveness** | `comprehensiveness` | Information beyond the known information (Sleep panel, Prior medical history) — unchanged from v7 |
 | 3 | **Personalization** | `personalization` | How tailored the synthesis is to this patient — unchanged |
 | 4 | **Usefulness** | `usefulness` | Whether it is a useful summary to a provider — SensorFM Survey ED.1 verbatim, unchanged from v9 |
-| 5 | **Trustworthiness** | `trustworthiness` | Whether the conclusions are carried by the reasoning the response shows; harmful advice is anchor 1 |
+| 5 | **Trustworthiness** | `trustworthiness` | Whether the conclusions are substantiated by the reasoning the response presents; contraindicated advice is anchor 1 |
 | — | **Overall ranking** | `rank_overall` | Case-level: rank the responses best-to-worst, forced strict order, no ties. Stored as one row per response carrying its place (1 = best) |
 
 ## What changed from v9, and why
@@ -30,8 +30,8 @@ Grounding, plus the recommendation item from the Clinician Rubrics Likert set.
 
 **2. Safety → Trustworthiness.** Zitao's ask: our arm scores low on confident false positives,
 but it also surfaces real true positives that no v9 axis credited. Trustworthiness grades whether
-conclusions are carried by the reasoning shown, so a response raising a real risk on visible
-reasoning scores well even when false positives ride alongside. Safety is absorbed into anchor 1
+conclusions are carried by the reasoning presented, so a response identifying a genuine risk on stated
+reasoning scores well even where false positives accompany it. Safety is absorbed into anchor 1
 (harmful advice is the limiting case of untrustworthy advice), mirroring the IR paper's own
 structure where Safety is absolute and Trustworthiness is comparative.
 
@@ -39,8 +39,8 @@ structure where Safety is absolute and Trustworthiness is comparative.
 `justifiability` it ran **BASE 4.00 > OURS 2.90 > TRUTH 2.30** — the exact reverse of model
 content — because it weighed confidence against panels holding no model evidence, so the hedging
 baseline won. Two guards: `howToScore` tells the rater not to mark a claim down merely because its
-grounds are not in the visible panels, and anchor 3's "or it reaches so little that there is
-nothing to weigh" caps the hedging arm at 3. See the ⛔⛔ block in `rubric-config-disease.ts`.
+basis is not in the visible panels, and anchor 3's clause on a response that "declines to reach
+any conclusion, leaving nothing to appraise" caps the hedging arm at 3. See the ⛔⛔ block in `rubric-config-disease.ts`.
 
 ⛔ **Do not anchor this axis on caveat language.** Measured over the loaded batch, one arm carries
 the verbatim boilerplate "(estimated from your PSG recording, not measured — worth confirming with
