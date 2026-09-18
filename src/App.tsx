@@ -33,7 +33,7 @@ import { SECTION_IDS, scrollToSection } from '@/lib/sections'
 import { UI_FLAGS } from '@/lib/ui-flags'
 import { RevealContext, initialRevealFromUrl } from '@/lib/reveal'
 import { FutureRiskStrip } from '@/components/FutureRiskStrip'
-import { ClipboardCheck } from 'lucide-react'
+import { ClipboardCheck, House } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LandingScreen } from '@/components/LandingScreen'
 import { CompletionScreen } from '@/components/CompletionScreen'
@@ -258,11 +258,7 @@ function App() {
         session={session}
         cases={DEMO_CASES}
         onReview={(i) => dispatch({ type: 'GOTO_CASE', caseIndex: i })}
-        onHome={() => {
-          flush(sessionReducer(session, { type: 'GO_HOME', at: Date.now() }))
-          dispatch({ type: 'GO_HOME', at: Date.now() })
-          window.scrollTo({ top: 0 })
-        }}
+        onHome={goHome}
         onResetAll={() => {
           clear()
           dispatch({ type: 'RESET_ALL' })
@@ -313,6 +309,15 @@ function App() {
     }
   }
 
+  // Back to the study overview with every answer intact. Shared by the header lockup,
+  // the explicit Home button, and the completion screen.
+  function goHome() {
+    const at = Date.now()
+    flush(sessionReducer(session, { type: 'GO_HOME', at }))
+    dispatch({ type: 'GO_HOME', at })
+    window.scrollTo({ top: 0 })
+  }
+
   function handleSubmit() {
     const at = new Date().toISOString()
     // Wall clock across ALL visits to this case (prior visits are already banked in timing.wallMs),
@@ -360,11 +365,7 @@ function App() {
               out. Answers are untouched — only the visible screen changes. */}
           <button
             type="button"
-            onClick={() => {
-              flush(sessionReducer(session, { type: 'GO_HOME', at: Date.now() }))
-              dispatch({ type: 'GO_HOME', at: Date.now() })
-              window.scrollTo({ top: 0 })
-            }}
+            onClick={goHome}
             title="Back to the study overview — your answers are saved"
             className="flex cursor-pointer items-center gap-3 rounded-md text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
@@ -379,6 +380,20 @@ function App() {
             </div>
           </button>
           <div className="flex items-center gap-3">
+            {/* An explicit Home control beside the save indicator. The lockup does the
+                same thing, but a clickable logo is a convention people miss — and the one
+                moment a rater needs this (wanting the instructions or rubric links back
+                mid-case) is the worst moment to be hunting for it. */}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={goHome}
+              title="Back to the study overview — your answers are saved"
+            >
+              <House className="size-4" aria-hidden="true" />
+              Home
+            </Button>
             <ProgressIndicator
               current={i}
               total={DEMO_CASES.length}
