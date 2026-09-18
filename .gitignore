@@ -31,3 +31,6 @@ dist-ssr
 # Python bytecode from scripts/data/
 __pycache__/
 *.pyc
+
+# Temporary side-by-side comparison configs (scratchpad paths, never deployed)
+vite.compare-*.config.ts
