@@ -1,14 +1,22 @@
-# Clinical Evaluation Rubrics — V10
+# Clinical Evaluation Rubrics — V11
 
-*Active 2026-09-18 · `rubric_version` v10-20260918 · SCHEMA_VERSION 21 · scores are NOT
-comparable with V9 or earlier.*
+*Active 2026-09-18 · `rubric_version` v11-20260918 · SCHEMA_VERSION 22 · scores are NOT
+comparable with V10 or earlier.*
 
 Score each response on the five criteria below, 1–5, then rank the three responses at the
 end of each case. The patient panel is your reference: **Sleep panel** and **Prior medical
 history** are tagged *Known info* (on record at the time of the study); **Future risk**
 (*New onset risk*) is what the patient actually developed in the six years after.
 
-> **WHAT CHANGED IN V10.** Two axes are new. **Accuracy** replaces Factuality: it still asks
+> **WHAT CHANGED IN V11.** One clarification only, after the first rater round:
+> Trustworthiness now says explicitly that the grounds for a conclusion may come from the
+> overnight findings, the demographics, the prior conditions, or how these bear on one
+> another — prior history is **not** privileged among them. Everything else in the
+> instrument is unchanged from V10. The patient panel now opens with the Sleep panel and
+> Prior medical history expanded, and a **Supplementary information** section shows
+> estimated medication and HbA1c values where available.
+
+> **Carried over from V10.** Two axes are new. **Accuracy** replaces Factuality: it still asks
 > whether the response called the right future risk, but that is now one of four things it
 > grades — the prediction, how this patient’s results are read, what any references support,
 > and what is recommended. A response can name the right condition and still not score 5.
@@ -107,7 +115,7 @@ How to score: Judge the response as a summary handed to a provider: is it clinic
 
 **To what extent are the conclusions in this response substantiated by the reasoning it presents?**
 
-How to score: Trace each conclusion to the reasoning offered in support of it, and assess whether that reasoning is sufficient to sustain the claim as stated. Evaluate the response on the evidence it presents: do not penalize a claim solely because its underlying basis is not contained in the Known info panels. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
+How to score: Trace each conclusion to the reasoning offered in support of it, and assess whether that reasoning is sufficient to sustain the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them, and a conclusion reasoned from the recording is not less substantiated for not resting on the history. Evaluate the response on the evidence it presents: do not penalize a claim solely because its underlying basis is not contained in the Known info panels. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
 
 | Score | Anchor | Meaning |
 |---|---|---|

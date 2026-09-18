@@ -74,7 +74,14 @@ import { advance, touch, park, resume } from './timing'
 //       satisfy the submit gate. Renamed keys cannot be read back either way: discard stale
 //       sessions. ⛔ v10 scores are NOT comparable with v8/v9 — report separately, never pooled.
 //       (The break is free: no ratings were ever collected under v9-20260903.)
-export const SCHEMA_VERSION = 21
+// v22 = rubric v11 (2026-09-18): Trustworthiness howToScore gains a sentence de-privileging prior
+//       medical history as the source of grounds (first-rater feedback). The QUESTION and anchors
+//       are unchanged, so this is a narrower break than v10 — but it is still a break: a rater
+//       scoring under v10 was answering without that instruction, and the history prior is exactly
+//       what it corrects for, so the two are not poolable on this axis. Also ships the
+//       Supplementary information panel (estimated values, rendered unconditionally) and opens the
+//       Sleep/History sections by default, both of which change what the rater sees while scoring.
+export const SCHEMA_VERSION = 22
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

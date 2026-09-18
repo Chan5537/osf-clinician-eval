@@ -144,6 +144,13 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
   // Show only fields that are actually recorded — never a fabricated value. age 0 and bmi 0 are
   // the "not recorded" sentinels from the export (BMI is null in the source for every patient),
   // so they are omitted rather than shown as "0" / "0.0" (Prof. Yang: don't invent inputs).
+  // Supplementary-panel data, hoisted NULL-SAFE. The panel renders unconditionally now, so these
+  // must tolerate a sidecar with no `ehrRecords` at all — which is the current state for all 10
+  // cases (the field was dropped at commit e57139e). Reading context.ehrRecords.* inline, as the
+  // pre-2026-09-18 code did, throws on every case the moment the render guard is relaxed.
+  const medications = context?.ehrRecords?.medications ?? []
+  const hba1c = context?.ehrRecords?.labs?.find((l) => /hba1c/i.test(l.name))
+
   const demoItems: { label: string; value: string }[] = []
   if (age > 0) demoItems.push({ label: 'Age', value: `${age}` })
   if (sex) demoItems.push({ label: 'Sex', value: sex })
@@ -211,7 +218,12 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           re-deriving their own (cardiovascular) prediction — doing the letters' job instead of
           judging it against what actually happened. The reference belongs on screen before the
           material it grades. Sleep and history still start collapsed. */}
-      <Accordion type="multiple">
+      {/* Sleep panel and Prior medical history start OPEN (owner 2026-09-18). A rater new to the
+          study could not tell whether the disease information in the responses was valid, because
+          the material it should be read against was behind two collapsed headers — a closed
+          section reads as an empty one. Supplementary stays collapsed: its absence was the
+          confusion, not its contents, and opening all three buries the responses below the fold. */}
+      <Accordion type="multiple" defaultValue={['sleep-indices', 'medical-history']}>
         {/* The recorded outcome moved OUT of this panel (owner 2026-09-03): it is now pinned
             above the page as FutureRiskStrip, on screen for the whole case instead of scrolling
             away exactly when the responses are being judged. Repeating it here would put the
@@ -254,29 +266,50 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Auxiliary information (owner 2026-09-02): ONE panel, tagged Unknown, after the
-            history. Medication and lab are the study's ADDED information — mostly absent
-            from the EHR, predictable from the recording. Presenting them as top-level
-            chart panels over-guided raters; folded here they read as "what the chart
-            usually lacks". The lab sub-block shows HbA1c only — the one analyte the
-            letters may carry — never the full w90 panel. EHR records still display when
-            they exist (data logic unchanged). */}
-        {context?.ehrRecords && (
-          <AccordionItem value="auxiliary-info" className={itemClass(AUX_STYLE)}>
+        {/* Supplementary information (owner 2026-09-18, ask from Zitao; renamed from "Auxiliary
+            information"). A rater with no prior exposure to the study reported not knowing where
+            the medication and lab-test content in the responses came from — the confusion was
+            PROVENANCE, not values. This panel answers it: it names the source and says plainly
+            that the figures are ESTIMATED FROM THE RECORDING rather than measured.
+
+            ⚠️ THE FRAMING IS THE SAFEGUARD, AND IT IS LOAD-BEARING. An earlier version of this
+            panel was withdrawn (see lib/case-context.ts) on the grounds that model readouts
+            "leaked the ours arm's information as reference truth". The owner's call 2026-09-18 is
+            that suppression was the wrong remedy: a value presented as a bare row in a chart panel
+            does read as an answer key, but one labelled "estimated" and accompanied by the
+            explicit line below does not. Hence "(estimated)" stays attached to the NUMBER and not
+            merely to the section header, and the note ends by telling the rater this is not a
+            check on the responses — mirroring the standing instruction in the Trustworthiness
+            howToScore ("judge the response on the evidence it presents"). Do not drop either.
+
+            The lab sub-block shows HbA1c only — the one analyte the letters may carry — never a
+            full chemistry panel, so the rater cannot cross-check a letter against a battery of
+            values they were never meant to audit.
+
+            RENDERED UNCONDITIONALLY (guard relaxed 2026-09-18): it previously mounted only when
+            `ehrRecords` was present, and that field was dropped from the sidecar at commit
+            e57139e, so the section silently vanished for every case — which is precisely what the
+            rater tripped over. Its empty states are honest and are the correct thing to show while
+            the upstream data is regenerated. */}
+        <AccordionItem value="auxiliary-info" className={itemClass(AUX_STYLE)}>
             <AccordionTrigger className={TRIGGER_CLASS}>
               <SectionHeader
                 icon={FlaskConical}
                 style={AUX_STYLE}
-                title="Auxiliary information"
-                tag="Unknown"
+                title="Supplementary information"
+                tag="Estimated"
                 tagClass="border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
                 meta="medication · lab test"
               />
             </AccordionTrigger>
             <AccordionContent>
               <p className="mb-2.5 text-xs text-muted-foreground">
-                Mostly missing from the EHR for these patients, but may be predictable from
-                the sleep recording.
+                Estimated from the sleep recording — not measured laboratory values, and mostly
+                absent from these patients&rsquo; records.{' '}
+                <span className="font-medium text-foreground">
+                  This is not a check on the responses
+                </span>{' '}
+                — judge them on the reasoning they give.
               </p>
               <div className="space-y-3 text-sm">
                 <div>
@@ -285,9 +318,9 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
                       Medication
                     </span>
                   </p>
-                  {context.ehrRecords.medications.length > 0 ? (
+                  {medications.length > 0 ? (
                     <ul className="flex flex-wrap gap-1.5">
-                      {context.ehrRecords.medications.map((m) => (
+                      {medications.map((m) => (
                         <li
                           key={m}
                           className="inline-flex items-center rounded-md border bg-muted px-2 py-0.5 text-sm capitalize text-foreground"
@@ -298,7 +331,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
                     </ul>
                   ) : (
                     <p className="text-muted-foreground">
-                      No EHR prescription in the 30 days before the study.
+                      No prescription on record in the 30 days before the study.
                     </p>
                   )}
                 </div>
@@ -308,25 +341,24 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
                       Lab test (HbA1c)
                     </span>
                   </p>
-                  {(() => {
-                    const a1c = context.ehrRecords.labs.find((l) => /hba1c/i.test(l.name))
-                    return a1c ? (
-                      <p className="text-foreground">
-                        {a1c.value}
-                        {' %'}
-                        {a1c.abnormal ? ' — abnormal per the recording site' : ''}
-                      </p>
-                    ) : (
-                      <p className="text-muted-foreground">
-                        No EHR HbA1c in the 90 days around the study.
-                      </p>
-                    )
-                  })()}
+                  {hba1c ? (
+                    <p className="text-foreground">
+                      {hba1c.value}
+                      {' %'}
+                      {/* "(estimated)" rides the VALUE, not just the section tag: a figure read in
+                          isolation must still carry its own standing. */}
+                      {hba1c.estimated === false ? '' : ' (estimated)'}
+                      {hba1c.abnormal ? ' — outside the reference range' : ''}
+                    </p>
+                  ) : (
+                    <p className="text-muted-foreground">
+                      No HbA1c on record in the 90 days around the study.
+                    </p>
+                  )}
                 </div>
               </div>
             </AccordionContent>
           </AccordionItem>
-        )}
 
       </Accordion>
     </section>
