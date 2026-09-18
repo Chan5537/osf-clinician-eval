@@ -101,12 +101,18 @@ if (typeof window !== 'undefined') {
       /* private mode: nothing to clear */
     }
 
+    // The outbox is deliberately NOT cleared from here: it is operator data, not rater
+    // data, and RLS gives a rater no access to it. But leaving a row behind silently
+    // breaks the next rehearsal — the completion insert is `on conflict (kind, rater_id,
+    // batch) do nothing`, so a stale row for the same rater and batch suppresses the new
+    // notification, the kick never fires, and it looks like nothing happened.
     // eslint-disable-next-line no-console
-    console.info(
+    console.warn(
       'Local session cleared. Server: ' +
         serverMsg +
-        '\n(notification_outbox is NOT touched — clear it in SQL if you want to re-test ' +
-        'the completion email.)',
+        '\n\n⚠️ ALSO RUN THIS, or the next completion will NOT email you:\n' +
+        '   delete from public.notification_outbox;\n' +
+        '(a leftover row for the same rater+batch suppresses the new notification)',
     )
     location.reload()
   }
