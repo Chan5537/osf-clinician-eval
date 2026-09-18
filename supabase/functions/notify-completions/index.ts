@@ -26,6 +26,12 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { SMTPClient } from 'https://deno.land/x/denomailer@1.6.0/mod.ts'
 
+const json = (o: unknown, status = 200) =>
+  new Response(JSON.stringify(o, null, 2), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const GMAIL_USER = Deno.env.get('GMAIL_USER') ?? ''
@@ -209,8 +215,42 @@ function body(r: OutboxRow): { subject: string; html: string } {
   }
 }
 
-Deno.serve(async () => {
+Deno.serve(async (req: Request) => {
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
+
+  // ?selftest=1 sends one mail immediately, bypassing the outbox entirely.
+  //
+  // Worth its own path: "no email arrived" has five possible causes (trigger, gateway,
+  // credentials, SMTP, delivery) and the outbox route cannot distinguish them. This
+  // exercises credentials -> SMTP -> inbox on its own and reports the real error.
+  if (new URL(req.url).searchParams.get('selftest') === '1') {
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+      return json({ ok: false, stage: 'config', error: 'GMAIL_USER/GMAIL_APP_PASSWORD not set' })
+    }
+    try {
+      const c = new SMTPClient({
+        connection: {
+          hostname: 'smtp.gmail.com',
+          port: 465,
+          tls: true,
+          auth: { username: GMAIL_USER, password: GMAIL_APP_PASSWORD },
+        },
+      })
+      try {
+        await c.send({
+          from: `UCLA Health Intelligence Lab <${GMAIL_USER}>`,
+          to: NOTIFY_TO,
+          subject: 'Self-test — clinician evaluation notifications',
+          html: '<p>If you are reading this, credentials and SMTP are working.</p>',
+        })
+      } finally {
+        await c.close()
+      }
+      return json({ ok: true, sent_to: NOTIFY_TO, from: GMAIL_USER })
+    } catch (e) {
+      return json({ ok: false, stage: 'smtp', error: String(e) })
+    }
+  }
 
   if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
     return new Response(

@@ -1,0 +1,13 @@
+project_id = "mypuldhldvfomboheczx"
+
+[functions.notify-completions]
+# verify_jwt = false because this function is invoked by MACHINES, not users: the
+# completion trigger via pg_net, and pg_cron as the safety net. Both present the
+# service-role key as a bearer token, which the gateway's JWT verification rejects —
+# it expects a user token. The request then fails at the edge, BEFORE the function
+# runs, so nothing lands in notification_outbox.last_error and the failure is silent.
+#
+# Turning it off does not make the function public in any meaningful sense: it reads
+# only the outbox and sends to a fixed operator address. An unauthenticated caller can
+# at most cause an already-queued notification to send slightly earlier.
+verify_jwt = false
