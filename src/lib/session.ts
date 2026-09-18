@@ -163,6 +163,13 @@ export type SessionAction =
   | { type: 'NEXT_CASE' }
   | { type: 'GOTO_CASE'; caseIndex: number }
   | { type: 'FINISH' }
+  // Return to the landing screen WITHOUT touching any answer — the home button.
+  //
+  // Distinct from RESET_ALL, which wipes everything: this only changes which screen is
+  // showing. The case clocks are settled on the way out so time spent reading is not
+  // billed to a case nobody is looking at, and BEGIN will re-enter at the first
+  // unsubmitted case exactly as it does on a fresh sign-in.
+  | { type: 'GO_HOME'; at: number }
   | { type: 'RESET_ALL' }
   | { type: 'ENTER_CASE'; at: number } // stamps caseEnteredAt + starts the case's active clock
   // Replace the whole session with one restored from the server (sync.hydrate +
@@ -293,6 +300,28 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
       return enterCase({ ...s, view: 'cycle' }, a.caseIndex, Date.now())
     case 'FINISH':
       return { ...s, view: 'completion' }
+    case 'GO_HOME': {
+      const c = s.cases[s.currentCaseIndex]
+      if (!c || c.timing.enteredAt === null) {
+        return { ...s, view: 'landing', caseEnteredAt: null }
+      }
+      // Close out the active case's clocks, the same way enterCase() does when moving
+      // to another case — otherwise the time spent on the landing screen would land on
+      // whichever case happened to be open.
+      const settled = settle(c.timing, a.at)
+      return patchCase(
+        { ...s, view: 'landing', caseEnteredAt: null },
+        s.currentCaseIndex,
+        {
+          timing: {
+            ...settled,
+            acc: park(settled.acc, a.at),
+            wallMs: c.timing.wallMs + Math.max(0, a.at - c.timing.enteredAt),
+            enteredAt: null,
+          },
+        },
+      )
+    }
     case 'RESET_ALL':
       return initialSessionState()
     case 'HYDRATE':

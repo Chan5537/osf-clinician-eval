@@ -218,6 +218,7 @@ function App() {
       <LandingScreen
         signedInAs={auth.email}
         requiresSignIn={SUPABASE_ENABLED}
+        submitted={session.cases.filter((c) => c.submitted).length}
         onSignOut={() => {
           // Drain first: anything still queued belongs to THIS rater, and after sign-out
           // the token to send it is gone.
@@ -257,6 +258,11 @@ function App() {
         session={session}
         cases={DEMO_CASES}
         onReview={(i) => dispatch({ type: 'GOTO_CASE', caseIndex: i })}
+        onHome={() => {
+          flush(sessionReducer(session, { type: 'GO_HOME', at: Date.now() }))
+          dispatch({ type: 'GO_HOME', at: Date.now() })
+          window.scrollTo({ top: 0 })
+        }}
         onResetAll={() => {
           clear()
           dispatch({ type: 'RESET_ALL' })
@@ -348,7 +354,20 @@ function App() {
     <div className="flex min-h-screen flex-col bg-muted/30">
       <header className="border-b bg-background">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
-          <div className="flex items-center gap-3">
+          {/* The lockup is a home button (owner, 2026-09-17). Before this, entering the
+              scoring flow was one-way: a rater who wanted to re-read the instructions or
+              the rubric links had no route back to the landing screen short of signing
+              out. Answers are untouched — only the visible screen changes. */}
+          <button
+            type="button"
+            onClick={() => {
+              flush(sessionReducer(session, { type: 'GO_HOME', at: Date.now() }))
+              dispatch({ type: 'GO_HOME', at: Date.now() })
+              window.scrollTo({ top: 0 })
+            }}
+            title="Back to the study overview — your answers are saved"
+            className="flex cursor-pointer items-center gap-3 rounded-md text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
             <img
               src={`${import.meta.env.BASE_URL}ucla_logo.jpg`}
               alt="UCLA"
@@ -358,7 +377,7 @@ function App() {
               <h1 className="text-lg font-semibold tracking-tight">Clinician Evaluation</h1>
               <p className="text-xs text-muted-foreground">UCLA Health Intelligence Lab</p>
             </div>
-          </div>
+          </button>
           <div className="flex items-center gap-3">
             <ProgressIndicator
               current={i}
