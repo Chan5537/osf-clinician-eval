@@ -23,6 +23,8 @@ interface Props {
   onSignOut?: () => void
   /** True when a backend is configured, so Begin will require sign-in. */
   requiresSignIn?: boolean
+  /** Cases already submitted, so the button can read "Continue" rather than "Begin". */
+  submitted?: number
 }
 
 // Opening screen: task explanation + axis overview (labels imported from
@@ -35,10 +37,13 @@ export function LandingScreen({
   signedInAs,
   onSignOut,
   requiresSignIn = false,
+  submitted,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
   const total = DEMO_CASES.length
+  // How far in they already are, so the primary button can say so.
+  const submittedCount = submitted ?? 0
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
   // items-per-case for the first case (each case has the same per-response count by design)
@@ -258,11 +263,18 @@ export function LandingScreen({
             </div>
 
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
+              {/* The label has to tell the truth about what the button does. With the
+                  lockup now acting as a home button, a rater can be HERE mid-round, and
+                  "Begin evaluation" would read as "start over". */}
               {!signedInAs && requiresSignIn
                 ? 'Sign in and begin'
-                : BLOCK > 0
-                  ? `Begin block ${BLOCK}`
-                  : 'Begin evaluation'}
+                : submittedCount > 0 && submittedCount < total
+                  ? `Continue — ${submittedCount} of ${total} done`
+                  : submittedCount >= total
+                    ? 'Review your answers'
+                    : BLOCK > 0
+                      ? `Begin block ${BLOCK}`
+                      : 'Begin evaluation'}
             </Button>
           </CardContent>
         </Card>

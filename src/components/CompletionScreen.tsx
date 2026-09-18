@@ -16,6 +16,8 @@ interface Props {
   session: SessionState
   cases: DemoCase[]
   onReview: (index: number) => void
+  /** Back to the study overview, answers untouched. */
+  onHome?: () => void
   onResetAll: () => void
 }
 
@@ -26,7 +28,7 @@ function isoDate(): string {
 // Final screen. Shows only "Case n" + case_id + a status chip per case — never
 // left_is_agent, never query_id, never which side was cited. Offers the
 // JSON/CSV download (the only place the un-blinding export is reachable).
-export function CompletionScreen({ session, cases, onReview, onResetAll }: Props) {
+export function CompletionScreen({ session, cases, onReview, onResetAll, onHome }: Props) {
   // Live upload backlog. A rater who closes the tab while rows are still queued
   // would leave those cases unsent, so the closing message holds until it clears.
   const sync = useSyncExternalStore(onSyncStatus, getSyncStatus, getSyncStatus)
@@ -38,7 +40,7 @@ export function CompletionScreen({ session, cases, onReview, onResetAll }: Props
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 py-10">
         <Card>
           <CardContent className="space-y-6 p-6 sm:p-8">
-            <LogoLockup />
+            <LogoLockup onClick={onHome} />
             <div className="space-y-2">
               <h1 className="text-xl font-semibold tracking-tight">
                 Evaluation complete — thank you!
