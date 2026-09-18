@@ -168,8 +168,12 @@ export function LikertDimensions({
                         <dt className="font-semibold tabular-nums">
                           {a.value} · {a.label}
                         </dt>
+                        {/* Bold runs in the anchor text mark the DISCRIMINATING words — the
+                            quantifier or the condition that separates this level from its
+                            neighbours — so a rater comparing 3 against 4 can find the difference
+                            without re-reading both in full. */}
                         <dd className="text-[13px] leading-snug text-muted-foreground">
-                          {a.description}
+                          <InlineEmphasis text={a.description} />
                         </dd>
                       </div>
                     ))}
