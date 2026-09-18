@@ -280,6 +280,43 @@ export async function flushNow(): Promise<void> {
   await drain()
 }
 
+/**
+ * What the sync layer is holding, for the console:  __syncState()
+ *
+ * "I submitted but nothing arrived" has three possible causes — the rows never left the
+ * browser, they left but the trigger did not fire, or the trigger fired and the email did
+ * not send. This answers the first one without guessing.
+ */
+export function debugState(): {
+  enabled: boolean
+  status: SyncStatus
+  pending: number
+  ops: { kind: string; rows?: number }[]
+} {
+  loadQueue()
+  return {
+    enabled: SUPABASE_ENABLED,
+    status,
+    pending: queue.length,
+    ops: queue.map((o) => ({
+      kind: o.kind,
+      ...(o.kind === 'ratings' ? { rows: o.rows.length } : {}),
+    })),
+  }
+}
+
+if (typeof window !== 'undefined') {
+  ;(window as unknown as Record<string, unknown>).__syncState = () => {
+    const d = debugState()
+    // eslint-disable-next-line no-console
+    console.table(d.ops)
+    // eslint-disable-next-line no-console
+    console.info('enabled:', d.enabled, '| status:', d.status, '| pending:', d.pending)
+    return d
+  }
+  ;(window as unknown as Record<string, unknown>).__syncFlush = () => flushNow()
+}
+
 export function pendingCount(): number {
   loadQueue()
   return queue.length
