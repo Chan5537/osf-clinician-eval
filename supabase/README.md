@@ -460,7 +460,59 @@ delete from public.notification_outbox where kind = 'rater_completed';
 
 ---
 
-# ⚠️ Required: the email template must show the CODE
+# ⚠️ Required: THREE email templates, and the Site URL
+
+Both of these bit a real tester on 2026-09-18, on the deployed site.
+
+## 1. Site URL must include the app path
+
+**Authentication → URL Configuration**
+
+- Site URL: `https://chan5537.github.io/osf-clinician-eval/` — **with the path and the
+  trailing slash**
+- Redirect URLs: `https://chan5537.github.io/osf-clinician-eval/**` and
+  `http://localhost:5173/osf-clinician-eval/**`
+
+The app sends NO `emailRedirectTo` (that is what makes Supabase mail a code instead of a
+link), so Supabase falls back to the Site URL for anything that does redirect. With the
+bare domain there, a tester landed on `https://chan5537.github.io/#error=...` — GitHub
+Pages has no site at the domain root, so they saw a 404 and no explanation.
+
+## 2. EVERY template must use `{{ .Token }}`, not `{{ .ConfirmationURL }}`
+
+Editing the Magic Link template alone is not enough. A **new** user gets **Confirm
+signup**, not Magic Link — so the first clinician to sign up received a clickable
+"Confirm your email address" link, Gmail's scanner fetched it, and the link was spent
+before they clicked: `otp_expired` on a one-minute-old email.
+
+Update all of these under **Authentication → Emails**:
+
+| Template | Fires when |
+|---|---|
+| **Confirm signup** | a NEW address signs up — the one that was missed |
+| **Magic Link** | a returning address signs in |
+| **Invite user** | you invite from the dashboard |
+
+Body for each:
+
+```html
+<h2>Your sign-in code</h2>
+<p>Enter this code on the evaluation page to continue:</p>
+<p style="font-size:28px;font-weight:700;letter-spacing:6px;font-family:monospace">
+  {{ .Token }}
+</p>
+<p>The code is valid for 1 hour. If you did not request it, you can ignore this email.</p>
+```
+
+## 3. Expect spam filtering
+
+Sending from a personal Gmail over SMTP gets flagged ("similar to messages that were
+identified as spam"). No configuration fixes this — it needs a verified sending domain.
+For a handful of clinicians, tell them in advance to check spam and mark it not-spam.
+
+---
+
+# Reference: why a code rather than a link
 
 Sign-in uses a **6-digit code**, not a clickable link — the rater stays on the page and
 types it. Supabase decides which to send from whether the app passes a redirect URL; the
