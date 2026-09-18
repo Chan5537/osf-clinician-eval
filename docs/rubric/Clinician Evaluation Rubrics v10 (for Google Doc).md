@@ -125,14 +125,5 @@ How to score: Trace each conclusion to the reasoning offered in support of it, a
 
 **Taking everything together, rank these three responses from best to worst.**
 
-Judge them as letters you would actually send to this patient. When the responses disagree,
-weigh them in this order: (1) is it right about this patient, (2) would acting on it help or
-harm them, (3) how well is it written for them.
-
-**Every response gets a different place — no ties.** These are forced choices. Small
-differences are expected and are exactly what this question is for; if you find yourself
-indifferent, choose on the first point above, then the second, then the third. Your 1–5
-scores are where “these are equally good” is recorded — this question asks which one you
-would pick.
-
-Clicking a place already held by another response swaps the two, so a tie cannot be entered.
+Assign each response a place: 1st, 2nd or 3rd. Selecting a place already held by another
+response exchanges the two, so every response ends on a different place.

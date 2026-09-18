@@ -14,7 +14,7 @@ GENERATED FROM `src/lib/rubric-config-disease.ts`, so it cannot drift from the i
 | 3 | **Personalization** | `personalization` | How tailored the synthesis is to this patient — unchanged |
 | 4 | **Usefulness** | `usefulness` | Whether it is a useful summary to a provider — SensorFM Survey ED.1 verbatim, unchanged from v9 |
 | 5 | **Trustworthiness** | `trustworthiness` | Whether the conclusions are substantiated by the reasoning the response presents; contraindicated advice is anchor 1 |
-| — | **Overall ranking** | `rank_overall` | Case-level: rank the responses best-to-worst, forced strict order, no ties. Stored as one row per response carrying its place (1 = best) |
+| — | **Overall ranking** | `rank_overall` | Case-level: rank the responses best-to-worst. The stem stands alone — no tie-break guidance is shown, and selecting a taken place swaps the two, so ties cannot be entered. Stored as one row per response carrying its place (1 = best) |
 
 ## What changed from v9, and why
 
@@ -48,8 +48,11 @@ a lab test)" in **10/10** letters and the others in **0/10**. Any anchor rewardi
 estimate-marking or hedging would be a 100% arm detector — it would score the template and make
 the arm identifiable on sight.
 
-**3. Overall ranking added.** One forced best-to-worst ranking per case, in its own section after
-the per-response scales, modelled on the IR paper's comparative section. It captures the global
+**3. Overall ranking added.** One best-to-worst ranking per case, in its own section after the
+per-response scales, modelled on the IR paper's comparative section. The question is presented as
+a bare stem: an earlier draft carried a criterion sentence, a three-point tie-break order and a
+no-ties notice, all removed at the owner's instruction (2026-09-18) because instructing the rater
+how to weigh the axes pre-empts the holistic judgement the question exists to capture. It captures the global
 trade-off the absolute scales cannot: which letter the clinician would actually stand behind when
 the axes disagree. Stored as three rating rows (one per response, `dimension = 'rank_overall'`,
 value = place), which needs **no DB migration** — the existing PK, FK and `value between 1 and 5`

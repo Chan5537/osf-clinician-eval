@@ -1,8 +1,7 @@
 import type { Dispatch } from 'react'
 import { Trophy } from 'lucide-react'
-import { AxisHelp } from '@/components/AxisHelp'
 import { AVATAR_STYLES } from '@/components/response-colors'
-import { rankOf, rankComplete, armComplete } from '@/lib/reducer'
+import { rankOf, rankComplete } from '@/lib/reducer'
 import { cn } from '@/lib/utils'
 import type { RubricState, RubricAction, ResponseEntry, RankValue } from '@/lib/types'
 
@@ -20,16 +19,18 @@ import type { RubricState, RubricAction, ResponseEntry, RankValue } from '@/lib/
 // ⚠️ ONE OVERALL RANK, NOT PER-AXIS. Per-axis ranks would re-encode what the Likert scales already
 // give by construction, at triple the rater cost.
 //
-// ⚠️ WHY THE CRITERION IS SPELLED OUT rather than left as "which is best": an unanchored global
-// judgement is vibes, and two raters resolve axis-conflicts differently. The three-point priority
-// list restates the existing axes in plain words WITHOUT naming them — naming them would invite
-// the rater to recompute their Likert scores instead of making a holistic call.
+// ⚠️ THE STEM STANDS ALONE (owner, 2026-09-18). An earlier draft carried a criterion sentence
+// ("judge them as letters you would actually send..."), a three-point tie-break order, a
+// no-ties notice, a "how to break a tie" toggletip and a hint to finish scoring first. All were
+// REMOVED at the owner's instruction: the question is a holistic judgement, and instructing the
+// rater how to weigh the axes both pre-empts that judgement and re-anchors it to the Likert
+// scales it is meant to be independent of. Do not reinstate them without asking.
+// The no-ties rule needs no prose: SET_RANK swaps on conflict, so a tie cannot be entered.
 //
 // ⛔ DO NOT reword this as "which response do you find more trustworthy" (the IR paper's own
 // phrasing). That construct was measured in the v6 round and INVERTED — BASE 4.00 > OURS 2.90 >
 // TRUTH 2.30 — because it scores rhetorical confidence against panels holding no model evidence.
-// See the ⛔⛔ block in lib/rubric-config-disease.ts. "Would actually send to this patient" keeps
-// the forced-preference structure without importing the poisoned construct.
+// See the ⛔⛔ block in lib/rubric-config-disease.ts.
 //
 // BLINDING: no system, arm, architecture, prediction, "ground truth" or "oracle" wording below.
 
@@ -51,8 +52,6 @@ export function RankOrder({
   dispatch: Dispatch<RubricAction>
 }) {
   const complete = rankComplete(state, responses)
-  // Every response scored on every scale — the point at which this question is easiest to answer.
-  const allScored = responses.every((r) => armComplete(state, r.label))
   // A 2-response batch degrades to Best/Worst rather than showing a dead 3rd place.
   const places = PLACES.slice(0, responses.length)
 
@@ -72,9 +71,6 @@ export function RankOrder({
           <h2 id="rank-heading" className="text-base font-semibold tracking-tight">
             Overall ranking
           </h2>
-          <span className="rounded bg-slate-500/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-300">
-            Final question for this case
-          </span>
           {complete ? (
             <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
               Answered
@@ -85,36 +81,6 @@ export function RankOrder({
         <p className="text-sm font-medium leading-snug text-foreground">
           Taking everything together, rank these {responses.length} responses from best to worst.
         </p>
-
-        <p className="text-[13px] leading-snug text-muted-foreground">
-          Judge them as letters you would actually send to this patient. When the responses
-          disagree, weigh them in this order: (1) is it right about this patient, (2) would acting
-          on it help or harm them, (3) how well is it written for them.{' '}
-          <span className="font-medium text-foreground">
-            Every response gets a different place — no ties.
-          </span>
-        </p>
-
-        <AxisHelp
-          label="Overall ranking"
-          cta="How to break a tie"
-          text={
-            <p className="text-[13px] leading-snug">
-              These are forced choices. Small differences are expected and are exactly what this
-              question is for — if you find yourself indifferent, choose on the first point above
-              (is it right about this patient), then the second, then the third. Your 1–5 scores
-              above are where “these are equally good” is recorded; this question asks which one
-              you would pick.
-            </p>
-          }
-        />
-
-        {!allScored ? (
-          <p className="mt-2 rounded-md bg-amber-500/10 px-2.5 py-1.5 text-[13px] leading-snug text-amber-800 dark:text-amber-300">
-            You can answer this at any point, but it is easiest once you have scored all{' '}
-            {responses.length} responses above.
-          </p>
-        ) : null}
       </div>
 
       <ul className="mt-3 space-y-1.5">
