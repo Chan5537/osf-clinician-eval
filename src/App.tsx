@@ -52,6 +52,36 @@ function initSession(): SessionState {
   return load() ?? initialSessionState()
 }
 
+// Escape hatch for testing, on `window` rather than a button so it exists in EVERY build
+// without adding a clinician-visible control.
+//
+// The completion screen is a dead end by design: a clinician must not be able to wipe a
+// finished round, so "Start over" is gated behind the testing flag. That leaves whoever is
+// REHEARSING the clinician build with no way back, and `localStorage` survives a server-side
+// delete — so clearing the tables and reloading just re-uploads the same session.
+//
+// Order matters and is why this exists as one call: browser first, then server.
+//   In the console:  __evalReset()
+if (typeof window !== 'undefined') {
+  ;(window as unknown as Record<string, unknown>).__evalReset = () => {
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith('clinician-eval-'))
+        .forEach((k) => localStorage.removeItem(k))
+    } catch {
+      /* private mode: nothing to clear */
+    }
+    // eslint-disable-next-line no-console
+    console.info(
+      'Local session cleared. Now clear the server too, or it will restore on next sign-in:\n' +
+        '  delete from public.rating;\n' +
+        '  delete from public.session_state;\n' +
+        '  delete from public.notification_outbox;',
+    )
+    location.reload()
+  }
+}
+
 function App() {
   const [session, dispatch] = useReducer(sessionReducer, undefined, initSession)
   // INTERNAL: arm-reveal switch (not persisted, not exported); see lib/reveal.ts
