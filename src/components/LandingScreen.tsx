@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
+import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { requiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
@@ -17,15 +18,32 @@ interface Props {
   reviewer: string
   onReviewerChange: (value: string) => void
   onBegin: () => void
+  /** Authenticated email, when a backend is configured. Null = no auth (kill switch). */
+  signedInAs?: string | null
+  onSignOut?: () => void
+  /** True when a backend is configured, so Begin will require sign-in. */
+  requiresSignIn?: boolean
+  /** Cases already submitted, so the button can read "Continue" rather than "Begin". */
+  submitted?: number
 }
 
 // Opening screen: task explanation + axis overview (labels imported from
 // rubric-config so the audited blinding copy is never retyped) + optional
 // initials. The word "tool" never appears; no agent architecture is revealed.
-export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
+export function LandingScreen({
+  reviewer,
+  onReviewerChange,
+  onBegin,
+  signedInAs,
+  onSignOut,
+  requiresSignIn = false,
+  submitted,
+}: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
   const total = DEMO_CASES.length
+  // How far in they already are, so the primary button can say so.
+  const submittedCount = submitted ?? 0
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
   // items-per-case for the first case (each case has the same per-response count by design)
@@ -108,17 +126,45 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
               </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="reviewer">Your initials (optional)</Label>
-              <Input
-                id="reviewer"
-                value={reviewer}
-                onChange={(e) => onReviewerChange(e.target.value)}
-                placeholder="e.g. JS"
-                className="max-w-[12rem]"
-                autoComplete="off"
-              />
-            </div>
+            {/* Identity. With a backend, WHO you are comes from the sign-in, not a
+                free-text box — it is the key your progress and answers are stored
+                under. The initials input survives only for the no-backend build
+                (kill switch), where nothing else records a rater. */}
+            {!signedInAs && requiresSignIn ? (
+              /* Signed out. Say plainly what pressing Begin will ask for, so the sign-in
+                 screen is never a surprise — but do not put a form here: the point of this
+                 screen is to let someone read the brief before committing. */
+              <p className="rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                You will be asked for your email address when you begin, so your progress
+                can be saved and you can continue on any computer.
+              </p>
+            ) : signedInAs ? (
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border bg-muted/40 px-3 py-2">
+                <span className="text-sm text-muted-foreground">Signed in as</span>
+                <span className="text-sm font-medium">{signedInAs}</span>
+                {onSignOut && (
+                  <button
+                    type="button"
+                    onClick={onSignOut}
+                    className="ml-auto cursor-pointer text-xs font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                  >
+                    Sign out
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="reviewer">Your initials (optional)</Label>
+                <Input
+                  id="reviewer"
+                  value={reviewer}
+                  onChange={(e) => onReviewerChange(e.target.value)}
+                  placeholder="e.g. JS"
+                  className="max-w-[12rem]"
+                  autoComplete="off"
+                />
+              </div>
+            )}
 
             {/* BLOCKS (2026-09-02). A full batch is too long for one sitting, so it is served
                 in blocks of BLOCK_SIZE. Whoever arrives without ?block= picks one here, and
@@ -159,42 +205,76 @@ export function LandingScreen({ reviewer, onReviewerChange, onBegin }: Props) {
 
             <div className="space-y-2">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Your progress is saved in this browser as you go, so you can close the page and
-                resume later. You can also download it at any time from the header, and put that
-                file back with <strong>Restore from file</strong> — on another machine, or after
-                clearing your browser.
+                {signedInAs || requiresSignIn ? (
+                  <>
+                    Your progress is saved to your account as you go, so you can close the page
+                    and <strong>resume on any computer</strong>. There is nothing to download
+                    and nothing to send us.
+                  </>
+                ) : (
+                  <>
+                    Your progress is saved in this browser as you go, so you can close the page
+                    and resume later.
+                    {IS_DEV_BUILD && (
+                      <>
+                        {' '}
+                        You can also download it at any time from the header, and put that file
+                        back with <strong>Restore from file</strong> — on another machine, or
+                        after clearing your browser.
+                      </>
+                    )}
+                  </>
+                )}
               </p>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="application/json,.json"
-                className="hidden"
-                onChange={async (e) => {
-                  const f = e.target.files?.[0]
-                  e.target.value = '' // let the same file be picked again after a failure
-                  if (!f) return
-                  try {
-                    const msg = restoreFromExport(await f.text())
-                    toast.success(msg)
-                    window.setTimeout(() => window.location.reload(), 600)
-                  } catch (err) {
-                    toast.error(err instanceof Error ? err.message : 'Could not read that file.')
-                  }
-                }}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground"
-                onClick={() => fileRef.current?.click()}
-              >
-                Restore from file
-              </Button>
+              {/* Dev-only (Yang, 2026-09-08). With downloads gone from the clinician
+                  build there is no file for them to restore FROM, and resume now comes
+                  from their account automatically. Kept in dev as the recovery path. */}
+              {IS_DEV_BUILD && (
+                <>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0]
+                    e.target.value = '' // let the same file be picked again after a failure
+                    if (!f) return
+                    try {
+                      const msg = restoreFromExport(await f.text())
+                      toast.success(msg)
+                      window.setTimeout(() => window.location.reload(), 600)
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : 'Could not read that file.')
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                  onClick={() => fileRef.current?.click()}
+                >
+                  Restore from file
+                </Button>
+                </>
+              )}
             </div>
 
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
-              {BLOCK > 0 ? `Begin block ${BLOCK}` : 'Begin evaluation'}
+              {/* The label has to tell the truth about what the button does. With the
+                  lockup now acting as a home button, a rater can be HERE mid-round, and
+                  "Begin evaluation" would read as "start over". */}
+              {!signedInAs && requiresSignIn
+                ? 'Sign in and begin'
+                : submittedCount > 0 && submittedCount < total
+                  ? `Continue — ${submittedCount} of ${total} done`
+                  : submittedCount >= total
+                    ? 'Review your answers'
+                    : BLOCK > 0
+                      ? `Begin block ${BLOCK}`
+                      : 'Begin evaluation'}
             </Button>
           </CardContent>
         </Card>

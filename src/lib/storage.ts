@@ -16,6 +16,12 @@ const KEY = `clinician-eval-session::${BLOCK_ID}`
 
 interface Envelope {
   version: number
+  // Monotonic client revision, bumped on every save(). Compared against
+  // session_state.client_rev to break a reconcile tie when both sides hold the
+  // same number of submitted cases. Wall-clock timestamps are NOT usable for
+  // this: two machines' clocks disagree, and the most recently *touched* device
+  // is not the one with the most work on it.
+  rev?: number
   // Which letter set the answers were given to. case_ids restart at HSP_v7_000 in every
   // batch, so answers from another batch describe different letters and must not be reused.
   batch?: string
@@ -136,11 +142,114 @@ export function save(session: SessionState): void {
       version: SCHEMA_VERSION,
       batch: BATCH,
       caseIds: DEMO_CASES.map((c) => c.case_id),
+      rev: nextRev(),
       session,
     }
     localStorage.setItem(KEY, JSON.stringify(env))
   } catch {
     /* quota / private mode — best effort; in-memory state stays correct */
+  }
+}
+
+// ---- revision counter -------------------------------------------------------------------
+// Read once at module load, then advanced in memory. Reading storage on every save would
+// cost a JSON.parse per keystroke, and a stale read is harmless here: the counter only has
+// to be MONOTONIC WITHIN A DEVICE, never comparable across devices.
+let revCounter: number | null = null
+
+function nextRev(): number {
+  if (revCounter === null) revCounter = readRev()
+  revCounter += 1
+  return revCounter
+}
+
+function readRev(): number {
+  try {
+    const raw = localStorage.getItem(KEY)
+    if (!raw) return 0
+    const env = JSON.parse(raw) as Envelope
+    return typeof env?.rev === 'number' && Number.isFinite(env.rev) && env.rev >= 0 ? env.rev : 0
+  } catch {
+    return 0
+  }
+}
+
+/**
+ * Re-shape an arbitrary SessionState against the CURRENT batch.
+ *
+ * `load()` has always done this for localStorage — rebuilding `cases` per case_id and
+ * clamping `currentCaseIndex` — but a session arriving from the SERVER used to skip it.
+ * That is a real crash: a session recorded against 10 cases, restored while a shorter
+ * batch is served, leaves currentCaseIndex past the end of DEMO_CASES, and App reads
+ * `demoCase.case_id` on undefined and white-screens.
+ *
+ * Reachable in production, not just behind VITE_CASE_LIMIT: any batch that loses a case
+ * between two of a rater's sittings does the same thing.
+ *
+ * Keeps every answer whose case_id still exists; anything else starts empty.
+ */
+export function sanitizeSession(s: SessionState): SessionState {
+  const fresh = initialSessionState()
+  const byId = new Map<string, CaseRubric>()
+  if (Array.isArray(s.cases)) {
+    // Positional: a stored session's cases[] is parallel to the DEMO_CASES it was
+    // written against. We cannot know that older list, so index against the current
+    // one — the same assumption load() makes on the pre-2026-09-02 envelope path.
+    DEMO_CASES.forEach((dc, i) => {
+      const c = s.cases[i]
+      if (c) byId.set(dc.case_id, c)
+    })
+  }
+  const cases: CaseRubric[] = DEMO_CASES.map((dc, i) => {
+    const c = byId.get(dc.case_id) ?? fresh.cases[i]
+    return {
+      state: sanitizeRubric(c?.state, dc),
+      submitted: !!c?.submitted,
+      submittedAt: typeof c?.submittedAt === 'string' ? c.submittedAt : null,
+      durationSeconds: typeof c?.durationSeconds === 'number' ? c.durationSeconds : null,
+      revealed: !!c?.revealed,
+      timing: sanitizeTiming(c?.timing),
+    }
+  })
+  return {
+    view: s.view === 'completion' || s.view === 'cycle' ? s.view : 'landing',
+    currentCaseIndex:
+      Number.isInteger(s.currentCaseIndex) &&
+      s.currentCaseIndex >= 0 &&
+      s.currentCaseIndex < DEMO_CASES.length
+        ? s.currentCaseIndex
+        : 0,
+    cases,
+    reviewer: typeof s.reviewer === 'string' ? s.reviewer : '',
+    caseEnteredAt: null, // never trust a persisted clock baseline
+    layoutMode: s.layoutMode === 'compare' ? 'compare' : 'focus',
+    hiddenAt: null,
+  }
+}
+
+/** The stored session PLUS its revision — what reconcile() needs. `load()` is unchanged. */
+export function loadEnvelope(): { session: SessionState; rev: number } | null {
+  const session = load()
+  if (!session) return null
+  return { session, rev: readRev() }
+}
+
+/**
+ * Park a session that reconcile() is about to overwrite.
+ *
+ * Costs four lines and turns a wrong reconcile from terminal into recoverable: the
+ * losing side is still on disk, under a timestamped key, for as long as the browser
+ * keeps it. Never throws — a full quota must not block the sign-in that triggered it.
+ */
+export function stashSuperseded(session: SessionState): void {
+  try {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-')
+    localStorage.setItem(
+      `${KEY}::superseded-${stamp}`,
+      JSON.stringify({ version: SCHEMA_VERSION, batch: BATCH, session }),
+    )
+  } catch {
+    /* best effort — losing the backup must never block the round */
   }
 }
 
