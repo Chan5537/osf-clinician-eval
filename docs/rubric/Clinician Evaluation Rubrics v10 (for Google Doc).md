@@ -33,9 +33,9 @@ history** are tagged *Known info* (on record at the time of the study); **Future
 
 ## 1. Accuracy
 
-**To what extent are this response's future disease risk-related statements and recommendations factually accurate (disease prediction, interpretation of this patient's results, references, and recommendations)?**
+**To what extent does this response get the future disease risk right — the prediction itself, its reading of this patient's results, its references, and what it recommends?**
 
-How to score: Check the "Future risk" panel for what this patient went on to develop, and the Sleep panel for the values the response interprets. Weigh accuracy across all four: what it predicts, how it reads this patient's results, what its references support, and what it advises. Closely related variants of a condition count as one condition.
+How to score: Check the "Future risk" panel for what this patient went on to develop, and the Sleep panel for the values the response reads. All four parts count: a response can name the right condition and still misread a value, cite a source that does not carry its claim, or advise something that does not follow. Closely related variants of a condition count as one.
 
 | Score | Anchor | Meaning |
 |---|---|---|

@@ -9,7 +9,7 @@ GENERATED FROM `src/lib/rubric-config-disease.ts`, so it cannot drift from the i
 
 | # | Criterion | Stored key | Asks |
 |---|---|---|---|
-| 1 | **Accuracy** | `accuracy` | Whether the risk statements and recommendations are factually accurate, across four surfaces: disease prediction, interpretation of this patient's results, references, recommendations |
+| 1 | **Accuracy** | `accuracy` | Whether the response gets the future disease risk right, across four parts: the prediction, its reading of this patient's results, its references, and what it recommends |
 | 2 | **Comprehensiveness** | `comprehensiveness` | Information beyond the known information (Sleep panel, Prior medical history) — unchanged from v7 |
 | 3 | **Personalization** | `personalization` | How tailored the synthesis is to this patient — unchanged |
 | 4 | **Usefulness** | `usefulness` | Whether it is a useful summary to a provider — SensorFM Survey ED.1 verbatim, unchanged from v9 |
