@@ -263,20 +263,37 @@ Deno.serve(async (req: Request) => {
     )
   }
 
-  const { data: rows, error } = await supabase
+  // Reply to the CALLER immediately and finish the sending in the background.
+  //
+  // The work here is slow by nature — 150 rows, two attachments, an SMTP handshake —
+  // and it was overrunning pg_net's timeout, which made the immediate kick look flaky
+  // even when the mail went out. EdgeRuntime.waitUntil keeps the isolate alive for the
+  // promise after the response is returned, so the caller sees a fast 200 and the send
+  // still completes.
+  //
+  // Nothing is lost if the isolate is killed early: the outbox row is only marked sent
+  // after the provider accepts it, so cron retries anything unfinished.
+  const work = drain(supabase)
+  const runtime = (globalThis as { EdgeRuntime?: { waitUntil(p: Promise<unknown>): void } })
+    .EdgeRuntime
+  if (runtime?.waitUntil) {
+    runtime.waitUntil(work)
+    return json({ accepted: true, note: 'sending in background' })
+  }
+  return json(await work)
+})
+
+/** Send every pending notification. Extracted so it can run after the response. */
+async function drain(
+  supabase: ReturnType<typeof createClient>,
+): Promise<{ sent: number; failed: number; failures: string[] }> {
+  const { data: rows } = await supabase
     .from('notification_outbox')
     .select('id, kind, batch, rater_id, attempts, payload')
     .is('sent_at', null)
     .lt('attempts', MAX_ATTEMPTS)
     .order('created_at', { ascending: true })
     .limit(20)
-
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 })
-  }
-  if (!rows?.length) {
-    return new Response(JSON.stringify({ sent: 0, note: 'nothing pending' }), { status: 200 })
-  }
 
   let sent = 0
   const failures: string[] = []
@@ -368,8 +385,5 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  return new Response(JSON.stringify({ sent, failed: failures.length, failures }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  })
-})
+  return { sent, failed: failures.length, failures }
+}
