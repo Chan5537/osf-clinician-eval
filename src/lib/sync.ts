@@ -102,7 +102,11 @@ function enqueue(op: Op): void {
   // offline stretch.
   if (op.kind === 'session') queue = queue.filter((o) => o.kind !== 'session')
   queue.push(op)
-  if (queue.length > MAX_OPS) queue = queue.slice(-MAX_OPS)
+  if (queue.length > MAX_OPS) {
+    // Trim in place. Reassigning `queue` here would swap the array out from under an
+    // in-flight drain(), which is the other half of the dropped-case bug above.
+    queue.splice(0, queue.length - MAX_OPS)
+  }
   persistQueue()
   reportQueued()
   void drain()
@@ -185,7 +189,18 @@ async function drain(): Promise<void> {
           return failWith(err)
         }
       }
-      queue.shift()
+      // Remove THIS op by identity, not by position.
+      //
+      // `queue.shift()` assumed the array had not moved while we were awaiting the
+      // network — but enqueue() runs synchronously during that await (the autofill
+      // button enqueues twenty ops in a tight loop) and can both push and reassign
+      // `queue`. Shifting then discarded whichever op happened to be at index 0,
+      // which silently dropped an entire case's ratings: 135 rows arrived instead of
+      // 150, and the completion trigger correctly refused to fire on 27 of 30
+      // responses. Identity removal is correct regardless of what else touched the
+      // queue mid-flight.
+      const at = queue.indexOf(op)
+      if (at >= 0) queue.splice(at, 1)
       persistQueue()
     }
     attempts = 0
