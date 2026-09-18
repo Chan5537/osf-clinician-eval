@@ -84,9 +84,18 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // question changes meaning (novelty moved to comprehensiveness; usefulness now scores
 // the warning against the recorded outcome, weighted by how hard it was to foresee) — the exact
 // cross-key semantic shuffle the v12 note warns about, so stale sessions are discarded.
+// v10 (2026-09-18): `factuality` -> `accuracy` and `safety` -> `trustworthiness`. BOTH are
+// renamed WITH their axes (keys stay equal to labels, the v6 rule). Accuracy is Factuality
+// broadened from a ground-truth lookup — which scored the outcome-matched arm exactly 5.00 on
+// every case, zero variance — to four accuracy surfaces (prediction, interpretation of results,
+// references, recommendations). Trustworthiness replaces Safety and grades whether conclusions
+// are carried by the reasoning the response SHOWS; Safety's substance lives in its anchor 1.
+// ⚠️ Trustworthiness is NOT v6's `justifiability` despite the shared label lineage: that one
+// weighed confidence against the visible panels and inverted (BASE 4.00 > OURS 2.90 >
+// TRUTH 2.30). See the ⛔⛔ block in rubric-config-disease.ts before changing its wording.
 export type RubricDimension =
-  | 'safety'
-  | 'factuality'
+  | 'trustworthiness'
+  | 'accuracy'
   | 'comprehensiveness'
   | 'personalization'
   | 'usefulness'
@@ -95,9 +104,26 @@ export type RubricDimension =
 // present response labels × the fixed dimensions.
 export type LikertKey = string
 
-// The whole scoring state of one case: one LikertScore per (responseLabel, dimension).
+// A rank place in the case-level comparative question: 1 = best … 3 = worst, or null (not yet
+// ranked). Deliberately inside the 1..5 domain `rating.value smallint check (value between 1 and
+// 5)` already allows, so the ranking needs no DB migration.
+export type RankValue = 1 | 2 | 3 | null
+
+// The `dimension` literal the ranking is stored under. It rides the SAME long/tidy rating rows as
+// the Likert cells — one row per response carrying that response's place — so the existing primary
+// key (…, response_label, dimension) and the batch_response foreign key both hold unchanged.
+export const RANK_DIMENSION = 'rank_overall'
+
+// The whole scoring state of one case: one LikertScore per (responseLabel, dimension), plus the
+// case-level ranking.
 export interface RubricState {
   likert: Record<LikertKey, LikertScore>
+  // Forced strict ranking of the present responses; one place per blinded letter, no ties.
+  // ⚠️ Kept a SEPARATE map rather than more `likert` keys: the ranking has no dimension axis, and
+  // keying it `${label}__rank_overall` would let storage.ts's allowlist and restoreFromExport
+  // silently treat a rank row as a Likert cell. The separation forces both to handle it
+  // explicitly instead of doing the wrong thing quietly.
+  rank: Partial<Record<ResponseLabel, RankValue>>
 }
 
 // Build the storage/state key for one (response label, Likert dimension).
@@ -107,4 +133,7 @@ export function likertKey(label: ResponseLabel, dimension: RubricDimension): Lik
 
 export type RubricAction =
   | { type: 'SET_LIKERT'; key: LikertKey; value: LikertScore }
+  // Assign a place to one response. The reducer enforces a strict permutation by SWAPPING with
+  // whichever response currently holds that place, so a tie is unreachable rather than validated.
+  | { type: 'SET_RANK'; label: ResponseLabel; value: RankValue }
   | { type: 'RESET' }

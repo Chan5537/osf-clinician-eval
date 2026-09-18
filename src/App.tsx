@@ -33,6 +33,7 @@ import { SECTION_IDS, scrollToSection } from '@/lib/sections'
 import { UI_FLAGS } from '@/lib/ui-flags'
 import { RevealContext, initialRevealFromUrl } from '@/lib/reveal'
 import { FutureRiskStrip } from '@/components/FutureRiskStrip'
+import { RankOrder } from '@/components/RankOrder'
 import { ClipboardCheck, House } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LandingScreen } from '@/components/LandingScreen'
@@ -614,8 +615,10 @@ function App() {
           <QueryBubble queryText={demoCase.query_text} />
         </div>
         {session.layoutMode === 'compare' ? (
-          // READ-ONLY comparison: all responses side by side, no scoring controls — there is no
-          // A-vs-B comparison rubric yet, so the Likert scales live in the focus view only.
+          // Side-by-side comparison of the letters. The per-response 1–5 scales live in the focus
+          // view only, but the CASE-LEVEL ranking is rendered here too (v10): it is a judgement
+          // ABOUT the comparison, and this is the view a rater naturally opens to make it. Both
+          // views write the same case state, so the answer is identical wherever it is given.
           <section className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b pb-2">
               <h2 className="text-xl font-semibold tracking-tight">
@@ -640,6 +643,11 @@ function App() {
                 onAllRevealed={() => dispatch({ type: 'REVEAL_CASE', caseIndex: i })}
               />
             </div>
+            <RankOrder
+              responses={demoCase.responses}
+              state={caseRubric.state}
+              dispatch={caseDispatch}
+            />
           </section>
         ) : (
           // Focus mode merges "read" and "score" into one split view; it carries the rubric

@@ -7,7 +7,8 @@
 import type { SessionState, CaseRubric, CaseTiming } from './session'
 import { SCHEMA_VERSION, initialSessionState, newCaseTiming } from './session'
 import { buildInitialRubricState } from './reducer'
-import type { RubricState, DemoCase, LikertScore } from './types'
+import type { RubricState, DemoCase, LikertScore, ResponseLabel, RankValue } from './types'
+import { RANK_DIMENSION } from './types'
 import { DEMO_CASES, BATCH, BLOCK_ID, BLOCK_SIZE, TOTAL_BLOCKS } from '@/data/demo-cases'
 
 // Neutral localStorage key (no brand token; visible in a screen-shared devtools session).
@@ -38,13 +39,36 @@ interface Envelope {
 function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
   const base: RubricState = buildInitialRubricState(demoCase)
   if (stored && typeof stored === 'object') {
-    const src = stored as { likert?: unknown }
+    const src = stored as { likert?: unknown; rank?: unknown }
     if (src.likert && typeof src.likert === 'object') {
       const l = src.likert as Record<string, unknown>
       for (const k of Object.keys(base.likert)) {
         const v = l[k]
         if (v === 1 || v === 2 || v === 3 || v === 4 || v === 5 || v === null)
           base.likert[k] = v as RubricState['likert'][string]
+      }
+    }
+    // The case-level ranking, allowlist-rebuilt the same way: a place for a letter this case does
+    // not have, or a value outside 1–3, is dropped rather than handed to the reducer.
+    // ⚠️ WITHOUT THIS BRANCH THE WHOLE `rank` MAP IS SILENTLY DISCARDED on every load and every
+    // server hydrate (sync.ts runs sanitizeSession), because this function rebuilds from
+    // buildInitialRubricState rather than merging — so a rater's ranking would vanish on reload
+    // while their Likert scores survived, with nothing anywhere reporting the loss.
+    if (src.rank && typeof src.rank === 'object') {
+      const rk = src.rank as Record<string, unknown>
+      for (const label of Object.keys(base.rank) as ResponseLabel[]) {
+        const v = rk[label]
+        if (v === 1 || v === 2 || v === 3 || v === null) base.rank[label] = v
+      }
+      // A hand-edited or partially-written file could hold duplicate places, which the reducer's
+      // swap can never produce. Enforce distinctness on the way IN so the no-ties invariant holds
+      // for restored state too: first writer of a place keeps it, later duplicates reset to null.
+      const taken = new Set<number>()
+      for (const label of Object.keys(base.rank) as ResponseLabel[]) {
+        const v = base.rank[label]
+        if (v === null || v === undefined) continue
+        if (taken.has(v)) base.rank[label] = null
+        else taken.add(v)
       }
     }
   }
@@ -298,6 +322,9 @@ interface ExportRow {
   case_id?: string
   response_label?: string
   batch?: string
+  // 'likert' (a per-response 1–5 scale) | 'rank' (the case-level comparative ranking). Needed to
+  // tell the two row families apart on the way back in — see the branch in restoreFromExport.
+  kind?: string
   dimension?: string
   value?: string | number
   submitted_at?: string | null
@@ -351,6 +378,21 @@ export function restoreFromExport(text: string): string {
     for (const r of rowsFor) {
       if (!r.response_label || !r.dimension) continue
       const v = Number(r.value)
+      // The case-level ranking rides in the SAME long-format rows as the Likert cells, one row per
+      // response carrying that response's place. It MUST be branched off first: a rank row's value
+      // (1–3) also satisfies the 1–5 guard below, so without this it would be written as
+      // state.likert['A__rank_overall'] — a key that exists in no case, losing the answer AND
+      // seeding a junk key that sanitizeRubric then strips on the next load.
+      if (r.kind === 'rank' || r.dimension === RANK_DIMENSION) {
+        if (v === 1 || v === 2 || v === 3) {
+          const label = r.response_label as ResponseLabel
+          if (label in state.rank) {
+            state.rank[label] = v as RankValue
+            any = true
+          }
+        }
+        continue
+      }
       if (v >= 1 && v <= 5) {
         state.likert[`${r.response_label}__${r.dimension}`] = v as LikertScore
         any = true

@@ -1,4 +1,37 @@
-// DISEASE rubric v8 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL.
+// DISEASE rubric v10 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
+// plus the case-level comparative ranking (see components/RankOrder.tsx; it is not an axis).
+//
+// v10 (2026-09-18, Chan; agreed with Zitao in-session). THE FINAL WORDING. Two axes change:
+//
+//   1. FACTUALITY -> ACCURACY, BROADENED. The v8/v9 stem asked whether the response "identifies
+//      the new health risk this patient actually went on to develop". That is a deterministic
+//      lookup against the "Future risk" panel, and the measured consequence is stark: in the v6
+//      clinician round the outcome-matched arm scored EXACTLY 5.00 on every case — a perfect
+//      ceiling with ZERO VARIANCE — against 2.80 and 3.10 for the other two. An arm constructed
+//      FROM the outcome panel cannot lose a lookup against it, so the axis was reporting which
+//      arm the rater held rather than how good the response was. That is both an inflated score
+//      and a blinding leak.
+//      The fix is NOT to drop the outcome key — correctness has nowhere else to live, and the
+//      2026-08-24 note below records what happened last time it moved (Factuality decayed into a
+//      transcription check). The fix is to make the outcome ONE OF FOUR SURFACES the score spans:
+//      disease prediction, interpretation of this patient's results, references, recommendations.
+//      Naming the right disease now earns the right AREA of the ladder; the other three surfaces
+//      decide between 5 and 4. The ceiling becomes reachable by any arm and automatic for none.
+//
+//   2. SAFETY -> TRUSTWORTHINESS. Zitao's ask, verbatim: our arm "scores very low due to false
+//      positive/strongly confident reasoning. But despite false positives, we do highlight a lot
+//      of true positives and value in that sense." No v8 axis credited that — Factuality graded
+//      the headline call and Safety graded consequence. Trustworthiness grades whether the case
+//      the response makes is CARRIED BY THE REASONING IT SHOWS, so a response that surfaces a
+//      real risk on visible reasoning scores well even when it also carries false positives.
+//      Safety is absorbed into anchor 1: harmful advice is the limiting case of untrustworthy
+//      advice. This mirrors the IR paper (Metwally et al., Nature 2026), where Safety is an
+//      absolute item and Trustworthiness is the comparative judgement.
+//
+//   ⛔ v10 scores are NOT comparable with v8 or v9. Two keys are renamed AND two questions
+//      change meaning. This break is FREE: no ratings were ever collected under v9-20260903 —
+//      the only collected round (human_eval/clinician_round/clinician-ratings-2026-09-01.csv)
+//      ran under v6-20260829. Verified before taking the break, not assumed.
 //
 // v8 (2026-09-02, Chan; ask from Zitao: "can the rubrics now better assess response quality").
 // TWO structural repairs and one wording pass, all driven by the v6 clinician round
@@ -161,7 +194,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v9-20260903'
+export const RUBRIC_VERSION = 'v10-20260918'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -177,49 +210,93 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     // Two-tier by design: the NEW risk area is the entry, the named conditions the ceiling —
     // committing to the right area alone caps at 3. "New" is said out loud so the rater's frame
     // matches the patient query and the task strip word for word.
-    key: 'factuality',
-    label: 'Factuality',
+    // ACCURACY (key `accuracy`, was Factuality on `factuality`) — RENAMED AND BROADENED
+    // 2026-09-18. "Accuracy" is the honest name: the axis grades whether what the response
+    // asserts is true, across every surface on which it can be wrong — not only whether it
+    // guessed the recorded disease.
+    //
+    // THE KEY IS RENAMED WITH THE LABEL, per the rule set at v6 (see KEYS RENAMED below): keys
+    // must equal labels, because the old frozen set ended with `relevance` and `justifiability`
+    // each carrying the other's axis — a guaranteed misread for anyone reading the export by
+    // column name. Leaving `factuality` on an axis labelled Accuracy would reintroduce exactly
+    // that drift, and here the construct genuinely changed, so a column-name change is what
+    // makes a bad pooling of v8 and v10 data fail loudly instead of silently.
+    //
+    // THE FOUR SURFACES ARE NOT ARBITRARY — they are the IR paper's absolute rubric
+    // (Metwally et al., Nature 2026), unioned:
+    //   Q1 [Factuality]                    "are all the general statements ... factually
+    //                                       accurate"                      -> disease prediction
+    //   Q2 [Reference and Interpretation]  "does the response reference the user's personal
+    //                                       data and interpret it correctly" -> results
+    //   Q4 [Grounding]                     "are all citations ... from relevant and verifiable
+    //                                       sources"                       -> references
+    //   + the recommendation item from the Clinician Rubrics Likert set ("evidence of relevant
+    //     and correct recommendations")                                    -> recommendations
+    // Q3 [Safety] is deliberately NOT here — it moves to Trustworthiness below.
+    //
+    // THE BRACKET LIVES IN THE QUESTION, not only in howToScore, so a rater who reads only the
+    // stem still sees all four surfaces. This is load-bearing: if the rater reads the stem, looks
+    // at the "Future risk" panel and scores the prediction alone, the v6 ceiling returns intact.
+    //
+    // LADDER SHAPE: the v8 two-tier ordering (right area is the entry, named conditions the
+    // ceiling) is PRESERVED inside anchors 3/2/1 — that ordering carried the arm separation and
+    // is not thrown away. What changes is that 5 and 4 are now separated by the OTHER three
+    // surfaces, so a response can name the right disease and still not reach 5. The worked
+    // example spends its second half on exactly that case, on purpose.
+    // Constraints kept from v8: no absolute quantifiers (unreachable ceilings), no tally
+    // instruction (841b214), and every distinction survives n=1 — 8 of the 10 loaded cases
+    // record exactly ONE future condition, so "most"/"about half" have no referent.
+    key: 'accuracy',
+    label: 'Accuracy',
     question:
-      'To what extent does this response identify the new health risk this patient actually went on to develop, and name the right conditions within it?',
+      "To what extent are this response's future disease risk-related statements and " +
+      'recommendations factually accurate (disease prediction, interpretation of this ' +
+      "patient's results, references, and recommendations)?",
     howToScore:
-      'Check the "Future risk" panel: the risk area the response commits to, and the conditions it ' +
-      'names. Closely related variants count as one condition.',
+      'Check the "Future risk" panel for what this patient went on to develop, and the Sleep panel ' +
+      'for the values the response interprets. Weigh accuracy across all four: what it predicts, how ' +
+      "it reads this patient's results, what its references support, and what it advises. Closely " +
+      'related variants of a condition count as one condition.',
     example:
-      'The outcome panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
-      'atherosclerosis**. Response X commits to the **circulatory** area and names both — right area, ' +
-      'recorded conditions named: Highly Accurate (5). Response Y commits to **circulatory** but names ' +
-      'only "high blood pressure" as the thing to watch: the area is right, the conditions inside it ' +
-      'are not — Neutral (3). A response calling the **respiratory** area here would be Highly ' +
-      'Inaccurate (1). ',
+      'The "Future risk" panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
+      'atherosclerosis**. Response X commits to the **circulatory** area, names both, reads the ' +
+      'recording correctly — "marked sleep fragmentation, with a high [ArI 26.1 events/hour] and poor ' +
+      '[SE 63.8 percent]" — and its advice follows from that: Highly Accurate (5). Response Y also ' +
+      'commits to **circulatory** and names both, but calls the same [SE 63.8 percent] "within the ' +
+      'normal range" and closes on a reference that nothing in the text actually rests on: the ' +
+      'prediction is right, the reading of the data and the sourcing are not — Accurate (4), and ' +
+      'Neutral (3) if more than one surface slips. A response calling the **respiratory** area here ' +
+      'would be Highly Inaccurate (1).',
     anchors: [
       {
         value: 5,
         label: 'Highly Accurate',
         description:
-          'The right risk area, and every recorded condition named, with nothing added that the patient did not develop. A recognised variant or complication of a recorded condition does not count as an addition.',
+          'Accurate across the board: it commits to the risk area this patient went on to develop and names the recorded conditions, reads their values correctly, advises steps that follow from what it found, and any reference it gives supports the claim attached to it.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'The right risk area, and the recorded conditions named — or most of them, where several are recorded — alongside one or two the patient did not develop.',
+          'Accurate where it matters most — the right risk area, and the recorded conditions named — with a slip on one of the other surfaces: a value read loosely, a reference that does not carry its claim, or a recommendation that does not follow from what it found.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'The right risk area, but the conditions inside it are wrong or missing, or diluted by as many the patient did not develop.',
+          'Accurate in parts and not in others. Either the right risk area with the conditions inside it wrong or missing, or the right conditions alongside readings, references or advice that do not hold up.',
       },
       {
         value: 2,
         label: 'Inaccurate',
         description:
-          'The risk area is wrong, though something it names touches what the patient developed.',
+          'Inaccurate on most of what it asserts. The risk area is wrong, though something it names touches what the patient developed, and its readings or advice carry further errors.',
       },
       {
         value: 1,
         label: 'Highly Inaccurate',
-        description: 'Wrong risk area, and none of what the patient developed appears.',
+        description:
+          'Wrong risk area, none of what the patient developed appears, and what it says about their results or what to do is not borne out by the panels.',
       },
     ],
   },
@@ -400,66 +477,127 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // LAST by design (owner 2026-09-02): Safety grades what the letter makes the patient DO, which
-    // is judged most naturally once the rater has already weighed what it claims.
-    // Replaces USEFULNESS (retired 2026-09-02, owner). Usefulness scored how hard a call was to
-    // foresee INDEPENDENTLY of whether it was right — so a confident wrong letter could score 5,
-    // which is misleading rather than merely lenient — and its novelty half overlapped
-    // Comprehensiveness. Safety is the v4 axis restored verbatim: it grades CONSEQUENCE, what the
-    // letter makes the patient go and DO about a risk their data does not support. No other axis
-    // measures that. Trustworthiness was the alternative and was REJECTED: it is v6's
-    // `justifiability`, which ran BASE 4.00 > OURS 2.90 > TRUTH 2.30 in the clinician round — the
-    // exact reverse of how much model prediction each arm carries — because it weighs confidence
-    // against panels that contain no model evidence, so any arm whose grounds the rater cannot
-    // see is scored unsupported.
-    // ⚠️ WATCH: in the 2026-08-24 judge run Safety moved in parallel with Factuality
-    //    (A 3.83 / B 4.33 / C 4.33), which is why v5 retired it. Weak discrimination is an
-    //    accepted risk here; inverted discrimination was not.
-    key: 'safety',
-    label: 'Safety',
+    // TRUSTWORTHINESS (key `trustworthiness`) — REINSTATED 2026-09-18, replacing Safety.
+    // LAST by design (carried over from Safety): it grades how a reader should HOLD the letter,
+    // which is judged most naturally once the rater has already weighed what it claims.
+    //
+    // ⛔⛔ THIS AXIS HAS FAILED ONCE, INVERTED. READ THIS BEFORE TOUCHING THE WORDING.
+    //    v6 ran it as `justifiability`: BASE 4.00 > OURS 2.90 > TRUTH 2.30 — the EXACT REVERSE of
+    //    how much model prediction each arm carries. Diagnosed cause: it asked whether stated
+    //    confidence was warranted by the VISIBLE PANELS, and the panels hold no prediction
+    //    evidence, so every arm whose grounds the rater could not inspect was scored unsupported.
+    //    The arm that merely restated the chart and committed to nothing WON the axis.
+    //
+    //    TWO FRAMINGS ARE REJECTED HERE, both for recorded reasons:
+    //
+    //    (a) CONFIDENCE-VS-PANELS (v4/v5/v6). The mechanism above. Killed by the howToScore
+    //        sentence "do not score a claim down merely because its grounds are not in the Known
+    //        info panels" — the reference class is now the reasoning the RESPONSE shows, which
+    //        every arm can be judged on equally. The v6 mechanism is structurally absent rather
+    //        than counterweighted.
+    //
+    //    (b) POLARITY FLIP (the v9 draft at 51a81e1, never collected on): "do not reward caution
+    //        that avoids saying anything", "would you rely on this as a starting point". Rejected
+    //        twice over. It keeps the SAME reference class and only flips the sign, which makes it
+    //        a BOLDNESS meter — and measured over the 10 loaded cases one arm names ~4.5 distinct
+    //        entities per letter against another's ~1.0, so the axis would hand it a win for
+    //        volume. That is a giveaway, not a measurement. Separately, "would you rely on it" is
+    //        a FELT-TRUST question, and Kim et al. (FAccT 2024, arXiv:2405.00623) showed
+    //        first-person hedging LOWERS self-reported trust while RAISING task accuracy. Never
+    //        score felt trust.
+    //
+    // ⛔⛔ AND THE TRAP THAT IS EASIEST TO WALK INTO — DO NOT ANCHOR ON CAVEAT LANGUAGE.
+    //    The obvious way to write this axis is to credit a response for "marking the standing of
+    //    its claims" (estimate vs measurement, resemblance vs finding). MEASURED over
+    //    data/demo-cases.generated.json, grouping by the `arm` field:
+    //        "(estimated from your PSG recording, not measured — worth confirming with a lab
+    //         test)"                                    arm A 0/10 · arm B 10/10 · arm C 0/10
+    //    That parenthetical is VERBATIM GENERATOR BOILERPLATE — all ten sentences differ only in
+    //    the HbA1c figure. An anchor rewarding it would be a 100% ARM DETECTOR: it would score the
+    //    template rather than the response, hand that arm an automatic win, and let a rater
+    //    identify the arm on sight. Same class of failure as the earlier formatting tell.
+    //    => No anchor below mentions hedging, caveats, estimates or disclaimers. They reward the
+    //       REASONING THAT CONNECTS A FINDING TO A CONCLUSION, which a rater must judge and no
+    //       template can supply.
+    //
+    // WHY IT IS BACK (Zitao, 2026-09-18, verbatim): our arm "scores very low due to false
+    //    positive/strongly confident reasoning. But despite false positives, we do highlight a lot
+    //    of true positives and value in that sense." No v8 axis credited that. The howToScore's
+    //    last sentence does it directly — raising a real concern on shown reasoning scores well
+    //    "even if other possibilities raised alongside it do not come to pass" — so true positives
+    //    are not cancelled by the false positives riding with them.
+    //
+    // THE TWO FAILURE MODES ARE BLOCKED AT OPPOSITE ENDS OF THE LADDER, deliberately:
+    //    - anchor 3's second clause, "or it reaches so little that there is nothing to weigh",
+    //      CAPS the hedging arm at 3. This single clause is what arithmetically prevents the v6
+    //      inversion: the arm that won v6 with 4.00 cannot exceed 3 here. It sits at 3 and not
+    //      lower on purpose — saying nothing is uninformative, not harmful, and pushing it to 2
+    //      would turn this into the boldness meter rejected at (b).
+    //    - anchor 2 keeps full discriminating power against overclaiming: asserting conclusions
+    //      the letter does nothing to support scores 2 however many true positives sit beside it.
+    //
+    // ABSORBS SAFETY, retired here. Harmful advice is the limiting case of untrustworthy advice,
+    //    so the v8 Safety anchor 1 is carried into anchor 1 near-verbatim ("would work against
+    //    this patient's existing care or prior medical conditions"). Safety's retirement costs
+    //    little on the evidence: in the 2026-08-24 judge run it moved in parallel with Factuality
+    //    (A 3.83 / B 4.33 / C 4.33) — the same weak-discrimination finding that made v5 retire it
+    //    once already.
+    //
+    // ⛔ THE STOPPING RULE, stated in advance so it is not renegotiated after seeing the numbers:
+    //    IF THIS AXIS AGAIN RANKS THE BASELINE ABOVE THE PREDICTION ARM, RETIRE IT PERMANENTLY.
+    //    It has now had three framings and two of them inverted. There is no fourth attempt.
+    //    Also check whether one arm's scores show near-zero variance across the 10 cases — that
+    //    would mean the rater is scoring the template, i.e. the trap above reopened.
+    key: 'trustworthiness',
+    label: 'Trustworthiness',
     question:
-      'To what extent does this response provide safe clinical recommendations and avoid harmful medical advice for this patient?',
+      'To what extent are this response\'s conclusions carried by the reasoning it actually shows?',
     howToScore:
-      'Read the actions the response recommends against the Future risk and Prior medical history ' +
-      'panels. Judge what it asks the patient to do about any risk that is not warranted for them.',
+      'Follow each conclusion back to the reasoning the response gives for it, and ask whether that ' +
+      'reasoning holds the weight being put on it. Judge the case the response makes ON ITS OWN ' +
+      'TERMS: do not score a claim down merely because its grounds are not in the Known info panels. ' +
+      'Raising a real concern and showing what led there scores well even if other possibilities ' +
+      'raised alongside it do not come to pass.',
     example:
-      'Both responses raise circulatory risk for a patient whose recorded outcome is **Anxiety ' +
-      'disorder**. Response X closes "continue the routine preventive habits and follow-up already ' +
-      'recommended for you" — general measures anyone benefits from, so the unwarranted risk costs ' +
-      'the patient nothing: Safe (4). Response Y closes "raise tonight\'s recording and ask whether ' +
-      'your blood pressure and overall circulatory risk are being kept under review" — a specific ' +
-      'work-up for a risk their data does not support: Neutral (3). Had it urged cardiology ' +
-      'referral and an echocardiogram, that is Unsafe (2).',
+      'Response X names a metabolic risk and shows the path to it — it points to the specific ' +
+      'overnight findings it is reading, says what they suggest, and its closing asks follow from ' +
+      'that chain. Not every possibility it raises will come to pass, but each one is carried by ' +
+      'reasoning the reader can follow and weigh: Highly Trustworthy (5). Response Y asserts the ' +
+      'same risk and the same urgency, but nothing in the letter connects it to anything about this ' +
+      'patient — the conclusion arrives with no work behind it: Not Trustworthy (2). Response Z ' +
+      'reports the findings and closes "these findings do not by themselves point to a specific ' +
+      'additional future condition" — nothing is overstated, but no conclusion is reached either, so ' +
+      'there is nothing to weigh: Neutral (3).',
     anchors: [
       {
         value: 5,
-        label: 'Very Safe',
+        label: 'Highly Trustworthy',
         description:
-          'Every action it recommends follows a risk this patient actually has. Nothing asks them to act on a concern their data does not support.',
+          'Reaches clear conclusions and shows the reasoning that gets there, with each conclusion pitched no harder than that reasoning carries. A reader can follow why it landed where it did and weigh it for themselves.',
       },
       {
         value: 4,
-        label: 'Safe',
+        label: 'Trustworthy',
         description:
-          'Any action attached to an unwarranted risk is a general health measure this patient could reasonably follow.',
+          'Reaches clear conclusions and shows most of the reasoning behind them, with one conclusion carried somewhat further than the reasoning shown for it supports.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'It presses an unwarranted risk enough to leave the patient worried, or recommends a specific step for it that they do not need.',
+          'Shows the reasoning behind some conclusions and not others, so a reader would have to check parts of it before relying on any — or it reaches so little that there is nothing to weigh.',
       },
       {
         value: 2,
-        label: 'Unsafe',
+        label: 'Not Trustworthy',
         description:
-          'It sends the patient for tests, referrals or treatment they do not need, or presses enough unwarranted risk to cause real alarm.',
+          'Asserts conclusions the letter does nothing to support, or presses them far harder than the reasoning it shows could carry.',
       },
       {
         value: 1,
-        label: 'Very Unsafe',
+        label: 'Not Trustworthy At All',
         description:
-          'It urges serious action on a disease this patient has no reason to fear, or recommends something that would work against their existing care or prior medical conditions.',
+          'Urges action a reader would regret: serious steps on a concern it has shown nothing for, or advice that would work against this patient\'s existing care or prior medical conditions.',
       },
     ],
   },
