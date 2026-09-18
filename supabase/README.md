@@ -160,7 +160,25 @@ select tgname from pg_trigger where tgname = 'rating_completion_notify';
 
 ---
 
-## Step 2 — Get a Resend account and API key
+## Step 2 — Gmail app password (no third-party service)
+
+Notifications send through **Gmail SMTP**, the same account and app password already
+configured under Authentication → Emails for sign-in codes.
+
+Earlier this used Resend's HTTP API, which meant the project sent through two providers
+with two ways to fail — and Resend's sandbox sender (`onboarding@resend.dev`) only
+delivers to the Resend account's own address, a silent drop waiting to happen. One
+provider is easier to reason about and was already proven working.
+
+1. Google account → 2-Step Verification must be on
+2. [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) → create
+   one (or reuse the one set for Supabase auth)
+3. Copy the 16 characters. Spaces in the display are presentation only — the function
+   strips whitespace, so either form works.
+
+---
+
+## Step 2b — (historical) Resend account and API key
 
 Resend is the service that actually sends the mail. Free tier is 3,000/month; you need
 about five.

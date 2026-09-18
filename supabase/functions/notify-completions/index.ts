@@ -1,8 +1,16 @@
 // Drains notification_outbox and emails the study operator.
 //
 // Deploy:  supabase functions deploy notify-completions
-// Secrets: supabase secrets set RESEND_API_KEY=... NOTIFY_TO=... NOTIFY_FROM=...
-// Schedule: pg_cron, or Supabase Dashboard -> Edge Functions -> Schedules (every 5 min).
+// Secrets: supabase secrets set GMAIL_USER=... GMAIL_APP_PASSWORD=... NOTIFY_TO=...
+// Schedule: fired immediately by the completion trigger (migration 006); pg_cron every
+//           5 minutes is the safety net.
+//
+// SENDS VIA GMAIL SMTP — the same account and app password already configured under
+// Authentication -> Emails for sign-in codes. It previously used Resend's HTTP API, which
+// left the project sending through two providers for no reason: auth mail via Gmail,
+// notifications via Resend, each with its own way to fail. Resend's sandbox sender also
+// only delivers to the Resend account's own address, which is a silent-drop waiting to
+// happen. One provider, one set of credentials, one failure mode to reason about.
 //
 // WHY AN OUTBOX RATHER THAN EMAILING FROM THE TRIGGER
 // The trigger runs inside the clinician's submit transaction. An HTTP call there
@@ -16,12 +24,15 @@
 // nothing is readable by whoever the mail is forwarded to.
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { SMTPClient } from 'https://deno.land/x/denomailer@1.6.0/mod.ts'
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
-const NOTIFY_TO = Deno.env.get('NOTIFY_TO')!            // the operator's address
-const NOTIFY_FROM = Deno.env.get('NOTIFY_FROM') ?? 'onboarding@resend.dev'
+const GMAIL_USER = Deno.env.get('GMAIL_USER') ?? ''
+const GMAIL_APP_PASSWORD = (Deno.env.get('GMAIL_APP_PASSWORD') ?? '').replace(/\s+/g, '')
+// Google shows app passwords as "abcd efgh ijkl mnop"; the spaces are presentation only
+// and SMTP AUTH rejects them, so strip whitespace rather than rely on careful pasting.
+const NOTIFY_TO = Deno.env.get('NOTIFY_TO') || GMAIL_USER  // defaults to the sender
 // Where the button goes: the project's rating table, behind a dashboard login.
 const PROJECT_REF = SUPABASE_URL.split('//')[1]?.split('.')[0] ?? ''
 
@@ -201,6 +212,17 @@ function body(r: OutboxRow): { subject: string; html: string } {
 Deno.serve(async () => {
   const supabase = createClient(SUPABASE_URL, SERVICE_KEY)
 
+  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+    return new Response(
+      JSON.stringify({
+        error:
+          'GMAIL_USER and GMAIL_APP_PASSWORD are not set. ' +
+          'supabase secrets set GMAIL_USER=you@gmail.com GMAIL_APP_PASSWORD=<16 chars>',
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
+    )
+  }
+
   const { data: rows, error } = await supabase
     .from('notification_outbox')
     .select('id, kind, batch, rater_id, attempts, payload')
@@ -261,21 +283,33 @@ Deno.serve(async () => {
         console.error('attachment build failed', attachErr)
       }
 
-      const res = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
+      const client = new SMTPClient({
+        connection: {
+          hostname: 'smtp.gmail.com',
+          port: 465,
+          tls: true, // implicit TLS; denomailer handles 465 directly
+          auth: { username: GMAIL_USER, password: GMAIL_APP_PASSWORD },
         },
-        body: JSON.stringify({
-          from: NOTIFY_FROM,
-          to: [NOTIFY_TO],
+      })
+      try {
+        await client.send({
+          from: `UCLA Health Intelligence Lab <${GMAIL_USER}>`,
+          to: NOTIFY_TO,
           subject,
           html,
-          ...(attachments.length > 0 ? { attachments } : {}),
-        }),
-      })
-      if (!res.ok) throw new Error(`${res.status} ${await res.text()}`)
+          // denomailer takes attachment content as base64, same as the previous provider.
+          attachments: attachments.map((a) => ({
+            filename: a.filename,
+            encoding: 'base64' as const,
+            content: a.content,
+            contentType: a.filename.endsWith('.json') ? 'application/json' : 'text/csv',
+          })),
+        })
+      } finally {
+        // Always close: a leaked connection would exhaust Gmail's per-session limits and
+        // start failing sends that have nothing wrong with them.
+        await client.close()
+      }
       // Mark sent only after the provider accepted it. A crash before this point
       // means the row stays pending and is retried — at-least-once, which for a
       // notification is the right side to err on.
