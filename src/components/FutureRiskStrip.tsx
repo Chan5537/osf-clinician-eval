@@ -110,8 +110,17 @@ export function FutureRiskStrip({ caseId, responseCount, onGoToScoring }: Props)
           </span>
         )}
 
-        {/* Task + jump, demoted: one clause, quieter voice, pushed to the end of the line. */}
+        {/* Task + jump, demoted: one clause, quieter voice, pushed to the end of the line.
+            WORDING (owner 2026-09-18): "What this patient actually developed" was added after a
+            rater new to the study reported not knowing, at first, where the reference for scoring
+            was. The strip showed the conditions but never said what they WERE, so it read as a
+            page header rather than as the thing the summaries are judged against. Said plainly in
+            the rater's own terms — no "ground truth" or "oracle", which stay out of rater-facing
+            copy; the label and tag are unchanged because the rubric names them. */}
         <span className="ml-auto shrink-0 text-sm text-indigo-800/80 dark:text-indigo-200/80">
+          <span className="font-semibold text-indigo-900 dark:text-indigo-100">
+            What this patient actually developed.
+          </span>{' '}
           Rate the {responseCount} summaries against it.{' '}
           <button
             type="button"

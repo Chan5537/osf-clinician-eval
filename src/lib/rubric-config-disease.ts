@@ -194,7 +194,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v10-20260918'
+export const RUBRIC_VERSION = 'v11-20260918'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -565,6 +565,43 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     //    It has now had three framings and two of them inverted. There is no fourth attempt.
     //    Also check whether one arm's scores show near-zero variance across the 10 cases — that
     //    would mean the rater is scoring the template, i.e. the trap above reopened.
+    // v11 (2026-09-18, Chan; ask from Zitao, after the first v10 rater round): ONE sentence added
+    //    to howToScore de-privileging prior medical history as the source of grounds. Nothing else
+    //    changes — question, anchors and example are v10 verbatim.
+    //    His concern is real: unprompted, a clinician brings the prior that "a diagnosis is
+    //    justified by the medical history", which is DIRECTIONAL — it would favour letters leaning
+    //    on history and penalise letters reasoning from the recording or the demographics. The new
+    //    sentence names the sources as peers and says outright that a conclusion reasoned from the
+    //    recording is not less substantiated for not resting on the history.
+    //
+    // ⛔ HIS FULLER PROPOSAL — rewording the axis around "leveraging multi-aspect information" —
+    //    WAS MEASURED AND REJECTED. Counts over data/demo-cases.generated.json, by `arm`:
+    //      what each letter CITES AS GROUNDS (the "because ..." clause), summed over 10 letters:
+    //        a PSG finding                 BASE 10 · OURS  7 · TRUTH  1
+    //        "your profile" (circular)     BASE  0 · OURS  9 · TRUTH 12
+    //        prior history                 BASE  0 · OURS  0 · TRUTH  1
+    //        demographics                  BASE  0 · OURS  0 · TRUTH  0
+    //      distinct source types MENTIONED anywhere: BASE 2.5 · OURS 2.4 · TRUTH 2.8 per letter.
+    //    Two conclusions, both fatal to the breadth framing:
+    //      (a) NO ARM DOES MULTI-ASPECT JUSTIFICATION. History and demographics are essentially
+    //          never cited as grounds, so an integration standard would score every arm low and
+    //          measure a property absent from the material rather than discriminating between
+    //          letters.
+    //      (b) MENTION-BREADTH IS ARM-INVARIANT (2.4-2.8), so an anchor keyed to how many aspects
+    //          appear measures nothing at all — while an anchor keyed to how many are NAMED would
+    //          simply favour the arm that names ~4.5 entities per letter over the one that names
+    //          ~1.0. That is a giveaway, not a measurement, and it is how this axis inverted twice.
+    //
+    // ⚠️ NOTED, NOT ACTIONED: two arms ground conclusions in "because your profile is predictive
+    //    of X" (OURS 9, TRUTH 12) — circular, the stated ground restating the claim. Worst case in
+    //    the loaded batch, HSP_v7_045: "Your profile is predictive of mental conditions,
+    //    particularly Tobacco use disorder, because your profile points most strongly to that
+    //    condition." A rigorous substantiation axis SHOULD fault that, and the current anchors
+    //    already can (anchor 2: "asserted with a confidence that the stated basis does not
+    //    support"). It is not being written into the wording, because the defect belongs to the
+    //    GENERATOR — the letters should state their grounds — and sharpening the instrument to
+    //    punish it would score the prediction arms down for a fixable writing problem.
+    //
     key: 'trustworthiness',
     label: 'Trustworthiness',
     question:
@@ -572,7 +609,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'presents?',
     howToScore:
       'Trace each conclusion to the reasoning offered in support of it, and assess whether that ' +
-      'reasoning is sufficient to sustain the claim as stated. Evaluate the response on the ' +
+      'reasoning is sufficient to sustain the claim as stated. Grounds may legitimately come from ' +
+      "the overnight findings, this patient's demographics, their prior conditions, or the way " +
+      'these bear on one another; prior history is not privileged among them, and a conclusion ' +
+      'reasoned from the recording is not less substantiated for not resting on the history. ' +
+      'Evaluate the response on the ' +
       'evidence it presents: do not penalize a claim solely because its underlying basis is not ' +
       'contained in the Known info panels. A response that identifies a genuine concern and sets ' +
       'out the findings leading to it is well substantiated, irrespective of whether other ' +

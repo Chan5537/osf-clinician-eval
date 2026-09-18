@@ -1,4 +1,24 @@
-# Rubric v10 — source of truth and validation
+# Rubric v11 — source of truth and validation
+
+**v11 (2026-09-18)** — one clarification after the first rater round: Trustworthiness'
+`howToScore` now states that grounds may come from the overnight findings, demographics, prior
+conditions or their interaction, and that **prior history is not privileged among them**. The
+question, all five anchors and the worked example are v10 verbatim. Shipped alongside: the
+**Supplementary information** panel (estimated medication/HbA1c, rendered unconditionally) and the
+Sleep/History sections opening by default. `rubric_version` **v11-20260918**, SCHEMA_VERSION **22**.
+
+⚠️ v10 and v11 are not poolable ON TRUSTWORTHINESS — a v10 rater answered without the clarifying
+sentence, and the history prior is exactly what it corrects for. The other four axes are unchanged
+in wording; pool them only with that caveat recorded.
+
+⛔ The fuller "multi-aspect integration" rewrite Zitao proposed was measured and REJECTED — see the
+v11 block in `src/lib/rubric-config-disease.ts`. Across all 30 letters, prior history is cited as
+grounds 0/0/1 times and demographics 0/0/0, so no arm does multi-aspect justification; and
+mention-breadth is arm-invariant (2.5 / 2.4 / 2.8), so an anchor keyed to it measures nothing.
+
+---
+
+## Rubric v10 — the axis rebuild
 
 **Active as of 2026-09-18** (Chan; agreed with Zitao in-session). SCHEMA_VERSION **21**,
 `rubric_version` **v10-20260918**. Full clinician-facing text with worked examples:

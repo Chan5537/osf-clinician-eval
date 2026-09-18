@@ -24,13 +24,27 @@ export interface CaseSelection {
   stratum: string // short_tst | high_ahi | low_n3 | circulatory | endocrine_metabolic | ...
 }
 
-// EHR records for the rater panel (v58, owner 2026-09-01). Real chart data — model
-// readouts were withdrawn (they leaked the ours arm's information as reference truth).
-// Empty arrays are honest "no EHR record in-window" states.
+// Records behind the Supplementary information panel (v58, owner 2026-09-01; reopened to
+// ESTIMATED values 2026-09-18, owner).
+//
+// HISTORY, because this reverses a documented decision: model readouts were withdrawn here on
+// 2026-09-01 on the grounds that they "leaked the ours arm's information as reference truth".
+// The owner's call 2026-09-18 is that the remedy was wrong, not the observation. A predicted
+// figure rendered as a bare row inside a panel of chart facts does read as an answer key — but
+// that is a FRAMING failure, and framing is what fixes it. The panel now says the values are
+// estimated from the recording rather than measured, repeats "(estimated)" on the figure itself,
+// and states outright that it is not a check on the responses. What it must never become is a
+// full chemistry battery: the HbA1c-only filter in CaseContextPanel is part of the safeguard.
+//
+// Empty arrays are honest "nothing on record in-window" states and are the correct thing to
+// render while the upstream data is regenerated.
 export interface EhrLabRow {
   name: string
   value: number
   abnormal: boolean | null
+  // True/absent = estimated from the recording (the default, and what the panel labels).
+  // Explicit `false` marks a genuinely measured chart value, which renders without the tag.
+  estimated?: boolean
 }
 export interface EhrRecords {
   medications: string[]
