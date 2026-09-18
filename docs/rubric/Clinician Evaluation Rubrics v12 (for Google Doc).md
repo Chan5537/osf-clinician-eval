@@ -115,7 +115,7 @@ How to score: Judge the response as a summary handed to a provider: is it clinic
 
 **To what extent are the statements in this response substantiated with evidence (check panels) and coherent reasoning?**
 
-How to score: Two things are being judged. First, EVIDENCE: where the response states something the panels carry — a sleep value, a prior condition, a supplementary estimate — check it against them; a misquoted or invented value is not substantiated. Second, REASONING: trace each conclusion to the support offered for it and assess whether that support sustains the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them. ⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient will develop, so a prediction cannot be checked against one. Judge those on the reasoning given, and do not mark a claim down merely because its basis is not visible to you. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
+How to score: Check what the panels carry against what the response says, then ask whether its conclusions follow from the support it gives — but judge a prediction on that reasoning alone, since no panel records what the patient went on to develop.
 
 | Score | Anchor | Meaning |
 |---|---|---|
