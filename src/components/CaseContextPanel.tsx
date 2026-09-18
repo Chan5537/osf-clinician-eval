@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { ClipboardList, FlaskConical, Moon, UserRound } from 'lucide-react'
+import { ClipboardList, FlaskConical, Moon, TrendingUp, UserRound } from 'lucide-react'
 import {
   Accordion,
   AccordionItem,
@@ -9,7 +9,7 @@ import {
 import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { ConditionList } from '@/components/ConditionList'
 import { SleepIndexGrid } from '@/components/SleepIndexGrid'
-import { caseContext } from '@/lib/case-context'
+import { caseContext, futureRiskRollup, inPanel23 } from '@/lib/case-context'
 import { withGivenFieldsOnly } from '@/lib/given-inputs'
 import { cn } from '@/lib/utils'
 import type { Demographics } from '@/lib/types'
@@ -48,6 +48,12 @@ const SLEEP_STYLE: SectionStyle = {
 const HISTORY_STYLE: SectionStyle = {
   rail: 'border-l-slate-400 dark:border-l-slate-500',
   icon: 'text-slate-500 dark:text-slate-400',
+}
+// Future risk (the recorded outcome) — indigo, the SAME hue as the pinned FutureRiskStrip, so the
+// panel section and the strip read as one thing in two places rather than two different facts.
+const OUTCOME_STYLE: SectionStyle = {
+  rail: 'border-l-indigo-500',
+  icon: 'text-indigo-600 dark:text-indigo-400',
 }
 // Auxiliary information (model-relevant med/lab) — amber, the "unknown" hue.
 const AUX_STYLE: SectionStyle = {
@@ -148,6 +154,11 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
   // must tolerate a sidecar with no `ehrRecords` at all — which is the current state for all 10
   // cases (the field was dropped at commit e57139e). Reading context.ehrRecords.* inline, as the
   // pre-2026-09-18 code did, throws on every case the moment the render guard is relaxed.
+  // The recorded outcome, derived EXACTLY as FutureRiskStrip derives it (same 23-panel filter,
+  // same rollup) so the panel section and the strip can never disagree about this patient.
+  const outcomeConditions = (context?.futureDiseaseGroundTruth ?? []).filter(inPanel23)
+  const outcomeGroups = futureRiskRollup(outcomeConditions).groups
+
   const medications = context?.ehrRecords?.medications ?? []
   const hba1c = context?.ehrRecords?.labs?.find((l) => /hba1c/i.test(l.name))
 
@@ -223,12 +234,14 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           the material it should be read against was behind two collapsed headers — a closed
           section reads as an empty one. Supplementary stays collapsed: its absence was the
           confusion, not its contents, and opening all three buries the responses below the fold. */}
-      <Accordion type="multiple" defaultValue={['sleep-indices', 'medical-history']}>
-        {/* The recorded outcome moved OUT of this panel (owner 2026-09-03): it is now pinned
-            above the page as FutureRiskStrip, on screen for the whole case instead of scrolling
-            away exactly when the responses are being judged. Repeating it here would put the
-            same two lines on screen twice. The strip keeps the "Future risk" name and the
-            "New onset risk" tag, so the rubric guidance that names this panel still resolves. */}
+      <Accordion type="multiple" defaultValue={['sleep-indices', 'medical-history', 'future-risk']}>
+        {/* ⚠️ SUPERSEDED 2026-09-18 — the recorded outcome is BACK in this panel, below Prior
+            medical history (see the Future risk item further down). The 2026-09-03 reasoning kept
+            here for the record: it was moved out to the pinned FutureRiskStrip so it would not
+            scroll away exactly when the responses are being judged, and repeating it was judged
+            redundant. The strip still does that job and is unchanged; what the move did not
+            anticipate is a rater looking for the outcome in the patient panel and concluding it
+            was not there. */}
         <AccordionItem value="sleep-indices" className={itemClass(SLEEP_STYLE)}>
           <AccordionTrigger className={TRIGGER_CLASS}>
             <SectionHeader
@@ -263,6 +276,52 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               conditions={ehrHistory}
               emptyLabel="No coded history recorded at the time of the study."
             />
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* FUTURE RISK — restored to the panel 2026-09-18 (owner), below Prior medical history.
+            It was moved OUT on 2026-09-03 to the pinned FutureRiskStrip, and the strip STAYS: it
+            is the persistent reference while the letters are read. But a rater new to the study
+            reported not knowing, at first, where the outcome was — he looked in the patient panel,
+            because that is where a clinician looks for a patient's record, and found only inputs.
+            So the outcome now appears in BOTH places, and the duplication is deliberate: the
+            earlier note ("repeating it here would put the same two lines on screen twice") treated
+            redundancy as the cost to avoid, which was right until the cost of NOT FINDING IT AT
+            ALL turned up. Same indigo hue, same rollup and same 23-panel filter as the strip, so
+            the two can never disagree.
+            Tagged Ground-truth like the other recorded panels — it is what this patient actually
+            went on to develop, which is the one thing the responses are scored against. */}
+        <AccordionItem value="future-risk" className={itemClass(OUTCOME_STYLE)}>
+          <AccordionTrigger className={TRIGGER_CLASS}>
+            <SectionHeader
+              icon={TrendingUp}
+              style={OUTCOME_STYLE}
+              title="Future risk"
+              tag="Ground-truth"
+              meta={plural(outcomeConditions.length, 'condition')}
+            />
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2.5 text-xs text-muted-foreground">
+              What this patient actually went on to develop in the six years after the study —
+              new onset, not present at the time. This is what the responses are rated against.
+            </p>
+            {outcomeGroups.length > 0 ? (
+              <div className="space-y-2 text-sm">
+                {outcomeGroups.map(({ group, conditions }) => (
+                  <div key={group} className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <span className="rounded-md bg-indigo-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-indigo-500">
+                      {group}
+                    </span>
+                    <span className="text-foreground">{conditions.join(' · ')}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No new-onset condition recorded in the 6-year window.
+              </p>
+            )}
           </AccordionContent>
         </AccordionItem>
 

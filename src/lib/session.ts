@@ -86,7 +86,12 @@ import { advance, touch, park, resume } from './timing'
 //       regrade accordingly. The panel tags also change from "Known info" to "Ground-truth", which
 //       the rubric text now references by that name. A v22 rater answered a single-part question
 //       against differently-labelled panels: discard stale sessions, do not pool on this axis.
-export const SCHEMA_VERSION = 23
+// v24 = the recorded outcome returns to the patient panel as a "Future risk" section below Prior
+//       medical history, tagged Ground-truth and open by default (the pinned strip stays). No
+//       rubric wording change — RUBRIC_VERSION is unchanged at v12 — but what the rater sees while
+//       scoring does change, so a stale session is discarded rather than resumed against a
+//       different screen.
+export const SCHEMA_VERSION = 24
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
