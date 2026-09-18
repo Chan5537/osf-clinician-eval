@@ -8,12 +8,12 @@ end of each case. The patient panel is your reference: **Sleep panel** and **Pri
 history** are tagged *Ground-truth* (on record at the time of the study); **Future risk**
 (*New onset risk*) is what the patient actually developed in the six years after.
 
-> **WHAT CHANGED IN V12.** Trustworthiness is now explicitly **two-part**: whether the
-> statements are grounded in evidence — check facts on record against the panels — and whether
-> the conclusions are substantiated by coherent reasoning. Note that a forward-looking claim is
-> NOT a fact on record: no panel contains what the patient went on to develop, so predictions are
-> judged on the reasoning given, not on whether you can verify them. The Sleep panel and Prior
-> medical history tags now read **Ground-truth** (previously "Known info").
+> **WHAT CHANGED IN V12.** Trustworthiness is now explicitly **two-part**: whether the statements
+> are substantiated with evidence — check what the panels carry, including the Supplementary
+> estimates — and whether the conclusions rest on coherent reasoning. Note that a forward-looking
+> claim is NOT something the panels can settle: no panel contains what the patient went on to
+> develop, so predictions are judged on the reasoning given, not on whether you can verify them.
+> The Sleep panel and Prior medical history tags now read **Ground-truth** (previously "Known info").
 
 
 > **Carried over from V10.** Two axes are new. **Accuracy** replaces Factuality: it still asks
@@ -113,16 +113,16 @@ How to score: Judge the response as a summary handed to a provider: is it clinic
 
 ## 5. Trustworthiness
 
-**To what extent are the statements in this response grounded in evidence (check the Ground-truth panels) and substantiated with coherent reasoning?**
+**To what extent are the statements in this response substantiated with evidence (check panels) and coherent reasoning?**
 
-How to score: Two things are being judged. First, GROUNDING: where the response states a fact that is on record — a sleep value, a prior condition — check it against the Ground-truth panels; a misquoted or invented value is not grounded. Second, REASONING: trace each conclusion to the support offered for it and assess whether that support sustains the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them. ⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient will develop, so a prediction cannot be checked against one. Judge those on the reasoning given, and do not mark a claim down merely because its basis is not visible to you. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
+How to score: Two things are being judged. First, EVIDENCE: where the response states something the panels carry — a sleep value, a prior condition, a supplementary estimate — check it against them; a misquoted or invented value is not substantiated. Second, REASONING: trace each conclusion to the support offered for it and assess whether that support sustains the claim as stated. Grounds may legitimately come from the overnight findings, this patient's demographics, their prior conditions, or the way these bear on one another; prior history is not privileged among them. ⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient will develop, so a prediction cannot be checked against one. Judge those on the reasoning given, and do not mark a claim down merely because its basis is not visible to you. A response that identifies a genuine concern and sets out the findings leading to it is well substantiated, irrespective of whether other possibilities it raises are subsequently borne out.
 
 | Score | Anchor | Meaning |
 |---|---|---|
-| 5 | Highly Trustworthy | Facts on record are stated accurately, and every conclusion drawn from them is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently. |
-| 4 | Trustworthy | Facts on record are stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one recorded value reported loosely. |
-| 3 | Neutral | Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a fact on record is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here. |
-| 2 | Not Trustworthy | Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the Ground-truth panels. |
+| 5 | Highly Trustworthy | Everything the panels carry is stated accurately, and every conclusion drawn from it is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently. |
+| 4 | Trustworthy | What the panels carry is stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one value reported loosely. |
+| 3 | Neutral | Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a value the panels carry is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here. |
+| 2 | Not Trustworthy | Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the panels. |
 | 1 | Not Trustworthy At All | Recommends consequential action on a concern for which no supporting reasoning is presented, or advises a course that would be contraindicated given this patient's existing care or prior medical conditions. |
 
 **Worked example.** Response X quotes this patient's overnight findings as the Sleep panel records them, states what they indicate, and its recommendations follow from that chain of reasoning. Not every possibility it raises will be borne out, but the facts are right and each conclusion is substantiated by reasoning the reader can trace: Highly Trustworthy (5). Response Y reaches a similar conclusion but reports an AHI the Sleep panel does not support — the reasoning may read well, yet it is built on a value that is not what the panel records: Neutral (3), or Not Trustworthy (2) where the conclusion rests on that value. Response Z asserts the risk with equal confidence but presents nothing connecting it to this patient: Not Trustworthy (2). Response W reports the findings and concludes "these findings do not by themselves point to a specific additional future condition"; nothing is overstated, but no conclusion is reached, so there is nothing to appraise: Neutral (3).

@@ -615,9 +615,14 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     //    the reverse of how much prediction each arm carries — because raters checked claims
     //    against panels that hold no model evidence, so any arm whose grounds they could not
     //    inspect scored as unsupported and the hedging baseline won. The owner has directed that
-    //    "(check the Ground-truth panels)" appear in the stem regardless; these are the guards:
-    //      - howToScore SPLITS the judgement: the panel check is scoped to FACTS ON RECORD (a
-    //        sleep value, a prior condition), which are the only things a panel can settle;
+    //    "(check panels)" appear in the stem regardless; these are the guards:
+    //      - howToScore SPLITS the judgement: the panel check is scoped to WHAT THE PANELS CARRY
+    //        (a sleep value, a prior condition, a supplementary estimate) — the only things a
+    //        panel can settle. "check panels" is deliberately UNQUALIFIED in the stem: scoping it
+    //        to the Ground-truth panels alone (owner, 2026-09-18) would exclude the Supplementary
+    //        panel, which is precisely where a rater verifies the estimate claims. Comprehensiveness
+    //        keeps the narrower "Ground-truth panels" wording, because that axis measures what a
+    //        response adds BEYOND what was already on record and must exclude the estimates;
     //      - a ⚠️ sentence states outright that a forward-looking claim is NOT a fact on record,
     //        that no panel contains what the patient will develop, and that such claims must be
     //        judged on the reasoning given — "do not mark a claim down merely because its basis
@@ -632,12 +637,12 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     key: 'trustworthiness',
     label: 'Trustworthiness',
     question:
-      'To what extent are the statements in this response grounded in evidence (check the ' +
-      'Ground-truth panels) and substantiated with coherent reasoning?',
+      'To what extent are the statements in this response substantiated with evidence ' +
+      '(check panels) and coherent reasoning?',
     howToScore:
-      'Two things are being judged. First, GROUNDING: where the response states a fact that is on ' +
-      'record — a sleep value, a prior condition — check it against the Ground-truth panels; a ' +
-      'misquoted or invented value is not grounded. Second, REASONING: trace each conclusion to ' +
+      'Two things are being judged. First, EVIDENCE: where the response states something the panels ' +
+      'carry — a sleep value, a prior condition, a supplementary estimate — check it against them; ' +
+      'a misquoted or invented value is not substantiated. Second, REASONING: trace each conclusion to ' +
       'the support offered for it and assess whether that support sustains the claim as stated. ' +
       'Grounds may legitimately come from the overnight findings, this ' +
       "patient's demographics, their prior conditions, or the way these bear on one another; " +
@@ -665,25 +670,25 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Trustworthy',
         description:
-          'Facts on record are stated accurately, and every conclusion drawn from them is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
+          'Everything the panels carry is stated accurately, and every conclusion drawn from it is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
       },
       {
         value: 4,
         label: 'Trustworthy',
         description:
-          'Facts on record are stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one recorded value reported loosely.',
+          'What the panels carry is stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one value reported loosely.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a fact on record is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
+          'Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a value the panels carry is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
       },
       {
         value: 2,
         label: 'Not Trustworthy',
         description:
-          'Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the Ground-truth panels.',
+          'Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the panels.',
       },
       {
         value: 1,
