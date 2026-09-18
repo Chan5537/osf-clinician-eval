@@ -6,7 +6,7 @@
 // `view` field drives which screen App renders.
 
 import type { RubricState, RubricAction, DemoCase, ResponseLabel } from './types'
-import { buildInitialRubricState, rubricReducer } from './reducer'
+import { buildInitialRubricState, rubricReducer, likertKeysFor } from './reducer'
 import { DEMO_CASES } from '@/data/demo-cases'
 import type { TimeAccumulator } from './timing'
 import { advance, touch, park, resume } from './timing'
@@ -163,8 +163,32 @@ export type SessionAction =
   | { type: 'NEXT_CASE' }
   | { type: 'GOTO_CASE'; caseIndex: number }
   | { type: 'FINISH' }
+  // Return to the landing screen WITHOUT touching any answer — the home button.
+  //
+  // Distinct from RESET_ALL, which wipes everything: this only changes which screen is
+  // showing. The case clocks are settled on the way out so time spent reading is not
+  // billed to a case nobody is looking at, and BEGIN will re-enter at the first
+  // unsubmitted case exactly as it does on a fresh sign-in.
+  | { type: 'GO_HOME'; at: number }
   | { type: 'RESET_ALL' }
   | { type: 'ENTER_CASE'; at: number } // stamps caseEnteredAt + starts the case's active clock
+  // Replace the whole session with one restored from the server (sync.hydrate +
+  // reconcile). The ONLY way server state enters the reducer; nothing else may
+  // wholesale-replace a session. SCHEMA_VERSION is deliberately NOT bumped for
+  // this: the stored shape is unchanged, so a rater with work already in progress
+  // on the live site keeps it.
+  | { type: 'HYDRATE'; state: SessionState }
+  // TEST FIXTURE ONLY (see lib/app-mode.ts ALLOW_TEST_AUTOFILL). Fills every Likert cell
+  // of every case with random 1-5 scores and marks them submitted, so the end of a round
+  // — the completion screen, the completion trigger, the notification email — can be
+  // reached without hand-clicking 150 radio buttons. Never reachable in the deployed
+  // build; the action is dispatched from a button that does not exist there.
+  //
+  // NOTE: the reducer CASE survives tree-shaking (the reducer is reachable, so its switch
+  // is kept), so the literal 'AUTOFILL_ALL' appears in the deployed bundle. It has no
+  // caller there and no URL or console path reaches a reducer dispatch, so it is dead
+  // code rather than a hidden feature.
+  | { type: 'AUTOFILL_ALL'; at: string }
   | { type: 'REVEAL_CASE'; caseIndex: number } // mark streaming reveal as played (once)
   | { type: 'SET_LAYOUT_MODE'; mode: LayoutMode } // focus/compare toggle
   // Tab hidden/visible. Drives the idle split; `at` is the caller's Date.now().
@@ -276,8 +300,54 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
       return enterCase({ ...s, view: 'cycle' }, a.caseIndex, Date.now())
     case 'FINISH':
       return { ...s, view: 'completion' }
+    case 'GO_HOME': {
+      const c = s.cases[s.currentCaseIndex]
+      if (!c || c.timing.enteredAt === null) {
+        return { ...s, view: 'landing', caseEnteredAt: null }
+      }
+      // Close out the active case's clocks, the same way enterCase() does when moving
+      // to another case — otherwise the time spent on the landing screen would land on
+      // whichever case happened to be open.
+      const settled = settle(c.timing, a.at)
+      return patchCase(
+        { ...s, view: 'landing', caseEnteredAt: null },
+        s.currentCaseIndex,
+        {
+          timing: {
+            ...settled,
+            acc: park(settled.acc, a.at),
+            wallMs: c.timing.wallMs + Math.max(0, a.at - c.timing.enteredAt),
+            enteredAt: null,
+          },
+        },
+      )
+    }
     case 'RESET_ALL':
       return initialSessionState()
+    case 'HYDRATE':
+      return a.state
+    case 'AUTOFILL_ALL': {
+      const cases = s.cases.map((c, i) => {
+        const dc = DEMO_CASES[i]
+        if (!dc) return c
+        const likert: RubricState['likert'] = {}
+        for (const key of likertKeysFor(dc)) {
+          // Random rather than constant: a uniform column of 3s would make any analysis
+          // run against this data look plausible while carrying no signal at all. Random
+          // values are obviously synthetic the moment anyone looks.
+          likert[key] = ((Math.floor(Math.random() * 5) + 1) as 1 | 2 | 3 | 4 | 5)
+        }
+        return {
+          ...c,
+          state: { likert },
+          submitted: true,
+          submittedAt: a.at,
+          durationSeconds: c.durationSeconds ?? 1,
+          timing: c.timing,
+        }
+      })
+      return { ...s, cases, view: 'completion' as SessionView }
+    }
     case 'ENTER_CASE':
       // Now actually dispatched (App mount/resume). Pre-v8 this action existed but nothing sent it,
       // so a reloaded session had caseEnteredAt=null and reported a null duration.

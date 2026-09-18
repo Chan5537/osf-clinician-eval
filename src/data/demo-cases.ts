@@ -41,7 +41,9 @@ export const TOTAL_BLOCKS = Math.ceil(ALL.length / BLOCK_SIZE)
 // announces itself instead of silently handing out someone else's slice.
 const requested = blockFromUrl()
 export const BLOCK = requested > 0 && requested <= TOTAL_BLOCKS ? requested : 0
-if (requested > 0 && BLOCK === 0) {
+if (requested > 0 && BLOCK === 0 && import.meta.env.VITE_APP_MODE !== 'clinician') {
+  // Dev only: a console message is developer instrumentation, and the visible
+  // absence of the Block chip already announces the fallback to everyone else.
   console.warn(`block=${requested} is out of range (1-${TOTAL_BLOCKS}); serving the whole batch`)
 }
 const sliced = BLOCK > 0 ? ALL.slice((BLOCK - 1) * BLOCK_SIZE, BLOCK * BLOCK_SIZE) : ALL
