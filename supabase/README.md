@@ -285,6 +285,21 @@ supabase functions deploy notify-completions
 
 ✅ **Expect:** `Deployed Function notify-completions`
 
+⚠️ **`secrets set` alone is not enough — you must redeploy.** A running function keeps the
+environment it was deployed with, so new secrets are invisible to it until the next deploy.
+This bit us on 2026-09-18: the Gmail credentials were set at 04:30 but the function had last
+deployed at 21:30 the previous evening, so it kept calling the old provider and no email
+arrived, with nothing in the logs to say why.
+
+Check the two timestamps agree:
+
+```bash
+supabase secrets list      # when the values were set
+supabase functions list    # updated_at = when the code last deployed
+```
+
+If `updated_at` predates the secrets, redeploy.
+
 Secrets live on Supabase's servers, never in the repo. Confirm with `supabase secrets list`
 — you should see `RESEND_API_KEY`, `NOTIFY_TO` and `NOTIFY_FROM`.
 
