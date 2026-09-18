@@ -1,8 +1,12 @@
 // Client-side export of the session's ratings to JSON and CSV.
 //
-// LIKERT-ONLY schema (v6, LONG / TIDY format): one row per (case, response, Likert dimension).
-// The `kind` column is kept ('likert' on every row) for forward compatibility with future
-// side-by-side comparison metrics.
+// LIKERT + RANK schema (v10, LONG / TIDY format): one row per (case, response, dimension).
+// The `kind` column distinguishes the two row families — 'likert' for the five per-response
+// absolute scales, 'rank' for the case-level comparative ranking (dimension 'rank_overall',
+// value = that response's place, 1 = best). It is no longer a placeholder: the analysis scripts
+// in sleepfm-agent-eval/scripts/ filter on `kind == "likert"` BEFORE asserting their dimension
+// set, so emitting a rank row as 'likert' would trip every one of those asserts.
+// ⛔ DOWNSTREAM ANALYSIS MUST FILTER ON `kind`.
 //
 // ⛔ NO `arm` COLUMN (2026-09-02, owner). It used to ride along as the unblinding key, which
 // meant a rater who opened their own export could read off which response came from which
@@ -17,8 +21,8 @@ import { SCHEMA_VERSION } from './session'
 import { pickCount } from './reducer'
 import { RUBRIC_DIMENSIONS, RUBRIC_VERSION } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
-import { likertKey } from './types'
-import type { LikertScore } from './types'
+import { likertKey, RANK_DIMENSION } from './types'
+import type { LikertScore, RankValue } from './types'
 import { msToSeconds } from './timing'
 
 // One row per (case, response, Likert dimension). `value` is the clinician's answer; `arm` is the
@@ -30,8 +34,8 @@ const COLUMNS: string[] = [
   'response_label', // blinded A/B/C the clinician saw
   'batch', // which exported letter set this row scored (join key to the arm key file)
   'response_sha', // fingerprint of response_text — guards the join, survives Excel mangling
-  'kind', // 'likert' (reserved for future comparison-metric row kinds)
-  'dimension', // safety | factuality | comprehensiveness | personalization | relevance
+  'kind', // 'likert' (per-response 1–5 scale) | 'rank' (case-level comparative ranking)
+  'dimension', // trustworthiness | accuracy | comprehensiveness | personalization | usefulness | rank_overall
   'value', // 1–5 ; '' (unanswered)
   'submitted_at',
   // TIMING (v8). `duration_seconds` keeps its original wall-clock meaning so pre-v8 analysis
@@ -69,6 +73,11 @@ function likertValueCell(v: LikertScore): string | number {
   return '' // null / unanswered
 }
 
+function rankValueCell(v: RankValue): string | number {
+  if (v === 1 || v === 2 || v === 3) return v
+  return '' // null / unranked
+}
+
 export function buildRows(session: SessionState): ReviewRow[] {
   const rows: ReviewRow[] = []
   session.cases.forEach((c, i) => {
@@ -83,7 +92,7 @@ export function buildRows(session: SessionState): ReviewRow[] {
     const activeSeconds = msToSeconds(t.acc.activeMs)
     const idleSeconds = msToSeconds(t.acc.idleMs)
     for (const r of dc.responses) {
-      // The 4 subjective-quality Likert dimensions, once per response.
+      // The 5 subjective-quality Likert dimensions, once per response.
       for (const dim of RUBRIC_DIMENSIONS) {
         rows.push({
           reviewer: session.reviewer,
@@ -104,6 +113,42 @@ export function buildRows(session: SessionState): ReviewRow[] {
           response_text: r.markdown,
         })
       }
+    }
+
+    // THE CASE-LEVEL COMPARATIVE QUESTION (v10): the forced best-to-worst ranking, emitted as ONE
+    // ROW PER RESPONSE carrying that response's place. Same long/tidy shape as a Likert row, so it
+    // reaches public.rating through the existing upsert with no new column, no new sync op kind
+    // and NO MIGRATION: the primary key (rater, batch, case, response_label, dimension) holds
+    // because the rows differ by response_label, the batch_response foreign key holds because the
+    // labels are real, and `value` (1–3) satisfies `check (value between 1 and 5)`.
+    // It also makes the analysis free — mean rank per arm is avg(value) grouped by arm.
+    //
+    // ⛔ kind MUST be 'rank', not 'likert' — see the file header.
+    for (const r of dc.responses) {
+      rows.push({
+        reviewer: session.reviewer,
+        case_id: dc.case_id,
+        query_id: dc.query_id,
+        response_label: r.label,
+        batch: dc.batch ?? '',
+        // The same fingerprint as this response's Likert rows: the ranking was given against this
+        // exact text, and extract.sql's integrity tripwire joins rating.response_sha to
+        // batch_response.response_sha — a rank row with a different sha would be dropped there.
+        response_sha: textFingerprint(r.markdown),
+        kind: 'rank',
+        dimension: RANK_DIMENSION,
+        value: rankValueCell(s.rank?.[r.label] ?? null),
+        submitted_at: c.submittedAt,
+        // Case-level timings are identical to the Likert rows — they describe the case, not the
+        // row. response_active_seconds is the time spent reading THIS response, which is as true
+        // of a rank row as of a Likert one.
+        duration_seconds: wallSeconds,
+        active_seconds: activeSeconds,
+        idle_seconds: idleSeconds,
+        response_active_seconds: msToSeconds(t.perResponseMs[r.label] ?? 0),
+        rubric_version: RUBRIC_VERSION,
+        response_text: r.markdown,
+      })
     }
   })
   return rows

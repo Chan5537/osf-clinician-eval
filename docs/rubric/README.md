@@ -1,3 +1,92 @@
+# Rubric v10 — source of truth and validation
+
+**Active as of 2026-09-18** (Chan; agreed with Zitao in-session). SCHEMA_VERSION **21**,
+`rubric_version` **v10-20260918**. Full clinician-facing text with worked examples:
+`Clinician Evaluation Rubrics v10 (for Google Doc).md` in this folder — that file is
+GENERATED FROM `src/lib/rubric-config-disease.ts`, so it cannot drift from the instrument.
+
+⛔ **THIS IS THE FINAL RUBRIC VERSION.** No further wording changes are planned.
+
+| # | Criterion | Stored key | Asks |
+|---|---|---|---|
+| 1 | **Accuracy** | `accuracy` | Whether the risk statements and recommendations are factually accurate, across four surfaces: disease prediction, interpretation of this patient's results, references, recommendations |
+| 2 | **Comprehensiveness** | `comprehensiveness` | Information beyond the known information (Sleep panel, Prior medical history) — unchanged from v7 |
+| 3 | **Personalization** | `personalization` | How tailored the synthesis is to this patient — unchanged |
+| 4 | **Usefulness** | `usefulness` | Whether it is a useful summary to a provider — SensorFM Survey ED.1 verbatim, unchanged from v9 |
+| 5 | **Trustworthiness** | `trustworthiness` | Whether the conclusions are carried by the reasoning the response shows; harmful advice is anchor 1 |
+| — | **Overall ranking** | `rank_overall` | Case-level: rank the responses best-to-worst, forced strict order, no ties. Stored as one row per response carrying its place (1 = best) |
+
+## What changed from v9, and why
+
+**1. Factuality → Accuracy (renamed key, broadened question).** v9's Factuality was a
+deterministic lookup against the Future risk panel, and the v6 clinician round shows what that
+cost: the outcome-matched arm scored **exactly 5.00 on every case, zero variance**, against 2.80
+and 3.10 for the other two. An arm built from the outcome panel cannot lose a lookup against it,
+so the axis reported which arm the rater held rather than how good the response was. Accuracy
+keeps the outcome as ONE OF FOUR surfaces, so naming the right disease earns the right region of
+the ladder while the other three decide 5 vs 4. Grounded in the IR paper's absolute rubric
+(Metwally et al., Nature 2026): its Q1 Factuality + Q2 Reference and Interpretation + Q4
+Grounding, plus the recommendation item from the Clinician Rubrics Likert set.
+
+**2. Safety → Trustworthiness.** Zitao's ask: our arm scores low on confident false positives,
+but it also surfaces real true positives that no v9 axis credited. Trustworthiness grades whether
+conclusions are carried by the reasoning shown, so a response raising a real risk on visible
+reasoning scores well even when false positives ride alongside. Safety is absorbed into anchor 1
+(harmful advice is the limiting case of untrustworthy advice), mirroring the IR paper's own
+structure where Safety is absolute and Trustworthiness is comparative.
+
+⚠️ **Trustworthiness has failed once before and the wording is designed against that.** As v6's
+`justifiability` it ran **BASE 4.00 > OURS 2.90 > TRUTH 2.30** — the exact reverse of model
+content — because it weighed confidence against panels holding no model evidence, so the hedging
+baseline won. Two guards: `howToScore` tells the rater not to mark a claim down merely because its
+grounds are not in the visible panels, and anchor 3's "or it reaches so little that there is
+nothing to weigh" caps the hedging arm at 3. See the ⛔⛔ block in `rubric-config-disease.ts`.
+
+⛔ **Do not anchor this axis on caveat language.** Measured over the loaded batch, one arm carries
+the verbatim boilerplate "(estimated from your PSG recording, not measured — worth confirming with
+a lab test)" in **10/10** letters and the others in **0/10**. Any anchor rewarding
+estimate-marking or hedging would be a 100% arm detector — it would score the template and make
+the arm identifiable on sight.
+
+**3. Overall ranking added.** One forced best-to-worst ranking per case, in its own section after
+the per-response scales, modelled on the IR paper's comparative section. It captures the global
+trade-off the absolute scales cannot: which letter the clinician would actually stand behind when
+the axes disagree. Stored as three rating rows (one per response, `dimension = 'rank_overall'`,
+value = place), which needs **no DB migration** — the existing PK, FK and `value between 1 and 5`
+check all hold.
+
+## Pooling rule
+
+⛔ **v10 scores are NOT comparable with v9 or earlier** — two keys renamed, two questions changed.
+Report separately, never pooled. The break was free: no ratings were ever collected under
+`v9-20260903` (the only collected round, `human_eval/clinician_round/clinician-ratings-2026-09-01.csv`,
+ran under `v6-20260829`).
+
+## Before collecting
+
+- [ ] **Repoint `LIKERT_RUBRIC_DOC_URL`** in `src/lib/links.ts`. It currently targets a Google Doc
+      carrying the **v4** criteria — a rater following it meets a different instrument. Paste the
+      generated v10 markdown into a new Doc, share view-only, update the URL.
+- [ ] Confirm `supabase/extract.sql` is pinned to `v10-20260918` (done) and expects **180** rows
+      per full round.
+
+## Checks to run after the round
+
+- **Accuracy:** the outcome-matched arm's variance. If sd is still ~0, the broadening failed and
+  the axis is a lookup again.
+- **Trustworthiness:** if it again ranks the baseline above the prediction arm, **retire it
+  permanently** — three framings, two inversions. Also check for near-zero variance within one
+  arm, which means the rater is scoring the template.
+- **Cross-axis:** correlate `accuracy` with `usefulness` (r > 0.7 = collapsed into general
+  quality), and Trustworthiness-anchor-1 cases with Accuracy (r > 0.7 = the Safety absorption
+  failed and Safety should return as its own axis).
+- **Rank vs Likert:** does mean rank agree with the Likert composite? Systematic disagreement is
+  the interesting result, not a bug.
+
+---
+
+# Superseded versions
+
 # Rubric v7 — source of truth and validation
 
 **Active as of 2026-09-01** (owner; settled in-session after the first clinician round).

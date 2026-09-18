@@ -5,7 +5,7 @@
 // RubricAction to the targeted case via the RUBRIC action. No router; the
 // `view` field drives which screen App renders.
 
-import type { RubricState, RubricAction, DemoCase, ResponseLabel } from './types'
+import type { RubricState, RubricAction, DemoCase, ResponseLabel, RankValue } from './types'
 import { buildInitialRubricState, rubricReducer, likertKeysFor } from './reducer'
 import { DEMO_CASES } from '@/data/demo-cases'
 import type { TimeAccumulator } from './timing'
@@ -66,7 +66,15 @@ import { advance, touch, park, resume } from './timing'
 //       warning against the recorded outcome, weighted by foreseeability). A v16 session
 //       would present old-usefulness answers under the new question: discard stale sessions.
 //       ⛔ v7 scores are NOT comparable with v6 or earlier — report separately.
-export const SCHEMA_VERSION = 20
+// v21 = disease rubric v10 (2026-09-18) + the case-level RANKING. Three changes at once, any one
+//       of which alone requires the bump: (a) `factuality` -> `accuracy`, broadened from a
+//       ground-truth lookup to four accuracy surfaces; (b) `safety` -> `trustworthiness`, a
+//       different question on a renamed key; (c) RubricState gains a second map, `rank`, so the
+//       STORED SHAPE changes — a v20 session deserialises with no rank places and can never
+//       satisfy the submit gate. Renamed keys cannot be read back either way: discard stale
+//       sessions. ⛔ v10 scores are NOT comparable with v8/v9 — report separately, never pooled.
+//       (The break is free: no ratings were ever collected under v9-20260903.)
+export const SCHEMA_VERSION = 21
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
@@ -337,9 +345,22 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
           // values are obviously synthetic the moment anyone looks.
           likert[key] = ((Math.floor(Math.random() * 5) + 1) as 1 | 2 | 3 | 4 | 5)
         }
+        // A random PERMUTATION, not random places. The no-ties invariant must hold in autofilled
+        // data too: tied ranks are something no real rater could submit (the reducer's swap makes
+        // them unreachable and isComplete would refuse them), so writing them here would produce
+        // test rows that no analysis can read and that misrepresent what the instrument collects.
+        const rank: RubricState['rank'] = {}
+        const places = dc.responses.map((_, n) => n + 1)
+        for (let n = places.length - 1; n > 0; n--) {
+          const j = Math.floor(Math.random() * (n + 1))
+          ;[places[n], places[j]] = [places[j], places[n]]
+        }
+        dc.responses.forEach((r, n) => {
+          rank[r.label] = places[n] as RankValue
+        })
         return {
           ...c,
-          state: { likert },
+          state: { likert, rank },
           submitted: true,
           submittedAt: a.at,
           durationSeconds: c.durationSeconds ?? 1,

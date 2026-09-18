@@ -24,7 +24,9 @@ select
   coalesce(br.arm_name, br.arm)   as arm,    -- resolved from the SNAPSHOT, never the client
   r.batch,
   r.response_sha,                            -- kept: lets a saved extract be re-verified later
-  'likert'                        as kind,
+  -- v10: two row families. 'rank_overall' carries the case-level comparative ranking
+  -- (value = that response's place, 1 = best); everything else is a 1-5 Likert scale.
+  case when r.dimension = 'rank_overall' then 'rank' else 'likert' end as kind,
   r.dimension,
   r.value,
   r.submitted_at,
@@ -41,7 +43,7 @@ join public.batch_response br
 join public.rater ra
   on ra.id = r.rater_id
 where r.batch          = 'v611_r10'
-  and r.rubric_version = 'v9-20260903'   -- ALWAYS pin: past renames crossed over
+  and r.rubric_version = 'v10-20260918'  -- ALWAYS pin: past renames crossed over
   -- ⚠️ SIGN-UP IS OPEN (2026-09-17): anyone reaching the public URL can create an
   -- account, and their rows are indistinguishable from a recruited clinician's. Before
   -- analysis, restrict to the raters you actually recruited — uncomment and fill in:
@@ -72,7 +74,7 @@ order by reviewer, br.case_position, r.response_label, r.dimension;
 -- ===========================================================================
 -- AUDIT 2 — COMPLETENESS / POOLABILITY.
 --
--- 150 submitted rows = a full round (10 cases x 3 responses x 5 dimensions).
+-- 180 submitted rows = a full round (10 cases x 3 responses x (5 Likert + 1 rank)).
 -- If n_rubric_versions > 1 for ANY rater, STOP: a rubric changed mid-round and
 -- those rows are not comparable. Partition by rubric_version and report apart.
 -- ===========================================================================

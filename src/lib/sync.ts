@@ -7,7 +7,8 @@
 //
 // Two things are mirrored:
 //   session_state  the whole SessionState blob, debounced (resume / B6)
-//   rating         15 rows per submitted case                (collection / B8)
+//   rating         18 rows per submitted case                (collection / B8)
+//                  (3 responses x 5 Likert dimensions, + 3 rank rows for the case-level ranking)
 //
 // Both are UPSERTS on a natural key, so delivery is at-least-once and duplicates
 // are harmless. That is what lets the queue retry blindly with no dedup table.

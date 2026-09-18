@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { Markdown } from '@/components/Markdown'
 import { LikertDimensions } from '@/components/LikertRubric'
 import { LikertRubricLink } from '@/components/RubricRefLink'
+import { RankOrder } from '@/components/RankOrder'
 import { AVATAR_STYLES, CARD_STYLES } from '@/components/response-colors'
 import { armAnsweredCount, armRequiredCount } from '@/lib/reducer'
 import { cn } from '@/lib/utils'
@@ -180,6 +181,12 @@ export function FocusReview({ responses, state, dispatch, onCompare, onFocusResp
           </div>
         </div>
       </div>
+
+      {/* CASE-LEVEL question, deliberately OUTSIDE the two-column grid: full width, below both
+          panes, and unmistakably not part of whichever arm is currently under review. It must not
+          go inside either pane — those are fixed-height scrollers (PANE_HEIGHT) and would bury it.
+          `state` and `dispatch` are already case-scoped props, so this needs nothing new. */}
+      <RankOrder responses={responses} state={state} dispatch={dispatch} />
     </section>
   )
 }

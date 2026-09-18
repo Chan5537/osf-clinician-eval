@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogoLockup } from '@/components/LogoLockup'
 import { AppFooter } from '@/components/AppFooter'
 import { IS_DEV_BUILD } from '@/lib/app-mode'
-import { requiredCount } from '@/lib/reducer'
+import { armRequiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
 import { DEMO_CASES, BLOCK, BLOCK_SIZE, TOTAL_BLOCKS } from '@/data/demo-cases'
@@ -47,9 +47,10 @@ export function LandingScreen({
   const nResponses = DEMO_CASES[0]?.responses.length ?? 3
   const responseLetters = (DEMO_CASES[0]?.responses ?? []).map((r) => r.label).join(', ')
   // items-per-case for the first case (each case has the same per-response count by design)
-  const itemsPerResponse = DEMO_CASES[0]
-    ? Math.round(requiredCount(DEMO_CASES[0]) / (DEMO_CASES[0].responses.length || 1))
-    : 0
+  // Items per RESPONSE — the five Likert scales. Deliberately NOT requiredCount/responses.length:
+  // since v10 requiredCount also counts the case-level rank places, which are not per-response
+  // items, so that arithmetic would silently claim six scales per response.
+  const itemsPerResponse = armRequiredCount()
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-4 py-10">
@@ -74,8 +75,9 @@ export function LandingScreen({
               <p className="text-sm leading-relaxed text-muted-foreground">
                 For each response you will rate <strong>{itemsPerResponse} quality scales</strong>{' '}
                 from <strong>1 to 5</strong>. These are judgement calls — pick the score that
-                matches your impression. The whole study takes about{' '}
-                <strong>15–20 minutes</strong>.
+                matches your impression. At the end of each case you will also{' '}
+                <strong>rank the {nResponses} responses from best to worst</strong>. The whole study
+                takes about <strong>15–20 minutes</strong>.
               </p>
             </div>
 

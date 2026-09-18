@@ -136,7 +136,11 @@ async function fetchRows(
       arm: br?.arm_name ?? br?.arm ?? '',
       batch: r.batch,
       response_sha: r.response_sha,
-      kind: 'likert',
+      // Two row families share this table (v10). 'rank_overall' is the case-level comparative
+      // ranking, value = that response's place (1 = best); everything else is a 1–5 Likert scale.
+      // Labelling a rank row 'likert' would make the attachment actively misleading and would
+      // trip the kind filters the analysis scripts rely on.
+      kind: r.dimension === 'rank_overall' ? 'rank' : 'likert',
       dimension: r.dimension,
       value: r.value,
       submitted_at: r.submitted_at,
@@ -265,7 +269,7 @@ Deno.serve(async (req: Request) => {
 
   // Reply to the CALLER immediately and finish the sending in the background.
   //
-  // The work here is slow by nature — 150 rows, two attachments, an SMTP handshake —
+  // The work here is slow by nature — 180 rows, two attachments, an SMTP handshake —
   // and it was overrunning pg_net's timeout, which made the immediate kick look flaky
   // even when the mail went out. EdgeRuntime.waitUntil keeps the isolate alive for the
   // promise after the response is returned, so the caller sees a fast 200 and the send
