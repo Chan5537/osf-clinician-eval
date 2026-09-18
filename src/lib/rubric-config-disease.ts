@@ -616,13 +616,17 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     //    against panels that hold no model evidence, so any arm whose grounds they could not
     //    inspect scored as unsupported and the hedging baseline won. The owner has directed that
     //    "(check panels)" appear in the stem regardless; these are the guards:
-    //      - howToScore SPLITS the judgement: the panel check is scoped to WHAT THE PANELS CARRY
-    //        (a sleep value, a prior condition, a supplementary estimate) — the only things a
-    //        panel can settle. "check panels" is deliberately UNQUALIFIED in the stem: scoping it
-    //        to the Ground-truth panels alone (owner, 2026-09-18) would exclude the Supplementary
-    //        panel, which is precisely where a rater verifies the estimate claims. Comprehensiveness
-    //        keeps the narrower "Ground-truth panels" wording, because that axis measures what a
-    //        response adds BEYOND what was already on record and must exclude the estimates;
+    //      - howToScore carries the guard in its own clause: "judge a prediction on that reasoning
+    //        alone, since no panel records what the patient went on to develop". COMPRESSED to one
+    //        sentence 2026-09-18 (owner) to match the other axes — it had grown to 7 sentences and
+    //        1015 chars against their 131-196, and an unread instruction guards nothing. The clause
+    //        is the load-bearing half of the compression, NOT optional detail: without it the stem's
+    //        "check panels" is the v6 mechanism verbatim. Do not trim it further.
+    //      - "check panels" is deliberately UNQUALIFIED: scoping it to the Ground-truth panels
+    //        would exclude the Supplementary panel, which is precisely where a rater verifies the
+    //        estimate claims. Comprehensiveness keeps the narrower "Ground-truth panels" wording,
+    //        because that axis measures what a response adds BEYOND what was already on record and
+    //        must exclude the estimates;
     //      - a ⚠️ sentence states outright that a forward-looking claim is NOT a fact on record,
     //        that no panel contains what the patient will develop, and that such claims must be
     //        judged on the reasoning given — "do not mark a claim down merely because its basis
@@ -640,19 +644,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'To what extent are the statements in this response substantiated with evidence ' +
       '(check panels) and coherent reasoning?',
     howToScore:
-      'Two things are being judged. First, EVIDENCE: where the response states something the panels ' +
-      'carry — a sleep value, a prior condition, a supplementary estimate — check it against them; ' +
-      'a misquoted or invented value is not substantiated. Second, REASONING: trace each conclusion to ' +
-      'the support offered for it and assess whether that support sustains the claim as stated. ' +
-      'Grounds may legitimately come from the overnight findings, this ' +
-      "patient's demographics, their prior conditions, or the way these bear on one another; " +
-      'prior history is not privileged among them. ' +
-      '⚠️ A FORWARD-LOOKING CLAIM IS NOT A FACT ON RECORD: no panel contains what this patient ' +
-      'will develop, so a prediction cannot be checked against one. Judge those on the reasoning ' +
-      'given, and do not mark a claim down merely because its basis is not visible to you. ' +
-      'A response that identifies a genuine concern and sets ' +
-      'out the findings leading to it is well substantiated, irrespective of whether other ' +
-      'possibilities it raises are subsequently borne out.',
+      'Check what the panels carry against what the response says, then ask whether its conclusions follow from the support it gives — but judge a prediction on that reasoning alone, since no panel records what the patient went on to develop.',
     example:
       'Response X quotes this patient\'s overnight findings as the Sleep panel records them, states ' +
       'what they indicate, and its recommendations follow from that chain of reasoning. Not every ' +
