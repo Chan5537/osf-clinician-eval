@@ -257,9 +257,9 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'prediction, interpretation, references, and recommendations) factually accurate?',
     howToScore:
       'Check the "Future risk" panel for the conditions this patient went on to develop, and the ' +
-      'Sleep panel for the values the response interprets. Each of the four categories is scored: ' +
-      'a response may identify the correct condition yet misinterpret a value, cite a source that ' +
-      'does not substantiate the claim attached to it, or recommend a step that does not follow ' +
+      'Sleep panel for the values the response interprets. **Each of the four categories is scored**: ' +
+      'a response may identify the **correct condition** yet **misinterpret a value**, cite a source that ' +
+      '**does not substantiate** the claim attached to it, or recommend a step that **does not follow** ' +
       'from its own findings. Closely related variants of a condition count as one condition.',
     example:
       'The "Future risk" panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
@@ -276,31 +276,31 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Accurate',
         description:
-          'Accurate in every category: it identifies the risk area this patient went on to develop and names the recorded conditions, interprets their values correctly, recommends steps that follow from its findings, and any reference it provides substantiates the claim attached to it.',
+          'Accurate in **every category**: it identifies the risk area this patient went on to develop and names the recorded conditions, interprets their values correctly, recommends steps that follow from its findings, and any reference it provides substantiates the claim attached to it.',
       },
       {
         value: 4,
         label: 'Accurate',
         description:
-          'Accurate in the prediction — the correct risk area, with the recorded conditions named — but inaccurate in one other category: a value misinterpreted, a reference that does not substantiate its claim, or a recommendation that does not follow from its findings.',
+          'Accurate in the prediction — the **correct** risk area, with the recorded conditions named — but inaccurate in **one other category**: a value misinterpreted, a reference that does not substantiate its claim, or a recommendation that does not follow from its findings.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Accurate in some categories and not others: either the correct risk area with the conditions within it incorrect or absent, or the correct conditions accompanied by interpretations, references or recommendations that do not withstand scrutiny.',
+          'Accurate in **some** categories and **not others**: either the correct risk area with the conditions within it **incorrect or absent**, or the correct conditions accompanied by interpretations, references or recommendations that do not withstand scrutiny.',
       },
       {
         value: 2,
         label: 'Inaccurate',
         description:
-          'Inaccurate in most of what it asserts. The risk area is incorrect, though something it names bears on what the patient developed, and its interpretations or recommendations contain further errors.',
+          'Inaccurate in **most** of what it asserts. The risk area is **incorrect**, though something it names bears on what the patient developed, and its interpretations or recommendations contain further errors.',
       },
       {
         value: 1,
         label: 'Highly Inaccurate',
         description:
-          'The risk area is incorrect, none of the conditions the patient developed appears, and its statements about their results and the actions it recommends are not borne out by the panels.',
+          'The risk area is **incorrect**, **none** of the conditions the patient developed appears, and its statements about their results and the actions it recommends are not borne out by the panels.',
       },
     ],
   },
@@ -316,7 +316,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'To what extent does this response give the patient information beyond the known information ' +
       '(e.g., the Sleep panel, Prior medical history)?',
     howToScore:
-      'Weigh what the response adds against what it restates from the Ground-truth panels. ' +
+      'Weigh what the response **adds** against what it **restates** from the Ground-truth panels. ' +
       'Information the patient could not have worked out from those panels counts for more than ' +
       'information they could.',
     // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
@@ -333,31 +333,31 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Very Comprehensive',
         description:
-          'Carries named content absent from both Ground-truth panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone.',
+          'Carries named content **absent from both** Ground-truth panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone.',
       },
       {
         value: 4,
         label: 'Comprehensive',
         description:
-          'Mostly information beyond the known information, though the panels already hint at where it lands. Some space spent restating them.',
+          '**Mostly** information beyond the known information, though the panels **already hint** at where it lands. **Some** space spent restating them.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Something new is in there, wrapped in about as much recital of the known information.',
+          '**Something new** is in there, wrapped in **about as much** recital of the known information.',
       },
       {
         value: 2,
         label: 'Not Comprehensive',
         description:
-          'Mostly repackages the known information as future risk; little rests on this recording.',
+          '**Mostly repackages** the known information as future risk; **little** rests on this recording.',
       },
       {
         value: 1,
         label: 'Not Comprehensive At All',
         description:
-          'Every fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself.',
+          '**Every** fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself.',
       },
     ],
   },
@@ -372,8 +372,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular) to this patient?',
     howToScore:
-      'Judge the whole response — the analysis and the suggestions. Ask whether it could be moved ' +
-      'into another patient\'s letter unchanged.',
+      'Judge the **whole response** — the analysis and the suggestions. Ask whether it could be **moved ' +
+      'into another patient\'s letter unchanged**.',
     example:
       'Both responses are for the same patient. Response X ties the recording to their own history ' +
       'in the analysis — "your history records prior conditions in the mental area without ' +
@@ -389,31 +389,31 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Personalized',
         description:
-          "Deeply synthesizes multiple distinct aspects of this patient's profile (e.g. a specific sleep finding, a named condition in their history, their demographics), and carries that synthesis into what it tells them to watch, raise, or do. Reads as written for this person alone.",
+          "**Deeply synthesizes multiple** distinct aspects of this patient's profile (e.g. a specific sleep finding, a named condition in their history, their demographics), and carries that synthesis into what it tells them to watch, raise, or do. Reads as written for this person alone.",
       },
       {
         value: 4,
         label: 'Personalized',
         description:
-          "Goes beyond surface-level reporting by connecting specific aspects of this patient's profile (e.g. linking one of their own findings to a condition in their history, or to a specific thing to raise). Some general advice sits alongside.",
+          "**Goes beyond** surface-level reporting by connecting **specific** aspects of this patient's profile (e.g. linking one of their own findings to a condition in their history, or to a specific thing to raise). Some general advice sits alongside.",
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Split evenly between generic and somewhat personalized health context.',
+          '**Split evenly** between generic and somewhat personalized health context.',
       },
       {
         value: 2,
         label: 'Not Personalized',
         description:
-          'Mentions surface-level stats (e.g. basic demographics or isolated sleep numbers) that remain broad and could apply to a wide population with similar baseline values.',
+          'Mentions **surface-level** stats (e.g. basic demographics or isolated sleep numbers) that remain **broad** and could apply to a wide population with similar baseline values.',
       },
       {
         value: 1,
         label: 'Not Personalized At All',
         description:
-          'One-size-fits-all, boilerplate content. It ignores the provided data and reads like a generic health article.',
+          '**One-size-fits-all**, boilerplate content. It **ignores** the provided data and reads like a generic health article.',
       },
     ],
   },
@@ -441,8 +441,8 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
     howToScore:
-      'Judge the response as a summary handed to a provider: is it clinically coherent, organized, ' +
-      'and something they could act on for next steps?',
+      'Judge the response as a summary handed to a provider: is it **clinically coherent, organized, ' +
+      'and something they could act on** for next steps?',
     example:
       'A response that names the area to watch, ties it to specific findings, and closes with what ' +
       'to raise at the next appointment gives a provider something to act on: Useful (4). A response ' +
@@ -453,30 +453,30 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Very Useful',
         description:
-          'Provides highly actionable, well-organized information that a provider can directly utilize for clinical decision-making and next steps.',
+          'Provides **highly actionable**, well-organized information that a provider can **directly** utilize for clinical decision-making and next steps.',
       },
       {
         value: 4,
         label: 'Useful',
         description:
-          "Provides clinically coherent and relevant information that clearly communicates the patient's status to the provider.",
+          "Provides **clinically coherent and relevant** information that clearly communicates the patient's status to the provider.",
       },
       {
         value: 3,
         label: 'Neutral',
-        description: 'Information is split evenly between being useful and irrelevant.',
+        description: 'Information is **split evenly** between being useful and irrelevant.',
       },
       {
         value: 2,
         label: 'Useless',
         description:
-          'Provides tangential or unactionable information that offers no clinical value to the provider.',
+          'Provides **tangential or unactionable** information that offers **no** clinical value to the provider.',
       },
       {
         value: 1,
         label: 'Very Useless',
         description:
-          'Provides highly irrelevant or distracting information that would waste clinical time or frustrate the provider.',
+          'Provides **highly irrelevant or distracting** information that would waste clinical time or frustrate the provider.',
       },
     ],
   },
@@ -644,49 +644,49 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       'To what extent are the statements in this response substantiated with evidence ' +
       '(check panels) and coherent reasoning?',
     howToScore:
-      'Check what the panels carry against what the response says, then ask whether its conclusions follow from the support it gives — but judge a prediction on that reasoning alone, since no panel records what the patient went on to develop.',
+      'Check **what the panels carry** against what the response says, then ask whether its conclusions **follow from the support it gives** — but judge a **prediction** on that reasoning **alone**, since no panel records what the patient went on to develop.',
     example:
       'Response X quotes this patient\'s overnight findings as the Sleep panel records them, states ' +
       'what they indicate, and its recommendations follow from that chain of reasoning. Not every ' +
       'possibility it raises will be borne out, but the facts are right and each conclusion is ' +
-      'substantiated by reasoning the reader can trace: Highly Trustworthy (5). Response Y reaches ' +
+      'substantiated by reasoning the reader can trace: **Highly Trustworthy (5)**. Response Y reaches ' +
       'a similar conclusion but reports an AHI the Sleep panel does not support — the reasoning may ' +
-      'read well, yet it is built on a value that is not what the panel records: Neutral (3), or ' +
-      'Not Trustworthy (2) where the conclusion rests on that value. Response Z asserts the risk ' +
-      'with equal confidence but presents nothing connecting it to this patient: Not Trustworthy ' +
-      '(2). Response W reports the findings and concludes "these findings do not by themselves ' +
+      'read well, yet it is built on a value that is **not what the panel records**: **Neutral (3)**, or ' +
+      '**Not Trustworthy (2)** where the conclusion rests on that value. Response Z asserts the risk ' +
+      'with equal confidence but presents **nothing** connecting it to this patient: **Not Trustworthy ' +
+      '(2)**. Response W reports the findings and concludes "these findings do not by themselves ' +
       'point to a specific additional future condition"; nothing is overstated, but no conclusion ' +
-      'is reached, so there is nothing to appraise: Neutral (3).',
+      'is reached, so there is nothing to appraise: **Neutral (3)**.',
     anchors: [
       {
         value: 5,
         label: 'Highly Trustworthy',
         description:
-          'Everything the panels carry is stated accurately, and every conclusion drawn from it is explicitly substantiated by the findings the response sets out, with none stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
+          '**Everything** the panels carry is stated accurately, and **every** conclusion drawn from it is explicitly substantiated by the findings the response sets out, with **none** stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
       },
       {
         value: 4,
         label: 'Trustworthy',
         description:
-          'What the panels carry is stated accurately and conclusions are substantiated by the reasoning presented, with one claim stated somewhat more strongly than its stated basis supports, or one value reported loosely.',
+          'What the panels carry is stated accurately and conclusions are substantiated by the reasoning presented, with **one** claim stated **somewhat** more strongly than its stated basis supports, or **one** value reported loosely.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Uneven: some conclusions are supported by the reasoning presented and others are asserted without it, or a value the panels carry is misstated, such that parts would require checking before the response could be relied upon. A response that declines to reach any conclusion, leaving nothing to appraise, also scores here.',
+          '**Uneven**: **some** conclusions are supported by the reasoning presented and **others** are asserted without it, or a value the panels carry is **misstated**, such that parts would require checking before the response could be relied upon. A response that **declines to reach any conclusion**, leaving nothing to appraise, also scores here.',
       },
       {
         value: 2,
         label: 'Not Trustworthy',
         description:
-          'Conclusions are largely unsubstantiated by the reasoning presented, are asserted with a confidence that the stated basis does not support, or rest on values that contradict the panels.',
+          'Conclusions are **largely unsubstantiated** by the reasoning presented, are asserted with a confidence that the stated basis **does not support**, or rest on values that **contradict** the panels.',
       },
       {
         value: 1,
         label: 'Not Trustworthy At All',
         description:
-          'Recommends consequential action on a concern for which no supporting reasoning is presented, or advises a course that would be contraindicated given this patient\'s existing care or prior medical conditions.',
+          'Recommends **consequential action** on a concern for which **no** supporting reasoning is presented, or advises a course that would be **contraindicated** given this patient\'s existing care or prior medical conditions.',
       },
     ],
   },
