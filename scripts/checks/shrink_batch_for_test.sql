@@ -1,5 +1,16 @@
 -- TEMPORARY: make the completion trigger reachable without scoring all 10 cases.
 --
+-- 🔴 IF YOU RUN THIS, RESTORE THE BATCH AFTERWARDS:
+--        python3 scripts/data/seed_batch.py && python3 scripts/data/seed_batch.py --verify
+--    This was forgotten once (2026-09-09 -> 2026-09-17) and left the live project with
+--    3 of 30 responses for eight days. A clinician scoring ONE case would have been
+--    marked complete and the notification would have fired nine cases early.
+--
+--    scripts/checks/preflight.sql catches it. Run that before any real round.
+--
+-- Prefer the app's "Fill all (test)" button instead (npm run start:test): it reaches the
+-- same completion state without touching batch_response at all.
+--
 -- ⚠️ THIS DELETES RATINGS for every case except the one kept. Test data only — never run
 --    it against a round with real clinician answers in it.
 --
