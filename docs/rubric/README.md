@@ -1,4 +1,22 @@
-# Rubric v11 — source of truth and validation
+# Rubric v12 — source of truth and validation
+
+**v12 (2026-09-18, owner)** — Trustworthiness becomes TWO-PART: grounded in evidence (the panels
+are named in the stem) AND substantiated by coherent reasoning; anchors 5/4/3/2 grade both halves.
+The panel tags change from "Known info" to **Ground-truth**. `rubric_version` **v12-20260918**,
+SCHEMA_VERSION **23**.
+
+⛔ **WATCH THIS AXIS ABOVE ALL OTHERS NEXT ROUND.** Naming the panels in the stem re-introduces the
+exact mechanism that inverted this axis in v6 (BASE 4.00 > OURS 2.90 > TRUTH 2.30: raters checked
+claims against panels holding no model evidence, so the hedging baseline won). The owner directed
+the panel reference in regardless; the guards are (a) `howToScore` scopes the panel check to FACTS
+ON RECORD only, (b) an explicit clause that a forward-looking claim is not a fact on record and
+must be judged on reasoning, (c) anchors 5/4 lead with accuracy-of-facts so the check reads as a
+floor rather than the whole axis, (d) anchor 3's no-conclusion cap is untouched. If BASE again
+outranks OURS, the v10 stopping rule applies and the axis retires.
+
+---
+
+## Rubric v11 — the history clarification
 
 **v11 (2026-09-18)** — one clarification after the first rater round: Trustworthiness'
 `howToScore` now states that grounds may come from the overnight findings, demographics, prior

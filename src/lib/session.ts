@@ -81,7 +81,12 @@ import { advance, touch, park, resume } from './timing'
 //       what it corrects for, so the two are not poolable on this axis. Also ships the
 //       Supplementary information panel (estimated values, rendered unconditionally) and opens the
 //       Sleep/History sections by default, both of which change what the rater sees while scoring.
-export const SCHEMA_VERSION = 22
+// v23 = rubric v12 (2026-09-18, owner): Trustworthiness becomes TWO-PART — grounded in evidence
+//       (the panels named in the stem) AND substantiated by coherent reasoning; anchors 5/4/3/2
+//       regrade accordingly. The panel tags also change from "Known info" to "Ground-truth", which
+//       the rubric text now references by that name. A v22 rater answered a single-part question
+//       against differently-labelled panels: discard stale sessions, do not pool on this axis.
+export const SCHEMA_VERSION = 23
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

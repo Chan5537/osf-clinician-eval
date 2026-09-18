@@ -235,7 +235,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               icon={Moon}
               style={SLEEP_STYLE}
               title="Sleep panel"
-              tag="Known info"
+              tag="Ground-truth"
               meta={plural(sleepMetricCount, 'metric')}
             />
           </AccordionTrigger>
@@ -254,7 +254,7 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               icon={ClipboardList}
               style={HISTORY_STYLE}
               title="Prior medical history"
-              tag="Known info"
+              tag="Ground-truth"
               meta={plural(ehrHistory.length, 'condition')}
             />
           </AccordionTrigger>
