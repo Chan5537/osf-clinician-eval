@@ -66,6 +66,7 @@ interface OutboxRow {
   id: number
   kind: string
   batch: string
+  rater_id: string
   attempts: number
   payload: {
     email?: string
@@ -74,6 +75,90 @@ interface OutboxRow {
     cases?: number
     completed_at?: string
   }
+}
+
+/**
+ * Every rating this rater submitted, as analysis-ready rows.
+ *
+ * Column names and order deliberately MIRROR src/lib/export.ts COLUMNS — the browser
+ * export a rater used to download and email in by hand — so the attachment drops into
+ * the same analysis without a translation step. The one addition is `arm`, resolved
+ * server-side from batch_response; the browser export omits it on purpose, because a
+ * rater must not be able to un-blind themselves from their own file.
+ */
+async function fetchRows(
+  supabase: ReturnType<typeof createClient>,
+  raterId: string,
+  batch: string,
+): Promise<Record<string, unknown>[]> {
+  const { data, error } = await supabase
+    .from('rating')
+    .select(
+      'case_id, response_label, dimension, value, submitted_at, duration_seconds, ' +
+        'active_seconds, idle_seconds, response_active_seconds, rubric_version, ' +
+        'schema_version, response_sha, batch, rater:rater_id(email), ' +
+        'batch_response!inner(arm, arm_name, query_id, case_position)',
+    )
+    .eq('rater_id', raterId)
+    .eq('batch', batch)
+  if (error) throw error
+
+  const rows = (data ?? []).map((r) => {
+    const br = (r as Record<string, never>).batch_response as unknown as {
+      arm?: string
+      arm_name?: string
+      query_id?: string
+      case_position?: number
+    }
+    const ra = (r as Record<string, never>).rater as unknown as { email?: string }
+    return {
+      reviewer: ra?.email ?? '',
+      case_id: r.case_id,
+      query_id: br?.query_id ?? '',
+      response_label: r.response_label,
+      arm: br?.arm_name ?? br?.arm ?? '',
+      batch: r.batch,
+      response_sha: r.response_sha,
+      kind: 'likert',
+      dimension: r.dimension,
+      value: r.value,
+      submitted_at: r.submitted_at,
+      duration_seconds: r.duration_seconds,
+      active_seconds: r.active_seconds,
+      idle_seconds: r.idle_seconds,
+      response_active_seconds: r.response_active_seconds,
+      rubric_version: r.rubric_version,
+      schema_version: r.schema_version,
+      _case_position: br?.case_position ?? 0,
+    }
+  })
+
+  rows.sort(
+    (a, b) =>
+      (a._case_position as number) - (b._case_position as number) ||
+      String(a.response_label).localeCompare(String(b.response_label)) ||
+      String(a.dimension).localeCompare(String(b.dimension)),
+  )
+  for (const r of rows) delete (r as Record<string, unknown>)._case_position
+  return rows
+}
+
+/** RFC-4180 CSV, mirroring escapeCSV() in src/lib/export.ts (including the Excel guard). */
+function toCSV(rows: Record<string, unknown>[]): string {
+  if (rows.length === 0) return ''
+  const cols = Object.keys(rows[0])
+  const cell = (v: unknown) => {
+    if (v === null || v === undefined) return ''
+    let s = String(v)
+    if (/^[=+\-@]/.test(s)) s = `'${s}` // spreadsheet formula-injection guard
+    if (/[",\r\n]/.test(s)) s = `"${s.replace(/"/g, '""')}"`
+    return s
+  }
+  return (
+    '\uFEFF' +
+    [cols.join(','), ...rows.map((r) => cols.map((c) => cell(r[c])).join(','))].join('\r\n') +
+    '\r\n'
+  )
 }
 
 function body(r: OutboxRow): { subject: string; html: string } {
@@ -100,8 +185,12 @@ function body(r: OutboxRow): { subject: string; html: string } {
                   padding:10px 18px;border-radius:6px;font-size:14px;font-weight:600">
           View their responses
         </a>
-        <p style="margin:16px 0 0;color:#888;font-size:12px">
-          Opens the Supabase SQL editor with their responses already queried — press Run.
+        <p style="margin:16px 0 0;color:#666;font-size:13px">
+          Their full responses are attached as <strong>.json</strong> and
+          <strong>.csv</strong>, with arms resolved.
+        </p>
+        <p style="margin:8px 0 0;color:#888;font-size:12px">
+          The link opens the Supabase SQL editor with their responses already queried — press Run.
           You will need to be signed in. The ratings themselves are deliberately not
           included in this email.
         </p>
@@ -114,7 +203,7 @@ Deno.serve(async () => {
 
   const { data: rows, error } = await supabase
     .from('notification_outbox')
-    .select('id, kind, batch, attempts, payload')
+    .select('id, kind, batch, rater_id, attempts, payload')
     .is('sent_at', null)
     .lt('attempts', MAX_ATTEMPTS)
     .order('created_at', { ascending: true })
@@ -133,13 +222,58 @@ Deno.serve(async () => {
   for (const r of rows as OutboxRow[]) {
     const { subject, html } = body(r)
     try {
+      // Attach the rater's own data, so the round can be archived straight from the
+      // inbox without a dashboard round trip. JSON for scripts, CSV for a spreadsheet —
+      // the same two formats the browser export offered before collection was automated.
+      //
+      // ⚠️ Unlike the deep link, THIS PUTS RATING DATA IN AN EMAIL. It is acceptable only
+      //    because NOTIFY_TO is the operator's own address. Never add a second recipient
+      //    without revisiting that: ratings join to batch_response, so a forwarded
+      //    attachment is also a partial un-blinding.
+      const attachments: { filename: string; content: string }[] = []
+      try {
+        const dataRows = await fetchRows(supabase, r.rater_id, r.batch)
+        if (dataRows.length > 0) {
+          const who = (r.payload.email ?? 'rater').replace(/[^a-zA-Z0-9]+/g, '-')
+          const stamp = new Date().toISOString().slice(0, 10)
+          const base = `clinician-ratings-${who}-${r.batch}-${stamp}`
+          const json = JSON.stringify(
+            {
+              schema_version: dataRows[0]?.schema_version ?? null,
+              rubric_version: dataRows[0]?.rubric_version ?? null,
+              batch: r.batch,
+              reviewer: r.payload.email ?? null,
+              exported_at: new Date().toISOString(),
+              reviews: dataRows,
+            },
+            null,
+            2,
+          )
+          attachments.push({ filename: `${base}.json`, content: btoa(unescape(encodeURIComponent(json))) })
+          attachments.push({
+            filename: `${base}.csv`,
+            content: btoa(unescape(encodeURIComponent(toCSV(dataRows)))),
+          })
+        }
+      } catch (attachErr) {
+        // A failed attachment must not cost the notification. Send without it and say so
+        // in the log; the deep link still gets the operator to the data.
+        console.error('attachment build failed', attachErr)
+      }
+
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${RESEND_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ from: NOTIFY_FROM, to: [NOTIFY_TO], subject, html }),
+        body: JSON.stringify({
+          from: NOTIFY_FROM,
+          to: [NOTIFY_TO],
+          subject,
+          html,
+          ...(attachments.length > 0 ? { attachments } : {}),
+        }),
       })
       if (!res.ok) throw new Error(`${res.status} ${await res.text()}`)
       // Mark sent only after the provider accepted it. A crash before this point

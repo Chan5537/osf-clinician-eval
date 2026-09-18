@@ -561,6 +561,18 @@ The database never calls Resend directly. If it did, a clinician's submission wo
 depend on an email provider being up, and a slow provider would slow their screen. The
 trigger only writes a local row; sending happens separately and retries on failure.
 
-**The email contains no rating data** — just counts and a button to a login-protected
-view. Emails get forwarded and indexed, and ratings can be joined back to the arm key,
-so putting the data in the message would be a quiet un-blinding risk.
+**The email carries the rater's data as attachments** (`.json` and `.csv`, arms resolved),
+plus a deep link into the SQL editor with their responses already queried.
+
+⚠️ This is safe ONLY because `NOTIFY_TO` is the operator's own address. Ratings join back
+to the arm key, so a forwarded attachment is a partial un-blinding. **Do not add a second
+recipient** without revisiting this — send them the deep link instead, which requires a
+dashboard login.
+
+The attachment columns mirror `src/lib/export.ts` COLUMNS — the file a rater used to
+download and email in by hand — so it drops into existing analysis unchanged. The one
+addition is `arm`, resolved server-side from `batch_response`; the browser export omits
+it deliberately, so a rater cannot un-blind themselves from their own file.
+
+If building the attachment fails, the notification still sends without it and the failure
+is logged — the deep link remains a complete path to the data.
