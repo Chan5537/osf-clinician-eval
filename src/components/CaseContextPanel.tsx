@@ -338,8 +338,8 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
             does read as an answer key, but one labelled "estimated" and accompanied by the
             explicit line below does not. Hence "(estimated)" stays attached to the NUMBER and not
             merely to the section header, and the note ends by telling the rater this is not a
-            check on the responses — mirroring the standing instruction in the Trustworthiness
-            howToScore ("judge the response on the evidence it presents"). Do not drop either.
+            check on the responses — mirroring the rubric's standing instruction to judge each response
+            on its own terms (v10-v12 also carried it in the Trustworthiness howToScore). Do not drop either.
 
             The lab sub-block shows HbA1c only — the one analyte the letters may carry — never a
             full chemistry panel, so the rater cannot cross-check a letter against a battery of

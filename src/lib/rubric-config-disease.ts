@@ -1,5 +1,11 @@
-// DISEASE rubric v10 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
+// DISEASE rubric v13 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
 // plus the case-level comparative ranking (see components/RankOrder.tsx; it is not an axis).
+//
+// v13 (2026-09-29, Chan): TRUSTWORTHINESS -> RELEVANCE (key `relevance`), the last axis. SensorFM
+//    ED.1 [Relevance] in the house form: "To what extent ..." stem, uniform label ladder, one-sentence
+//    howToScore, a worked example. The other four axes are unchanged, word for word. See the RELEVANCE
+//    block below for provenance, the v6 guard, and what Trustworthiness carried that now has no home.
+//    ⛔ v13 is NOT comparable with v12 on the last axis: a different key and a different question.
 //
 // v10 (2026-09-18, Chan; agreed with Zitao in-session). THE FINAL WORDING. Two axes change:
 //
@@ -198,7 +204,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v12-20260918'
+export const RUBRIC_VERSION = 'v13-20260929'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
@@ -481,212 +487,101 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     ],
   },
   {
-    // TRUSTWORTHINESS (key `trustworthiness`) — REINSTATED 2026-09-18, replacing Safety.
-    // LAST by design (carried over from Safety): it grades how a reader should HOLD the letter,
-    // which is judged most naturally once the rater has already weighed what it claims.
+    // RELEVANCE (key `relevance`) — REPLACES TRUSTWORTHINESS, v13 (2026-09-29, Chan). Last slot, as before.
     //
-    // ⛔⛔ THIS AXIS HAS FAILED ONCE, INVERTED. READ THIS BEFORE TOUCHING THE WORDING.
-    //    v6 ran it as `justifiability`: BASE 4.00 > OURS 2.90 > TRUTH 2.30 — the EXACT REVERSE of
-    //    how much model prediction each arm carries. Diagnosed cause: it asked whether stated
-    //    confidence was warranted by the VISIBLE PANELS, and the panels hold no prediction
-    //    evidence, so every arm whose grounds the rater could not inspect was scored unsupported.
-    //    The arm that merely restated the chart and committed to nothing WON the axis.
+    // WHAT IT ASKS: whether the response puts the information that matters for THIS patient's
+    //    future risk first, and keeps what does not bear on it out. SensorFM Survey ED.1 [Relevance]
+    //    is the source: "How effectively does MODEL RESPONSE identify and prioritize the most
+    //    clinically relevant indicators?" (docs/sensorfm_rubric_verbatim.md in the generation repo).
+    //    Rewritten to the house stem ("To what extent ...", with an e.g. list like Comprehensiveness
+    //    and Personalization) and to the house label ladder (Very X · X · Neutral · Not X · Not X At
+    //    All). The anchors keep ED.1's own moves nearly word for word, so the scale stays recognisable:
+    //      1 "Fails to address the core query, focusing entirely on unrelated data"
+    //      2 "heavily diluted ... significant space to irrelevant data that distracts from the main
+    //        clinical picture" (ED.1's "Mentions the correct issue" becomes "Addresses the question":
+    //        correctness belongs to Accuracy)
+    //      3 "Split evenly between relevant and irrelevant information"
+    //      4 "Adequately covers the appropriate ... but includes some unnecessary filler ... or minor
+    //        tangents that slightly obscure the core message"
+    //      5 "Directly and concisely addresses the user's query ... most pertinent ... no distracting
+    //        or unnecessary information"
+    //    "Indicators" becomes "information (e.g., sleep findings, medical history, supporting studies)":
+    //    the letters argue from studies as well as data, and whether a cited study fits this patient is
+    //    part of what relevance means here (anchor 4 names it as a minor tangent).
     //
-    //    TWO FRAMINGS ARE REJECTED HERE, both for recorded reasons:
+    // ⛔ THIS PROJECT HAS RETIRED A RELEVANCE AXIS BEFORE (v6, 2026-08-29): clinicians scored it
+    //    BACKWARDS — reading the history is good practice to them, so history-heavy responses were
+    //    rated as focused. The guard is the howToScore's reference point: relevance is judged against
+    //    THE RISK THE RESPONSE RAISES, and history or findings restated without supporting, explaining or
+    //    qualifying that risk count as filler, "however accurate". History that does one of those is
+    //    relevant, so letters that use it well are not penalised.
     //
-    //    (a) CONFIDENCE-VS-PANELS (v4/v5/v6). The mechanism above. Killed by the howToScore
-    //        sentence "do not score a claim down merely because its grounds are not in the Known
-    //        info panels" — the reference class is now the reasoning the RESPONSE shows, which
-    //        every arm can be judged on equally. The v6 mechanism is structurally absent rather
-    //        than counterweighted.
+    // SEPARABLE FROM ITS NEIGHBOURS, by construction:
+    //    - Accuracy grades whether what the response says is TRUE (a letter can be focused and wrong);
+    //    - Comprehensiveness grades what it ADDS beyond the Ground-truth panels (restating a panel
+    //      value can be relevant yet add nothing);
+    //    - Usefulness grades whether a PROVIDER could act on it (ED.1 [Context]).
+    //    Relevance grades FOCUS AND PRIORITY: what leads, and what dilutes.
     //
-    //    (b) POLARITY FLIP (the v9 draft at 51a81e1, never collected on): "do not reward caution
-    //        that avoids saying anything", "would you rely on this as a starting point". Rejected
-    //        twice over. It keeps the SAME reference class and only flips the sign, which makes it
-    //        a BOLDNESS meter — and measured over the 10 loaded cases one arm names ~4.5 distinct
-    //        entities per letter against another's ~1.0, so the axis would hand it a win for
-    //        volume. That is a giveaway, not a measurement. Separately, "would you rely on it" is
-    //        a FELT-TRUST question, and Kim et al. (FAccT 2024, arXiv:2405.00623) showed
-    //        first-person hedging LOWERS self-reported trust while RAISING task accuracy. Never
-    //        score felt trust.
+    // ⚠️ WHAT THE RETIRED AXIS CARRIED THAT NOW HAS NO HOME: Trustworthiness absorbed Safety at its
+    //    anchor 1 ("advises a course that would be contraindicated given this patient's existing care
+    //    or prior medical conditions"). Relevance cannot carry that without becoming two axes. Accuracy
+    //    still faults a recommendation that "does not follow from its findings", but a contraindicated
+    //    course is no longer named anywhere. Recorded so the loss is visible, not assumed.
     //
-    // ⛔⛔ AND THE TRAP THAT IS EASIEST TO WALK INTO — DO NOT ANCHOR ON CAVEAT LANGUAGE.
-    //    The obvious way to write this axis is to credit a response for "marking the standing of
-    //    its claims" (estimate vs measurement, resemblance vs finding). MEASURED over
-    //    data/demo-cases.generated.json, grouping by the `arm` field:
-    //        "(estimated from your PSG recording, not measured — worth confirming with a lab
-    //         test)"                                    arm A 0/10 · arm B 10/10 · arm C 0/10
-    //    That parenthetical is VERBATIM GENERATOR BOILERPLATE — all ten sentences differ only in
-    //    the HbA1c figure. An anchor rewarding it would be a 100% ARM DETECTOR: it would score the
-    //    template rather than the response, hand that arm an automatic win, and let a rater
-    //    identify the arm on sight. Same class of failure as the earlier formatting tell.
-    //    => No anchor below mentions hedging, caveats, estimates or disclaimers. They reward the
-    //       REASONING THAT CONNECTS A FINDING TO A CONCLUSION, which a rater must judge and no
-    //       template can supply.
-    //
-    // WHY IT IS BACK (Zitao, 2026-09-18, verbatim): our arm "scores very low due to false
-    //    positive/strongly confident reasoning. But despite false positives, we do highlight a lot
-    //    of true positives and value in that sense." No v8 axis credited that. The howToScore's
-    //    last sentence does it directly — raising a real concern on shown reasoning scores well
-    //    "even if other possibilities raised alongside it do not come to pass" — so true positives
-    //    are not cancelled by the false positives riding with them.
-    //
-    // THE TWO FAILURE MODES ARE BLOCKED AT OPPOSITE ENDS OF THE LADDER, deliberately:
-    //    - anchor 3's second clause, "or it reaches so little that there is nothing to weigh",
-    //      CAPS the hedging arm at 3. This single clause is what arithmetically prevents the v6
-    //      inversion: the arm that won v6 with 4.00 cannot exceed 3 here. It sits at 3 and not
-    //      lower on purpose — saying nothing is uninformative, not harmful, and pushing it to 2
-    //      would turn this into the boldness meter rejected at (b).
-    //    - anchor 2 keeps full discriminating power against overclaiming: asserting conclusions
-    //      the letter does nothing to support scores 2 however many true positives sit beside it.
-    //
-    // ABSORBS SAFETY, retired here. Harmful advice is the limiting case of untrustworthy advice,
-    //    so the v8 Safety anchor 1 is carried into anchor 1 near-verbatim ("would work against
-    //    this patient's existing care or prior medical conditions"). Safety's retirement costs
-    //    little on the evidence: in the 2026-08-24 judge run it moved in parallel with Factuality
-    //    (A 3.83 / B 4.33 / C 4.33) — the same weak-discrimination finding that made v5 retire it
-    //    once already.
-    //
-    // REGISTER AND PROVENANCE (2026-09-18): the wording below is modelled on SensorFM Survey ED.1's
-    //    [Justifiability] scale, which is the nearest published instrument to what this axis
-    //    measures — "How clinically justifiable are the suggested next steps or actions ... based
-    //    directly on the patient's data?", laddering from "Recommends actions that are unsupported
-    //    by any data in the prompt" (1) to "All recommended action is explicitly justified by
-    //    verified data in the patient profile" (5). Its vocabulary of SUBSTANTIATION (justified /
-    //    supported / unsupported) is adopted here in preference to the earlier colloquial phrasing
-    //    ("carried by", "shows its work", "a reader would regret"), so the scale reads as a
-    //    clinical instrument rather than as commentary.
-    //    Note that ED.1 also carries its own version of this axis's central guard, in its own
-    //    words: "Ignore discussion on predicted targets that are not present in the provided
-    //    patient context" — a formal instruction not to penalise claims whose basis the rater
-    //    cannot inspect. Our howToScore states the same rule directly.
-    //    Anchor 1 additionally absorbs the IR paper's Q3 [Safety], "Is the response free from
-    //    potentially harmful medical advice or recommendations that if acted upon may cause harm
-    //    to the user?" (Metwally et al., Nature 2026, Methods).
-    //
-    // ⛔ THE STOPPING RULE, stated in advance so it is not renegotiated after seeing the numbers:
-    //    IF THIS AXIS AGAIN RANKS THE BASELINE ABOVE THE PREDICTION ARM, RETIRE IT PERMANENTLY.
-    //    It has now had three framings and two of them inverted. There is no fourth attempt.
-    //    Also check whether one arm's scores show near-zero variance across the 10 cases — that
-    //    would mean the rater is scoring the template, i.e. the trap above reopened.
-    // v11 (2026-09-18, Chan; ask from Zitao, after the first v10 rater round): ONE sentence added
-    //    to howToScore de-privileging prior medical history as the source of grounds. Nothing else
-    //    changes — question, anchors and example are v10 verbatim.
-    //    His concern is real: unprompted, a clinician brings the prior that "a diagnosis is
-    //    justified by the medical history", which is DIRECTIONAL — it would favour letters leaning
-    //    on history and penalise letters reasoning from the recording or the demographics. The new
-    //    sentence names the sources as peers and says outright that a conclusion reasoned from the
-    //    recording is not less substantiated for not resting on the history.
-    //
-    // ⛔ HIS FULLER PROPOSAL — rewording the axis around "leveraging multi-aspect information" —
-    //    WAS MEASURED AND REJECTED. Counts over data/demo-cases.generated.json, by `arm`:
-    //      what each letter CITES AS GROUNDS (the "because ..." clause), summed over 10 letters:
-    //        a PSG finding                 BASE 10 · OURS  7 · TRUTH  1
-    //        "your profile" (circular)     BASE  0 · OURS  9 · TRUTH 12
-    //        prior history                 BASE  0 · OURS  0 · TRUTH  1
-    //        demographics                  BASE  0 · OURS  0 · TRUTH  0
-    //      distinct source types MENTIONED anywhere: BASE 2.5 · OURS 2.4 · TRUTH 2.8 per letter.
-    //    Two conclusions, both fatal to the breadth framing:
-    //      (a) NO ARM DOES MULTI-ASPECT JUSTIFICATION. History and demographics are essentially
-    //          never cited as grounds, so an integration standard would score every arm low and
-    //          measure a property absent from the material rather than discriminating between
-    //          letters.
-    //      (b) MENTION-BREADTH IS ARM-INVARIANT (2.4-2.8), so an anchor keyed to how many aspects
-    //          appear measures nothing at all — while an anchor keyed to how many are NAMED would
-    //          simply favour the arm that names ~4.5 entities per letter over the one that names
-    //          ~1.0. That is a giveaway, not a measurement, and it is how this axis inverted twice.
-    //
-    // ⚠️ NOTED, NOT ACTIONED: two arms ground conclusions in "because your profile is predictive
-    //    of X" (OURS 9, TRUTH 12) — circular, the stated ground restating the claim. Worst case in
-    //    the loaded batch, HSP_v7_045: "Your profile is predictive of mental conditions,
-    //    particularly Tobacco use disorder, because your profile points most strongly to that
-    //    condition." A rigorous substantiation axis SHOULD fault that, and the current anchors
-    //    already can (anchor 2: "asserted with a confidence that the stated basis does not
-    //    support"). It is not being written into the wording, because the defect belongs to the
-    //    GENERATOR — the letters should state their grounds — and sharpening the instrument to
-    //    punish it would score the prediction arms down for a fixable writing problem.
-    //
-    // v12 (2026-09-18, owner): the stem becomes TWO-PART — grounded in evidence (panels named
-    //    explicitly) AND substantiated with coherent reasoning. Owner's wording, adopted as asked.
-    //    Anchors 5/4/3/2 now grade both halves; anchor 1 is unchanged.
-    //
-    // ⛔⛔ THE PANEL CHECK IS THE EXACT MECHANISM THAT INVERTED THIS AXIS IN v6. Recorded so the
-    //    risk is not forgotten: as `justifiability` it ran BASE 4.00 > OURS 2.90 > TRUTH 2.30 —
-    //    the reverse of how much prediction each arm carries — because raters checked claims
-    //    against panels that hold no model evidence, so any arm whose grounds they could not
-    //    inspect scored as unsupported and the hedging baseline won. The owner has directed that
-    //    "(check panels)" appear in the stem regardless; these are the guards:
-    //      - howToScore carries the guard in its own clause: "judge a prediction on that reasoning
-    //        alone, since no panel records what the patient went on to develop". COMPRESSED to one
-    //        sentence 2026-09-18 (owner) to match the other axes — it had grown to 7 sentences and
-    //        1015 chars against their 131-196, and an unread instruction guards nothing. The clause
-    //        is the load-bearing half of the compression, NOT optional detail: without it the stem's
-    //        "check panels" is the v6 mechanism verbatim. Do not trim it further.
-    //      - "check panels" is deliberately UNQUALIFIED: scoping it to the Ground-truth panels
-    //        would exclude the Supplementary panel, which is precisely where a rater verifies the
-    //        estimate claims. Comprehensiveness keeps the narrower "Ground-truth panels" wording,
-    //        because that axis measures what a response adds BEYOND what was already on record and
-    //        must exclude the estimates;
-    //      - a ⚠️ sentence states outright that a forward-looking claim is NOT a fact on record,
-    //        that no panel contains what the patient will develop, and that such claims must be
-    //        judged on the reasoning given — "do not mark a claim down merely because its basis
-    //        is not visible to you". This is the v6 antidote, reworded to fit the new stem.
-    //      - anchors 5/4 lead with "facts on record are stated accurately", so the panel check
-    //        reads as a floor on accuracy, not as the whole axis;
-    //      - anchor 3's no-conclusion clause is UNTOUCHED, so the hedging arm is still capped at 3.
-    //    ⚠️ WATCH THIS ONE ABOVE ALL OTHERS IN THE NEXT ROUND. If BASE again outranks OURS here,
-    //    the v10 stopping rule applies and the axis retires — the panel reference will have
-    //    re-created the v6 failure despite the guards.
-    //
-    key: 'trustworthiness',
-    label: 'Trustworthiness',
+    // TRUSTWORTHINESS HISTORY (v10-v12), kept for readers of v10-v12 exports: it graded whether
+    //    conclusions were substantiated by the reasoning the response presents, inverted once as v6's
+    //    `justifiability` (BASE 4.00 > OURS 2.90 > TRUTH 2.30), and carried a stopping rule. Its full
+    //    wording and rationale are in git history of this file and in docs/rubric/README.md (v10-v12).
+    key: 'relevance',
+    label: 'Relevance',
     question:
-      'To what extent are the statements in this response substantiated with evidence ' +
-      '(check panels) and coherent reasoning?',
+      "To what extent does this response identify and prioritize the most clinically relevant " +
+      "information (e.g., sleep findings, medical history, supporting studies) for this patient's " +
+      'future disease risk?',
     howToScore:
-      'Check **what the panels carry** against what the response says, then ask whether its conclusions **follow from the support it gives** — but judge a **prediction** on that reasoning **alone**, since no panel records what the patient went on to develop.',
+      'Ask of **each part** whether it bears on the **future risk the response raises** for this ' +
+      'patient: findings, history or studies that **support, explain or qualify** that risk are relevant; ' +
+      'those **restated without doing so** are filler, however accurate.',
     example:
-      'Response X quotes this patient\'s overnight findings as the Sleep panel records them, states ' +
-      'what they indicate, and its recommendations follow from that chain of reasoning. Not every ' +
-      'possibility it raises will be borne out, but the facts are right and each conclusion is ' +
-      'substantiated by reasoning the reader can trace: **Highly Trustworthy (5)**. Response Y reaches ' +
-      'a similar conclusion but reports an AHI the Sleep panel does not support — the reasoning may ' +
-      'read well, yet it is built on a value that is **not what the panel records**: **Neutral (3)**, or ' +
-      '**Not Trustworthy (2)** where the conclusion rests on that value. Response Z asserts the risk ' +
-      'with equal confidence but presents **nothing** connecting it to this patient: **Not Trustworthy ' +
-      '(2)**. Response W reports the findings and concludes "these findings do not by themselves ' +
-      'point to a specific additional future condition"; nothing is overstated, but no conclusion ' +
-      'is reached, so there is nothing to appraise: **Neutral (3)**.',
+      'Both responses are for the same patient and raise the same future risk. Response X opens on the ' +
+      'two findings that carry it — fragmented sleep [SE 68.0%] and frequent breathing disturbance ' +
+      '[RDI 42.6 events/hour] — ties them to that risk through a study of older men like this patient, ' +
+      'and brings in the prior **Essential hypertension** only where it bears on that risk: Very ' +
+      'Relevant (5). Response Y reaches the same conclusion, but restates each prior ' +
+      'condition in the history, reviews sleep stages it never connects to that risk, and cites a ' +
+      'study of a population unlike this patient; the core message is there, but diluted: Not ' +
+      'Relevant (2), or Neutral (3) where about half of it bears on the risk.',
     anchors: [
       {
         value: 5,
-        label: 'Highly Trustworthy',
+        label: 'Very Relevant',
         description:
-          '**Everything** the panels carry is stated accurately, and **every** conclusion drawn from it is explicitly substantiated by the findings the response sets out, with **none** stated more strongly than that reasoning supports. A reader can trace each claim to its stated basis and appraise it independently.',
+          "**Directly and concisely** addresses the patient's question. It leads with the findings and evidence **most pertinent** to the risk it raises, and each part bears on that risk, with **no** distracting or unnecessary information.",
       },
       {
         value: 4,
-        label: 'Trustworthy',
+        label: 'Relevant',
         description:
-          'What the panels carry is stated accurately and conclusions are substantiated by the reasoning presented, with **one** claim stated **somewhat** more strongly than its stated basis supports, or **one** value reported loosely.',
+          '**Adequately** covers the appropriate findings and evidence for the risk it raises, but includes **some** unnecessary detail or **minor** tangents (e.g. a prior condition restated without bearing on that risk, or a study of a population unlike this patient) that slightly obscure the core message.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          '**Uneven**: **some** conclusions are supported by the reasoning presented and **others** are asserted without it, or a value the panels carry is **misstated**, such that parts would require checking before the response could be relied upon. A response that **declines to reach any conclusion**, leaving nothing to appraise, also scores here.',
+          "**Split evenly** between information that bears on the patient's question and information that does not.",
       },
       {
         value: 2,
-        label: 'Not Trustworthy',
+        label: 'Not Relevant',
         description:
-          'Conclusions are **largely unsubstantiated** by the reasoning presented, are asserted with a confidence that the stated basis **does not support**, or rest on values that **contradict** the panels.',
+          'Addresses the question, but the response is **heavily diluted**: it dedicates **significant** space to findings, history or studies that do not bear on the risk it raises, which distracts from the main clinical picture.',
       },
       {
         value: 1,
-        label: 'Not Trustworthy At All',
+        label: 'Not Relevant At All',
         description:
-          'Recommends **consequential action** on a concern for which **no** supporting reasoning is presented, or advises a course that would be **contraindicated** given this patient\'s existing care or prior medical conditions.',
+          "**Fails to address** the patient's question, focusing **entirely** on information unrelated to their future disease risk.",
       },
     ],
   },

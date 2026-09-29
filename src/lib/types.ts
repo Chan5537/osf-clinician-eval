@@ -93,8 +93,12 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // ⚠️ Trustworthiness is NOT v6's `justifiability` despite the shared label lineage: that one
 // weighed confidence against the visible panels and inverted (BASE 4.00 > OURS 2.90 >
 // TRUTH 2.30). See the ⛔⛔ block in rubric-config-disease.ts before changing its wording.
+// v13 (2026-09-29, Chan): `trustworthiness` -> `relevance`, renamed WITH the axis (keys stay equal to
+// labels). Relevance is SensorFM ED.1 [Relevance] in the house form: focus and priority, judged against
+// the risk the response raises. ⚠️ `relevance` has carried other axes in older exports (v4/v5 Relevance;
+// see the rename table above) — always filter on rubric_version before pooling.
 export type RubricDimension =
-  | 'trustworthiness'
+  | 'relevance'
   | 'accuracy'
   | 'comprehensiveness'
   | 'personalization'

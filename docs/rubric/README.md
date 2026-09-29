@@ -1,3 +1,45 @@
+# Rubric v13 — source of truth and validation
+
+**v13 (2026-09-29, Chan)** — the fifth criterion is **Relevance**, replacing Trustworthiness.
+`rubric_version` **v13-20260929**, SCHEMA_VERSION **25**, stored key **`relevance`** (was
+`trustworthiness`). The other four criteria are unchanged, word for word. Clinician-facing text:
+`Clinician Evaluation Rubrics v13 (for Google Doc).md` (section 5 is copied from
+`src/lib/rubric-config-disease.ts`). The Google Doc behind `LIKERT_RUBRIC_DOC_URL` in `src/lib/links.ts`
+still holds v12: paste the v13 file into it (or a new doc) before the next round.
+
+| # | Criterion | Stored key | Asks |
+|---|---|---|---|
+| 1 | **Accuracy** | `accuracy` | unchanged |
+| 2 | **Comprehensiveness** | `comprehensiveness` | unchanged |
+| 3 | **Personalization** | `personalization` | unchanged |
+| 4 | **Usefulness** | `usefulness` | unchanged |
+| 5 | **Relevance** | `relevance` | To what extent the response identifies and prioritizes the most clinically relevant information (e.g., sleep findings, medical history, supporting studies) for this patient's future disease risk |
+
+**Wording.** SensorFM Survey ED.1 [Relevance] ("How effectively does MODEL RESPONSE identify and
+prioritize the most clinically relevant indicators?") in the house form: a "To what extent …" stem with
+an e.g. list, the uniform label ladder (Very Relevant · Relevant · Neutral · Not Relevant · Not Relevant
+At All), a one-sentence How to score, and a worked example. The anchors keep ED.1's own moves nearly
+verbatim (1 fails to address the query; 2 heavily diluted; 3 split evenly; 4 adequate with minor tangents;
+5 direct, concise, most pertinent first). ED.1's "Mentions the correct issue" became "Addresses the
+question": correctness is Accuracy's.
+
+⛔ **The guard.** A Relevance axis was retired once (v6): clinicians scored history-heavy letters as
+focused, because reading the chart is good practice to them. How to score therefore fixes the reference
+point, **the risk the response raises**, and says that history or findings restated without supporting,
+explaining or qualifying that risk are filler, "however accurate".
+
+⚠️ **What no longer has a home.** Trustworthiness carried Safety in its anchor 1 (a course
+contraindicated by the patient's existing care or prior conditions). Relevance cannot absorb it.
+Accuracy still faults a recommendation that does not follow from its findings, but a contraindicated
+course is no longer named by any criterion. Add it back as a flag if the raters' comments show it matters.
+
+**Watch next round:**
+- Relevance should not move with Comprehensiveness: focus and novelty are different properties;
+  r > 0.7 would mean raters are scoring one thing.
+- No arm should sit at near-zero variance: that would mean the template is being scored.
+
+---
+
 # Rubric v12 — source of truth and validation
 
 **v12 (2026-09-18, owner)** — Trustworthiness becomes TWO-PART: grounded in evidence (the panels
