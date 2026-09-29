@@ -91,7 +91,10 @@ import { advance, touch, park, resume } from './timing'
 //       rubric wording change — RUBRIC_VERSION is unchanged at v12 — but what the rater sees while
 //       scoring does change, so a stale session is discarded rather than resumed against a
 //       different screen.
-export const SCHEMA_VERSION = 24
+// v25 = rubric v13 (2026-09-29, Chan): the last axis changes from Trustworthiness to Relevance (key
+//       `trustworthiness` -> `relevance`, a different question). A v24 session holds answers to a question
+//       no longer asked, so it is discarded rather than resumed.
+export const SCHEMA_VERSION = 25
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
