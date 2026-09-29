@@ -1,406 +1,759 @@
 {
-  "cases": {
-    "HSP_v7_026": {
-      "sessionId": "HSP_v7_026",
-      "sourceIndex": 0,
-      "sleepIndex": {
-        "ahi": 5.675675675675675,
-        "odi": 2.4324324324324325,
-        "rdi": 11.08108108108108,
-        "tst_min": 444.0,
-        "trt_min": 559.5,
-        "se": 79.35656836461126,
-        "sol_min": 9.0,
-        "waso_min": 106.5,
-        "rem_pct": 27.927927927927925,
-        "n1_pct": 9.797297297297296,
-        "n2_pct": 43.91891891891892,
-        "n3_pct": 18.355855855855857,
-        "mean_spo2": 99.04485691288212,
-        "nadir_spo2": 91.9831085205078,
-        "plmi": 0.8108108108108107
-      },
-      "futureDiseaseGroundTruth": [
-        "Hyperlipidemia"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "endocrine_metabolic"
-      }
-    },
-    "HSP_v7_034": {
-      "sessionId": "HSP_v7_034",
-      "sourceIndex": 1,
-      "sleepIndex": {
-        "ahi": 25.63922942206655,
-        "tst_min": 285.5,
-        "trt_min": 431.5,
-        "se": 66.16454229432213,
-        "sol_min": 4.5,
-        "waso_min": 137.5,
-        "rem_pct": 14.185639229422067,
-        "n1_pct": 28.021015761821367,
-        "n2_pct": 56.91768826619965,
-        "n3_pct": 0.8756567425569177,
-        "mean_spo2": 97.26806451705812,
-        "nadir_spo2": 72.3883285522461,
-        "plmi": 9.036777583187389,
-        "ari": 11.558669001751312
-      },
-      "futureDiseaseGroundTruth": [
-        "Asthma"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "respiratory"
-      }
-    },
-    "HSP_v7_041": {
-      "sessionId": "HSP_v7_041",
-      "sourceIndex": 2,
-      "sleepIndex": {
-        "ahi": 5.074285714285714,
-        "odi": 5.348571428571429,
-        "rdi": 65.28,
-        "tst_min": 437.5,
-        "trt_min": 515.0,
-        "se": 84.9514563106796,
-        "sol_min": 37.0,
-        "waso_min": 40.5,
-        "rem_pct": 13.028571428571428,
-        "n1_pct": 27.88571428571429,
-        "n2_pct": 59.08571428571429,
-        "n3_pct": 0.0,
-        "mean_spo2": 93.3861909537047,
-        "nadir_spo2": 58.097442626953125,
-        "ari": 8.365714285714285
-      },
-      "futureDiseaseGroundTruth": [
-        "Type 2 diabetes"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "endocrine_metabolic"
-      }
-    },
-    "HSP_v7_043": {
-      "sessionId": "HSP_v7_043",
-      "sourceIndex": 3,
-      "sleepIndex": {
-        "ahi": 59.4,
-        "tst_min": 400.0,
-        "trt_min": 483.5,
-        "se": 82.7300930713547,
-        "sol_min": 6.5,
-        "waso_min": 77.0,
-        "rem_pct": 18.625,
-        "n1_pct": 24.375,
-        "n2_pct": 56.99999999999999,
-        "n3_pct": 0.0,
-        "mean_spo2": 94.48078035211564,
-        "nadir_spo2": 67.0106201171875,
-        "plmi": 0.0
-      },
-      "futureDiseaseGroundTruth": [
-        "Sleep disorders",
-        "Obstructive sleep apnea"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "neurological"
-      }
-    },
-    "HSP_v7_045": {
-      "sessionId": "HSP_v7_045",
-      "sourceIndex": 4,
-      "sleepIndex": {
-        "ahi": 2.0262664165103192,
-        "odi": 0.225140712945591,
-        "rdi": 8.105065666041277,
-        "tst_min": 266.5,
-        "trt_min": 417.5,
-        "se": 63.83233532934132,
-        "sol_min": 24.0,
-        "waso_min": 127.0,
-        "rem_pct": 10.881801125703564,
-        "n1_pct": 12.757973733583489,
-        "n2_pct": 76.36022514071294,
-        "n3_pct": 0.0,
-        "mean_spo2": 94.72309041503372,
-        "nadir_spo2": 90.0,
-        "ari": 26.11632270168856
-      },
-      "futureDiseaseGroundTruth": [
-        "Ischemic Heart Disease",
-        "Coronary atherosclerosis"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "circulatory"
-      }
-    },
-    "HSP_v7_059": {
-      "sessionId": "HSP_v7_059",
-      "sourceIndex": 5,
-      "sleepIndex": {
-        "ahi": 61.11940298507462,
-        "odi": 58.208955223880594,
-        "rdi": 100.52238805970148,
-        "tst_min": 268.0,
-        "trt_min": 395.0,
-        "se": 67.84810126582278,
-        "sol_min": 2.0,
-        "waso_min": 123.5,
-        "rem_pct": 28.171641791044777,
-        "n1_pct": 8.768656716417912,
-        "n2_pct": 63.059701492537314,
-        "n3_pct": 0.0,
-        "mean_spo2": 89.95768541696653,
-        "nadir_spo2": 65.0174560546875,
-        "ari": 6.940298507462686
-      },
-      "futureDiseaseGroundTruth": [
-        "Acute and chronic tonsillitis",
-        "Chronic tonsillitis and adenoiditis"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "respiratory"
-      }
-    },
-    "HSP_v7_062": {
-      "sessionId": "HSP_v7_062",
-      "sourceIndex": 6,
-      "sleepIndex": {
-        "ahi": 6.751054852320675,
-        "odi": 7.088607594936709,
-        "rdi": 12.48945147679325,
-        "tst_min": 355.5,
-        "trt_min": 371.5,
-        "se": 95.69313593539704,
-        "sol_min": 5.0,
-        "waso_min": 10.5,
-        "rem_pct": 20.39381153305204,
-        "n1_pct": 2.6722925457102678,
-        "n2_pct": 44.163150492264414,
-        "n3_pct": 32.77074542897328,
-        "mean_spo2": 95.60691902779438,
-        "nadir_spo2": 79.01744079589844,
-        "ari": 5.063291139240507
-      },
-      "futureDiseaseGroundTruth": [
-        "Anxiety disorder",
-        "Depression"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "mental"
-      }
-    },
-    "HSP_v7_070": {
-      "sessionId": "HSP_v7_070",
-      "sourceIndex": 7,
-      "sleepIndex": {
-        "ahi": 19.0625,
-        "odi": 19.375,
-        "rdi": 64.21875,
-        "tst_min": 384.0,
-        "trt_min": 422.5,
-        "se": 90.88757396449704,
-        "sol_min": 9.0,
-        "waso_min": 29.5,
-        "rem_pct": 22.786458333333336,
-        "n1_pct": 8.463541666666668,
-        "n2_pct": 67.96875,
-        "n3_pct": 0.78125,
-        "mean_spo2": 94.37333943777614,
-        "nadir_spo2": 80.01433563232422,
-        "ari": 5.3125
-      },
-      "futureDiseaseGroundTruth": [
-        "Heart failure NOS",
-        "Hypertensive heart and/or renal disease"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "circulatory"
-      }
-    },
-    "HSP_v7_077": {
-      "sessionId": "HSP_v7_077",
-      "sourceIndex": 8,
-      "sleepIndex": {
-        "ahi": 12.158590308370044,
-        "odi": 11.45374449339207,
-        "rdi": 27.84140969162996,
-        "tst_min": 340.5,
-        "trt_min": 387.5,
-        "se": 87.87096774193547,
-        "sol_min": 16.0,
-        "waso_min": 31.0,
-        "rem_pct": 33.480176211453745,
-        "n1_pct": 5.139500734214391,
-        "n2_pct": 61.38032305433187,
-        "n3_pct": 0.0,
-        "mean_spo2": 91.6452770038908,
-        "nadir_spo2": 76.0,
-        "ari": 4.933920704845815
-      },
-      "futureDiseaseGroundTruth": [
-        "Anxiety disorder",
-        "Tobacco use disorder"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "mental"
-      }
-    },
-    "HSP_v7_078": {
-      "sessionId": "HSP_v7_078",
-      "sourceIndex": 9,
-      "sleepIndex": {
-        "ahi": 8.88888888888889,
-        "odi": 4.904214559386973,
-        "rdi": 11.954022988505749,
-        "tst_min": 391.5,
-        "trt_min": 467.5,
-        "se": 83.74331550802138,
-        "sol_min": 9.5,
-        "waso_min": 66.0,
-        "rem_pct": 41.251596424010216,
-        "n1_pct": 4.342273307790549,
-        "n2_pct": 30.906768837803323,
-        "n3_pct": 23.49936143039591,
-        "mean_spo2": 89.00610068342746,
-        "nadir_spo2": 75.97161531448364,
-        "plmi": 0.0,
-        "ari": 8.42911877394636
-      },
-      "futureDiseaseGroundTruth": [
-        "Sleep disorders",
-        "Insomnia"
-      ],
-      "selection": {
-        "cohortGroup": "risky",
-        "stratum": "neurological"
-      }
-    }
+ "cases": {
+  "HSP_v7_000": {
+   "sessionId": "HSP_v7_000",
+   "sourceIndex": 0,
+   "sleepIndex": {
+    "ahi": 13.982608695652171,
+    "odi": 10.434782608695652,
+    "rdi": 42.57391304347826,
+    "tst_min": 287.5,
+    "trt_min": 422.5,
+    "se": 68.04733727810651,
+    "sol_min": 7.5,
+    "waso_min": 127.0,
+    "rem_pct": 8.0,
+    "n1_pct": 7.652173913043478,
+    "n2_pct": 83.82608695652173,
+    "n3_pct": 0.5217391304347827,
+    "mean_spo2": 96.15797691190416,
+    "nadir_spo2": 91.0,
+    "plmi": null,
+    "ari": 16.904347826086955,
+    "sleep_transition_index": 18.991304347826087,
+    "n_awakenings": 26.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Ischemic Heart Disease",
+    "Coronary atherosclerosis"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "circulatory"
+   },
+   "ehrRecords": {
+    "medications": [],
+    "labs": []
+   }
   },
-  "categoryOrder": [
-    "circulatory system",
-    "respiratory",
-    "endocrine/metabolic",
-    "neurological",
-    "mental disorders",
-    "musculoskeletal",
-    "digestive",
-    "genitourinary",
-    "sense organs",
-    "neoplasms",
-    "hematopoietic",
-    "dermatologic",
-    "congenital anomalies"
-  ],
-  "sleepIndexFields": [
-    "ahi",
-    "odi",
-    "rdi",
-    "tst_min",
-    "trt_min",
-    "se",
-    "sol_min",
-    "waso_min",
-    "rem_pct",
-    "n1_pct",
-    "n2_pct",
-    "n3_pct",
-    "mean_spo2",
-    "nadir_spo2",
-    "plmi",
-    "ari"
-  ],
-  "diseaseCategoryByName": {
-    "Abnormal involuntary movements": "neurological",
-    "Abnormal weight gain": "endocrine/metabolic",
-    "Abnormality of gait": "neurological",
-    "Acute and chronic tonsillitis": "respiratory",
-    "Allergic rhinitis": "respiratory",
-    "Altered mental status": "mental disorders",
-    "Anxiety disorder": "mental disorders",
-    "Asthma": "respiratory",
-    "Benign neoplasm of uterus": "neoplasms",
-    "Bipolar": "mental disorders",
-    "Cerebral ischemia": "circulatory system",
-    "Chronic airway obstruction": "respiratory",
-    "Chronic pharyngitis and nasopharyngitis": "respiratory",
-    "Chronic sinusitis": "respiratory",
-    "Chronic tonsillitis and adenoiditis": "respiratory",
-    "Circadian rhythm sleep disorder": "neurological",
-    "Coronary atherosclerosis": "circulatory system",
-    "Degeneration of intervertebral disc": "musculoskeletal",
-    "Depression": "mental disorders",
-    "Displacement of intervertebral disc": "musculoskeletal",
-    "Enthesopathy": "musculoskeletal",
-    "Esophagitis, GERD and related diseases": "digestive",
-    "Essential hypertension": "circulatory system",
-    "Extrapyramidal disease and abnormal movement disorders": "neurological",
-    "Hearing loss": "sense organs",
-    "Hyperlipidemia": "endocrine/metabolic",
-    "Hyperplasia of prostate": "genitourinary",
-    "Hypersomnia": "neurological",
-    "Hypertensive heart and/or renal disease": "circulatory system",
-    "Inflammatory and toxic neuropathy": "neurological",
-    "Insomnia": "neurological",
-    "Ischemic Heart Disease": "circulatory system",
-    "Memory loss": "mental disorders",
-    "Migraine": "neurological",
-    "Myocardial infarction": "circulatory system",
-    "Obesity": "endocrine/metabolic",
-    "Obstructive sleep apnea": "neurological",
-    "Occlusion of cerebral arteries": "circulatory system",
-    "Osteoarthritis; localized": "musculoskeletal",
-    "Peripheral enthesopathies and allied syndromes": "musculoskeletal",
-    "Pleurisy; pleural effusion": "respiratory",
-    "Septal Deviations/Turbinate Hypertrophy": "respiratory",
-    "Sleep disorders": "neurological",
-    "Sleep related movement disorders": "neurological",
-    "Tobacco use disorder": "mental disorders",
-    "Type 2 diabetes": "endocrine/metabolic",
-    "Uterine leiomyoma": "neoplasms",
-    "Vitamin D deficiency": "endocrine/metabolic",
-    "Iron deficiency anemias, unspecified or not due to blood loss": "circulatory system",
-    "Acute posthemorrhagic anemia": "circulatory system",
-    "Develomental delays and disorders": "circulatory system",
-    "Sensorineural hearing loss": "circulatory system",
-    "Mitral valve disease": "circulatory system",
-    "Nonrheumatic tricuspid valve disorders": "circulatory system",
-    "Other chronic ischemic heart disease, unspecified": "circulatory system",
-    "Primary/intrinsic cardiomyopathies": "circulatory system",
-    "Paroxysmal tachycardia, unspecified": "circulatory system",
-    "Atrial fibrillation and flutter": "circulatory system",
-    "Premature beats": "circulatory system",
-    "Congestive heart failure; nonhypertensive": "circulatory system",
-    "Heart failure NOS": "circulatory system",
-    "Atherosclerosis": "circulatory system",
-    "Atherosclerosis of aorta": "circulatory system",
-    "Respiratory failure": "circulatory system",
-    "Respiratory insufficiency": "circulatory system",
-    "Wheezing": "circulatory system",
-    "Difficulty in walking": "circulatory system",
-    "Cardiac congenital anomalies": "circulatory system",
-    "Type 1 diabetes": "circulatory system",
-    "Nonrheumatic mitral valve disorders": "circulatory system",
-    "Congestive heart failure (CHF) NOS": "circulatory system",
-    "Heart failure with reduced EF [Systolic or combined heart failure]": "circulatory system",
-    "Heart failure with preserved EF [Diastolic heart failure]": "circulatory system",
-    "Obstructive chronic bronchitis": "circulatory system",
-    "Dependence on respirator [Ventilator] or supplemental oxygen": "circulatory system",
-    "Senile cataract": "circulatory system",
-    "Hypoventilation": "circulatory system",
-    "Pruritus and related conditions": "circulatory system",
-    "Spinal stenosis": "circulatory system",
-    "Spondylosis without myelopathy": "circulatory system",
-    "Congestive heart failure": "circulatory system",
-    "Paroxysmal tachycardia": "circulatory system"
+  "HSP_v7_001": {
+   "sessionId": "HSP_v7_001",
+   "sourceIndex": 1,
+   "sleepIndex": {
+    "ahi": 41.08474576271186,
+    "odi": 37.83050847457627,
+    "rdi": 70.98305084745762,
+    "tst_min": 295.0,
+    "trt_min": 428.0,
+    "se": 68.92523364485982,
+    "sol_min": 17.5,
+    "waso_min": 115.5,
+    "rem_pct": 23.559322033898304,
+    "n1_pct": 7.627118644067797,
+    "n2_pct": 68.47457627118644,
+    "n3_pct": 0.3389830508474576,
+    "mean_spo2": 91.61213108213607,
+    "nadir_spo2": 82.00001525878906,
+    "plmi": null,
+    "ari": 5.084745762711864,
+    "sleep_transition_index": 17.28813559322034,
+    "n_awakenings": 23.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Hyperlipidemia"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "endocrine_metabolic"
+   },
+   "ehrRecords": {
+    "medications": [],
+    "labs": []
+   }
+  },
+  "HSP_v7_023": {
+   "sessionId": "HSP_v7_023",
+   "sourceIndex": 2,
+   "sleepIndex": {
+    "ahi": 16.348773841961854,
+    "odi": 0.326975476839237,
+    "rdi": 16.348773841961854,
+    "tst_min": 367.0,
+    "trt_min": 461.5,
+    "se": 79.52329360780065,
+    "sol_min": 11.0,
+    "waso_min": 69.0,
+    "rem_pct": 16.893732970027248,
+    "n1_pct": 5.5858310626703,
+    "n2_pct": 76.566757493188,
+    "n3_pct": 0.9536784741144414,
+    "mean_spo2": 99.25047877196876,
+    "nadir_spo2": 97.03739166259766,
+    "plmi": 26.97547683923706,
+    "ari": 5.885558583106268,
+    "sleep_transition_index": 12.425068119891009,
+    "n_awakenings": 22.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Sleep disorders",
+    "Insomnia",
+    "Obstructive sleep apnea"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "neurological"
+   },
+   "ehrRecords": {
+    "medications": [],
+    "labs": [
+     {
+      "name": "Cholesterol Total",
+      "value": 178.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hdl",
+      "value": 40.0,
+      "abnormal": false
+     },
+     {
+      "name": "Triglycerides",
+      "value": 95.0,
+      "abnormal": false
+     }
+    ]
+   }
+  },
+  "HSP_v7_053": {
+   "sessionId": "HSP_v7_053",
+   "sourceIndex": 3,
+   "sleepIndex": {
+    "ahi": 24.07239819004525,
+    "odi": 21.538461538461537,
+    "rdi": 39.27601809954751,
+    "tst_min": 331.5,
+    "trt_min": 398.5,
+    "se": 83.18695106649938,
+    "sol_min": 10.5,
+    "waso_min": 54.0,
+    "rem_pct": 8.597285067873303,
+    "n1_pct": 49.321266968325794,
+    "n2_pct": 38.612368024132735,
+    "n3_pct": 3.469079939668175,
+    "mean_spo2": 96.06100973299006,
+    "nadir_spo2": 86.0,
+    "plmi": null,
+    "ari": 6.515837104072398,
+    "sleep_transition_index": 27.149321266968325,
+    "n_awakenings": 40.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Obstructive sleep apnea"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "neurological"
+   },
+   "ehrRecords": {
+    "medications": [
+     "atorvastatin",
+     "carvedilol",
+     "isosorbide",
+     "torsemide",
+     "trazodone"
+    ],
+    "labs": [
+     {
+      "name": "Alt",
+      "value": 36.0,
+      "abnormal": false
+     },
+     {
+      "name": "Bicarbonate",
+      "value": 35.0,
+      "abnormal": true
+     },
+     {
+      "name": "Calcium",
+      "value": 10.3,
+      "abnormal": true
+     },
+     {
+      "name": "Chloride",
+      "value": 85.0,
+      "abnormal": true
+     },
+     {
+      "name": "Creatinine",
+      "value": 5.92,
+      "abnormal": true
+     },
+     {
+      "name": "Glucose",
+      "value": 126.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hdl",
+      "value": 33.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hematocrit",
+      "value": 40.5,
+      "abnormal": false
+     },
+     {
+      "name": "Hemoglobin",
+      "value": 14.2,
+      "abnormal": false
+     },
+     {
+      "name": "Platelet",
+      "value": 111.0,
+      "abnormal": true
+     },
+     {
+      "name": "Potassium",
+      "value": 2.7,
+      "abnormal": true
+     },
+     {
+      "name": "Sodium",
+      "value": 135.0,
+      "abnormal": false
+     },
+     {
+      "name": "Triglycerides",
+      "value": 94.0,
+      "abnormal": false
+     },
+     {
+      "name": "Tsh",
+      "value": 1.19,
+      "abnormal": false
+     },
+     {
+      "name": "Urea Nitrogen",
+      "value": 121.0,
+      "abnormal": true
+     },
+     {
+      "name": "Uric Acid",
+      "value": 6.5,
+      "abnormal": false
+     },
+     {
+      "name": "Wbc",
+      "value": 6.4,
+      "abnormal": false
+     }
+    ]
+   }
+  },
+  "HSP_v7_054": {
+   "sessionId": "HSP_v7_054",
+   "sourceIndex": 4,
+   "sleepIndex": {
+    "ahi": 0.4358353510895884,
+    "odi": 0.0,
+    "rdi": 1.0169491525423728,
+    "tst_min": 413.0,
+    "trt_min": 493.0,
+    "se": 83.77281947261663,
+    "sol_min": 2.0,
+    "waso_min": 19.0,
+    "rem_pct": 20.944309927360774,
+    "n1_pct": 3.631961259079903,
+    "n2_pct": 34.74576271186441,
+    "n3_pct": 40.67796610169492,
+    "mean_spo2": 96.89258340969,
+    "nadir_spo2": 94.97825503349304,
+    "plmi": 0.0,
+    "ari": 2.905569007263922,
+    "sleep_transition_index": 11.622276029055689,
+    "n_awakenings": 12.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Asthma",
+    "Allergic rhinitis"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "respiratory"
+   },
+   "ehrRecords": {
+    "medications": [
+     "trazodone"
+    ],
+    "labs": []
+   }
+  },
+  "HSP_v7_079": {
+   "sessionId": "HSP_v7_079",
+   "sourceIndex": 5,
+   "sleepIndex": {
+    "ahi": 22.985915492957744,
+    "odi": 3.380281690140845,
+    "rdi": 38.53521126760563,
+    "tst_min": 177.5,
+    "trt_min": 384.5,
+    "se": 46.16384915474642,
+    "sol_min": 79.0,
+    "waso_min": 127.5,
+    "rem_pct": 8.169014084507042,
+    "n1_pct": 33.52112676056338,
+    "n2_pct": 58.309859154929576,
+    "n3_pct": 0.0,
+    "mean_spo2": 94.12083841573464,
+    "nadir_spo2": 86.99473738670349,
+    "plmi": 107.49295774647888,
+    "ari": 35.49295774647887,
+    "sleep_transition_index": 39.88732394366197,
+    "n_awakenings": 30.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Respiratory failure"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "respiratory"
+   },
+   "ehrRecords": {
+    "medications": [
+     "atorvastatin",
+     "insulin"
+    ],
+    "labs": [
+     {
+      "name": "Alt",
+      "value": 5.0,
+      "abnormal": false
+     },
+     {
+      "name": "Bicarbonate",
+      "value": 21.0,
+      "abnormal": true
+     },
+     {
+      "name": "Calcium",
+      "value": 8.8,
+      "abnormal": false
+     },
+     {
+      "name": "Chloride",
+      "value": 110.0,
+      "abnormal": true
+     },
+     {
+      "name": "Cholesterol Total",
+      "value": 189.0,
+      "abnormal": false
+     },
+     {
+      "name": "Creatinine",
+      "value": 2.5,
+      "abnormal": true
+     },
+     {
+      "name": "Glucose",
+      "value": 500.0,
+      "abnormal": true
+     },
+     {
+      "name": "Hba1C",
+      "value": 8.0,
+      "abnormal": true
+     },
+     {
+      "name": "Hematocrit",
+      "value": 26.7,
+      "abnormal": true
+     },
+     {
+      "name": "Hemoglobin",
+      "value": 8.6,
+      "abnormal": true
+     },
+     {
+      "name": "Platelet",
+      "value": 127.0,
+      "abnormal": true
+     },
+     {
+      "name": "Potassium",
+      "value": 4.3,
+      "abnormal": false
+     },
+     {
+      "name": "Sodium",
+      "value": 147.0,
+      "abnormal": false
+     },
+     {
+      "name": "Triglycerides",
+      "value": 126.0,
+      "abnormal": false
+     },
+     {
+      "name": "Urea Nitrogen",
+      "value": 46.0,
+      "abnormal": true
+     },
+     {
+      "name": "Wbc",
+      "value": 5.4,
+      "abnormal": false
+     }
+    ]
+   }
+  },
+  "HSP_v7_085": {
+   "sessionId": "HSP_v7_085",
+   "sourceIndex": 6,
+   "sleepIndex": {
+    "ahi": 23.824604141291108,
+    "odi": 19.00121802679659,
+    "rdi": 36.54080389768575,
+    "tst_min": 410.5,
+    "trt_min": 530.0,
+    "se": 77.45283018867924,
+    "sol_min": 28.0,
+    "waso_min": 86.5,
+    "rem_pct": 28.25822168087698,
+    "n1_pct": 13.520097442143728,
+    "n2_pct": 45.43239951278928,
+    "n3_pct": 12.78928136419001,
+    "mean_spo2": 91.52859481528137,
+    "nadir_spo2": 57.21922516822815,
+    "plmi": 11.839220462850182,
+    "ari": 12.423873325213156,
+    "sleep_transition_index": 19.43970767356882,
+    "n_awakenings": 31.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Hypertensive heart and/or renal disease"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "circulatory"
+   },
+   "ehrRecords": {
+    "medications": [
+     "glipizide",
+     "trazodone"
+    ],
+    "labs": [
+     {
+      "name": "Alt",
+      "value": 21.0,
+      "abnormal": false
+     },
+     {
+      "name": "Bicarbonate",
+      "value": 27.0,
+      "abnormal": false
+     },
+     {
+      "name": "Calcium",
+      "value": 8.6,
+      "abnormal": false
+     },
+     {
+      "name": "Chloride",
+      "value": 98.0,
+      "abnormal": false
+     },
+     {
+      "name": "Creatinine",
+      "value": 1.1,
+      "abnormal": false
+     },
+     {
+      "name": "Eosinophil Abs",
+      "value": 1.6,
+      "abnormal": false
+     },
+     {
+      "name": "Glucose",
+      "value": 94.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hematocrit",
+      "value": 37.6,
+      "abnormal": true
+     },
+     {
+      "name": "Hemoglobin",
+      "value": 12.2,
+      "abnormal": true
+     },
+     {
+      "name": "Platelet",
+      "value": 205.0,
+      "abnormal": false
+     },
+     {
+      "name": "Potassium",
+      "value": 4.6,
+      "abnormal": false
+     },
+     {
+      "name": "Sodium",
+      "value": 137.0,
+      "abnormal": false
+     },
+     {
+      "name": "Urea Nitrogen",
+      "value": 14.0,
+      "abnormal": false
+     },
+     {
+      "name": "Wbc",
+      "value": 10.3,
+      "abnormal": true
+     }
+    ]
+   }
+  },
+  "HSP_v7_092": {
+   "sessionId": "HSP_v7_092",
+   "sourceIndex": 7,
+   "sleepIndex": {
+    "ahi": 6.775631500742942,
+    "odi": 0.0,
+    "rdi": 6.775631500742942,
+    "tst_min": 336.5,
+    "trt_min": 474.0,
+    "se": 70.9915611814346,
+    "sol_min": 27.0,
+    "waso_min": 110.5,
+    "rem_pct": 15.304606240713223,
+    "n1_pct": 6.240713224368499,
+    "n2_pct": 78.30609212481427,
+    "n3_pct": 0.1485884101040119,
+    "mean_spo2": 94.86984700962952,
+    "nadir_spo2": 91.67634582519533,
+    "plmi": 0.0,
+    "ari": 0.0,
+    "sleep_transition_index": 8.558692421991084,
+    "n_awakenings": 15.0
+   },
+   "futureDiseaseGroundTruth": [
+    "Depression"
+   ],
+   "selection": {
+    "cohortGroup": "risky",
+    "stratum": "mental"
+   },
+   "ehrRecords": {
+    "medications": [],
+    "labs": [
+     {
+      "name": "Alt",
+      "value": 22.0,
+      "abnormal": false
+     },
+     {
+      "name": "Bicarbonate",
+      "value": 24.0,
+      "abnormal": false
+     },
+     {
+      "name": "Calcium",
+      "value": 8.7,
+      "abnormal": false
+     },
+     {
+      "name": "Chloride",
+      "value": 109.0,
+      "abnormal": false
+     },
+     {
+      "name": "Cholesterol Total",
+      "value": 206.0,
+      "abnormal": false
+     },
+     {
+      "name": "Creatinine",
+      "value": 0.9,
+      "abnormal": null
+     },
+     {
+      "name": "Glucose",
+      "value": 103.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hdl",
+      "value": 47.0,
+      "abnormal": false
+     },
+     {
+      "name": "Hematocrit",
+      "value": 43.6,
+      "abnormal": false
+     },
+     {
+      "name": "Hemoglobin",
+      "value": 14.6,
+      "abnormal": false
+     },
+     {
+      "name": "Platelet",
+      "value": 341.0,
+      "abnormal": false
+     },
+     {
+      "name": "Potassium",
+      "value": 3.9,
+      "abnormal": false
+     },
+     {
+      "name": "Sodium",
+      "value": 140.0,
+      "abnormal": false
+     },
+     {
+      "name": "Triglycerides",
+      "value": 177.0,
+      "abnormal": false
+     },
+     {
+      "name": "Tsh",
+      "value": 0.24,
+      "abnormal": true
+     },
+     {
+      "name": "Urea Nitrogen",
+      "value": 17.0,
+      "abnormal": null
+     },
+     {
+      "name": "Wbc",
+      "value": 8.7,
+      "abnormal": false
+     }
+    ]
+   }
   }
+ },
+ "categoryOrder": [
+  "circulatory system",
+  "respiratory",
+  "endocrine/metabolic",
+  "neurological",
+  "mental disorders",
+  "musculoskeletal",
+  "digestive",
+  "genitourinary",
+  "sense organs",
+  "neoplasms",
+  "hematopoietic",
+  "dermatologic",
+  "congenital anomalies"
+ ],
+ "sleepIndexFields": [
+  "ahi",
+  "odi",
+  "rdi",
+  "tst_min",
+  "trt_min",
+  "se",
+  "sol_min",
+  "waso_min",
+  "rem_pct",
+  "n1_pct",
+  "n2_pct",
+  "n3_pct",
+  "mean_spo2",
+  "nadir_spo2",
+  "plmi",
+  "ari"
+ ],
+ "diseaseCategoryByName": {
+  "Abnormal involuntary movements": "neurological",
+  "Abnormal weight gain": "endocrine/metabolic",
+  "Abnormality of gait": "neurological",
+  "Acute and chronic tonsillitis": "respiratory",
+  "Allergic rhinitis": "respiratory",
+  "Altered mental status": "mental disorders",
+  "Anxiety disorder": "mental disorders",
+  "Asthma": "respiratory",
+  "Benign neoplasm of uterus": "neoplasms",
+  "Bipolar": "mental disorders",
+  "Cerebral ischemia": "circulatory system",
+  "Chronic airway obstruction": "respiratory",
+  "Chronic pharyngitis and nasopharyngitis": "respiratory",
+  "Chronic sinusitis": "respiratory",
+  "Chronic tonsillitis and adenoiditis": "respiratory",
+  "Circadian rhythm sleep disorder": "neurological",
+  "Coronary atherosclerosis": "circulatory system",
+  "Degeneration of intervertebral disc": "musculoskeletal",
+  "Depression": "mental disorders",
+  "Displacement of intervertebral disc": "musculoskeletal",
+  "Enthesopathy": "musculoskeletal",
+  "Esophagitis, GERD and related diseases": "digestive",
+  "Essential hypertension": "circulatory system",
+  "Extrapyramidal disease and abnormal movement disorders": "neurological",
+  "Hearing loss": "sense organs",
+  "Hyperlipidemia": "endocrine/metabolic",
+  "Hyperplasia of prostate": "genitourinary",
+  "Hypersomnia": "neurological",
+  "Hypertensive heart and/or renal disease": "circulatory system",
+  "Inflammatory and toxic neuropathy": "neurological",
+  "Insomnia": "neurological",
+  "Ischemic Heart Disease": "circulatory system",
+  "Memory loss": "mental disorders",
+  "Migraine": "neurological",
+  "Myocardial infarction": "circulatory system",
+  "Obesity": "endocrine/metabolic",
+  "Obstructive sleep apnea": "neurological",
+  "Occlusion of cerebral arteries": "circulatory system",
+  "Osteoarthritis; localized": "musculoskeletal",
+  "Peripheral enthesopathies and allied syndromes": "musculoskeletal",
+  "Pleurisy; pleural effusion": "respiratory",
+  "Septal Deviations/Turbinate Hypertrophy": "respiratory",
+  "Sleep disorders": "neurological",
+  "Sleep related movement disorders": "neurological",
+  "Tobacco use disorder": "mental disorders",
+  "Type 2 diabetes": "endocrine/metabolic",
+  "Uterine leiomyoma": "neoplasms",
+  "Vitamin D deficiency": "endocrine/metabolic",
+  "Iron deficiency anemias, unspecified or not due to blood loss": "circulatory system",
+  "Acute posthemorrhagic anemia": "circulatory system",
+  "Develomental delays and disorders": "circulatory system",
+  "Sensorineural hearing loss": "circulatory system",
+  "Mitral valve disease": "circulatory system",
+  "Nonrheumatic tricuspid valve disorders": "circulatory system",
+  "Other chronic ischemic heart disease, unspecified": "circulatory system",
+  "Primary/intrinsic cardiomyopathies": "circulatory system",
+  "Paroxysmal tachycardia, unspecified": "circulatory system",
+  "Atrial fibrillation and flutter": "circulatory system",
+  "Premature beats": "circulatory system",
+  "Congestive heart failure; nonhypertensive": "circulatory system",
+  "Heart failure NOS": "circulatory system",
+  "Atherosclerosis": "circulatory system",
+  "Atherosclerosis of aorta": "circulatory system",
+  "Respiratory failure": "circulatory system",
+  "Respiratory insufficiency": "circulatory system",
+  "Wheezing": "circulatory system",
+  "Difficulty in walking": "circulatory system",
+  "Cardiac congenital anomalies": "circulatory system",
+  "Type 1 diabetes": "circulatory system",
+  "Nonrheumatic mitral valve disorders": "circulatory system",
+  "Congestive heart failure (CHF) NOS": "circulatory system",
+  "Heart failure with reduced EF [Systolic or combined heart failure]": "circulatory system",
+  "Heart failure with preserved EF [Diastolic heart failure]": "circulatory system",
+  "Obstructive chronic bronchitis": "circulatory system",
+  "Dependence on respirator [Ventilator] or supplemental oxygen": "circulatory system",
+  "Senile cataract": "circulatory system",
+  "Hypoventilation": "circulatory system",
+  "Pruritus and related conditions": "circulatory system",
+  "Spinal stenosis": "circulatory system",
+  "Spondylosis without myelopathy": "circulatory system",
+  "Congestive heart failure": "circulatory system",
+  "Paroxysmal tachycardia": "circulatory system"
+ }
 }
