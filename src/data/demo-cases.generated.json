@@ -1,440 +1,437 @@
 [
-  {
-    "case_id": "HSP_v7_026",
-    "batch": "v611_r10",
-    "category": "endocrine/metabolic",
-    "demographics": {
-      "age": 39,
-      "sex": "M",
-      "bmi": 0,
-      "race": "other"
-    },
-    "ehr_history": [
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Epilepsy",
-      "Atrial fibrillation and flutter"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Your profile is predictive of **endocrine/metabolic** conditions, especially future **Obesity**, because **Obesity** is the strongest signal in your profile.\n\n**Detailed analysis:** Your PSG recording shows mild sleep-disordered breathing [AHI 5.7 events/h] and reduced sleep efficiency [79.4 percent], findings that can accompany metabolic risk in people with obesity-related sleep apnea patterns [1]. Your age and sex also fit the demographic context in which these risks can emerge, while your prior history is in the neurological area rather than the endocrine/metabolic area. Your profile also points to **Type 2 diabetes** as a condition to watch, because **6.37 %** HbA1c (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test) falls in the prediabetic range and adds concern about future glucose dysregulation [1]. Your profile also looks similar to other patients who later went on to take **inhaled steroids**, because the mild breathing disturbance in your PSG recording resembles an airway-related pattern seen in patients receiving respiratory treatment; this resemblance does not establish that you take them.\n\n**What this means for you:** At your next routine appointment, raise the profile\u2019s obesity and diabetes signals, ask to review your weight trend and glucose status, and discuss sustainable eating, activity, sleep, and alcohol habits that support metabolic health. Keep watch for persistent daytime sleepiness, worsening snoring, or continued weight gain, and mention these alongside your neurological-area history. These steps are reasonable because sleep-disordered breathing, obesity, hypertension, and diabetes can interact over time [2].\n\n## References\n\n1. Obstructive sleep apnea: a cardiometabolic risk in obesity and the metabolic syndrome \u2014 Journal of the American College of Cardiology 2013. https://pubmed.ncbi.nlm.nih.gov/23770180/\n2. Obstructive Sleep Apnea and Cardiometabolic Disease: Obesity, Hypertension, and Diabetes \u2014 Circulation Research 2025. https://pubmed.ncbi.nlm.nih.gov/40811500/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The new area to watch is **circulatory**, because your PSG recording shows mild sleep-disordered breathing [AHI 5.7 events/h], which is associated with future cardiovascular risk [1].\n\n**Detailed analysis:** Your PSG recording shows an AHI of 5.7 events/h, a mild sleep-disordered breathing finding, and evidence links sleep-disordered breathing with circulatory conditions such as high blood pressure and cardiovascular disease [1]. Your age of 39 makes this a long-term risk to monitor rather than evidence that you currently have a new circulatory condition. Your prior neurological history is relevant background, but the strongest new concern arising from your PSG recording is circulatory risk.\n\n**What this means for you:** At your next routine appointment, raise the AHI from your PSG recording and ask whether your blood pressure and overall circulatory risk should be reviewed, because cardiovascular guidance recognizes sleep-disordered breathing as relevant to that risk [1]. Keep track of repeated elevated blood-pressure readings and mention new chest discomfort with exertion, unusual breathlessness, or reduced exercise tolerance promptly. This supports steady prevention and awareness, not alarm.\n\n## References\n\n1. Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association \u2014 Circulation 2021. https://pubmed.ncbi.nlm.nih.gov/34148375/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The new area to watch is **endocrine/metabolic**, because your profile is predictive of **Hyperlipidemia** within six years and your PSG recording shows mild sleep-disordered breathing [AHI 5.7 events/h].\n\n**Detailed analysis:** Your profile marks **Hyperlipidemia** as the only new condition, while your PSG recording shows mild breathing disruption and reduced sleep efficiency [SE 79.4 percent]. Sleep health is linked with cardiometabolic risk, supporting this endocrine/metabolic inference [1]. Your age and male sex provide context for discussing prevention over the coming years. Your prior neurological-area history makes sleep quality relevant, but your profile does not point to a new neurological condition. The oxygenation shown by your PSG recording [Mean SpO2 99.0 percent] is reassuring when considering respiratory concerns.\n\n**What this means for you:** At your next routine appointment, mention that your profile is predictive of **Hyperlipidemia** and ask how your overall risk should be monitored. Regular sleep timing, adequate sleep, nutritious eating, and physical activity support cardiometabolic health as part of overall sleep health [1]. Raise persistent daytime sleepiness or worsening sleep quality at that appointment as well.\n\n## References\n\n1. Multidimensional Sleep Health: Definitions and Implications for Cardiometabolic Health: A Scientific Statement From the American Heart Association \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/40223596/\n2. Long-Term Outcomes in Sleeve Gastrectomy versus Roux-en-Y Gastric Bypass: A Systematic Review and Meta-Analysis of Randomized Trials \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/40622470/\n3. Metabolic Consequences of Obstructive Sleep Apnea in Adolescents with Obesity: A Systematic Literature Review and Meta-Analysis \u2014 PubMed 2017. https://pubmed.ncbi.nlm.nih.gov/27936906/\n4. CPAP in patients with obstructive sleep apnea and type 2 diabetes mellitus: Systematic review and meta-analysis \u2014 PubMed 2018. https://pubmed.ncbi.nlm.nih.gov/30073792/\n5. Semaglutide for adults living with obesity \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/41161683/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+ {
+  "case_id": "HSP_v7_000",
+  "batch": "v66w3_r8",
+  "category": "circulatory system",
+  "demographics": {
+   "age": 73,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "white"
   },
-  {
-    "case_id": "HSP_v7_034",
-    "batch": "v611_r10",
-    "category": "respiratory",
-    "demographics": {
-      "age": 62,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Septal Deviations/Turbinate Hypertrophy",
-      "Chronic sinusitis",
-      "Pleurisy; pleural effusion"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Your **respiratory** area is the one to watch because your profile is predictive of **Asthma** within six years, and your PSG recording shows moderate breathing disturbance [AHI 25.6 events/hour], a pattern relevant to respiratory risk [1].\n\n**Detailed analysis:** Your profile points specifically to **Asthma**, while it does not predict the other listed conditions within six years. Your PSG recording supplies the strongest clinical strand through its moderate AHI, and longitudinal research links obstructive sleep apnea with later respiratory disease patterns [1]. A separate long-term cohort found an association between obstructive lung disease and obstructive sleep apnea, supporting this respiratory inference [2]. Your demographics show that you are 62 and male, and your history includes conditions in the neurological area; those facts provide context for your sleep and health monitoring but do not replace the respiratory signal from your profile. This is a risk indication, not a diagnosis: your profile does not say that you have asthma now.\n\n**What this means for you:** Watch for recurring wheeze, cough, chest tightness, or breathlessness, especially during activity or after exposure to smoke, dust, or other irritants; asthma literature discusses exercise-related respiratory symptoms and their evaluation [3]. At your next routine appointment, raise any new or persistent breathing symptoms and discuss relevant tobacco-smoke, workplace, household, or seasonal exposures. Maintaining activity as tolerated and limiting avoidable smoke exposure are reasonable ways to support respiratory health [3]. Seek prompt care for severe or rapidly worsening breathing difficulty.\n\n## References\n\n1. Longitudinal risk factors for obstructive sleep apnea: A systematic review \u2014 PubMed 2023. https://pubmed.ncbi.nlm.nih.gov/37639973/\n2. Obstructive Lung Disease and Obstructive Sleep Apnea (OLDOSA) cohort study: 10-year assessment \u2014 PubMed 2020. https://pubmed.ncbi.nlm.nih.gov/31992433/\n3. The impact of exercise on asthma \u2014 PubMed 2019. https://pubmed.ncbi.nlm.nih.gov/30601152/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The new area to watch is **circulatory**, because your PSG recording shows moderate sleep-disordered breathing [AHI 25.6 events/hour], a pattern associated with cardiovascular risk factors in population research [1].\n\n**Detailed analysis:** Your PSG recording provides the first strand: the AHI falls in the moderate range, which supports concern about future circulatory risk. The second strand is disrupted sleep, reflected by poor sleep efficiency [SE 66.2 percent] and very low deep sleep [N3 0.9 percent of TST]; longitudinal research has linked sleep-apnea patterns with cardiovascular disease over time [2]. The third strand is your age of 62, since cardiovascular associations of sleep apnea vary with age and sex [1]. Together, these findings support watching for new high blood pressure and other circulatory conditions, without proving that either has developed. Future hypertension is the clearest specific risk to raise, because research describes sleep apnea as a risk factor for incident hypertension [3].\n\n**What this means for you:** At your next routine appointment, mention your PSG recording\u2019s AHI and ask to review your blood-pressure trend and overall cardiovascular risk. Because longitudinal research links sleep apnea with cardiovascular disease patterns [2], keeping sustained changes in blood pressure, weight, blood sugar, cholesterol, smoking, alcohol use, and activity under review is sensible. Your PSG recording is a reason for awareness, not alarm.\n\n## References\n\n1. Association between Obstructive Sleep Apnea and Cardiovascular Risk Factors: Variation by Age, Sex, and Race. The Multi-Ethnic Study of Atherosclerosis \u2014 PubMed 2018. https://pubmed.ncbi.nlm.nih.gov/29742365/\n2. Multi-level Phenotypic Models of Cardiovascular Disease and Obstructive Sleep Apnea Comorbidities: A Longitudinal Wisconsin Sleep Cohort Study \u2014 arXiv 2024. http://arxiv.org/abs/2406.18602v1\n3. Intelligent Incident Hypertension Prediction in Obstructive Sleep Apnea \u2014 arXiv 2025. http://arxiv.org/abs/2505.20615v1\n\n*clinical decision support, not a diagnosis*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "Your profile is predictive of **Insomnia**, making **neurological** the main area to watch because your PSG recording shows poor sleep efficiency [SE 66.2 percent] and very little deep sleep [N3 0.9 percent of TST] [1].\n\n**Detailed analysis:** Your age and your history in the neurological area add context to the fragmented sleep pattern, while your PSG recording also shows moderate breathing disruption [AHI 25.6 events/h]; together, these findings support watching for **Insomnia** over the coming years [1]. Your profile also points to **Depression** as a possible alternative area to monitor because persistent sleep problems in later life commonly overlap with mood difficulties [1]. Your profile makes **6.34 % HbA1c** an estimate in the prediabetic range (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test), adding a separate future risk of **Type 2 diabetes**. Your profile also looks similar to other patients who later went on to take **oral steroids**, and the breathing disturbance in your PSG recording is consistent with a respiratory vulnerability worth watching alongside insomnia.\n\n**What this means for you:** At your next routine appointment, raise ongoing difficulty falling or staying asleep, daytime effects, breathing-related symptoms during sleep, and changes in mood. It is also reasonable to discuss confirming the estimated HbA1c and following your general metabolic health. Keeping a simple record of sleep quality and daytime alertness can help show whether these concerns are persistent; older adults commonly experience changing sleep patterns that merit attention [1].\n\n## References\n\n1. Sleep disorders in the elderly: a growing challenge \u2014 PubMed 2018. https://pubmed.ncbi.nlm.nih.gov/29878472/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Hyperlipidemia",
+   "Acute posthemorrhagic anemia",
+   "Tobacco use disorder",
+   "Sleep disorders",
+   "Obstructive sleep apnea",
+   "Insomnia",
+   "Organic or persistent insomnia",
+   "Sleep related movement disorders",
+   "Nonrheumatic mitral valve disorders",
+   "Essential hypertension",
+   "Hypertensive heart and/or renal disease",
+   "Hypertensive chronic kidney disease",
+   "Atrioventricular [AV] block",
+   "Atrial fibrillation and flutter",
+   "Atrial fibrillation",
+   "Sinoatrial node dysfunction (Bradycardia)",
+   "Chronic renal failure [CKD]",
+   "Spinal stenosis",
+   "Spondylosis without myelopathy",
+   "Degeneration of intervertebral disc",
+   "Osteoarthritis; localized"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The area to watch is **circulatory**, particularly **Coronary atherosclerosis** and **Ischemic Heart Disease**, because your profile is predictive of both within six years.\n\n**Detailed analysis:** Your PSG recording shows frequent breathing-related disturbances [RDI 42.6 events/hour] alongside a mild apnea-hypopnea index [AHI 14.0 events/hour]. In men, sleep-disordered breathing has been associated with later coronary-related mortality, especially when breathing disturbance is severe, although that evidence came mainly from men aged 40\u201370, somewhat younger than you [1]. This supports attention to your future circulatory health without predicting that either condition will definitely occur.\n\nYour PSG recording also shows disrupted sleep, with reduced sleep efficiency [68.0%] and frequent awakenings [26.0]. In a cohort of men, frequently disturbed sleep was associated with later heart-disease events, so this pattern adds context to your profile\u2019s prediction [2]. Your cardiovascular history [prior Essential hypertension] makes these findings more relevant because blood-pressure strain can compound sleep-related cardiovascular stress.\n\nThe mild apnea-hypopnea index does not by itself settle the longer-term risk: research in people with obstructive sleep apnea found that a sleep-apnea-specific pulse-rate response, rather than event count alone, was associated with cardiovascular morbidity and mortality [3]. Your PSG recording could therefore reflect several contributors to cardiovascular risk, not a diagnosis of either future condition.\n\n**What this means for you:** At your next routine appointment, raise the frequent respiratory disturbances and disrupted sleep shown by your PSG recording, and ask whether your recent blood-pressure review and lipid testing are up to date; a recent result takes precedence. Ask what symptoms should prompt earlier assessment, particularly exertional chest discomfort or breathlessness. Review of cardiovascular risk factors is reasonable because disturbed sleep and sleep-disordered breathing have been linked with later heart-disease events [2,3].\n\n## References\n\n1. Sleep-disordered breathing and mortality: a prospective cohort study \u2014 PLoS Medicine 2009. https://pubmed.ncbi.nlm.nih.gov/19688045/\n2. Sleep disturbance, stroke, and heart disease events: evidence from the Caerphilly cohort \u2014 Journal of Epidemiology and Community Health 2006. https://pubmed.ncbi.nlm.nih.gov/16361457/\n3. The Sleep Apnea-Specific Pulse-Rate Response Predicts Cardiovascular Morbidity and Mortality \u2014 American Journal of Respiratory and Critical Care Medicine 2021. https://pubmed.ncbi.nlm.nih.gov/33406013/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "Your profile is predictive of **Ischemic Heart Disease** [3.6 times higher risk than men of your age] in the **circulatory** area, with your PSG recording\u2019s broken sleep providing the strongest reason because reduced sleep efficiency predicts cardiovascular events [1].\n\n**Detailed analysis:** Reduced sleep efficiency on your PSG recording means that a substantial part of your time in bed was spent awake [69%]. Your PSG recording also estimates frequent awakenings [2]. In a community population, extended wakefulness after sleep onset was associated with cardiovascular events and cardiovascular death, including a stronger association with cardiovascular death [1]. This makes fragmented sleep relevant to your future circulatory health, not merely to how rested you feel.\n\nYour profile is predictive of **Coronary atherosclerosis** [2.8 times higher risk than men of your age]. That prediction has greater practical importance alongside your cardiovascular history [prior Essential hypertension], because sleep-health characteristics have been studied as markers of later adverse outcomes in older men [3]. Your PSG recording therefore supports keeping coronary risk under routine review, while not establishing that disease is present now.\n\nThe overnight arousal-burden study found an association with long-term cardiovascular mortality in older adults, although the association was less strong in men [4]. Your PSG recording\u2019s broken-sleep pattern can have several contributors, so your profile is a risk signal rather than confirmation of a new condition; the estimated breathing pattern may be one contributor, but it does not by itself explain the full circulatory prediction.\n\n**What this means for you:** At your next routine appointment, ask to review the broken sleep and its cardiovascular implications, including a blood-pressure check and recent cholesterol results; a recent result takes precedence. Ask whether your cardiovascular risk assessment has considered coronary atherosclerosis. The link between prolonged wakefulness and cardiovascular outcomes supports addressing this sleep-related risk in routine follow-up [1].\n\n## References\n\n1. Objective Sleep Efficiency Predicts Cardiovascular Disease in a Community Population: The Sleep Heart Health Study \u2014 Journal of the American Heart Association 2021. https://pubmed.ncbi.nlm.nih.gov/33719504/\n3. Which Sleep Health Characteristics Predict All-Cause Mortality in Older Men? An Application of Flexible Multivariable Approaches \u2014 Sleep 2018. https://pubmed.ncbi.nlm.nih.gov/29165696/\n4. Sleep arousal burden is associated with long-term all-cause and cardiovascular mortality in 8001 community-dwelling older men and women \u2014 European Heart Journal 2021. https://pubmed.ncbi.nlm.nih.gov/33876221/\n\n*The data show a broken-sleep pattern and indicate clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The new area to watch is **circulatory**, especially **atrial fibrillation**, because central sleep-disordered breathing predicted this rhythm problem in older men [1].\n\n**Detailed analysis:** Your PSG recording showed repeated periods of reduced nasal airflow and an estimated slow overnight pulse [51.2 beats/min]. Because you have a sleep-related breathing history [prior Obstructive sleep apnea], these periods could reflect obstructive events, arousals, or signal variation rather than central breathing.\n\nOlder-men studies found sleep-disordered breathing to be common and associated with cardiovascular comorbidity [2,3]. A separate study found that central apnea and Cheyne\u2013Stokes breathing, rather than obstructive breathing alone, predicted atrial fibrillation in older men [1]. Your PSG recording therefore supports watching your heart rhythm, but it cannot establish which breathing pattern occurred or diagnose atrial fibrillation.\n\nYour slow estimated overnight pulse may occur during sleep without representing a disease, but its combination with breathing instability makes a rhythm check reasonable. A recent result in your records should take precedence over this estimate.\n\n**What this means for you:** At your next routine appointment, ask whether your PSG scoring showed central apnea or Cheyne\u2013Stokes breathing, and ask whether your pulse and rhythm need checking for intermittent atrial fibrillation [1]. Raise any new irregular heartbeat sensation, unexplained breathlessness, dizziness, or reduced exercise tolerance promptly, because these can be relevant symptoms when clinicians assess a possible rhythm disorder. Use any recent pulse or rhythm result as the more current information.\n\n## References\n\n1. Central Sleep-disordered Breathing Predicts Incident Atrial Fibrillation in Older Men \u2014 American Journal of Respiratory and Critical Care Medicine 2016. https://pubmed.ncbi.nlm.nih.gov/26595380/\n2. Prevalence and correlates of sleep-disordered breathing in older men: osteoporotic fractures in men sleep study \u2014 Journal of the American Geriatrics Society 2007. https://pubmed.ncbi.nlm.nih.gov/17767677/\n3. Sleep apnoea in Australian men: disease burden, co-morbidities, and correlates from the Australian longitudinal study of male health \u2014 BMC Public Health 2016. https://pubmed.ncbi.nlm.nih.gov/28185594/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_001",
+  "batch": "v66w3_r8",
+  "category": "endocrine/metabolic",
+  "demographics": {
+   "age": 62,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "white"
   },
-  {
-    "case_id": "HSP_v7_041",
-    "batch": "v611_r10",
-    "category": "endocrine/metabolic",
-    "demographics": {
-      "age": 52,
-      "sex": "F",
-      "bmi": 0,
-      "race": "black or african american",
-      "bp": "117/78"
-    },
-    "ehr_history": [
-      "Hyperlipidemia",
-      "Obesity",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Depression",
-      "Anxiety disorder",
-      "Sleep disorders",
-      "Hypersomnia",
-      "Obstructive sleep apnea",
-      "Insomnia",
-      "Sleep related movement disorders"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Your profile is predictive of **Tobacco use disorder**, making **mental** the area to watch most closely because your PSG recording shows mild sleep-disordered breathing [AHI 5.1 events/h], and smoking-related sleep problems are documented in the literature [1].\n\n**Detailed analysis:** Your PSG recording also shows mild oxygen dips [ODI 5.3 events/h] and borderline average oxygenation [Mean SpO2 93.4 percent]; sleep-disordered breathing and smoking can interact with cardiopulmonary risk [2][3]. Your medical history lists the mental, circulatory, endocrine/metabolic, and neurological areas, while your demographics are age 52, female, and Black or African American, so your profile\u2019s mental-area signal deserves attention without treating **Tobacco use disorder** as present. Your profile also estimates **HbA1c 6.47 %** in the prediabetic range (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test), which adds future **Type 2 diabetes** risk [4]. Your profile also looks similar to other patients who later went on to take **non-tricyclic antidepressants**, and the low REM proportion in your PSG recording [REM sleep ratio 13.0 percent] makes it reasonable to watch for emerging mental-health symptoms rather than interpret this resemblance as evidence of treatment.\n\n**What this means for you:** At your next routine appointment, raise tobacco exposure or urges to use tobacco, mood and anxiety changes, sleep-related breathing symptoms, blood-pressure concerns, and the estimated HbA1c. Ask whether the HbA1c estimate should be confirmed with laboratory measurement and discuss practical steps that reduce tobacco-related and cardiometabolic risk. Seek prompt care for severe breathlessness, chest discomfort, fainting, or sudden neurological changes.\n\n## References\n\n1. Smoking and sleep disorders \u2014 Archivos de bronconeumologia 2009. https://pubmed.ncbi.nlm.nih.gov/19501944/\n2. Interaction between smoking and obstructive sleep apnea: not just participants \u2014 Chinese medical journal 2012. https://pubmed.ncbi.nlm.nih.gov/22932197/\n3. Unobtrusive Reflectance Photoplethysmography for Detecting and Severity Grading of Sleep Apnea via Oxygen Desaturation Index \u2014 arXiv 2025. http://arxiv.org/abs/2507.08399v1\n4. Guidelines for the diagnosis and treatment of obstructive sleep apnea in adults (2025) \u2014 Zhonghua jie he he hu xi za zhi 2026. https://pubmed.ncbi.nlm.nih.gov/41820035/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your profile is predictive of future **Type 2 diabetes** in the **endocrine/metabolic** area, because your profile identifies it as the only new condition expected within six years.\n\n**Detailed analysis:** Your PSG recording showed mild sleep-disordered breathing [AHI 5.1 events/hour] and mild oxygen desaturation [ODI 5.3 events/hour], findings that support an inference of increased future diabetes risk because obstructive sleep apnea is associated with type 2 diabetes and its progression [1][2]. Your PSG recording also showed borderline average oxygenation [Mean SpO2 93.4 percent] and no measured deep sleep, adding evidence of disrupted overnight physiology. Your existing history in the endocrine/metabolic area, together with your age and demographic context, converges with your PSG recording and your profile\u2019s prediction; the circulatory, mental, and neurological history areas do not change which new condition your profile identifies.\n\n**What this means for you:** At your next routine appointment, raise your future **Type 2 diabetes** risk and ask what schedule for reviewing your blood sugar, weight, and blood pressure fits your overall health; comprehensive obesity-care guidance supports addressing modifiable lifestyle factors when relevant [3]. Aim for sustainable eating and regular physical activity that you can maintain, and mention persistent tiredness, increased thirst, or more frequent urination if these occur, because they warrant timely clinical discussion.\n\n## References\n\n1. Obstructive sleep apnea, prediabetes and progression of type\u20092 diabetes: A systematic review and meta-analysis \u2014 PubMed 2022. https://pubmed.ncbi.nlm.nih.gov/35302714/\n2. Association between Obstructive Sleep Apnea and Type 2 Diabetes Mellitus: A Dose-Response Meta-Analysis \u2014 PubMed 2021. https://pubmed.ncbi.nlm.nih.gov/34630603/\n3. AMERICAN ASSOCIATION OF CLINICAL ENDOCRINOLOGISTS AND AMERICAN COLLEGE OF ENDOCRINOLOGY COMPREHENSIVE CLINICAL PRACTICE GUIDELINES FOR MEDICAL CARE OF PATIENTS WITH OBESITY \u2014 PubMed 2016. https://pubmed.ncbi.nlm.nih.gov/27219496/\n4. Efficacy and Safety of GLP-1 RAs in Children and Adolescents With Obesity or Type 2 Diabetes: A Systematic Review and Meta-Analysis \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/40952752/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "Your main new area to watch is **circulatory**, because your PSG recording shows mild breathing-related events [AHI 5.1 events/h] and oxygen desaturations [ODI 5.3 events/h], which can contribute to future hypertension risk [1].\n\n**Detailed analysis:** Your PSG recording provides the first strand: repeated breathing disruption and intermittent oxygen lowering may stress blood-pressure regulation [1]. Your PSG recording also shows borderline average oxygenation [mean SpO2 93.4 percent], adding to the relevance of monitoring this area. At age 52, your demographics add background risk for developing high blood pressure, while your medical history already includes the circulatory, endocrine/metabolic, mental and neurological areas. Taken together, the clearest new condition to watch for is hypertension, rather than a diagnosis that can be made from your PSG recording. Your PSG recording therefore gives the strongest signal for circulatory monitoring, although your other history areas remain relevant to routine health review.\n\n**What this means for you:** At your next routine appointment, raise any repeated increase in blood-pressure readings and mention new exertional breathlessness, chest discomfort, palpitations, ankle swelling, snoring, witnessed breathing pauses or increasing daytime sleepiness because your PSG recording found breathing-related disruption. Maintaining a healthy weight and regular physical activity can reduce cardiometabolic risk [2]. Ask whether your usual blood-pressure monitoring and overall risk review should be adjusted in light of your PSG recording and medical history. Seek prompt medical attention for severe or sudden chest symptoms, fainting or marked breathlessness.\n\n## References\n\n1. Intelligent Incident Hypertension Prediction in Obstructive Sleep Apnea \u2014 arXiv 2025. http://arxiv.org/abs/2505.20615v1\n2. AMERICAN ASSOCIATION OF CLINICAL ENDOCRINOLOGISTS AND AMERICAN COLLEGE OF ENDOCRINOLOGY COMPREHENSIVE CLINICAL PRACTICE GUIDELINES FOR MEDICAL CARE OF PATIENTS WITH OBESITY \u2014 Endocrine Practice 2016. https://pubmed.ncbi.nlm.nih.gov/27219496/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Obesity",
+   "Depression",
+   "Major depressive disorder",
+   "Anxiety disorder",
+   "Sleep disorders",
+   "Obstructive sleep apnea",
+   "Peripheral enthesopathies and allied syndromes",
+   "Enthesopathy"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "**circulatory** is the main area to watch, because your PSG recording shows a breathing pattern associated with later cardiovascular risk in men in your age group [1,2].\n\n**Detailed analysis:** Your PSG recording contained repeated airflow reductions [102 episodes lasting 10\u2013120 seconds] and a median estimated pulse rate [87.3 beats/min]. The airflow pattern occurred with continuing respiratory effort, which supports obstructive rather than purely central breathing; because your respiratory history [prior Obstructive sleep apnea], it may represent persistent breathing-related stress rather than a new sleep diagnosis.\n\nAmong men aged 40\u201370, severe sleep-disordered breathing has been associated with mortality from coronary artery disease [1]. Separately, obstructive sleep-apnea risk in adults with obesity and blood-pressure risk has been associated with markers of early atherosclerosis [2]. These findings make future **coronary artery disease** reasonable to monitor, while your PSG recording alone cannot establish its severity or diagnose it.\n\nThe cardiovascular implication depends partly on the type of breathing abnormality: in older men, central apnea and Cheyne\u2013Stokes breathing, rather than an elevated obstructive event index, were associated with later heart-failure events [3]. That distinction is why the technician-scored event type and oxygen results matter more than the airflow estimate alone.\n\n**What this means for you:** At your next routine appointment, ask to review your recent blood-pressure, cholesterol and glucose results; a recent result takes precedence over the pulse estimate from your PSG recording. Ask whether the repeated airflow reductions warrant review of the scored obstructive, central and oxygen findings. Ask what cardiovascular-risk monitoring is appropriate, because obstructive sleep-apnea risk has been linked with subclinical atherosclerosis markers [2].\n\n## References\n\n1. Sleep-disordered breathing and mortality: a prospective cohort study \u2014 PLoS Medicine 2009. https://pubmed.ncbi.nlm.nih.gov/19688045/\n2. Obstructive sleep apnea risk and subclinical atherosclerosis in South Asians living in the United States \u2014 Sleep Health 2020. https://pubmed.ncbi.nlm.nih.gov/31699634/\n3. Sleep-disordered Breathing and Incident Heart Failure in Older Men \u2014 American Journal of Respiratory and Critical Care Medicine 2016. https://pubmed.ncbi.nlm.nih.gov/26502092/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "Your profile is predictive of **Hyperlipidemia** in the **endocrine/metabolic** area, and your PSG recording shows frequent breathing interruptions linked with abnormal cholesterol and triglyceride levels in adults with obstructive sleep apnea [1].\n\n**Detailed analysis:** Frequent breathing interruptions [AHI 41.1 events/hour] and repeated oxygen desaturation [ODI 37.8 events/hour] are the strongest links between your PSG recording and later lipid problems; studies of adults with obstructive sleep apnea found that greater severity and nocturnal hypoxemia accompany cardiometabolic complications [2,3].\n\nYour PSG recording also showed markedly disrupted sleep [Sleep Efficiency 68.9%]. Alongside your history [prior Obesity], this makes the lipid prediction more relevant because sleep architecture, sleep disruption, and nocturnal hypoxemia have each been associated with dyslipidemia in obstructive sleep apnea [2]. A separate adult database study found that obstructive sleep apnea severity was independently associated with cholesterol and triglyceride concentrations [1].\n\nThis pattern can also reflect your existing sleep-related breathing condition [prior Obstructive sleep apnea], so your PSG recording does not by itself establish that a lipid disorder has already developed; the relevant confirmation is a recent blood lipid result.\n\n**What this means for you:** At your next routine appointment, ask whether your recent cholesterol and triglyceride results have been reviewed, because a recent result takes precedence over a future-risk prediction. If no recent result is available, ask whether a lipid panel would be appropriate; this directly checks the condition identified by your profile and is relevant because obstructive sleep apnea severity has been linked with lipid levels [1]. Continue watching your routine records for a new abnormal lipid result.\n\n## References\n\n1. Obstructive sleep apnoea independently predicts lipid levels: Data from the European Sleep Apnea Database \u2014 Respirology 2018. https://pubmed.ncbi.nlm.nih.gov/30133061/\n2. Determinative sleep traits associated with dyslipidemia in obstructive sleep apnea patients \u2014 BMC Pulmonary Medicine 2025. https://pubmed.ncbi.nlm.nih.gov/40057676/\n3. Cardiometabolic comorbidities in obstructive sleep apnea patients are related to disease severity, nocturnal hypoxemia, and decreased sleep quality \u2014 Respiratory Research 2020. https://pubmed.ncbi.nlm.nih.gov/31996224/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "Your **endocrine/metabolic** area is the main one to watch: your profile is predictive of **Hyperlipidemia** [2 times higher risk than men of your age], consistent with the lipid disturbance associated with obstructive sleep apnea in clinical research [1].\n\n**Detailed analysis:** Frequent breathing interruptions [apnea-hypopnea index 26 events/hour] and repeated respiratory disturbances [respiratory disturbance index 54 events/hour] occurred in your PSG recording. Oxygen drops [oxygen desaturation index 19 events/hour] can produce intermittent hypoxia, which increased lipid-related insulin resistance in an experimental study of healthy adults, although that population did not have your history [2].\n\nA clinical study found that people with obstructive sleep apnea had less favourable cholesterol and triglyceride patterns even after obesity and diabetes were excluded [1]. Because your body-weight history [prior Obesity] affects this interpretation, that study\u2019s results cannot be transferred directly to you; importantly, its association with severity was clearer in women than men, so it supports a connection rather than proving that your PSG recording caused future Hyperlipidemia [1].\n\nYour sleep efficiency was low [71%], linking substantial wakefulness during your PSG recording with sleep disruption. A large cross-sectional study found that glucose-lipid abnormalities were associated with sleep fragmentation, particularly when breathing-related problems and oxygen changes were greater [3]. Your profile\u2019s six-year estimate places this condition\u2019s chance above that of comparable men [40.8% vs 19.9%].\n\n**What this means for you:** At your next routine appointment, ask about a lipid panel because your profile points to Hyperlipidemia and your PSG recording shows breathing-related disruption associated with lipid abnormalities [1,3]. If a recent lipid result is already in your records, it takes precedence over this estimate. Ask whether periodic lipid checks are appropriate, and mention any change in your breathing-related sleep history so the result can be interpreted alongside it.\n\n## References\n\n1. Dyslipidemia prevalence in nonobese, nondiabetic patients with obstructive sleep apnea: does sex matter? \u2014 Journal of Clinical Sleep Medicine 2023. https://pubmed.ncbi.nlm.nih.gov/36708260/\n2. Intermittent hypoxia increases lipid insulin resistance in healthy humans: A randomized crossover trial \u2014 Journal of Sleep Research 2025. https://pubmed.ncbi.nlm.nih.gov/38866393/\n3. Glucose-lipid metabolic dysregulation and sleep fragmentation in obstructive sleep apnea: insights from a large-scale cross-sectional study and exploratory hypoxia-related single-nucleus transcriptomic analysis \u2014 Frontiers in Nutrition 2026. https://pubmed.ncbi.nlm.nih.gov/42500234/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_023",
+  "batch": "v66w3_r8",
+  "category": "neurological",
+  "demographics": {
+   "age": 39,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "white"
   },
-  {
-    "case_id": "HSP_v7_043",
-    "batch": "v611_r10",
-    "category": "neurological",
-    "demographics": {
-      "age": 40,
-      "sex": "M",
-      "bmi": 0,
-      "race": "Unknown"
-    },
-    "ehr_history": [
-      "Type 2 diabetes",
-      "Hyperlipidemia",
-      "Obesity",
-      "Essential hypertension",
-      "Asthma"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "your profile is predictive of **Obstructive sleep apnea** and **Sleep disorders** in the **neurological** area because your PSG recording shows severe sleep-apnea burden [AHI 59.4 events/hour], a clinically meaningful severity measure [1].\n\n**Detailed analysis:** Your PSG recording shows severe sleep-apnea burden [AHI 59.4 events/hour], reduced sleep efficiency [82.7 percent], and no recorded deep sleep [N3 ratio 0.0 percent], so your profile points most strongly toward future **Obstructive sleep apnea** and **Sleep disorders**. Your profile is predictive of both conditions within six years, and that inference from your PSG recording is supported by research emphasizing that sleep-apnea severity is not captured by one measure alone [1]. Your medical history includes respiratory, circulatory, and endocrine/metabolic areas, so those areas are relevant context when you discuss possible effects of ongoing sleep-related problems with your clinician. At age 40, your profile supports watching for persistent sleep-related symptoms over the coming years rather than assuming that one night settles your future health.\n\n**What this means for you:** At your next routine appointment, bring your PSG recording results and raise the severe AHI and the predicted **Obstructive sleep apnea** and **Sleep disorders**. Mention loud or irregular snoring, witnessed breathing pauses, morning headaches, or daytime sleepiness if they occur, because these symptoms are relevant to obstructive sleep-apnea screening [2]. Keeping a regular sleep schedule and allowing enough time for sleep are reasonable preventive habits to discuss, while changes in your respiratory, circulatory, or endocrine/metabolic health are worth reporting because those areas are in your medical history.\n\n## References\n\n1. Metrics of sleep apnea severity: beyond the apnea-hypopnea index \u2014 Sleep 2021. https://pubmed.ncbi.nlm.nih.gov/33693939/\n2. STOP-Bang Questionnaire: A Practical Approach to Screen for Obstructive Sleep Apnea \u2014 Chest 2016. https://pubmed.ncbi.nlm.nih.gov/26378880/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The new area to watch is **neurological**, because your PSG recording showed severe sleep-disordered breathing [AHI 59.4 events/hour], a pattern associated with later cognitive impairment in cohort evidence [1].\n\n**Detailed analysis:** Your PSG recording also showed reduced sleep efficiency [82.7 percent] and no recorded deep sleep [N3 ratio 0.0 percent], findings that strengthen concern about the quality and restorative nature of your sleep. Taken together with your 40-year-old age and male demographics, the severe event burden makes future problems with memory, attention, or other cognitive abilities worth watching rather than assuming they are inevitable. Research reviews also link persistent sleep disturbance with progression of Alzheimer\u2019s-related disease processes [2]. Your history includes circulatory, endocrine/metabolic, and respiratory areas, but those are not new areas for you; the neurological area is the clearest new focus from your PSG recording.\n\n**What this means for you:** At your next routine appointment, raise the severe breathing-event burden shown by your PSG recording and ask whether your memory, concentration, daytime functioning, and sleep quality should be reviewed periodically. Mention any new forgetfulness, difficulty organizing familiar tasks, or persistent daytime sleepiness early. Keeping a simple record of such changes can help you and your clinician judge whether they are persistent, while maintaining attention to your existing circulatory, endocrine/metabolic, and respiratory health may also support long-term brain health. The association is a reason for awareness and follow-up, not a prediction that you will develop cognitive disease.\n\n## References\n\n1. Association between sleep apnoea and risk of cognitive impairment and Alzheimer's disease: a meta-analysis of cohort-based studies \u2014 Sleep & Breathing 2024. https://pubmed.ncbi.nlm.nih.gov/37857768/\n2. The Role of Sleep Disturbances in Alzheimer's Disease Progression: A Systematic Review \u2014 Cureus 2025. https://pubmed.ncbi.nlm.nih.gov/40688896/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "You should mainly watch for **neurological** conditions, especially **Obstructive sleep apnea**, because your profile is predictive of that condition and your PSG recording shows severe sleep-disordered breathing [AHI 59.4 events/hour], a pattern linked with future cardiovascular risk [1].\n\n**Detailed analysis:** Your PSG recording\u2019s severe AHI is the strongest strand, while reduced sleep efficiency [82.7 percent] and absent deep sleep [N3 ratio 0.0 percent] add evidence of disrupted sleep. Your history includes circulatory and respiratory areas, which makes the established relationship between obstructive sleep apnea and cardiovascular disease particularly relevant [1]. Your profile also points to possible future sleep-related conditions, but the neurological answer remains the clearest. Your profile estimates **HbA1c 6.21 %** (estimated from your PSG recording, not measured) in the prediabetic range; that adds future endocrine/metabolic risk and is worth discussing because diabetes classification uses recognized HbA1c bands [2]. Your profile also looks similar to other patients who later went on to take **inhaled steroids**, and the severe breathing-disruption pattern in your PSG recording is consistent with respiratory problems for which that class may be used.\n\n**What this means for you:** At your next routine appointment, raise the severe AHI, the estimated HbA1c, and your history in the circulatory, respiratory, and endocrine/metabolic areas. Ask how to reduce future cardiometabolic risk through sustainable activity, balanced nutrition, and avoiding tobacco, while keeping watch for persistent breathing-related sleep disruption and changes in daytime functioning [1][2].\n\n## References\n\n1. Obstructive sleep apnea and cardiovascular disease: a perspective and future directions \u2014 Progress in Cardiovascular Diseases 2009. https://pubmed.ncbi.nlm.nih.gov/19249449/\n2. Classification and Diagnosis of Diabetes \u2014 2018. https://pubmed.ncbi.nlm.nih.gov/33651569/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "Your **neurological** area is the priority because your profile is predictive of **Sleep disorders** [50% higher risk than men of your age].\n\n**Detailed analysis:** Your PSG recording estimates reduced sleep efficiency [sleep efficiency 79%] and mild-or-lower breathing disruption [apnea-hypopnea index 4 events/hour], while showing few oxygen dips [oxygen desaturation index about 0 events/hour]. Together, these findings point more toward a sleep-continuity problem than sustained overnight oxygen stress.\n\nYour profile also points to **Obstructive sleep apnea** [2.3 times higher risk than men of your age]. Recordings like yours are often followed by that diagnosis when symptoms or risk factors persist, although the estimated breathing index is not firmly diagnostic because its usual uncertainty is large. In adults, better sleep consolidation and the absence of obstructive sleep apnea were associated with better global cognition over five years [1]. Your profile\u2019s male comparison is also relevant because adult men and women can show different clinical and polysomnographic features of obstructive sleep apnea [2].\n\nYour profile\u2019s sleep-disorder signal should not be read as proof that you have a neurological disease today. A longitudinal study found that obstructive sleep apnea can have complex, potentially bidirectional links with Parkinson\u2019s disease, but it also emphasised that cause and effect remain uncertain [3]. That makes symptom-led reassessment more useful than assuming a future diagnosis.\n\n**What this means for you:** At your next routine appointment, raise the reduced sleep efficiency and ask whether your symptoms justify a clinical review for obstructive sleep apnea, especially if you develop loud snoring, witnessed breathing pauses, morning headaches, or persistent daytime sleepiness. Ask about a repeat overnight assessment if these symptoms emerge or worsen. Keep watch for continuing fragmented sleep, difficulty maintaining sleep, or daytime concentration problems; a recent result in your records takes precedence over this estimate.\n\n## References\n\n1. Sleep Architecture, Obstructive Sleep Apnea, and Cognitive Function in Adults \u2014 JAMA Network Open 2023. https://pubmed.ncbi.nlm.nih.gov/37462968/\n2. Sex differences in clinical and polysomnographic features of obstructive sleep apnea: The Turkish sleep apnea database (TURKAPNE) cohort \u2014 Sleep Medicine 2025. https://pubmed.ncbi.nlm.nih.gov/39721358/\n3. Obstructive Sleep Apnea and Parkinson's Disease: Bidirectional Clinical and Pathophysiologic Links \u2014 International Journal of Molecular Sciences 2025. https://pubmed.ncbi.nlm.nih.gov/40332389/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "Your main new condition to watch is **circulatory**\u2014**hypertension**, because obstructive sleep apnea becomes more common with age and is associated with cardiovascular disease in adult populations [1,2].\n\n**Detailed analysis:** Your PSG recording captured snoring [snore microphone], and you are a 39-year-old man; that combination makes future upper-airway obstruction worth checking. Obstructive sleep apnea increased continuously with age in an adult population study [1], while a cohort of veterans found disordered sleep associated with **hypertension** and cardiovascular disease [2]. These findings support awareness, not a diagnosis from your PSG recording.\n\nThe snoring signal alone could reflect simple snoring rather than obstructive sleep apnea. Snoring predicted obstructive sleep apnea in a population with resistant **hypertension**, but that study involved an older, higher-risk group than you [3]. This difference limits how strongly that result applies to you and makes routine blood-pressure tracking more useful than assuming a disease from snoring alone.\n\nYour PSG recording therefore points to a condition worth monitoring indirectly: future **hypertension** could emerge if sleep-related airway obstruction develops. A clinician\u2019s review of the scored breathing events would clarify whether the snoring had obstructive features; a recent result takes precedence over this interpretation.\n\n**What this means for you:** At your next routine appointment, ask to review your blood-pressure trend and the breathing-event interpretation from your PSG recording. Raise persistent loud snoring, witnessed breathing pauses, gasping, or troublesome daytime sleepiness, because those symptoms would make obstructive sleep apnea more important to reassess [1]. Ask whether a repeat blood-pressure measurement or further breathing assessment is appropriate if these features develop.\n\n## References\n\n1. Prevalence and association analysis of obstructive sleep apnea with gender and age differences - Results of SHIP-Trend \u2014 Journal of Sleep Research 2019. https://pubmed.ncbi.nlm.nih.gov/30272383/\n2. Insomnia, Sleep Apnea, and Incidence of Hypertension and Cardiovascular Disease Among Men and Women US Veterans \u2014 Journal of the American Heart Association 2025. https://pubmed.ncbi.nlm.nih.gov/41378507/\n3. Obstructive sleep apnea: the most common secondary cause of hypertension associated with resistant hypertension \u2014 Hypertension 2011. https://pubmed.ncbi.nlm.nih.gov/21968750/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The main area highlighted is **neurological**, because your profile is predictive of **Obstructive sleep apnea**, **Insomnia**, and **Sleep disorders**, while your PSG recording shows repeated breathing interruptions and broken sleep.\n\n**Detailed analysis:** Repeated breathing interruptions [AHI 16.3 events/hour], reduced sleep efficiency [79.5%], and frequent awakenings [22.0] make your PSG recording resemble recordings often followed by breathing-related sleep diagnoses. Your profile is predictive of **Obstructive sleep apnea**, so these findings support watching for persistent snoring, witnessed pauses in breathing, morning headaches, or daytime sleepiness rather than treating the result as an isolated night.\n\nVery little deep sleep [1.0% of TST] alongside disrupted sleep continuity shows difficulty maintaining consolidated sleep in your PSG recording. Your profile is predictive of **Insomnia**, and a prospective study of young working adults found that insomnia was commonly previously undiagnosed and was associated with loss of workplace productivity [1]. This makes difficulty falling asleep, repeated waking, early waking, or impaired daytime concentration useful symptoms to track.\n\nA study of post-9/11 Veterans found that combined insomnia and sleep apnea carried the greatest subsequent hypertension and cardiovascular-disease risk [2]; because that population differs from you in background and may differ in age, this is a reason for routine monitoring rather than a prediction that you will develop those conditions. A separate study linked increasing age with combined insomnia and sleep apnea in elderly patients [3], so it does not establish your course at age 39 but supports reassessing sleep symptoms as the years pass.\n\n**What this means for you:** At your next routine appointment, raise the breathing interruptions and disrupted sleep shown by your PSG recording, and ask whether a recent result takes precedence. Ask about a clinical assessment for **Obstructive sleep apnea** if breathing pauses or daytime sleepiness continue, and an assessment for **Insomnia** if persistent difficulty sleeping affects daytime function. Ask about routine blood-pressure measurement because combined insomnia and sleep apnea has been associated with later cardiovascular risk in a different population [2].\n\n## References\n\n1. Insomnia and workplace productivity loss among young working adults: a prospective observational study of clinical sleep disorders in a community cohort \u2014 The Medical Journal of Australia 2023. https://pubmed.ncbi.nlm.nih.gov/37357134/\n2. Insomnia, Sleep Apnea, and Incidence of Hypertension and Cardiovascular Disease Among Men and Women US Veterans \u2014 Journal of the American Heart Association 2025. https://pubmed.ncbi.nlm.nih.gov/41378507/\n3. Association between age and comorbid insomnia and sleep apnea \u2014 Sleep Medicine 2024. https://pubmed.ncbi.nlm.nih.gov/39531785/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_053",
+  "batch": "v66w3_r8",
+  "category": "neurological",
+  "demographics": {
+   "age": 68,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "black or african american"
   },
-  {
-    "case_id": "HSP_v7_045",
-    "batch": "v611_r10",
-    "category": "circulatory system",
-    "demographics": {
-      "age": 60,
-      "sex": "M",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Hyperlipidemia",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Sleep related movement disorders",
-      "Inflammatory and toxic neuropathy",
-      "Hearing loss",
-      "Sensorineural hearing loss",
-      "Spinal stenosis",
-      "Spondylosis without myelopathy",
-      "Displacement of intervertebral disc"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Your profile is predictive of **mental** conditions, particularly **Tobacco use disorder**, because your profile points most strongly to that condition.\n\n**Detailed analysis:** Your PSG recording shows poor sleep efficiency [SE 63.8 percent] and frequent arousals [ArI 26.1 events/hour], findings that support watching for **Anxiety disorder** and **Depression**, since persistent insomnia-related disruption can contribute to emotional dysregulation and later anxiety or depression [1]. Your age, sex, prior endocrine/metabolic history and prior neurological history add context to this risk, while your profile identifies the mental area as the strongest destination. Your profile also estimates **HbA1c 6.53 %** (estimated from your PSG recording, not measured\u2014worth confirming with a lab test) in the diabetic range; this raises additional concern for future **Type 2 diabetes**, because HbA1c around this threshold can help identify diabetes but should be confirmed appropriately [2]. Your profile also looks similar to other patients who later went on to take **non-tricyclic antidepressants**, and the inefficient, arousal-heavy sleep in your PSG recording is consistent with the mood-related risk your profile identifies.\n\n**What this means for you:** At your next routine appointment, raise the frequent arousals, disrupted sleep, tobacco exposure or urges, and the estimated HbA1c. Watch for persistent low mood, excessive worry, loss of interest, concentration changes, or increasing tobacco use, and discuss these early because your profile identifies them as future risks. Discuss practical steps to reduce tobacco exposure, support regular sleep, and protect metabolic health; your profile\u2019s estimated HbA1c makes glucose follow-up especially worthwhile.\n\n## References\n\n1. Chronic insomnia, REM sleep instability and emotional dysregulation: A pathway to anxiety and depression? \u2014 Journal of Sleep Research 2025. https://pubmed.ncbi.nlm.nih.gov/38811745/\n2. Diagnostic accuracy of tests for type 2 diabetes and prediabetes: A systematic review and meta-analysis \u2014 PLOS ONE 2020. https://pubmed.ncbi.nlm.nih.gov/33216783/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your profile is predictive of **circulatory** conditions, particularly **Coronary atherosclerosis** and **Ischemic Heart Disease**, because your profile marks both as conditions that may develop within six years.\n\n**Detailed analysis:** Your PSG recording shows marked sleep fragmentation, with a high [ArI 26.1 events/hour] and poor [SE 63.8 percent]. Alongside your demographics as a 60-year-old man, these findings make the circulatory area the most important one to monitor; clinical reviews describe disrupted sleep as relevant to cardiovascular risk [1]. Your medical history includes endocrine/metabolic and neurological areas, which makes it sensible to include those areas when reviewing your overall risk, although your profile does not predict a new condition in either area. Your PSG recording does not show a pattern of frequent breathing interruptions, so the concern comes from the profile\u2019s circulatory prediction and the broader sleep-fragmentation context, not from a breathing-disorder diagnosis.\n\n**What this means for you:** At your next routine appointment, raise your profile\u2019s prediction and ask to review established cardiovascular risk factors, including blood pressure, cholesterol, glucose, tobacco exposure, activity, weight, and diet; prevention guidance supports this type of comprehensive risk review [2]. Keep track of persistent changes in sleep or daytime functioning and mention them alongside your cardiovascular risk review. This prediction is a reason for steady prevention and monitoring, not a diagnosis that you currently have.\n\n## References\n\n1. Sleep and Cardiovascular Risk \u2014 Sleep Medicine Clinics 2021. https://pubmed.ncbi.nlm.nih.gov/34325825/\n2. 2019 ACC/AHA Guideline on the Primary Prevention of Cardiovascular Disease: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines \u2014 Circulation 2019. https://pubmed.ncbi.nlm.nih.gov/30879355/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "You should watch most closely in **neurological** health, because your PSG recording shows frequent sleep disruption [arousal index 26.1 events/hour] alongside poor sleep efficiency and no recorded deep sleep, a pattern relevant to later cognitive vulnerability in older adults [1].\n\n**Detailed analysis:** Your PSG recording shows [sleep efficiency 63.8 percent], [N3 ratio 0.0 percent], [REM ratio 10.9 percent], and [arousal index 26.1 events/hour], so the clearest signal is disrupted sleep structure rather than inadequate breathing. Your age of 60 and medical history in the neurological and endocrine/metabolic areas add context for watching future neurological changes, while age-related changes in sleep architecture are recognized in older adults [2]. Your PSG recording shows [AHI 2.0 events/hour], [ODI 0.2 events/hour], and [mean SpO2 94.7 percent], making a new respiratory condition a less prominent concern from these data. This does not establish a neurological condition; it identifies cognitive or other neurological change as worth noticing over time, consistent with evidence linking multidomain sleep vulnerability with later cognitive decline [1].\n\n**What this means for you:** At your next routine appointment, raise any persistent change in memory, attention, balance, coordination, sensation, or daytime functioning, and mention ongoing fragmented or unrefreshing sleep because sleep vulnerability and cognition can be related in later life [1]. Keeping a simple note of when these changes begin and whether they persist may help you describe them accurately. Your PSG recording is reassuring about the breathing-related measures reported above, but future symptoms\u2014not one night alone\u2014should guide further discussion.\n\n## References\n\n1. A multidomain sleep-brain vulnerability index predicts delirium and long-term cognitive decline in hospitalized older adults \u2014 PubMed 2026. https://pubmed.ncbi.nlm.nih.gov/41999484/\n2. Sleep health in the older adults: Architecture, circadian changes, and common sleep disorders \u2014 PubMed 2026. https://pubmed.ncbi.nlm.nih.gov/41825783/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Hyperlipidemia",
+   "Hypercholesterolemia",
+   "Mixed hyperlipidemia",
+   "Tobacco use disorder",
+   "Sleep disorders",
+   "Insomnia",
+   "Nonrheumatic mitral valve disorders",
+   "Nonrheumatic aortic valve disorders",
+   "Nonrheumatic tricuspid valve disorders",
+   "Nonrheumatic pulmonary valve disorders",
+   "Essential hypertension",
+   "Hypertensive heart and/or renal disease",
+   "Hypertensive chronic kidney disease",
+   "Ischemic Heart Disease",
+   "Myocardial infarction",
+   "Coronary atherosclerosis",
+   "Other chronic ischemic heart disease, unspecified",
+   "Primary/intrinsic cardiomyopathies",
+   "Atrial fibrillation and flutter",
+   "Atrial fibrillation",
+   "Atrial flutter",
+   "Congestive heart failure; nonhypertensive",
+   "Congestive heart failure (CHF) NOS",
+   "Heart failure NOS",
+   "Heart failure with reduced EF [Systolic or combined heart failure]",
+   "Heart failure with preserved EF [Diastolic heart failure]",
+   "Atherosclerosis",
+   "Peripheral vascular disease, unspecified",
+   "Pleurisy; pleural effusion",
+   "Esophagitis, GERD and related diseases",
+   "GERD",
+   "Chronic renal failure [CKD]",
+   "Hyperplasia of prostate"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The clearest new area is **neurological**, because your profile is predictive of **Obstructive sleep apnea**, and recordings like your PSG recording are often followed by that diagnosis.\n\n**Detailed analysis:** Frequent breathing interruptions [AHI 24.1 events/hour] and respiratory disturbances [RDI 39.3 events/hour] occur alongside repeated oxygen drops [ODI 21.5 events/hour]. Your PSG recording therefore shows a substantial breathing-related sleep pattern, while your profile is predictive of the same diagnosis. Physiological consequences of this pattern have predicted later blood-sugar disease in a historical cohort of people with obstructive sleep apnea [1], so a routine glucose result remains relevant even though your profile does not point to that condition.\n\nReduced REM sleep [REM sleep ratio 8.6% of TST] and frequent awakenings [40.0 awakenings] help explain why your sleep may feel fragmented. With prior sleep disturbance [prior Insomnia], your PSG recording resembles the combined insomnia and sleep-breathing pattern studied in older men, which was associated with later blood-sugar disease [2]. The Sleep Heart Health Study also found that sleep disturbances were associated with poorer physical quality of life across racial and ethnic groups, with existing health conditions changing that relationship [3]. These findings support monitoring how sleep-related breathing affects daytime function, while your profile keeps the main concern focused on the breathing diagnosis.\n\nThe evidence does not support automatically screening every symptom-free adult for this diagnosis [4], but your PSG recording and your profile provide patient-specific reasons to review it with your doctor.\n\n**What this means for you:** At your next routine appointment, ask whether a recent result already in your records takes precedence and whether your breathing-related sleep findings need clinical confirmation. Raise witnessed pauses in breathing, loud snoring, morning headaches, or worsening daytime sleepiness if they occur. Ask about a current glucose result because sleep-breathing impairment combined with insomnia has been linked with later blood-sugar disease in older men [2]. Also discuss any decline in daytime physical functioning, since sleep disturbance and existing health conditions can interact [3].\n\n## References\n\n1. Obstructive sleep apnea and incident diabetes. A historical cohort study \u2014 American Journal of Respiratory and Critical Care Medicine 2014. https://pubmed.ncbi.nlm.nih.gov/24897551/\n2. Redefining Comorbid Insomnia and Sleep Apnea: The Association of Sleep Breathing Impairment and Insomnia with Incident Diabetes \u2014 Annals of the American Thoracic Society 2023. https://pubmed.ncbi.nlm.nih.gov/37695743/\n3. Sleep disturbances, quality of life, and ethnicity: the Sleep Heart Health Study \u2014 Journal of Clinical Sleep Medicine 2010. https://pubmed.ncbi.nlm.nih.gov/20411696/\n4. Screening for Obstructive Sleep Apnea in Adults: US Preventive Services Task Force Recommendation Statement \u2014 JAMA 2022. https://pubmed.ncbi.nlm.nih.gov/36378202/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "The new area to discuss is **respiratory**, because **obstructive sleep apnea** is a diagnosis that recordings like your PSG recording are often followed by when snoring and changing breathing effort appear.\n\n**Detailed analysis:** Snoring and changing thoracic and abdominal effort appear during your PSG recording [snore microphone; thoracic and abdominal effort belts]. That pattern supports asking whether obstructive breathing is occurring during sleep, rather than assuming that all breathing instability has the same cause.\n\nYour PSG recording should also be interpreted alongside your heart-failure history [prior Congestive heart failure; nonhypertensive], because a study of older men found that central sleep apnea or Cheyne\u2013Stokes breathing, rather than obstructive event frequency, was associated with later heart-failure decompensation or clinical heart failure [1]. This makes distinguishing central from obstructive events important for you.\n\nYour history [prior Insomnia] matters because a large veteran cohort found that combined insomnia and sleep apnea carried the greatest subsequent hypertension and cardiovascular-disease risk, although that population was younger and not directly equivalent to you [2]. A hypertension-and-sleep-apnea cohort also found primary aldosteronism frequently enough to support consideration of targeted testing, while noting that older adults were underrepresented [3].\n\n**What this means for you:** At your next routine appointment, ask for a review of the scored obstructive-apnea index, central-apnea index, oxygen-desaturation findings, and whether the breathing pattern suggests Cheyne\u2013Stokes breathing; the most recent clinical result takes precedence. Ask whether your blood-pressure pattern warrants testing for primary aldosteronism, especially if hypertension is difficult to control. Watch for worsening snoring, witnessed pauses, gasping, morning headaches, or increasing daytime sleepiness, and report these symptoms.\n\n## References\n\n1. Sleep-Disordered Breathing and Incident Heart Failure in Older Men \u2014 American Journal of Respiratory and Critical Care Medicine 2016. https://pubmed.ncbi.nlm.nih.gov/26502092/\n2. Insomnia, Sleep Apnea, and Incidence of Hypertension and Cardiovascular Disease Among Men and Women US Veterans \u2014 Journal of the American Heart Association 2025. https://pubmed.ncbi.nlm.nih.gov/41378507/\n3. Prevalence of primary aldosteronism in patients with concomitant hypertension and obstructive sleep apnea, baseline data of a cohort \u2014 Hypertension Research 2023. https://pubmed.ncbi.nlm.nih.gov/36882631/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The strongest new condition in the **neurological** area is **Obstructive sleep apnea**: recordings like your PSG recording are often followed by that diagnosis, and your profile is predictive of it [25 times higher risk than men of your age].\n\n**Detailed analysis:** Frequent breathing interruptions are prominent on your PSG recording [apnea-hypopnea index 37 events/hour]. Repeated oxygen drops also occur on your PSG recording [oxygen desaturation index 28 events/hour]. Together, these findings support taking your profile\u2019s prediction seriously, while recognising that a scored clinical assessment would confirm the diagnosis.\n\nYour night resembles those of people recently prescribed diuretics (water pills such as furosemide or hydrochlorothiazide) [5.6 times as likely as other patients here to have a recent prescription]. Alongside your cardiovascular history [prior Congestive heart failure; nonhypertensive], this raises a plausible mechanism: in men with heart failure, fluid can move from the legs toward the neck during sleep and narrow the airway, contributing to obstructive sleep apnea [1]. This leg-to-neck relationship has been demonstrated more clearly in men than women with heart failure [2].\n\nYour profile is predictive of **Type 2 diabetes** [3.2 times higher risk than men of your age], and your night resembles those of people recently prescribed oral diabetes medications (such as metformin or glipizide) [2 times as likely as other patients here to have a recent prescription]. In a cohort of men, severe obstructive sleep apnea and overnight oxygen depletion were each associated with newly developing Type 2 diabetes [3], so your PSG recording\u2019s breathing interruptions and oxygen drops make this a reasonable condition to monitor.\n\n**What this means for you:** At your next routine appointment, ask whether a recent or updated assessment for **Obstructive sleep apnea** is needed, because recordings like your PSG recording are often followed by that diagnosis. Ask for a recent HbA1c or equivalent blood-sugar check because your breathing-interruption and oxygen-drop pattern is linked with future Type 2 diabetes in men [3]. A recent result takes precedence. Also ask whether your fluid-retention history changes how your nighttime breathing should be assessed.\n\n## References\n\n1. Nocturnal rostral fluid shift: a unifying concept for the pathogenesis of obstructive and central sleep apnea in men with heart failure \u2014 Circulation 2010. https://pubmed.ncbi.nlm.nih.gov/20351237/\n2. Differing relationship of nocturnal fluid shifts to sleep apnea in men and women with heart failure \u2014 Circulation: Heart Failure 2012. https://pubmed.ncbi.nlm.nih.gov/22679060/\n3. Nocturnal Hypoxemia and Severe Obstructive Sleep Apnea are Associated with Incident Type 2 Diabetes in a Population Cohort of Men \u2014 Journal of Clinical Sleep Medicine 2015. https://pubmed.ncbi.nlm.nih.gov/25766697/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_054",
+  "batch": "v66w3_r8",
+  "category": "respiratory",
+  "demographics": {
+   "age": 26,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "white"
   },
-  {
-    "case_id": "HSP_v7_059",
-    "batch": "v611_r10",
-    "category": "respiratory",
-    "demographics": {
-      "age": 35,
-      "sex": "F",
-      "bmi": 0,
-      "race": "black or african american",
-      "bp": "134/84"
-    },
-    "ehr_history": [
-      "Obesity",
-      "pc_278.11_dx",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Depression",
-      "Anxiety disorder",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Epilepsy",
-      "Essential hypertension",
-      "Allergic rhinitis"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Your **respiratory** health is the area to watch most closely because your profile is predictive of **Acute and chronic tonsillitis** and **Chronic tonsillitis and adenoiditis** within six years, while your PSG recording shows severe breathing disruption [AHI 61.1 events/hour; ODI 58.2 events/hour].\n\n**Detailed analysis:** Your PSG recording shows repeated breathing interruptions with severe oxygen desaturation and a low average oxygen level [mean SpO2 90.0 percent], providing the strongest physiological reason to focus on the respiratory area. Your prior respiratory-area history adds relevant context, while your profile points specifically to **Acute and chronic tonsillitis** and **Chronic tonsillitis and adenoiditis**, rather than the circulatory, endocrine/metabolic, mental, neurological, or other respiratory conditions listed. Evidence linking upper-airway disease with sleep-related breathing problems supports this inference from your PSG recording and your profile [1][2]. Your age and sex provide the demographic context, but the profile\u2019s respiratory prediction is the clearest guide.\n\n**What this means for you:** At your next routine appointment, raise recurrent sore throats, enlarged tonsils, nasal blockage, mouth breathing, or persistent snoring, and mention the severe breathing and oxygen findings from your PSG recording; these symptoms and findings are relevant when considering upper-airway inflammation or obstruction [1][2]. Keep a record of repeated throat or nasal symptoms and seek timely medical attention if breathing becomes difficult while awake, because your profile identifies respiratory conditions as the main area to monitor.\n\n## References\n\n1. Allergic Rhinitis and Its Effect on Sleep \u2014 PubMed 2024. https://pubmed.ncbi.nlm.nih.gov/37867109/\n2. Adenotonsillectomy Reduces Obstructive Sleep Apnea and Improves Sleep Quality in Adult Patients \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/40318698/\n\n*clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your new area to watch is **circulatory**, because your PSG recording shows severe breathing disruption [AHI 61.1 events/hour] and oxygen burden [ODI 58.2 events/hour; mean SpO2 90.0 percent], a pattern associated with later cardiovascular disease and high blood pressure [1].\n\n**Detailed analysis:** Your PSG recording provides the strongest signal: frequent events and low overnight oxygen exposure. Your medical history already includes the circulatory area, so future changes in blood pressure or heart-and-blood-vessel health deserve attention rather than assuming they are explained by your existing history; sleep-disordered breathing is linked with hypertension and cardiovascular risk [1][2]. Your demographics identify you as a 35-year-old woman, which makes this a longer-term risk to monitor, not a claim that you currently have a new circulatory condition. The short sleep opportunity and poor sleep efficiency [sleep efficiency 67.8 percent] add context, but the oxygen and breathing findings are the main reasons this area stands out.\n\n**What this means for you:** At your next routine appointment, raise the severe findings from your PSG recording and ask how your circulatory risk should be followed over time, including changes in blood pressure and symptoms such as chest discomfort, fainting, or unusual breathlessness. Risk-reducing habits\u2014avoiding tobacco, keeping alcohol modest, staying physically active, and maintaining a healthy weight\u2014are reasonable parts of cardiovascular prevention [1]. Seek prompt medical attention for severe or sudden symptoms rather than waiting for a routine visit.\n\n## References\n\n1. Association and Risk Factors for Obstructive Sleep Apnea and Cardiovascular Diseases: A Systematic Review \u2014 PubMed 2021. https://pubmed.ncbi.nlm.nih.gov/34940026/\n2. Obstructive Sleep Apnea and Hypertension: Updates to a Critical Relationship \u2014 PubMed 2022. https://pubmed.ncbi.nlm.nih.gov/35246797/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch most closely is **endocrine/metabolic**, because your profile is predictive of **Hyperlipidemia**, and your PSG recording shows severe breathing-related oxygen disruption [ODI 58.2 events/hour; mean SpO2 90.0 percent], which supports future cardiometabolic risk [1].\n\n**Detailed analysis:** Your profile points most strongly to **Hyperlipidemia** for the years ahead. Your PSG recording also shows severe sleep-disordered breathing [AHI 61.1 events/hour], and this pattern is associated with cardiovascular and metabolic complications [1][2]. Your history includes the endocrine/metabolic area, which makes lipid and glucose trends especially worth watching, while your profile also identifies **Heart failure NOS** as a circulatory condition to keep in view. Your profile estimates **6.45 % HbA1c** in the prediabetic range (estimated from your PSG recording, not measured\u2014worth confirming with a laboratory measurement), adding concern about future **Type 2 diabetes** [2]. Your profile also looks similar to other patients who later went on to take **oral steroids**, and the severe oxygen disruption on your PSG recording is consistent with the metabolic and circulatory risks described above.\n\n**What this means for you:** At your next routine appointment, raise the severe breathing and oxygen findings from your PSG recording and ask to review your cholesterol, blood pressure, and glucose trends, because your profile and PSG recording together support monitoring those areas [1][2]. Confirm the estimated HbA1c with laboratory blood work and discuss sustainable steps that support metabolic health and reduce tobacco exposure, taking your existing history areas into account.\n\n## References\n\n1. Obstructive sleep apnea and cardiovascular disease: a perspective and future directions \u2014 Progress in Cardiovascular Diseases 2009. https://pubmed.ncbi.nlm.nih.gov/19249449/\n2. Slow-wave sleep and obstructive sleep apnea in patients with type 2 diabetes mellitus \u2014 Sleep & Breathing 2022. https://pubmed.ncbi.nlm.nih.gov/34383276/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Anxiety disorder",
+   "Migraine",
+   "Occlusion of cerebral arteries",
+   "Cerebral artery occlusion, with cerebral infarction"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The main area to watch is **circulatory**, particularly future **hypertension**, because young adults diagnosed with obstructive sleep apnea have increased cardiovascular-event risk [1].\n\n**Detailed analysis:** Your ECG-derived average pulse [61.7 beats/min] across the recording [8.6 hours]. That measurement is a baseline rather than evidence of hypertension; blood pressure, not sleep pulse alone, establishes that condition.\n\nThe relevant longer-term link is conditional: if clinically confirmed obstructive sleep apnea develops, young adults have shown increased cardiovascular risk, including events that also occur in older adults [1]. This does not mean your PSG recording predicts such an event, but it makes future blood-pressure trends worth following.\n\nAge changes the interpretation of any later breathing-related result: obstructive sleep apnea becomes more common with increasing age [2], while research in men has linked diagnosed sleep apnea with cardiovascular and metabolic conditions, although that evidence is drawn mainly from older men rather than someone your age [3]. In people younger than 35 who already have hypertension, obstructive sleep apnea is common, so either condition should prompt attention to the other [4].\n\n**What this means for you:** At routine appointments, ask for blood-pressure checks over time and review any recent result, which takes precedence over a single overnight pulse estimate. If repeated elevated blood pressure appears, ask whether a review for sleep-related breathing is appropriate; if clinically significant sleep apnea is later confirmed, ask how your cardiovascular risk should be monitored [1,4]. Keep watch for persistent high readings and raise them rather than waiting for symptoms.\n\n## References\n\n1. Cardiovascular Risk in Young Patients Diagnosed With Obstructive Sleep Apnea \u2014 Journal of the American Heart Association 2024. https://pubmed.ncbi.nlm.nih.gov/38563371/\n2. Prevalence and association analysis of obstructive sleep apnea with gender and age differences - Results of SHIP-Trend \u2014 Journal of Sleep Research 2019. https://pubmed.ncbi.nlm.nih.gov/30272383/\n3. Sleep apnoea in Australian men: disease burden, co-morbidities, and correlates from the Australian longitudinal study on male health \u2014 BMC Public Health 2016. https://pubmed.ncbi.nlm.nih.gov/28185594/\n4. How common is obstructive sleep apnea in young hypertensive patients? \u2014 Internal and Emergency Medicine 2020. https://pubmed.ncbi.nlm.nih.gov/31970622/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "The **neurological** area is the main one to watch because your profile is predictive of **sleep disorders** [50% higher risk than men of your age].\n\n**Detailed analysis:** Your PSG recording estimates that you spent most of the night asleep [sleep efficiency 86%] and had repeated changes between sleep stages [sleep-stage transitions 11 per hour of sleep]. In young men, including a study population younger than you, chronic sleep disturbance was associated with poorer self-rated health, suggesting that persistent difficulty falling or staying asleep deserves attention even when breathing findings are limited [1].\n\nYour profile is predictive of **insomnia** [30% higher risk than men of your age]. If repeated difficulty falling asleep, staying asleep, or feeling restored develops, recordings like your PSG recording are often followed by an insomnia diagnosis; insomnia can persist over several years in adults [2].\n\nYour PSG recording shows few oxygen desaturations [oxygen desaturation index 1 events/hour]. That makes future concerns more symptom-led than centred on repeated oxygen loss, while young-adult research found that sleep disorders were often previously undiagnosed and that insomnia was linked with work-related difficulties [3]. This is a reason to notice changes rather than assume the current night explains every future problem.\n\n**What this means for you:** At your next routine appointment, raise persistent trouble falling or staying asleep, repeated awakenings, unrefreshing sleep, or daytime concentration problems. Ask about a clinical assessment for insomnia when those symptoms are persistent; a recent result takes precedence. Also mention any worsening daytime effects, because young-adult research found that insomnia can affect functioning [3]. Recordings like your PSG recording do not by themselves establish a future diagnosis.\n\n## References\n\n1. Chronic sleep disturbance, not chronic sleep deprivation, is associated with self-rated health in adolescents \u2014 Preventive Medicine 2019. https://pubmed.ncbi.nlm.nih.gov/31026473/\n2. Incidence, Persistence, and Remission Rates of Insomnia Over 5 Years \u2014 JAMA Network Open 2020. https://pubmed.ncbi.nlm.nih.gov/33156345/\n3. Insomnia and workplace productivity loss among young working adults: a prospective observational study of clinical sleep disorders in a community cohort \u2014 Medical Journal of Australia 2023. https://pubmed.ncbi.nlm.nih.gov/37357134/\n\n*The data show a sleep-related risk pattern and indicate monitoring for symptoms; clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "Your **respiratory** health is the area to watch because your profile is predictive of **Allergic rhinitis** and **Asthma**.\n\n**Detailed analysis:** Your PSG recording showed less consolidated sleep [Sleep Efficiency 83.8%] and repeated stage shifts [Sleep-stage transitions 11.6 per hour of sleep]. Your profile is predictive of **Allergic rhinitis** and **Asthma**, making new nasal or lower-airway symptoms the most relevant changes to notice. Because your mental-health history [prior Anxiety disorder] can affect sleep quality, it is also reasonable to ask whether changes in sleep quality coincide with anxiety symptoms rather than assuming they reflect a new respiratory illness.\n\nIn a seven-year cohort of young adults, adult-onset asthma was more likely among people with allergic rhinitis [1]. A 20-year birth-cohort study found that coexisting allergic conditions became increasingly common from adolescence into adulthood in both males and females [2]. Together, these findings support watching the two predicted conditions as related respiratory developments, while your profile\u2014not your PSG recording alone\u2014provides the future-risk signal.\n\nYour PSG recording showed few breathing interruptions [Apnea-Hypopnea Index 0.4 events/hour] and few oxygen dips [Oxygen Desaturation Index 0.0 events/hour]. Allergic rhinitis can nevertheless affect sleep and predispose people to more abnormal breathing measurements in other settings [3], so a new nasal pattern could change how a later PSG recording is interpreted.\n\n**What this means for you:** Watch for persistent nasal congestion, sneezing or itchy eyes, and for recurrent cough, wheeze or breathlessness. At your next routine appointment, raise any such symptoms and ask whether allergy assessment or breathing tests would clarify **Allergic rhinitis** or **Asthma**; the young-adult cohort specifically linked rhinitis with later adult-onset asthma [1]. If a recent result is already in your records, it should take precedence.\n\n## References\n\n1. Incidence of asthma and mortality in a cohort of young adults: a 7-year prospective study \u2014 Respiratory Research 2005. https://pubmed.ncbi.nlm.nih.gov/16105170/\n2. Allergic multimorbidity of asthma, rhinitis and eczema over 20 years in the German birth cohort MAS \u2014 Pediatric Allergy and Immunology 2015. https://pubmed.ncbi.nlm.nih.gov/26011739/\n3. Allergic and nonallergic rhinitis: the threat for obstructive sleep apnea \u2014 Annals of Allergy, Asthma & Immunology 2009. https://pubmed.ncbi.nlm.nih.gov/19663122/\n\n*The data show fragmented sleep with minimal breathing and oxygen disturbance; they indicate respiratory conditions to monitor, not a diagnosis. Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_079",
+  "batch": "v66w3_r8",
+  "category": "respiratory",
+  "demographics": {
+   "age": 79,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "other"
   },
-  {
-    "case_id": "HSP_v7_062",
-    "batch": "v611_r10",
-    "category": "mental disorders",
-    "demographics": {
-      "age": 25,
-      "sex": "F",
-      "bmi": 0,
-      "race": "black or african american",
-      "bp": "136/82"
-    },
-    "ehr_history": [
-      "Type 2 diabetes",
-      "Obesity",
-      "pc_278.11_dx",
-      "Iron deficiency anemias, unspecified or not due to blood loss",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Sleep related movement disorders",
-      "Migraine",
-      "Essential hypertension",
-      "Ischemic Heart Disease"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The new area to watch is **mental**: your profile is predictive of **Anxiety disorder** and **Depression** within six years.\n\n**Detailed analysis:** Your profile is predictive of **Anxiety disorder** and **Depression**, whereas your profile does not predict the listed new conditions in the circulatory, endocrine/metabolic, neurological, or respiratory areas. Your PSG recording shows mild breathing disruption [AHI 6.8 events/hour] and mild oxygen desaturation [ODI 7.1 events/hour], findings that support considering future sleep and mood symptoms together [1]. Your PSG recording also shows [Mean SpO2 95.6 percent] and [SE 95.7 percent], describing preserved average overnight oxygenation and sleep continuity. Your history includes mental and respiratory areas, so future mood or sleep-related changes deserve attention in that context. This is an inference from your profile and your PSG recording, not evidence that either condition is present; mood-related symptoms and sleep-related breathing features can overlap in people evaluated for obstructive sleep apnea [2].\n\n**What this means for you:** Because your profile is predictive of **Anxiety disorder** and **Depression**, raise persistent worry, low mood, loss of interest, irritability, reduced concentration, or distress related to sleep at your next routine appointment. Mention meaningful changes in snoring, witnessed breathing pauses, daytime sleepiness, or morning headaches alongside your PSG recording. Seek prompt help if severe mood symptoms or thoughts of self-harm arise.\n\n## References\n\n1. Screening of Obstructive Sleep Apnea with Empirical Mode Decomposition of Pulse Oximetry \u2014 arXiv 2014. http://arxiv.org/abs/1405.7843v1\n2. [Gender differences in clinical features and performance of sleep questionnaires in adults with obstructive sleep apnea syndrome] \u2014 Revista medica de Chile 2019. https://pubmed.ncbi.nlm.nih.gov/32186637/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your PSG recording makes **circulatory** health the main area to watch, because its mild breathing disturbance may contribute to future cardiovascular disease risk [1].\n\n**Detailed analysis:** Your PSG recording shows mild sleep-disordered breathing, with [AHI 6.8 events/hour] and [ODI 7.1 events/hour], so a new circulatory condition\u2014particularly elevated blood pressure\u2014is worth watching over time. Your history already includes circulatory, endocrine/metabolic, neurological, and respiratory areas; those areas provide context but do not establish a new condition. The link between sleep-disordered breathing and cardiovascular disease is described in the medical literature [1], while research indicates that age and existing cardiovascular or cerebrovascular conditions affect the significance of mild-to-moderate disease [2]. At age 25, this is a reason for awareness rather than alarm.\n\n**What this means for you:** At your next routine appointment, raise your PSG recording\u2019s mild breathing findings and ask whether your blood pressure and broader metabolic risk deserve review over time. Keep track of persistent symptoms such as unusual daytime sleepiness, morning headaches, or new breathlessness, and mention changes rather than assuming they are sleep-related. Healthy eating, regular physical activity, and maintaining a healthy weight are reasonable preventive priorities because a lifestyle intervention improved cardiometabolic measures in adults with obstructive sleep apnea [3].\n\n## References\n\n1. Impact of obstructive sleep apnoea on diabetes and cardiovascular disease \u2014 PubMed 2013. https://pubmed.ncbi.nlm.nih.gov/24138362/\n2. Mild-to-moderate obstructive sleep apnea and mortality risk in a general population sample: The modifying effect of age and cardiovascular/cerebrovascular comorbidity \u2014 PubMed 2024. https://pubmed.ncbi.nlm.nih.gov/37203593/\n3. Sustained improvements in the cardiometabolic profile of patients with obstructive sleep apnea after a weight-loss Mediterranean diet/lifestyle intervention: 12-month follow-up (6 months post-intervention) of the \"MIMOSA\" randomized clinical trial \u2014 PubMed 2023. https://pubmed.ncbi.nlm.nih.gov/36958969/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The **mental** area is the main one to watch: your profile is predictive of **Depression**, and your PSG recording shows mild sleep-related breathing disruption [AHI 6.8 events/hour; ODI 7.1 events/hour], a pattern associated with later depression in longitudinal research [1].\n\n**Detailed analysis:** Your profile points most strongly to **Depression**, while your history includes the mental area, making persistent changes in mood, interest, or daily functioning worth noticing. Your PSG recording supports this concern through its mild AHI and ODI findings. Your profile also estimates **HbA1c 6.33 %** in the prediabetic range (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test), adding future endocrine/metabolic risk; sleep-related breathing disorders are associated with metabolic risk [2]. Your profile also looks similar to other patients who later went on to take **oral steroids**, and the breathing-disruption pattern in your PSG recording is consistent with the respiratory context represented by that class; this resemblance does not mean you take it.\n\n**What this means for you:** At your next routine appointment, raise persistent low mood, loss of interest, daytime sleepiness, or worsening breathing-related symptoms, and ask to review the estimated HbA1c with a confirmed measurement. Regular sleep and wake times, physical activity, avoiding tobacco, and maintaining supportive social contact are reasonable ways to support mood and metabolic health. Your profile is not a diagnosis, and mild findings do not mean you will necessarily develop these conditions.\n\n## References\n\n1. The relative association of obstructive sleep apnea, obesity and excessive daytime sleepiness with incident depression: a longitudinal, population-based study \u2014 International Journal of Obesity (2005), 2016. https://pubmed.ncbi.nlm.nih.gov/27143032/\n2. Apnea Burden-Guided Framework: Enhancing Out-of-Distribution Generalization in PPG-Based Sleep Apnea Characterization \u2014 arXiv, 2026. http://arxiv.org/abs/2608.12229v1\n\n*clinical decision support, not a diagnosis*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Type 2 diabetes",
+   "Type 2 diabetes with renal manifestations",
+   "Type 2 diabetes with neurological manifestations",
+   "Diabetes type 2 with peripheral circulatory disorders",
+   "Diabetic retinopathy",
+   "Vitamin D deficiency",
+   "Hyperlipidemia",
+   "Mixed hyperlipidemia",
+   "Obesity",
+   "Abnormal weight gain",
+   "Iron deficiency anemias, unspecified or not due to blood loss",
+   "Anxiety disorder",
+   "Sleep disorders",
+   "Obstructive sleep apnea",
+   "Insomnia",
+   "Organic or persistent insomnia",
+   "Circadian rhythm sleep disorder",
+   "Extrapyramidal disease and abnormal movement disorders",
+   "Glaucoma",
+   "Mitral valve disease",
+   "Nonrheumatic mitral valve disorders",
+   "Nonrheumatic aortic valve disorders",
+   "Nonrheumatic tricuspid valve disorders",
+   "Essential hypertension",
+   "Hypertensive heart and/or renal disease",
+   "Hypertensive heart disease",
+   "Hypertensive chronic kidney disease",
+   "Ischemic Heart Disease",
+   "Myocardial infarction",
+   "Coronary atherosclerosis",
+   "Other chronic ischemic heart disease, unspecified",
+   "Chronic pulmonary heart disease",
+   "Primary/intrinsic cardiomyopathies",
+   "Cardiac defibrillator in situ",
+   "Paroxysmal tachycardia, unspecified",
+   "Paroxysmal ventricular tachycardia",
+   "Congestive heart failure; nonhypertensive",
+   "Congestive heart failure (CHF) NOS",
+   "Heart failure NOS",
+   "Heart failure with reduced EF [Systolic or combined heart failure]",
+   "Heart failure with preserved EF [Diastolic heart failure]",
+   "Aortic aneurysm",
+   "Peripheral vascular disease, unspecified",
+   "Wheezing",
+   "Esophagitis, GERD and related diseases",
+   "GERD",
+   "Chronic renal failure [CKD]",
+   "Hyperplasia of prostate",
+   "Pruritus and related conditions",
+   "Spinal stenosis",
+   "Peripheral enthesopathies and allied syndromes",
+   "Enthesopathy",
+   "Osteoarthritis; localized",
+   "Osteoarthrosis, localized, primary",
+   "Difficulty in walking",
+   "Cardiac congenital anomalies",
+   "Cardiac shunt/ heart septal defect",
+   "Congenital anomalies of great vessels"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The area to watch is **respiratory**, especially **Respiratory failure**, because congestive cardiac failure is an important cause of respiratory failure in adults over 40 [1].\n\n**Detailed analysis:** Your PSG recording shows markedly reduced sleep efficiency [sleep efficiency 48%] and an estimated burden of breathing disturbances [AHI 19 events/hour]. Together, these findings make your profile\u2019s respiratory prediction worth discussing, although your PSG recording alone cannot identify the eventual cause.\n\nYour heart history [prior Congestive heart failure; nonhypertensive] changes how this pattern reads: population research found congestive cardiac failure to be an important cause of hypercapnic respiratory failure in adults over 40, whereas obstructive sleep apnea was not an important cause in that analysis [1]. Your profile also points to raised long-term blood sugar [50% more likely than other tested patients to have an HbA1c in the diabetes range]. Because your history includes [prior Type 2 diabetes], this is mainly context: diabetes is associated with decreased lung function, although the direction and mechanism remain uncertain [2]. Lower lung function could leave less reserve if breathing problems develop.\n\nRespiratory failure can have several causes, and research shows that no single cause explains most cases; systematic assessment of potentially contributing conditions can improve detection of treatable problems [3]. Thus, your profile is a reason to monitor respiratory health, not evidence that you have developed this condition now.\n\n**What this means for you:** At your next routine appointment, ask to review any recent oxygen-saturation and lung-function results, and whether checking carbon dioxide is appropriate; a recent result takes precedence over your profile. Ask how your prior Congestive heart failure; nonhypertensive and prior Type 2 diabetes may affect breathing reserve. Raise any new breathlessness, morning headaches, or unusual daytime sleepiness promptly.\n\n## References\n\n1. Causes of hypercapnic respiratory failure: a population-based case-control study \u2014 BMC Pulmonary Medicine 2023. https://pubmed.ncbi.nlm.nih.gov/37710243/\n2. Systematic review of the association between lung function and Type 2 diabetes mellitus \u2014 Diabetic Medicine 2010. https://pubmed.ncbi.nlm.nih.gov/20722670/\n3. Causes of hypercapnic respiratory failure and associated in-hospital mortality \u2014 Respirology 2023. https://pubmed.ncbi.nlm.nih.gov/36210347/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "Based on your PSG recording, the main new condition to watch for is **circulatory** **atrial fibrillation**, because sleep-disordered breathing and sleep-related hypoxia have been linked with new atrial fibrillation in older men [1,2].\n\n**Detailed analysis:** Your PSG recording showed a usually steady pulse [median pulse rate 73.8 beats/minute] with periods of faster pulse [95th-percentile pulse rate 106.7 beats/minute]. Your PSG recording also included brief low-airflow periods [1.1% of recording time]. Together, these findings make the breathing\u2013heart-rhythm link worth checking, although airflow changes alone cannot establish whether the breathing pattern was obstructive, central, or associated with clinically important hypoxia; the American Heart Association describes these distinctions as important when assessing cardiovascular risk [3].\n\nYour age and sex [79-year-old man] make the finding particularly relevant because central sleep-disordered breathing predicted incident atrial fibrillation in older men [1]. The concern is also more personal because your cardiovascular history [prior Ischemic Heart Disease] increases the importance of identifying a new irregular rhythm; a clinical cohort found that sleep-related hypoxia remained associated with incident atrial fibrillation after accounting for pulmonary function [2].\n\nYour PSG recording may also help clarify whether the breathing pattern carries longer-term cardiac risk: in men, the hypoxic burden of sleep apnea was associated with incident heart failure after adjustment for other risk factors [4]. That finding does not establish a new diagnosis for you, but it supports reviewing the complete scored report rather than relying on airflow alone.\n\n**What this means for you:** At your next routine appointment, raise the faster pulse periods and ask whether a recent ECG or rhythm assessment already answers the atrial-fibrillation question; a recent result takes precedence. Ask to review your PSG recording\u2019s scored breathing events and oxygen results, because those findings determine whether sleep-related hypoxia needs follow-up [3,2]. Watch for a new irregular heartbeat, sustained racing pulse, unexplained breathlessness, or reduced exercise tolerance and report these promptly [3].\n\n## References\n\n1. Central Sleep-disordered Breathing Predicts Incident Atrial Fibrillation in Older Men \u2014 American Journal of Respiratory and Critical Care Medicine 2016. https://pubmed.ncbi.nlm.nih.gov/26595380/\n2. Sleep-Disordered Breathing, Hypoxia, and Pulmonary Physiologic Influences in Atrial Fibrillation \u2014 Journal of the American Heart Association 2023. https://pubmed.ncbi.nlm.nih.gov/37947123/\n3. Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association \u2014 Circulation 2021. https://pubmed.ncbi.nlm.nih.gov/34148375/\n4. The Sleep Apnea-Specific Hypoxic Burden Predicts Incident Heart Failure \u2014 Chest 2020. https://pubmed.ncbi.nlm.nih.gov/32298733/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The main area to watch is **respiratory**, because your profile is predictive of **respiratory failure** within the next six years.\n\n**Detailed analysis:** Your PSG recording shows frequent breathing interruptions [AHI 23.0 events/hour] and more numerous respiratory disturbances [RDI 38.5 events/hour]. In sleep-apnoea patients, greater breathing severity interacted with obesity and lung disease in ways associated with higher mortality [1]; your body-size history [prior Obesity] therefore makes this breathing burden worth monitoring over time.\n\nYour PSG recording also shows few oxygen dips [ODI 3.4 events/hour] alongside frequent respiratory disturbances. This combination can reflect airflow limitation that repeatedly disrupts breathing before sustained oxygen impairment, so it does not by itself establish respiratory failure today. In patients with obstructive sleep apnoea having major surgery, greater sleep-related hypoxic burden was associated with postoperative death and cardiovascular complications, although that study concerned perioperative patients rather than long-term progression [2]. This supports checking whether oxygenation changes during future illness or procedures.\n\nA related consideration is your existing cardiovascular and renal vulnerability [prior Hypertensive heart and/or renal disease]. A study of people with obstructive sleep apnoea found that autonomic responses to respiratory events helped predict chronic kidney disease progression [3], so respiratory follow-up can reasonably include attention to kidney results as well.\n\n**What this means for you:** At routine appointments, raise any new or worsening breathing limitation, reduced activity tolerance, or changes in overnight oxygen readings. Ask whether a recent oxygen result takes precedence and whether repeat overnight oxygen assessment or breathing-function checks are appropriate if your symptoms change. Ask about kidney blood-test monitoring because your PSG recording and existing history create a related reason to follow renal health. If you become acutely short of breath or confused, seek urgent medical help.\n\n## References\n\n1. Mortality risk factors in sleep apnoea: a matched case-control study \u2014 Journal of Sleep Research 2007. https://pubmed.ncbi.nlm.nih.gov/17309772/\n2. Sleep Apnea-Specific Hypoxic Burden and Postoperative Outcomes of Major Noncardiothoracic Surgery \u2014 JAMA Network Open 2026. https://pubmed.ncbi.nlm.nih.gov/41733912/\n3. Autonomic responses to respiratory events and risk of chronic kidney disease in obstructive sleep apnea \u2014 Journal of Clinical Sleep Medicine 2025. https://pubmed.ncbi.nlm.nih.gov/40878145/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_085",
+  "batch": "v66w3_r8",
+  "category": "circulatory system",
+  "demographics": {
+   "age": 58,
+   "sex": "M",
+   "bmi": 0.0,
+   "race": "white"
   },
-  {
-    "case_id": "HSP_v7_070",
-    "batch": "v611_r10",
-    "category": "circulatory system",
-    "demographics": {
-      "age": 52,
-      "sex": "F",
-      "bmi": 0,
-      "race": "black or african american",
-      "bp": "109/76"
-    },
-    "ehr_history": [
-      "Hyperlipidemia",
-      "pc_272.11_dx",
-      "Obesity",
-      "Depression",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Essential hypertension",
-      "Ischemic Heart Disease",
-      "Coronary atherosclerosis",
-      "Congestive heart failure; nonhypertensive"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "Based on your profile, watch the **circulatory** area\u2014especially **Heart failure NOS** and **Hypertensive heart and/or renal disease**\u2014because your profile predicts both conditions within six years.\n\n**Detailed analysis:** Your profile\u2019s circulatory predictions align with your prior history in the circulatory area and your age of 52. Your PSG recording shows moderate sleep-disordered breathing, with [AHI 19.1 events/hour] and [ODI 19.4 events/hour]; research links obstructive sleep apnea with cardiovascular disorders, including hypertension and heart failure [1]. Your profile therefore points to these two new circulatory conditions for the years ahead, rather than treating your PSG recording as evidence that either condition is present now. The association between sleep-disordered breathing and cardiovascular risk also supports keeping circulatory health under review [2].\n\n**What this means for you:** At your next routine appointment, bring your PSG recording and ask to review your blood pressure, cardiovascular risk factors, and any new breathlessness, swelling, reduced exercise tolerance, or chest discomfort. Ask which changes should prompt earlier medical attention. Continue your usual preventive care and mention any change in sleep-related symptoms, because cardiovascular disorders are recognized among conditions associated with obstructive sleep apnea [3].\n\n## References\n\n1. Obstructive sleep apnea, cardiovascular disease, and pulmonary hypertension \u2014 Proceedings of the American Thoracic Society 2008. https://pubmed.ncbi.nlm.nih.gov/18250213/\n2. Obstructive sleep apnea, obesity, and the risk of incident atrial fibrillation \u2014 Journal of the American College of Cardiology 2007. https://pubmed.ncbi.nlm.nih.gov/17276180/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "Your main area to watch is **circulatory**, because your PSG recording shows moderate breathing-related events and oxygen desaturations [AHI 19.1 events/hour; ODI 19.4 events/hour], a pattern associated with later hypertension [1].\n\n**Detailed analysis:** Your PSG recording\u2019s moderate AHI and ODI provide the strongest finding: repeated breathing-related disruption and oxygen drops are linked with increased future blood-pressure risk [1]. Your demographics show that you are 52 years old, and your medical history includes the circulatory area, so this risk deserves continued attention without implying that your PSG recording proves a new condition. Your medical history also includes endocrine/metabolic, mental, and neurological areas, but your PSG recording gives the clearest evidence for watching the circulatory area. The relationship is an inference about risk, not a prediction that a particular condition will develop.\n\n**What this means for you:** At your next routine appointment, bring the findings from your PSG recording and ask to review your blood-pressure pattern and broader cardiovascular risk alongside your existing history; hypertension guidance supports regular blood-pressure assessment as part of cardiovascular care [2]. It is also worth raising any new or worsening headaches, chest discomfort, palpitations, fainting, or breathlessness. Seek urgent care for severe chest pressure, sudden severe breathlessness, fainting, or sudden neurological symptoms.\n\n## References\n\n1. Relationship between obstructive sleep apnoea syndrome and essential hypertension: a dose-response meta-analysis \u2014 Sleep Medicine 2018. https://pubmed.ncbi.nlm.nih.gov/29880142/\n2. 2013 ESH/ESC guidelines for the management of arterial hypertension \u2014 European Heart Journal 2013. https://pubmed.ncbi.nlm.nih.gov/23771844/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The main new condition to watch for is **endocrine/metabolic**, because your profile is predictive of **Type 2 diabetes** and your PSG recording shows moderate breathing interruptions and oxygen desaturations, a pattern associated with future diabetes risk [1].\n\n**Detailed analysis:** Your profile points most strongly to **Type 2 diabetes**; your PSG recording supports that inference with [AHI 19.1 events/hour] and [ODI 19.4 events/hour], both in the moderate range, and your profile estimates **HbA1c 7.02 %** (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test), which falls in the diabetic range and adds concern for metabolic risk [2][1]. Your history includes endocrine/metabolic and circulatory areas, and at age 52 your demographic context makes it sensible to watch both strands rather than treat this estimate as a diagnosis. Your profile also points secondarily toward **Hypertensive heart and/or renal disease** and **Heart failure NOS**; your PSG recording\u2019s repeated overnight oxygen disruption resembles patterns associated with later cardiovascular disease [3]. Your profile also looks similar to other patients who later went on to take **non-tricyclic antidepressants**, and that resemblance does not establish medication use or change the main concern raised by your PSG recording and estimated HbA1c.\n\n**What this means for you:** At your next routine appointment, raise the estimated **HbA1c 7.02 %**, your moderate AHI and ODI, and your profile\u2019s predictions for diabetes and circulatory conditions. Confirm the chemistry estimate with a blood measurement, review blood-pressure and cardiovascular risk, and discuss sustainable activity, nutrition, sleep regularity, and avoiding tobacco exposure. Seek prompt medical attention for new severe breathlessness, chest discomfort, fainting, or marked swelling.\n\n## References\n\n1. Obstructive sleep apnea, glycemic control, and cardiovascular risk in young adults with youth-onset type 2 diabetes: results from the TODAY study \u2014 PubMed 2025. https://pubmed.ncbi.nlm.nih.gov/40566988/\n2. Sleep characteristics and HbA1c in patients with type 2 diabetes on glucose-lowering medication \u2014 PubMed 2020. https://pubmed.ncbi.nlm.nih.gov/32868313/\n3. Obstructive sleep apnea as a risk factor for coronary events or cardiovascular death \u2014 PubMed 2010. https://pubmed.ncbi.nlm.nih.gov/19777281/\n4. Nocturnal Hypoxemia and Severe Obstructive Sleep Apnea are Associated with Incident Type 2 Diabetes in a Population Cohort of Men \u2014 PubMed 2015. https://pubmed.ncbi.nlm.nih.gov/25766697/\n5. Obstructive Sleep Apnea, Sleepiness, and Glycemic Control in Type 2 Diabetes \u2014 PubMed 2019. https://pubmed.ncbi.nlm.nih.gov/31053205/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
+  "ehr_history": [
+   "Type 2 diabetes",
+   "Type 2 diabetes with renal manifestations",
+   "Type 2 diabetes with neurological manifestations",
+   "Hyperlipidemia",
+   "Hypercholesterolemia",
+   "Obesity",
+   "Morbid obesity",
+   "Altered mental status",
+   "Depression",
+   "Anxiety disorder",
+   "Develomental delays and disorders",
+   "Tobacco use disorder",
+   "Sleep disorders",
+   "Obstructive sleep apnea",
+   "Insomnia",
+   "Circadian rhythm sleep disorder",
+   "Sleep related movement disorders",
+   "Restless legs syndrome",
+   "Extrapyramidal disease and abnormal movement disorders",
+   "Nonrheumatic mitral valve disorders",
+   "Essential hypertension",
+   "Ischemic Heart Disease",
+   "Coronary atherosclerosis",
+   "Asthma",
+   "Chronic airway obstruction",
+   "Obstructive chronic bronchitis",
+   "Esophagitis, GERD and related diseases",
+   "GERD"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The main area to watch is **circulatory**, because your profile is predictive of new **Hypertensive heart and/or renal disease** within six years.\n\n**Detailed analysis:** Your PSG recording shows frequent breathing interruptions [AHI 23.8 events/hour], repeated oxygen drops [ODI 19.0 events/hour], and a substantial overall breathing-disturbance burden [RDI 36.5 events/hour]. In men aged 40\u201370, sleep-disordered breathing was associated with mortality, particularly from coronary disease when the breathing disturbance was severe [1]. Because you already have coronary disease [prior Ischemic Heart Disease], that population finding gives your profile\u2019s circulatory prediction added importance, without proving that a new condition is present now.\n\nYour PSG recording\u2019s moderate-to-severe breathing pattern also connects with vascular strain: a study of people with resistant hypertension found greater arterial stiffness among those with moderate-to-severe sleep apnea [2]. That study involved resistant hypertension rather than your hypertension history [prior Essential hypertension], so it supports the concern but does not establish the same degree of risk for you.\n\nA community study of men with mild-to-moderate sleep apnea found a strong adjusted association between sleep-disordered breathing and ischemic stroke [3]. Alongside your PSG recording and your profile, this supports keeping blood-pressure and broader vascular risk reviews active rather than treating the overnight breathing findings as an isolated issue.\n\n**What this means for you:** At your next routine appointment, ask for a review of your blood-pressure pattern, including whether recent readings take precedence, and ask whether kidney blood and urine tests are current. The breathing interruptions and oxygen drops on your PSG recording are the findings that make these checks relevant. Raise new or worsening breathlessness, ankle swelling, chest discomfort, severe headaches, or neurological symptoms promptly, because your existing cardiovascular history makes changes worth assessing.\n\n## References\n\n1. Sleep-disordered breathing and mortality: a prospective cohort study \u2014 PLoS Medicine 2009. https://pubmed.ncbi.nlm.nih.gov/19688045/\n2. Association between arterial stiffness and sleep apnoea in patients with resistant hypertension \u2014 Journal of Human Hypertension 2022. https://pubmed.ncbi.nlm.nih.gov/34992213/\n3. Obstructive sleep apnea-hypopnea and incident stroke: the sleep heart health study \u2014 American Journal of Respiratory and Critical Care Medicine 2010. https://pubmed.ncbi.nlm.nih.gov/20339144/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "The new area to watch is **circulatory**, particularly **Heart failure NOS**, because your profile is predictive of it [3.4 times higher risk than men of your age].\n\n**Detailed analysis:** Your PSG recording shows frequent breathing interruptions [AHI 23 events/hour] and repeated breathing-related disturbances [respiratory disturbance index 35 events/hour]. Obstructive sleep apnea can contribute to cardiovascular stress, and a review supports targeted cardiovascular assessment when sleep apnea occurs alongside heart failure risk [1].\n\nYour cardiovascular history [prior Nonrheumatic mitral valve disorders] makes new breathlessness, ankle swelling, reduced exercise tolerance, or difficulty lying flat especially important to raise at routine appointments. In people with acute coronary syndrome, obstructive sleep apnea was associated with later cardiovascular events, although the association was particularly pronounced in women; that evidence is relevant to your cardiovascular history but is not specific to men [2].\n\nThe estimate for your profile is a risk signal rather than proof that heart failure will develop. In a cohort of older men, incident heart failure was associated with central apnea and Cheyne\u2013Stokes breathing, rather than obstructive AHI alone [3]. This means that a clinical review should confirm whether your breathing pattern and heart function support the profile\u2019s prediction.\n\n**What this means for you:** At your next routine appointment, raise the possibility of **Heart failure NOS** and ask whether recent blood pressure readings, fluid-related symptoms, cardiac examination, heart imaging, and relevant blood tests should be reviewed. Ask whether a recent result already in your records takes precedence over this risk estimate. Continue to watch for new breathlessness, swelling, unusual fatigue, or declining exercise tolerance, and seek prompt medical advice if these appear or worsen.\n\n## References\n\n1. Sleep Apnea: The Slept-Upon Cardiovascular Risk Factor \u2014 Biomedicines 2025. https://pubmed.ncbi.nlm.nih.gov/41153810/\n2. Association of obstructive sleep apnoea with cardiovascular events in women and men with acute coronary syndrome \u2014 The European Respiratory Journal 2023. https://pubmed.ncbi.nlm.nih.gov/36104289/\n3. Sleep-disordered Breathing and Incident Heart Failure in Older Men \u2014 American Journal of Respiratory and Critical Care Medicine 2016. https://pubmed.ncbi.nlm.nih.gov/26502092/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The main new condition to watch for is **circulatory** **atrial fibrillation**, because research links sleep-disordered breathing with new atrial fibrillation in men like you [1].\n\n**Detailed analysis:** Your PSG recording gave an overnight pulse estimate [83.5 beats/min], and your age and sex [58-year-old male] place you in a group in which sleep-disordered breathing has been associated with later atrial fibrillation [1].\n\nYour sleep-related breathing history [prior Obstructive sleep apnea] makes that association more relevant: a large sleep-clinic cohort found that obstructive sleep apnea diagnosis and severity were independently associated with hospitalization for new atrial fibrillation [2]. This does not establish that you have **atrial fibrillation** now, because your PSG recording\u2019s pulse estimate is not an electrocardiographic rhythm diagnosis.\n\nAutomated analysis of the ECG channel from polysomnography can identify atrial fibrillation and agrees well with manual review in research settings [3], but your PSG recording\u2019s pulse estimate could also reflect ordinary night-to-night or sleep-stage variation. A recent ECG or rhythm result in your records takes precedence over this screening inference.\n\n**What this means for you:** At your next routine appointment, ask whether your recent ECG and pulse records show an irregular rhythm, because confirming or ruling out **atrial fibrillation** requires rhythm assessment rather than pulse rate alone [3]. Ask whether your existing obstructive sleep apnea assessment and cardiovascular risk review should be updated, since apnea severity has been linked with new atrial fibrillation [2]. Seek prompt medical advice for new sustained palpitations, fainting, or unexplained breathlessness.\n\n## References\n\n1. Obstructive and Central Sleep Apnea and the Risk of Incident Atrial Fibrillation in a Community Cohort of Men and Women \u2014 Journal of the American Heart Association 2017. https://pubmed.ncbi.nlm.nih.gov/28668820/\n2. Severity of OSA is an independent predictor of incident atrial fibrillation hospitalization in a large sleep-clinic cohort \u2014 Chest 2015. https://pubmed.ncbi.nlm.nih.gov/25927872/\n3. Automated detection of atrial fibrillation from the electrocardiogram channel of polysomnograms \u2014 Sleep & Breathing 2016. https://pubmed.ncbi.nlm.nih.gov/26092280/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   }
+  ]
+ },
+ {
+  "case_id": "HSP_v7_092",
+  "batch": "v66w3_r8",
+  "category": "mental disorders",
+  "demographics": {
+   "age": 55,
+   "sex": "F",
+   "bmi": 0.0,
+   "race": "unknown"
   },
-  {
-    "case_id": "HSP_v7_077",
-    "batch": "v611_r10",
-    "category": "mental disorders",
-    "demographics": {
-      "age": 53,
-      "sex": "M",
-      "bmi": 0,
-      "race": "black or african american"
-    },
-    "ehr_history": [
-      "Type 2 diabetes",
-      "pc_250.24_dx",
-      "Hyperlipidemia",
-      "Obesity",
-      "pc_278.11_dx",
-      "Sleep disorders",
-      "Obstructive sleep apnea",
-      "Abnormality of gait",
-      "Mitral valve disease",
-      "Aortic valve disease"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The area to watch most closely is **respiratory**, because your PSG recording shows mild repeated oxygen drops [ODI 11.5 events/hour] and borderline average oxygenation [mean SpO2 91.6 percent], a pattern that may increase concern for later pulmonary vascular complications [1].\n\n**Detailed analysis:** Your PSG recording shows mild sleep-related breathing disturbance [AHI 12.2 events/hour] alongside mild desaturation, so a new respiratory condition worth watching for is pulmonary hypertension rather than assuming that you have it now; sleep-related breathing disorders are associated with pulmonary hypertension [1]. Your prior circulatory history makes this possibility especially worth raising, because sleep apnea is recognized as a cardiovascular risk factor [2]. Your prior endocrine/metabolic history also strengthens the value of watching broader cardiometabolic health, although the clearest signal from your PSG recording remains respiratory. Your age of 53 years and male sex add context to the pattern shown by your PSG recording.\n\n**What this means for you:** At your next routine appointment, mention the oxygen findings from your PSG recording, and raise any new breathlessness, reduced exercise tolerance, chest discomfort, faintness, persistent snoring, or witnessed breathing pauses. Keeping tobacco exposure away, limiting alcohol near bedtime, maintaining regular activity, and supporting a healthy weight are sensible risk-reduction steps to discuss in light of the cardiovascular risk associated with sleep apnea [2]. Ask how your existing circulatory and endocrine/metabolic history should shape ongoing monitoring for changes in breathing or exercise tolerance.\n\n## References\n\n1. Sleep-related breathing disorders and pulmonary hypertension \u2014 The European Respiratory Journal 2021. https://pubmed.ncbi.nlm.nih.gov/32747397/\n2. Sleep apnea is a common and dangerous cardiovascular risk factor \u2014 Current Problems in Cardiology 2025. https://pubmed.ncbi.nlm.nih.gov/39242062/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "A",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to watch is **mental**, because **your profile is predictive of Anxiety disorder** and **Tobacco use disorder** within six years, with your PSG recording showing mild breathing-related sleep disruption that can be relevant to anxiety symptoms [1].\n\n**Detailed analysis:** Your PSG recording shows [AHI 12.2 events/h], [ODI 11.5 events/h], [mean SpO2 91.6 percent], no recorded deep sleep, and a high REM-sleep proportion. Research has linked sleep-related breathing severity with anxiety symptoms [1], while a systematic review connects poor sleep with mental-health concerns [2]. Your demographics and history in the neurological, circulatory, and endocrine/metabolic areas provide additional context for these findings. Together, your PSG recording, your demographics, your history, and your profile support watching for **Anxiety disorder**; your profile separately predicts **Tobacco use disorder**. Neither condition is established by your PSG recording.\n\n**What this means for you:** At your next routine appointment, raise persistent worry, panic-like symptoms, irritability, or distress related to sleep. Because your profile predicts **Tobacco use disorder**, discuss any tobacco exposure and prevention or stopping support at that appointment. Keeping a brief record of sleep quality, daytime anxiety, and tobacco use may help you notice changes early. Your PSG recording and your profile provide risk context, not a diagnosis.\n\n## References\n\n1. Relationship between obstructive sleep apnea severity and sleep, depression and anxiety symptoms in newly-diagnosed patients \u2014 PLOS ONE 2010. https://pubmed.ncbi.nlm.nih.gov/20419135/\n2. Association between poor sleep and mental health issues in Indigenous communities across the globe: a systematic review \u2014 Sleep Advances 2024. https://pubmed.ncbi.nlm.nih.gov/38721053/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "C",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "The area to watch most closely is **mental**, because your profile is predictive of **Depression**, which is its strongest forward-looking signal.\n\n**Detailed analysis:** Your PSG recording shows mild breathing-related disruption [AHI 12.2 events/h] and mild oxygen desaturation [ODI 11.5 events/h], with borderline average oxygenation [mean SpO2 91.6 percent]; these findings give important context for monitoring sleep and mood alongside the condition identified by your profile. Your prior neurological history also makes ongoing attention to sleep and mood appropriate. Your profile additionally points toward **Heart failure NOS** and **Ischemic Heart Disease**; your PSG recording\u2019s oxygen-related findings and your prior circulatory history support watching those conditions because sleep-disordered breathing has been associated with cardiovascular risk [1]. Your chemistry estimate of **HbA1c 6.90 %** (estimated from your PSG recording, not measured \u2014 worth confirming with a lab test) is in the diabetic range, adding an endocrine/metabolic issue to discuss with your clinician. Your profile also looks similar to other patients who later went on to take **non-tricyclic antidepressants**, and the sleep disruption shown by your PSG recording is consistent with the mood-related concern your profile identifies.\n\n**What this means for you:** At your next routine appointment, raise changes in mood, persistent sleep problems, breathing symptoms during sleep, your circulatory history, and the HbA1c estimate. Ask how to monitor the cardiovascular conditions named above and whether your sleep-related breathing findings warrant further clinical discussion. Seek urgent help for chest pressure, severe breathlessness, or thoughts of self-harm.\n\n## References\n\n1. Sleep Apnea: The Slept-Upon Cardiovascular Risk Factor \u2014 Biomedicines 2025. https://pubmed.ncbi.nlm.nih.gov/41153810/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  },
-  {
-    "case_id": "HSP_v7_078",
-    "batch": "v611_r10",
-    "category": "neurological",
-    "demographics": {
-      "age": 59,
-      "sex": "F",
-      "bmi": 0,
-      "race": "white"
-    },
-    "ehr_history": [
-      "Hyperlipidemia",
-      "Obesity",
-      "Abnormal weight gain",
-      "Anxiety disorder",
-      "Tobacco use disorder",
-      "Mitral valve disease",
-      "Nonrheumatic mitral valve disorders",
-      "Nonrheumatic tricuspid valve disorders",
-      "Essential hypertension",
-      "Hypertensive heart and/or renal disease"
-    ],
-    "query_id": "Based on my overnight sl",
-    "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
-    "responses": [
-      {
-        "markdown": "The area to watch is **neurological**, because your profile is predictive of **Insomnia** and **Sleep disorders**, and your PSG recording shows reduced sleep efficiency [SE 83.7 percent].\n\n**Detailed analysis:** Your profile is predictive of **Insomnia** and **Sleep disorders** within six years, making these the clearest new conditions to monitor. Your PSG recording supports this direction through reduced sleep efficiency, while your demographics identify you as a 59-year-old woman. Your history includes prior conditions in the mental and respiratory areas, which are relevant contexts when sleep symptoms change. Your PSG recording also shows mild sleep-related breathing disturbance [AHI 8.9 events/hour], but your profile is not predictive of the listed respiratory, circulatory, endocrine/metabolic, or mental conditions. Taken together, your profile and your PSG recording point most strongly toward future insomnia-related and other sleep conditions, without establishing a diagnosis; sleep disorders are important causes of reduced well-being in older adults [1].\n\n**What this means for you:** At your next routine appointment, raise persistent trouble falling asleep, repeated awakenings, waking too early, daytime fatigue, or worsening mood, because insomnia symptoms and worsening depressive symptoms can be related [2]. Keeping a simple record of sleep timing, awakenings, daytime alertness, and mood changes can help you describe whether symptoms are persistent. Regularly discussing new or worsening sleep symptoms is worthwhile because your profile identifies **Insomnia** and **Sleep disorders** as conditions to watch for.\n\n## References\n\n1. Common Sleep Disorders Affecting Older Adults \u2014 The Permanente Journal 2023. https://pubmed.ncbi.nlm.nih.gov/36503403/\n2. Treating Insomnia with High Risk of Depression Using Therapist-Guided Digital Cognitive, Behavioral, and Circadian Rhythm Support Interventions to Prevent Worsening of Depressive Symptoms: A Randomized Controlled Trial \u2014 Psychotherapy and Psychosomatics 2022. https://pubmed.ncbi.nlm.nih.gov/34872087/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "C",
-        "atoms": [],
-        "label": "A"
-      },
-      {
-        "markdown": "The area to watch is **circulatory**, because your PSG recording shows mild breathing-related events [AHI 8.9 events/h] together with low average oxygen [Mean SpO2 89.0 percent], a pattern associated with future cardiovascular risk in research on obstructive sleep apnea [1].\n\n**Detailed analysis:** Your PSG recording provides the first strand: repeated breathing events and reduced average oxygen can place recurring stress on the circulatory system. The second strand is your age, 59, and your medical history, which includes circulatory and respiratory areas; together, these make new high blood pressure or an irregular heart rhythm reasonable conditions to watch for, rather than conclusions about conditions you have now. Research specifically describes an important relationship between obstructive sleep apnea and hypertension [2], and an American Heart Association statement links sleep apnea with broader cardiovascular disease [3]. Your PSG recording does not provide a basis for selecting a new mental, neurological, or endocrine/metabolic condition as the leading concern.\n\n**What this means for you:** At your next routine appointment, raise any new blood-pressure concerns, racing or irregular heartbeat sensations, chest discomfort, or unexplained breathlessness, since cardiovascular disease is the risk area most connected to the findings on your PSG recording [3]. It is also reasonable to discuss how your mild breathing-related events and low average oxygen should fit into your ongoing circulatory follow-up, because the sleep-apnea\u2013hypertension relationship is well recognized [2]. These findings do not establish a new diagnosis.\n\n## References\n\n1. Obstructive sleep apnea and cardiovascular risk \u2014 PubMed 2024. https://pubmed.ncbi.nlm.nih.gov/38413245/\n2. Obstructive Sleep Apnea and Hypertension: Updates to a Critical Relationship \u2014 PubMed 2022. https://pubmed.ncbi.nlm.nih.gov/35246797/\n3. Obstructive Sleep Apnea and Cardiovascular Disease: A Scientific Statement From the American Heart Association \u2014 PubMed 2021. https://pubmed.ncbi.nlm.nih.gov/34148375/\n\n*clinical decision support, not a diagnosis*",
-        "arm": "A",
-        "atoms": [],
-        "label": "B"
-      },
-      {
-        "markdown": "Your profile is predictive of **neurological** conditions to watch for, chiefly **Sleep disorders**, because your profile points most strongly to that condition.\n\n**Detailed analysis:** Your PSG recording shows reduced sleep efficiency [SE 83.7 percent] alongside mild obstructive breathing [AHI 8.9 events/hour]; together, these findings support watching for persistent sleep disruption and **Insomnia** in the years ahead [1]. Your neurological-area history makes changes in sleep especially worth tracking, while your respiratory-area history and [Mean SpO2 89.0 percent] add reason to mention recurring nighttime breathing or daytime impairment at routine appointments [1]. Your profile also looks similar to other patients who later went on to take **non-tricyclic antidepressants**, and the sleep-pattern resemblance means future sleep concerns may occur alongside mood-related symptoms rather than showing that you take this class [1]. Separately, your profile estimates **6.72 %** HbA1c (estimated from your PSG recording, not measured\u2014worth confirming with a lab test) in the diabetic range, raising additional concern for **Type 2 diabetes** [2].\n\n**What this means for you:** Keep a regular sleep schedule and note persistent difficulty falling asleep, staying asleep, loud breathing, or daytime impairment; these symptoms are worth raising at your next routine appointment because sleep-related symptoms can persist or change over time [1]. Also raise the low oxygen measurement and HbA1c estimate so the metabolic concern can be clinically confirmed, since HbA1c assessment is used to evaluate glucose-related health [2]. These are conditions to watch for, not a diagnosis that you have developed them.\n\n## References\n\n1. Symptom subtypes of obstructive sleep apnea 10 years later: past, present, and future \u2014 Sleep 2025. https://pubmed.ncbi.nlm.nih.gov/40202500/\n2. Temporal trends of hemoglobin A1c testing \u2014 Journal of the American Medical Informatics Association 2014. https://pubmed.ncbi.nlm.nih.gov/24928176/\n\n*Clinical decision support, not a diagnosis.*",
-        "arm": "B",
-        "atoms": [],
-        "label": "C"
-      }
-    ]
-  }
+  "ehr_history": [
+   "Sleep disorders",
+   "Hypersomnia",
+   "Insomnia",
+   "Chronic sinusitis"
+  ],
+  "query_id": "Based on my overnight sl",
+  "query_text": "Based on my overnight sleep, what new health conditions should I be watching for in the years ahead?",
+  "responses": [
+   {
+    "label": "A",
+    "markdown": "The **neurological** area is the main concern: your profile is predictive of **Obstructive sleep apnea** [2.3 times higher risk than women of your age], and recordings like your PSG recording are often followed by that diagnosis.\n\n**Detailed analysis:** Your PSG recording shows reduced sleep efficiency [sleep efficiency 71%], mild-range breathing interruptions [apnea-hypopnea index 4 events/hour], and few oxygen dips [oxygen desaturation index about 0 events/hour]. Your prior Insomnia changes how this reads because insomnia commonly occurs alongside mild-to-moderate obstructive sleep apnea [1], so difficulty sleeping should not automatically be attributed only to insomnia.\n\nAs a 55-year-old woman, the combination of disrupted sleep and your profile's risk estimate makes future symptoms worth tracking even though the breathing pattern is mild or below the moderate range. In middle-aged and older adults, sleep-disordered breathing has been associated with daytime sleepiness even when clinically obvious apnea is not present [2].\n\nLower sleep efficiency in midlife women has also been associated with higher inflammatory markers [3]. This does not establish another condition, but it supports discussing persistent sleep disruption as a health finding rather than treating it as an isolated night.\n\n**What this means for you:** Watch for loud or worsening snoring, witnessed breathing pauses, gasping, morning headaches, or new daytime sleepiness. At your next routine appointment, raise any of these symptoms together with the reduced sleep efficiency shown by your PSG recording, and ask whether a repeat breathing assessment is appropriate if symptoms change. A recent clinical result takes precedence over your profile's estimate.\n\n## References\n\n1. Insomnia and hot flashes \u2014 Maturitas 2019. https://pubmed.ncbi.nlm.nih.gov/31239118/\n2. Relation of sleepiness to respiratory disturbance index: the Sleep Heart Health Study \u2014 American Journal of Respiratory and Critical Care Medicine 1999. https://pubmed.ncbi.nlm.nih.gov/9927364/\n3. Sleep characteristics and inflammatory biomarkers among midlife women \u2014 Sleep 2018. https://pubmed.ncbi.nlm.nih.gov/29617910/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "88f767",
+    "atoms": []
+   },
+   {
+    "label": "B",
+    "markdown": "Your profile is predictive of **Depression**, making **mental** the area to watch, and your PSG recording shows disrupted sleep that gives this prediction clinical context.\n\n**Detailed analysis:** Your PSG recording shows low sleep efficiency [71.0%] and almost no deep sleep [0.1% of TST]. Your sleep history [prior Insomnia] makes this pattern more consistent with an ongoing sleep-related vulnerability than an isolated night, and a prospective cohort found that insomnia symptoms were associated with a moderately increased risk of clinically significant depression outcomes [1].\n\nYour PSG recording also shows repeated awakenings [15.0] and frequent sleep-stage transitions [8.6 per hour of sleep]. In a longitudinal cohort of middle-aged women, sleep disturbance increased during and after menopause, while earlier difficulty initiating sleep predicted more severe later insomnia [2]. At your age [55-year-old female], this makes changes in sleep around midlife relevant context for watching your mood, although that study did not establish that sleep disturbance causes Depression.\n\nThe pattern is not specific to one future condition: objectively poor sleep efficiency and greater fragmentation were independently associated with anxiety symptoms in a study of much older women, even after accounting for depressive symptoms and medical factors [3]. This means your PSG recording supports attention to mood over time, while your profile provides the stronger reason to focus on Depression.\n\n**What this means for you:** Watch for persistent low mood, loss of interest, reduced motivation, guilt, or worsening concentration, particularly if your sleep difficulty continues. At your next routine appointment, raise the combination of persistent insomnia symptoms and the mood changes above and ask about a standard mood assessment; ask whether a recent result already in your records takes precedence. Also discuss whether midlife hormonal or other health changes could be contributing to the sleep pattern [2].\n\n## References\n\n1. Insomnia symptoms as a predictor of incident treatment for depression: prospective cohort study of 40,791 men and women \u2014 Sleep Medicine 2012. https://pubmed.ncbi.nlm.nih.gov/22177343/\n2. Insomnia symptoms in relation to menopause among middle-aged Chinese women: Findings from a longitudinal cohort study \u2014 Maturitas 2020. https://pubmed.ncbi.nlm.nih.gov/33036697/\n3. Anxiety symptoms and objectively measured sleep quality in older women \u2014 The American Journal of Geriatric Psychiatry 2009. https://pubmed.ncbi.nlm.nih.gov/19155746/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "b43497",
+    "atoms": []
+   },
+   {
+    "label": "C",
+    "markdown": "The new area most worth watching is **respiratory**, particularly **obstructive sleep apnea**, because repeated snoring on your PSG recording can be an early clue to this condition.\n\n**Detailed analysis:** Repeated snoring [snoring detected] occurred during your PSG recording, and your age and sex [55-year-old female] fit a group in which obstructive sleep apnea is clinically important to consider; women are also specifically represented in follow-up research linking obstructive sleep apnea with later kidney dysfunction [1]. Your PSG recording alone cannot establish obstructive sleep apnea because diagnosis depends on scored breathing reductions, arousals and oxygen changes, but the snoring pattern is a reason to review the scored report rather than assume that your prior **Insomnia** explains every sleep-related symptom.\n\nRecordings like yours with suspected sleep-disordered breathing are often followed by an obstructive sleep apnea diagnosis, and research in middle-aged and older adults found that people at high risk had consistently worse mental-health outcomes [2]. That does not mean you have a mental condition; it means that worsening daytime sleepiness, concentration, mood or unrefreshing sleep would make clarification of the breathing pattern more useful. Evidence about later blood-pressure disease is mixed: one general-population longitudinal study did not find a clear increase in incident hypertension, so your PSG recording should guide follow-up rather than predict it by itself [3].\n\n**What this means for you:** At your next routine appointment, ask whether the scored report confirms or rules out obstructive sleep apnea and whether a recent result takes precedence. Raise new loud snoring, witnessed breathing pauses, morning headaches, sleepiness or worsening concentration. Ask for a blood-pressure check if those symptoms develop, and discuss a repeat sleep assessment if symptoms change; your PSG recording cannot replace current clinical assessment.\n\n## References\n\n1. Simple obstructive sleep apnea patients without hypertension or diabetes accelerate kidney dysfunction: a population follow-up cohort study from Taiwan \u2014 Sleep & Breathing 2017. https://pubmed.ncbi.nlm.nih.gov/27380033/\n2. Obstructive Sleep Apnea Risk and Mental Health Conditions Among Older Canadian Adults in the Canadian Longitudinal Study on Aging \u2014 JAMA Network Open 2025. https://pubmed.ncbi.nlm.nih.gov/41632160/\n3. Obstructive sleep apnea and systemic hypertension: longitudinal study in the general population: the Vitoria Sleep Cohort \u2014 American Journal of Respiratory and Critical Care Medicine 2011. https://pubmed.ncbi.nlm.nih.gov/21868499/\n\n*Clinical decision support, not a diagnosis.*",
+    "arm": "2c48a6",
+    "atoms": []
+   }
+  ]
+ }
 ]
