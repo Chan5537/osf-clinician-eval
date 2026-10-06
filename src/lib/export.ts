@@ -35,7 +35,7 @@ const COLUMNS: string[] = [
   'batch', // which exported letter set this row scored (join key to the arm key file)
   'response_sha', // fingerprint of response_text — guards the join, survives Excel mangling
   'kind', // 'likert' (per-response 1–5 scale) | 'rank' (case-level comparative ranking)
-  'dimension', // relevance | accuracy | comprehensiveness | personalization | usefulness | rank_overall
+  'dimension', // relevance | justifiability | comprehensiveness | personalization | usefulness | rank_overall
   'value', // 1–5 ; '' (unanswered)
   'submitted_at',
   // TIMING (v8). `duration_seconds` keeps its original wall-clock meaning so pre-v8 analysis

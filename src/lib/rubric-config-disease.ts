@@ -1,5 +1,13 @@
-// DISEASE rubric v13 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
+// DISEASE rubric v14 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
 // plus the case-level comparative ranking (see components/RankOrder.tsx; it is not an axis).
+//
+// v14 (2026-10-06, Chan; agreed with Zitao after Prof. Yang's critique of Accuracy): ACCURACY ->
+//    JUSTIFIABILITY (key `justifiability`), the first axis. SensorFM ED.1 [Justifiability] in the house
+//    form, grading the reasoning behind the future-risk conclusions rather than the call against the
+//    recorded outcome. The other four axes are unchanged, word for word. See the JUSTIFIABILITY block
+//    below for provenance and the three departures from ED.1.
+//    ⛔ v14 is NOT comparable with v13 on the first axis (a different key and question), and v14
+//       `justifiability` is NOT v6 `justifiability` — filter on rubric_version.
 //
 // v13 (2026-09-29, Chan): TRUSTWORTHINESS -> RELEVANCE (key `relevance`), the last axis. SensorFM
 //    ED.1 [Relevance] in the house form: "To what extent ..." stem, uniform label ladder, one-sentence
@@ -204,109 +212,102 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v13-20260929'
+export const RUBRIC_VERSION = 'v14-20261006'
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
-    // ⛔ WHY NOT THE v4/v5 QUANTIFIER LADDER ("all / most / about half / few / none")? It cannot
-    //    be applied to this cohort: 8 of the 10 loaded cases record exactly ONE future condition
-    //    (2 record two), so "most", "about half" and "few" have no referent — a rater either
-    //    catches the one condition or does not. Counting also failed on its own terms once
-    //    before: 841b214 removed the tally instruction because it "asked for a tally the rater
-    //    then had to convert into a 1-5 judgement with no stated conversion". The two-tier
-    //    structure below carries the same ordering (area, then conditions, then extras) using
-    //    distinctions that survive n=1. Quantifiers are kept where they still degrade
-    //    gracefully: anchor 4 says "or most of them, where several are recorded".
-    // Two-tier by design: the NEW risk area is the entry, the named conditions the ceiling —
-    // committing to the right area alone caps at 3. "New" is said out loud so the rater's frame
-    // matches the patient query and the task strip word for word.
-    // ACCURACY (key `accuracy`, was Factuality on `factuality`) — RENAMED AND BROADENED
-    // 2026-09-18. "Accuracy" is the honest name: the axis grades whether what the response
-    // asserts is true, across every surface on which it can be wrong — not only whether it
-    // guessed the recorded disease.
+    // JUSTIFIABILITY (key `justifiability`) — REPLACES ACCURACY, v14 (2026-10-06, Chan; agreed with
+    // Zitao after Prof. Yang's critique of Accuracy). First slot, as Accuracy held.
     //
-    // THE KEY IS RENAMED WITH THE LABEL, per the rule set at v6 (see KEYS RENAMED below): keys
-    // must equal labels, because the old frozen set ended with `relevance` and `justifiability`
-    // each carrying the other's axis — a guaranteed misread for anyone reading the export by
-    // column name. Leaving `factuality` on an axis labelled Accuracy would reintroduce exactly
-    // that drift, and here the construct genuinely changed, so a column-name change is what
-    // makes a bad pooling of v8 and v10 data fail loudly instead of silently.
+    // WHY ACCURACY WENT: its stem still keyed one of its four surfaces on the "Future risk" panel, so
+    //    the axis graded the call against the recorded outcome; Prof. Yang's ask is that the axis
+    //    grade the REASONING instead. Justifiability keeps three of Accuracy's surfaces —
+    //    interpretation of the data, supporting studies, recommendations — recast as whether each
+    //    conclusion FOLLOWS from them, and drops the outcome surface. howToScore says so out loud:
+    //    "not whether the risk it raises later developed".
+    //    ⚠️ With Accuracy retired, NO axis is keyed on the Future risk panel any more.
     //
-    // THE FOUR SURFACES ARE NOT ARBITRARY — they are the IR paper's absolute rubric
-    // (Metwally et al., Nature 2026), unioned:
-    //   Q1 [Factuality]                    "are all the general statements ... factually
-    //                                       accurate"                      -> disease prediction
-    //   Q2 [Reference and Interpretation]  "does the response reference the user's personal
-    //                                       data and interpret it correctly" -> results
-    //   Q4 [Grounding]                     "are all citations ... from relevant and verifiable
-    //                                       sources"                       -> references
-    //   + the recommendation item from the Clinician Rubrics Likert set ("evidence of relevant
-    //     and correct recommendations")                                    -> recommendations
-    // Q3 [Safety] is deliberately NOT here — it moves to Trustworthiness below.
+    // SOURCE: SensorFM Survey ED.1 [Justifiability] (docs/sensorfm_rubric_verbatim.md in the
+    //    generation repo), adapted the way Relevance was in v13: the "To what extent ..." stem, an e.g.
+    //    list, scope to future disease risk. ED.1 asks about "the suggested next steps or actions";
+    //    the stem widens that to the CONCLUSIONS about future disease risk as well. The labels are
+    //    ED.1's own ladder (Very Unjustifiable ... Very Justifiable), as Usefulness keeps ED.1's. The
+    //    anchors keep ED.1's moves nearly word for word:
+    //      1 "unsupported by any data"        2 "somewhat unjustifiable ... weak correlative ...
+    //                                            while ignoring stronger ... signals"
+    //      3 "Split evenly between unjustifiable and justifiable"
+    //      4 "Accurate reporting and interpretation of data, but contains minor, harmless ..."
+    //      5 "explicitly justified by ... data"
     //
-    // THE BRACKET LIVES IN THE QUESTION, not only in howToScore, so a rater who reads only the
-    // stem still sees all four surfaces. This is load-bearing: if the rater reads the stem, looks
-    // at the "Future risk" panel and scores the prediction alone, the v6 ceiling returns intact.
+    // ⛔ THREE DELIBERATE DEPARTURES FROM ED.1, each a guard against a measured failure:
+    //    - "verified data in the patient profile" -> "the patient's data". v6's `justifiability`
+    //      sent the rater to the visible panels and INVERTED (BASE 4.00 > OURS 2.90 > TRUTH 2.30):
+    //      any ground the rater could not see in a panel scored as unsupported.
+    //    - "weak correlative predictions" -> "weak correlative evidence", so the anchor cannot be
+    //      read as an instruction to discount model output.
+    //    - "Ignore discussion on predicted targets ..." stays removed (2026-08-18b, rubric-config.ts).
+    //    Plus the v12 stopping rule at anchor 3 ("declines to reach any conclusion"), so a hedging
+    //    response cannot win by asserting nothing. Do NOT anchor on caveat language: one arm carries
+    //    a verbatim estimate caveat in 10/10 letters (docs/rubric/README.md).
     //
-    // LADDER SHAPE: the v8 two-tier ordering (right area is the entry, named conditions the
-    // ceiling) is PRESERVED inside anchors 3/2/1 — that ordering carried the arm separation and
-    // is not thrown away. What changes is that 5 and 4 are now separated by the OTHER three
-    // surfaces, so a response can name the right disease and still not reach 5. The worked
-    // example spends its second half on exactly that case, on purpose.
-    // Constraints kept from v8: no absolute quantifiers (unreachable ceilings), no tally
-    // instruction (841b214), and every distinction survives n=1 — 8 of the 10 loaded cases
-    // record exactly ONE future condition, so "most"/"about half" have no referent.
-    key: 'accuracy',
-    label: 'Accuracy',
+    // ⚠️ NOT v6's `justifiability`, despite the shared key and label: different stem, anchors and
+    //    reference point. Filter on rubric_version before pooling — never pool v6 with v14.
+    //
+    // THE EXAMPLE is built on HSP_v7_000 (the same case as Relevance's), from values on the Sleep
+    //    panel. It is a constructed same-risk pair, not one arm's letter: X joins a move from one arm
+    //    (the sleep-efficiency study) with a move from another (the mild-AHI qualification); Y's
+    //    flaw (an all-cause-mortality study under a heart-disease claim) is taken from a third
+    //    letter. No arm is the exemplar and no arm is the foil.
+    key: 'justifiability',
+    label: 'Justifiability',
     question:
-      "To what extent are this response's future disease-risk related statements (disease " +
-      'prediction, interpretation, references, and recommendations) factually accurate?',
+      "To what extent are this response's conclusions about future disease risk, and its suggested " +
+      'next steps, clinically justified by reasoning from the available evidence (e.g., sleep findings, ' +
+      'medical history, supporting studies)?',
     howToScore:
-      'Check the "Future risk" panel for the conditions this patient went on to develop, and the ' +
-      'Sleep panel for the values the response interprets. **Each of the four categories is scored**: ' +
-      'a response may identify the **correct condition** yet **misinterpret a value**, cite a source that ' +
-      '**does not substantiate** the claim attached to it, or recommend a step that **does not follow** ' +
-      'from its own findings. Closely related variants of a condition count as one condition.',
+      'Judge the **reasoning** the response presents, **not whether** the risk it raises later ' +
+      'developed: ask whether each conclusion and next step **follows from** the patient\'s data and ' +
+      'the studies cited in support of it.',
     example:
-      'The "Future risk" panel for this patient records **Ischemic Heart Disease** and **Coronary ' +
-      'atherosclerosis**. Response X identifies the **circulatory** area, names both conditions, ' +
-      'interprets the recording correctly — "marked sleep fragmentation, with a high [ArI 26.1 ' +
-      'events/hour] and poor [SE 63.8 percent]" — and its recommendations follow from those ' +
-      'findings: Highly Accurate (5). Response Y also identifies **circulatory** and names both, but ' +
-      'describes the same [SE 63.8 percent] as "within the normal range" and closes on a reference ' +
-      'that nothing in the text relies upon: the prediction is accurate, the interpretation and the ' +
-      'sourcing are not — Accurate (4), or Neutral (3) where more than one category is affected. A ' +
-      'response identifying the **respiratory** area here would be Highly Inaccurate (1).',
+      'Both responses are for the same patient and raise the same future risk, **Ischemic Heart ' +
+      'Disease**. Response X reasons from reduced sleep efficiency [SE 68.0%] to that risk through a ' +
+      'community study in which wakefulness after sleep onset predicted cardiovascular events, notes ' +
+      'that a mild [AHI 14.0 events/hour] does not by itself settle the question, and suggests a ' +
+      'blood-pressure and cholesterol review that follows from those findings: Very Justifiable (5). ' +
+      'Response Y reaches the same conclusion, but supports it with a study of all-cause mortality ' +
+      'rather than heart disease, and leaves the frequent breathing disturbance [RDI 42.6 ' +
+      'events/hour] unaddressed; the conclusion is stated, but not established by the reasoning ' +
+      'presented: Unjustifiable (2), or Neutral (3) where its other conclusions are justified.',
     anchors: [
       {
         value: 5,
-        label: 'Highly Accurate',
+        label: 'Very Justifiable',
         description:
-          'Accurate in **every category**: it identifies the risk area this patient went on to develop and names the recorded conditions, interprets their values correctly, recommends steps that follow from its findings, and any reference it provides substantiates the claim attached to it.',
+          "**All** conclusions about future disease risk, and **all** suggested next steps, are **explicitly justified** by reasoning from the patient's data, and each supporting study substantiates the claim it is attached to. Findings that weigh against those conclusions are **addressed**.",
       },
       {
         value: 4,
-        label: 'Accurate',
+        label: 'Justifiable',
         description:
-          'Accurate in the prediction — the **correct** risk area, with the recorded conditions named — but inaccurate in **one other category**: a value misinterpreted, a reference that does not substantiate its claim, or a recommendation that does not follow from its findings.',
+          "**Accurate** reporting and interpretation of the patient's data, with conclusions that follow from it, but contains **minor**, harmless gaps in reasoning (e.g., one conclusion stated **somewhat** more firmly than its stated basis supports).",
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Accurate in **some** categories and **not others**: either the correct risk area with the conditions within it **incorrect or absent**, or the correct conditions accompanied by interpretations, references or recommendations that do not withstand scrutiny.',
+          '**Split evenly** between justifiable and unjustifiable conclusions. A response that **declines to reach any conclusion**, leaving nothing to appraise, also scores here.',
       },
       {
         value: 2,
-        label: 'Inaccurate',
+        label: 'Unjustifiable',
         description:
-          'Inaccurate in **most** of what it asserts. The risk area is **incorrect**, though something it names bears on what the patient developed, and its interpretations or recommendations contain further errors.',
+          "Conclusions are **somewhat unjustifiable**, resting on **weak** correlative evidence or on studies that do not substantiate them, while **ignoring stronger** signals in the patient's own data.",
       },
       {
         value: 1,
-        label: 'Highly Inaccurate',
+        label: 'Very Unjustifiable',
         description:
-          'The risk area is **incorrect**, **none** of the conditions the patient developed appears, and its statements about their results and the actions it recommends are not borne out by the panels.',
+          "Draws conclusions or recommends actions that are **unsupported** by any data or reasoning the response presents, or that rest on a **misinterpretation** of the patient's data.",
       },
     ],
   },

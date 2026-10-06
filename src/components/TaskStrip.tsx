@@ -34,7 +34,7 @@ export function TaskStrip({ responseCount, onGoToScoring }: Props) {
         <span aria-hidden="true" className="mx-2 text-blue-400 dark:text-blue-600">|</span>
         Rate the {responseCount} health summaries below using the rubric. Each patient has six
         years of follow-up on record — the <strong>Future risk</strong> panel shows what actually
-        developed; use it when rating the accuracy of each response.{' '}
+        developed.{' '}
         <button
           type="button"
           onClick={onGoToScoring}

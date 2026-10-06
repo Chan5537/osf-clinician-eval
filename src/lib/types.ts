@@ -97,9 +97,14 @@ export type LikertScore = 1 | 2 | 3 | 4 | 5 | null
 // labels). Relevance is SensorFM ED.1 [Relevance] in the house form: focus and priority, judged against
 // the risk the response raises. ⚠️ `relevance` has carried other axes in older exports (v4/v5 Relevance;
 // see the rename table above) — always filter on rubric_version before pooling.
+// v14 (2026-10-06, Chan): `accuracy` -> `justifiability`, renamed WITH the axis (keys stay equal to
+// labels). Justifiability is SensorFM ED.1 [Justifiability] in the house form: whether the future-risk
+// conclusions and next steps follow from the reasoning presented, not whether the risk developed.
+// ⚠️ NOT v6's `justifiability` (the inverted axis above) despite the same key — filter on
+// rubric_version before pooling.
 export type RubricDimension =
   | 'relevance'
-  | 'accuracy'
+  | 'justifiability'
   | 'comprehensiveness'
   | 'personalization'
   | 'usefulness'
