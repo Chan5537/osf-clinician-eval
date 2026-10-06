@@ -27,9 +27,8 @@ interface DimColor {
   selectedText: string
 }
 const DIM_COLORS: Record<RubricDimension, DimColor> = {
-  // Accuracy (v10: Factuality renamed and broadened to four accuracy surfaces). Blue hue, kept
-  // from the axis it replaces so the leading scale looks the same on screen.
-  accuracy: {
+  // Justifiability (v14: replaces Accuracy, whose blue it inherits along with its leading slot).
+  justifiability: {
     rail: 'border-l-blue-500',
     bg: 'bg-blue-500/[0.04] dark:bg-blue-400/[0.06]',
     header: 'bg-blue-500/10 text-blue-700 dark:text-blue-300',

@@ -94,7 +94,10 @@ import { advance, touch, park, resume } from './timing'
 // v25 = rubric v13 (2026-09-29, Chan): the last axis changes from Trustworthiness to Relevance (key
 //       `trustworthiness` -> `relevance`, a different question). A v24 session holds answers to a question
 //       no longer asked, so it is discarded rather than resumed.
-export const SCHEMA_VERSION = 25
+// v26 = rubric v14 (2026-10-06, Chan): the first axis changes from Accuracy to Justifiability (key
+//       `accuracy` -> `justifiability`, a different question). A v25 session holds answers to a question
+//       no longer asked, so it is discarded rather than resumed.
+export const SCHEMA_VERSION = 26
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 
