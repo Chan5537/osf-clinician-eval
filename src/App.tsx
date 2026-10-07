@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { DEMO_CASES, BLOCK, TOTAL_BLOCKS, BLOCK_SIZE } from '@/data/demo-cases'
+import { DEMO_CASES, BLOCK, TOTAL_BLOCKS, BLOCK_SIZE, MUST_CHOOSE_BLOCK } from '@/data/demo-cases'
 import {
   sessionReducer,
   initialSessionState,
@@ -250,7 +250,8 @@ function App() {
     )
   }
 
-  if (session.view === 'landing') {
+  // No block chosen in a multi-block batch: the landing screen, whatever view was stored.
+  if (session.view === 'landing' || MUST_CHOOSE_BLOCK) {
     return (
       <LandingScreen
         signedInAs={auth.email}
