@@ -1,5 +1,26 @@
-// DISEASE rubric v14 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
+// DISEASE rubric v15 — the five Likert scales asked about the letter's FUTURE-DISEASE CALL,
 // plus the case-level comparative ranking (see components/RankOrder.tsx; it is not an axis).
+//
+// v15 (2026-10-07, Chan): a wording pass for the clinician round. Goal: every "What 1–5 mean
+//    here" and "How to score · example" text is self-contained, so raters score from the
+//    definitions rather than from their own priors. Changes:
+//    - ORDER: Relevance moves to the first slot (keys unchanged; export columns follow this order).
+//    - All five: no description defines a scale with its own word ("justified", "personalized",
+//      "useful", "relevant"); each How to score defines its terms; every example is laid out as a
+//      patient block (HSP_v7_000 values, quoted in parentheses as the letters write them) followed
+//      by one constructed response per score, 5 to 1. No example features a risk prediction:
+//      predictions appear in one arm's letters only (100/300 in v66w3_full100_parens).
+//    - Relevance: precision and priority only (omission moved to Comprehensiveness).
+//    - Justifiability: "reasoning" = evidence, inference, conclusion; "sound" = all three hold;
+//      predictions count as evidence; the "selective reading" clause at 2 is dropped.
+//    - Comprehensiveness: NEW QUESTION (coverage in breadth and depth, replacing "beyond the
+//      known information"). Full/Partial/Minimal per dimension, combined into 1–5.
+//    - Personalization: question unchanged; terms defined; 4 vs 5 = synthesis carried into the
+//      recommendations.
+//    - Usefulness: NEW QUESTION (useful to a clinician planning follow-up care, replacing
+//      SensorFM's "useful summary to a healthcare provider"); decision value x actionability.
+//    ⛔ v15 is NOT comparable with v14 on Comprehensiveness or Usefulness (different questions), and
+//       the other three changed their anchors: filter on rubric_version, never pool.
 //
 // v14 (2026-10-06, Chan; agreed with Zitao after Prof. Yang's critique of Accuracy): ACCURACY ->
 //    JUSTIFIABILITY (key `justifiability`), the first axis. SensorFM ED.1 [Justifiability] in the house
@@ -212,379 +233,445 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v14-20261006'
+export const RUBRIC_VERSION = 'v15-20261007'
+
+// Guidance strings are written one line per array element and joined with '\n', so the block
+// structure RubricText reads (blank line = new block; "- " list; "|" table) stays visible here.
+const lines = (...rows: string[]) => rows.join('\n')
 
 export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
   {
-    // JUSTIFIABILITY (key `justifiability`) — REPLACES ACCURACY, v14 (2026-10-06, Chan; agreed with
-    // Zitao after Prof. Yang's critique of Accuracy). First slot, as Accuracy held.
-    //
-    // WHY ACCURACY WENT: its stem still keyed one of its four surfaces on the "Future risk" panel, so
-    //    the axis graded the call against the recorded outcome; Prof. Yang's ask is that the axis
-    //    grade the REASONING instead. Justifiability keeps three of Accuracy's surfaces —
-    //    interpretation of the data, supporting studies, recommendations — recast as whether each
-    //    conclusion FOLLOWS from them, and drops the outcome surface. howToScore says so out loud:
-    //    "not whether the risk it raises later developed".
-    //    ⚠️ With Accuracy retired, NO axis is keyed on the Future risk panel any more.
-    //
-    // SOURCE: SensorFM Survey ED.1 [Justifiability] (docs/sensorfm_rubric_verbatim.md in the
-    //    generation repo), adapted the way Relevance was in v13: the "To what extent ..." stem, an e.g.
-    //    list, scope to future disease risk. ED.1 asks about "the suggested next steps or actions";
-    //    the stem widens that to the CONCLUSIONS about future disease risk as well. The labels are
-    //    ED.1's own ladder (Very Unjustifiable ... Very Justifiable), as Usefulness keeps ED.1's. The
-    //    anchors keep ED.1's moves nearly word for word:
-    //      1 "unsupported by any data"        2 "somewhat unjustifiable ... weak correlative ...
-    //                                            while ignoring stronger ... signals"
-    //      3 "Split evenly between unjustifiable and justifiable"
-    //      4 "Accurate reporting and interpretation of data, but contains minor, harmless ..."
-    //      5 "explicitly justified by ... data"
-    //
-    // ⛔ THREE DELIBERATE DEPARTURES FROM ED.1, each a guard against a measured failure:
-    //    - "verified data in the patient profile" -> "the patient's data". v6's `justifiability`
-    //      sent the rater to the visible panels and INVERTED (BASE 4.00 > OURS 2.90 > TRUTH 2.30):
-    //      any ground the rater could not see in a panel scored as unsupported.
-    //    - "weak correlative predictions" -> "weak correlative evidence", so the anchor cannot be
-    //      read as an instruction to discount model output.
-    //    - "Ignore discussion on predicted targets ..." stays removed (2026-08-18b, rubric-config.ts).
-    //    Plus the v12 stopping rule at anchor 3 ("declines to reach any conclusion"), so a hedging
-    //    response cannot win by asserting nothing. Do NOT anchor on caveat language: one arm carries
-    //    a verbatim estimate caveat in 10/10 letters (docs/rubric/README.md).
-    //
-    // ⚠️ NOT v6's `justifiability`, despite the shared key and label: different stem, anchors and
-    //    reference point. Filter on rubric_version before pooling — never pool v6 with v14.
-    //
-    // THE EXAMPLE is built on HSP_v7_000 (the same case as Relevance's), from values on the Sleep
-    //    panel. It is a constructed same-risk pair, not one arm's letter: X joins a move from one arm
-    //    (the sleep-efficiency study) with a move from another (the mild-AHI qualification); Y's
-    //    flaw (an all-cause-mortality study under a heart-disease claim) is taken from a third
-    //    letter. No arm is the exemplar and no arm is the foil.
-    key: 'justifiability',
-    label: 'Justifiability',
-    question:
-      "To what extent are this response's conclusions about future disease risk, and its suggested " +
-      'next steps, clinically justified by reasoning from the available evidence (e.g., sleep findings, ' +
-      'medical history, supporting studies)?',
-    howToScore:
-      'Judge the **reasoning** the response presents, **not whether** the risk it raises later ' +
-      'developed: ask whether each conclusion and next step **follows from** the patient\'s data and ' +
-      'the studies cited in support of it.',
-    example:
-      'Both responses are for the same patient and raise the same future risk, **Ischemic Heart ' +
-      'Disease**. Response X reasons from reduced sleep efficiency [SE 68.0%] to that risk through a ' +
-      'community study in which wakefulness after sleep onset predicted cardiovascular events, notes ' +
-      'that a mild [AHI 14.0 events/hour] does not by itself settle the question, and suggests a ' +
-      'blood-pressure and cholesterol review that follows from those findings: Very Justifiable (5). ' +
-      'Response Y reaches the same conclusion, but supports it with a study of all-cause mortality ' +
-      'rather than heart disease, and leaves the frequent breathing disturbance [RDI 42.6 ' +
-      'events/hour] unaddressed; the conclusion is stated, but not established by the reasoning ' +
-      'presented: Unjustifiable (2), or Neutral (3) where its other conclusions are justified.',
-    anchors: [
-      {
-        value: 5,
-        label: 'Very Justifiable',
-        description:
-          "**All** conclusions about future disease risk, and **all** suggested next steps, are **explicitly justified** by reasoning from the patient's data, and each supporting study substantiates the claim it is attached to. Findings that weigh against those conclusions are **addressed**.",
-      },
-      {
-        value: 4,
-        label: 'Justifiable',
-        description:
-          "**Accurate** reporting and interpretation of the patient's data, with conclusions that follow from it, but contains **minor**, harmless gaps in reasoning (e.g., one conclusion stated **somewhat** more firmly than its stated basis supports).",
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description:
-          '**Split evenly** between justifiable and unjustifiable conclusions. A response that **declines to reach any conclusion**, leaving nothing to appraise, also scores here.',
-      },
-      {
-        value: 2,
-        label: 'Unjustifiable',
-        description:
-          "Conclusions are **somewhat unjustifiable**, resting on **weak** correlative evidence or on studies that do not substantiate them, while **ignoring stronger** signals in the patient's own data.",
-      },
-      {
-        value: 1,
-        label: 'Very Unjustifiable',
-        description:
-          "Draws conclusions or recommends actions that are **unsupported** by any data or reasoning the response presents, or that rest on a **misinterpretation** of the patient's data.",
-      },
-    ],
-  },
-  {
-    // v7 (owner 2026-09-01): the coverage framing is retired — it rewarded
-    // chart-tour letters and put the truth arm LOWEST, the reverse of the eval's purpose.
-    // The name stays Comprehensiveness (owner 2026-09-01) but the axis now measures the
-    // increment directly; "known information" is the exact wording
-    // the panel's Ground-truth tags carry, so the question and the screen point at each other.
-    key: 'comprehensiveness',
-    label: 'Comprehensiveness',
-    question:
-      'To what extent does this response give the patient information beyond the known information ' +
-      '(e.g., the Sleep panel, Prior medical history)?',
-    howToScore:
-      'Weigh what the response **adds** against what it **restates** from the Ground-truth panels. ' +
-      'Information the patient could not have worked out from those panels counts for more than ' +
-      'information they could.',
-    // Examples live in the rubric doc (owner 2026-09-01), not in the UI.
-    example:
-      'Two responses for the same patient, both opening on the same recording [AHI 27.7 ' +
-      'events/hour; ODI 27.5 events/hour]. One adds a chemistry estimate neither panel holds — ' +
-      '**HbA1c 6.8 %**, outside the stated reference range, flagged as an estimate rather than a ' +
-      'blood result — and names a specific condition to watch beyond what the panels list: Very ' +
-      'Comprehensive (5). The other restates the same two indices, notes that the history already ' +
-      'covers those areas, and concludes they are worth watching; a reader learns nothing the ' +
-      'panels did not already give them: Not Comprehensive At All (1).',
-    anchors: [
-      {
-        value: 5,
-        label: 'Very Comprehensive',
-        description:
-          'Carries named content **absent from both** Ground-truth panels — a condition neither panel points to, an estimated value such as a chemistry figure, a medication resemblance — and states what in this recording points there. The patient could not have reached it from the panels alone.',
-      },
-      {
-        value: 4,
-        label: 'Comprehensive',
-        description:
-          '**Mostly** information beyond the known information, though the panels **already hint** at where it lands. **Some** space spent restating them.',
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description:
-          '**Something new** is in there, wrapped in **about as much** recital of the known information.',
-      },
-      {
-        value: 2,
-        label: 'Not Comprehensive',
-        description:
-          '**Mostly repackages** the known information as future risk; **little** rests on this recording.',
-      },
-      {
-        value: 1,
-        label: 'Not Comprehensive At All',
-        description:
-          '**Every** fact in it appears in the Sleep panel or Prior medical history. Delete the recording and the letter still writes itself.',
-      },
-    ],
-  },
-  {
-    // Sweet point between SensorFM ED.1 (anchors 1-3 near-verbatim) and findings-linked
-    // specificity (anchors 4-5). "Suggestions" — the section carries things to WATCH, to RAISE
-    // and to DO; only the last is a recommendation. Checked against the v56 letters: the
-    // actionable style is format-driven and identical across arms, so style is not scored;
-    // whether each suggestion comes from THIS letter's findings is.
-    key: 'personalization',
-    label: 'Personalization',
-    question:
-      'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular) to this patient?',
-    howToScore:
-      'Judge the **whole response** — the analysis and the suggestions. Ask whether it could be **moved ' +
-      'into another patient\'s letter unchanged**.',
-    example:
-      'Both responses are for the same patient. Response X ties the recording to their own history ' +
-      'in the analysis — "your history records prior conditions in the mental area without ' +
-      'identifying this specific new condition" — and carries that into what to do: "notice ' +
-      'persistent changes in worry, tension, mood, or sleep and bring them up at your next routine ' +
-      'appointment." Analysis and suggestions are both built from this patient: Personalized (4); ' +
-      'synthesizing a further aspect, such as tying a specific sleep finding in as well, would ' +
-      'reach 5. Response Y reports numbers and closes "continue the routine preventive habits and ' +
-      'follow-up already recommended for you" — surface-level stats plus advice that fits anyone: ' +
-      'Not Personalized (2).',
-    anchors: [
-      {
-        value: 5,
-        label: 'Highly Personalized',
-        description:
-          "**Deeply synthesizes multiple** distinct aspects of this patient's profile (e.g. a specific sleep finding, a named condition in their history, their demographics), and carries that synthesis into what it tells them to watch, raise, or do. Reads as written for this person alone.",
-      },
-      {
-        value: 4,
-        label: 'Personalized',
-        description:
-          "**Goes beyond** surface-level reporting by connecting **specific** aspects of this patient's profile (e.g. linking one of their own findings to a condition in their history, or to a specific thing to raise). Some general advice sits alongside.",
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description:
-          '**Split evenly** between generic and somewhat personalized health context.',
-      },
-      {
-        value: 2,
-        label: 'Not Personalized',
-        description:
-          'Mentions **surface-level** stats (e.g. basic demographics or isolated sleep numbers) that remain **broad** and could apply to a wide population with similar baseline values.',
-      },
-      {
-        value: 1,
-        label: 'Not Personalized At All',
-        description:
-          '**One-size-fits-all**, boilerplate content. It **ignores** the provided data and reads like a generic health article.',
-      },
-    ],
-  },
-  {
-    // USEFULNESS — VERBATIM SensorFM (Survey ED.1), adopted 2026-09-03 (Chan), replacing Relevance.
-    //
-    // The question, the five anchor labels and their descriptions below are SensorFM's own words,
-    // unedited. That is the point: an axis we did not author cannot be accused of being shaped to
-    // our result, and it makes our radar directly comparable to theirs.
-    //
-    // Chosen over Trustworthiness, which was the other candidate for this slot. Trustworthiness is
-    // v6's `justifiability` renamed, and in the v6 clinician round that axis ran BASE 4.00 > OURS
-    // 2.90 > TRUTH 2.30 — the exact REVERSE of how much model prediction each arm carries, because
-    // raters weighed confidence against panels holding no model evidence and scored any ground they
-    // could not see as unsupported.
-    //
-    // ⚠️ NOTE THE EARLIER, DIFFERENT USEFULNESS. v7 carried an axis of the same name that was
-    //    retired in v8; it scored how hard a call was to FORESEE, independently of whether it was
-    //    right, so a confident wrong letter could score 5, and its novelty half overlapped
-    //    Comprehensiveness. This is NOT that axis. SensorFM's Usefulness asks whether the response
-    //    is a useful summary TO A PROVIDER — clinical coherence and decision-readiness — which no
-    //    other axis in this set measures.
-    key: 'usefulness',
-    label: 'Usefulness',
-    question:
-      'To what extent does this response provide a useful summary to a healthcare provider regarding a patient?',
-    howToScore:
-      'Judge the response as a summary handed to a provider: is it **clinically coherent, organized, ' +
-      'and something they could act on** for next steps?',
-    example:
-      'A response that names the area to watch, ties it to specific findings, and closes with what ' +
-      'to raise at the next appointment gives a provider something to act on: Useful (4). A response ' +
-      'that reports findings and closes "but these findings do not by themselves point to a specific ' +
-      'additional future condition" leaves the provider without a next step: Useless (2).',
-    anchors: [
-      {
-        value: 5,
-        label: 'Very Useful',
-        description:
-          'Provides **highly actionable**, well-organized information that a provider can **directly** utilize for clinical decision-making and next steps.',
-      },
-      {
-        value: 4,
-        label: 'Useful',
-        description:
-          "Provides **clinically coherent and relevant** information that clearly communicates the patient's status to the provider.",
-      },
-      {
-        value: 3,
-        label: 'Neutral',
-        description: 'Information is **split evenly** between being useful and irrelevant.',
-      },
-      {
-        value: 2,
-        label: 'Useless',
-        description:
-          'Provides **tangential or unactionable** information that offers **no** clinical value to the provider.',
-      },
-      {
-        value: 1,
-        label: 'Very Useless',
-        description:
-          'Provides **highly irrelevant or distracting** information that would waste clinical time or frustrate the provider.',
-      },
-    ],
-  },
-  {
-    // RELEVANCE (key `relevance`) — REPLACES TRUSTWORTHINESS, v13 (2026-09-29, Chan). Last slot, as before.
-    //
-    // WHAT IT ASKS: whether the response puts the information that matters for THIS patient's
-    //    future risk first, and keeps what does not bear on it out. SensorFM Survey ED.1 [Relevance]
-    //    is the source: "How effectively does MODEL RESPONSE identify and prioritize the most
-    //    clinically relevant indicators?" (docs/sensorfm_rubric_verbatim.md in the generation repo).
-    //    Rewritten to the house stem ("To what extent ...", with an e.g. list like Comprehensiveness
-    //    and Personalization) and to the house label ladder (Very X · X · Neutral · Not X · Not X At
-    //    All). The anchors keep ED.1's own moves nearly word for word, so the scale stays recognisable:
-    //      1 "Fails to address the core query, focusing entirely on unrelated data"
-    //      2 "heavily diluted ... significant space to irrelevant data that distracts from the main
-    //        clinical picture" (ED.1's "Mentions the correct issue" becomes "Addresses the question":
-    //        correctness belongs to Accuracy)
-    //      3 "Split evenly between relevant and irrelevant information"
-    //      4 "Adequately covers the appropriate ... but includes some unnecessary filler ... or minor
-    //        tangents that slightly obscure the core message"
-    //      5 "Directly and concisely addresses the user's query ... most pertinent ... no distracting
-    //        or unnecessary information"
-    //    "Indicators" becomes "information (e.g., sleep findings, medical history, supporting studies)":
-    //    the letters argue from studies as well as data, and whether a cited study fits this patient is
-    //    part of what relevance means here (anchor 4 names it as a minor tangent).
-    //
-    // ⛔ THIS PROJECT HAS RETIRED A RELEVANCE AXIS BEFORE (v6, 2026-08-29): clinicians scored it
-    //    BACKWARDS — reading the history is good practice to them, so history-heavy responses were
-    //    rated as focused. The guard is the howToScore's reference point: relevance is judged against
-    //    THE RISK THE RESPONSE RAISES, and history or findings restated without supporting, explaining or
-    //    qualifying that risk count as filler, "however accurate". History that does one of those is
-    //    relevant, so letters that use it well are not penalised.
-    //
-    // SEPARABLE FROM ITS NEIGHBOURS, by construction:
-    //    - Accuracy grades whether what the response says is TRUE (a letter can be focused and wrong);
-    //    - Comprehensiveness grades what it ADDS beyond the Ground-truth panels (restating a panel
-    //      value can be relevant yet add nothing);
-    //    - Usefulness grades whether a PROVIDER could act on it (ED.1 [Context]).
-    //    Relevance grades FOCUS AND PRIORITY: what leads, and what dilutes.
-    //
-    // ⚠️ WHAT THE RETIRED AXIS CARRIED THAT NOW HAS NO HOME: Trustworthiness absorbed Safety at its
-    //    anchor 1 ("advises a course that would be contraindicated given this patient's existing care
-    //    or prior medical conditions"). Relevance cannot carry that without becoming two axes. Accuracy
-    //    still faults a recommendation that "does not follow from its findings", but a contraindicated
-    //    course is no longer named anywhere. Recorded so the loss is visible, not assumed.
-    //
-    // TRUSTWORTHINESS HISTORY (v10-v12), kept for readers of v10-v12 exports: it graded whether
-    //    conclusions were substantiated by the reasoning the response presents, inverted once as v6's
-    //    `justifiability` (BASE 4.00 > OURS 2.90 > TRUTH 2.30), and carried a stopping rule. Its full
-    //    wording and rationale are in git history of this file and in docs/rubric/README.md (v10-v12).
+    // RELEVANCE — first slot from v15. Precision and priority only: whether what the response
+    // includes is clinically relevant to the risk it raises, and whether the most strongly linked
+    // information leads. Omission of a relevant finding is NOT graded here (it moved to
+    // Comprehensiveness breadth in v15), and recommendations are out of scope, otherwise every
+    // response's advice section would count as irrelevant information.
     key: 'relevance',
     label: 'Relevance',
     question:
       "To what extent does this response identify and prioritize the most clinically relevant " +
       "information (e.g., sleep findings, medical history, supporting studies) for this patient's " +
       'future disease risk?',
-    howToScore:
-      'Ask of **each part** whether it bears on the **future risk the response raises** for this ' +
-      'patient: findings, history or studies that **support, explain or qualify** that risk are relevant; ' +
-      'those **restated without doing so** are filler, however accurate.',
-    example:
-      'Both responses are for the same patient and raise the same future risk. Response X opens on the ' +
-      'two findings that carry it — fragmented sleep [SE 68.0%] and frequent breathing disturbance ' +
-      '[RDI 42.6 events/hour] — ties them to that risk through a study of older men like this patient, ' +
-      'and brings in the prior **Essential hypertension** only where it bears on that risk: Very ' +
-      'Relevant (5). Response Y reaches the same conclusion, but restates each prior ' +
-      'condition in the history, reviews sleep stages it never connects to that risk, and cites a ' +
-      'study of a population unlike this patient; the core message is there, but diluted: Not ' +
-      'Relevant (2), or Neutral (3) where about half of it bears on the risk.',
+    howToScore: lines(
+      `**Evaluate** whether the response **identifies** the most clinically relevant information for the future disease risk it raises, and **prioritizes** it.`,
+      ``,
+      `Information is **clinically relevant** when it is one of the following, and the response connects it to the risk it raises:`,
+      ``,
+      `- **Sleep findings**: a value or pattern from the sleep study that raises or lowers the risk of that disease (e.g., Sleep efficiency or RDI for heart disease).`,
+      `- **Medical history**: a condition in Prior medical history, or the patient's age, sex or BMI, that raises or lowers the risk of that disease (e.g., Essential hypertension for heart disease).`,
+      `- **Supporting studies**: a cited study of the link between such findings or conditions and that disease.`,
+      ``,
+      `Information that is none of these is **irrelevant**, however accurate (e.g., a Prior medical history condition unrelated to that disease, or a sleep value the response never connects to it).`,
+      ``,
+      `**Identifying** means selecting the information most strongly linked to the risk. **Prioritizing** means presenting that information first and giving it the most space.`,
+      ``,
+      `Recommendations (what the patient should watch for or do) are not counted on this scale. This scale does not judge whether every relevant finding is included. Ignore the reference list.`,
+    ),
+    example: lines(
+      `**Patient:** a 73-year-old man.`,
+      ``,
+      `- **Sleep panel:** Sleep efficiency (68.0%), WASO (127.0 min), RDI (42.6 events per hour), AHI (14.0 events per hour), Sleep onset latency (7.5 min), N1 (7.7%), Time in bed (422.5 min).`,
+      `- **Prior medical history** includes Essential hypertension, Hyperlipidemia, Spinal stenosis, Osteoarthritis; localized and Acute posthemorrhagic anemia.`,
+      ``,
+      `All five responses raise **Ischemic Heart Disease** as the future risk.`,
+      ``,
+      `**Response X** opens with the two Sleep panel findings most strongly linked to heart disease: fragmented sleep (Sleep efficiency 68.0%; WASO 127.0 min) and frequent breathing disturbance (RDI 42.6 events per hour). It connects the fragmented sleep to that risk through a cited community study in which wakefulness after sleep onset predicted cardiovascular events, adds Essential hypertension and Hyperlipidemia as conditions that raise the same risk, and notes that the mild AHI (14.0 events per hour) lowers but does not remove the concern. Every item is connected to heart disease, and the most strongly linked come first: **Very Relevant (5)**.`,
+      ``,
+      `**Response Y** has the same opening, study and history, but also restates Spinal stenosis and Osteoarthritis; localized without linking them to heart disease. That is a small amount of irrelevant information: **Relevant (4)**.`,
+      ``,
+      `**Response Z** opens by reviewing Sleep onset latency (7.5 min) and N1 (7.7%), and lists Spinal stenosis, Osteoarthritis; localized and Acute posthemorrhagic anemia, connecting none of them to heart disease. Only in its second half does it reach Sleep efficiency (68.0%), RDI (42.6 events per hour) and the supporting study. The most clinically relevant information is present but placed after irrelevant information: **Neutral (3)**.`,
+      ``,
+      `**Response W** spends most of its length on the same unrelated Prior medical history conditions and on sleep timing (Time in bed 422.5 min; Sleep onset latency 7.5 min). It mentions Sleep efficiency (68.0%) in a single sentence near the end, and never mentions the RDI (42.6 events per hour) or Essential hypertension. Most of the information is irrelevant, and the most strongly linked finding occupies a single sentence: **Not Relevant (2)**.`,
+      ``,
+      `**Response V** names Ischemic Heart Disease but supports it with nothing that bears on it: it describes sleep timing (Time in bed 422.5 min; Sleep onset latency 7.5 min; N1 7.7%) and Spinal stenosis and Osteoarthritis; localized, connecting none of them to heart disease. No sleep finding, Prior medical history condition or study is connected to the risk: **Not Relevant At All (1)**.`,
+    ),
     anchors: [
       {
         value: 5,
         label: 'Very Relevant',
         description:
-          "**Directly and concisely** addresses the patient's question. It leads with the findings and evidence **most pertinent** to the risk it raises, and each part bears on that risk, with **no** distracting or unnecessary information.",
+          '**Identifies** the information most strongly linked to the risk it raises and **presents it first**, giving it the most space. **All** information in the response is clinically relevant.',
       },
       {
         value: 4,
         label: 'Relevant',
         description:
-          '**Adequately** covers the appropriate findings and evidence for the risk it raises, but includes **some** unnecessary detail or **minor** tangents (e.g. a prior condition restated without bearing on that risk, or a study of a population unlike this patient) that slightly obscure the core message.',
+          '**Leads with** the information most strongly linked to the risk, but includes **a small amount** of irrelevant information (e.g., one or two Prior medical history conditions or sleep values not linked to the risk) that slightly dilutes it.',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          "**Split evenly** between information that bears on the patient's question and information that does not.",
+          '**About half** of the information is clinically relevant and about half is irrelevant, **or** the most clinically relevant information is present but **placed after** irrelevant information.',
       },
       {
         value: 2,
         label: 'Not Relevant',
         description:
-          'Addresses the question, but the response is **heavily diluted**: it dedicates **significant** space to findings, history or studies that do not bear on the risk it raises, which distracts from the main clinical picture.',
+          '**Most** of the information is irrelevant; the information most strongly linked to the risk occupies **only a small part** of the response.',
       },
       {
         value: 1,
         label: 'Not Relevant At All',
         description:
-          "**Fails to address** the patient's question, focusing **entirely** on information unrelated to their future disease risk.",
+          '**None** of the information is clinically relevant: the response connects **no** sleep finding, medical history condition or study to the risk it raises, or raises no future disease risk at all.',
       },
     ],
   },
-
+  {
+    // JUSTIFIABILITY — v15 defines "reasoning" as three components (evidence, inference,
+    // conclusion) and "sound" as all three holding, so no anchor uses "justified". A risk
+    // prediction the response reports counts as evidence. The v14 "selective reading" clause at
+    // anchor 2 is dropped: omission is graded once, under Comprehensiveness breadth. The worked
+    // example deliberately contains no risk prediction: predictions appear in one arm only, so an
+    // example built on one would steer raters toward or against that arm.
+    key: 'justifiability',
+    label: 'Justifiability',
+    question:
+      "To what extent are this response's conclusions about future disease risk, and its suggested " +
+      'next steps, clinically justified by reasoning from the available evidence (e.g., sleep findings, ' +
+      'medical history, supporting studies)?',
+    howToScore: lines(
+      `**Evaluate** the **reasoning** the response states for each conclusion about future disease risk and each suggested next step, **not whether** the risk later developed.`,
+      ``,
+      `Reasoning has three components:`,
+      ``,
+      `- **Evidence**: the information a conclusion rests on. This can be a sleep finding, a condition in Prior medical history, the patient's age or sex, a risk prediction the response reports, or a cited study's result.`,
+      `- **Inference**: the stated link from the evidence to the conclusion, i.e. why the evidence makes the risk more or less likely, or why the next step addresses the risk (e.g., a study showing the association, or an established clinical mechanism).`,
+      `- **Conclusion**: the future risk raised or the next step suggested, together with how firmly it is stated (e.g., "may", "is associated with", "will").`,
+      ``,
+      `Reasoning is **sound** when all three hold:`,
+      ``,
+      `1. the evidence is stated and read correctly;`,
+      `2. the inference is stated and holds (a cited study concerns the same condition or outcome as the claim it supports);`,
+      `3. the conclusion is stated no more firmly than the evidence allows.`,
+      ``,
+      `These are **not reasoning**:`,
+      ``,
+      `- a finding placed next to a conclusion with no stated link (e.g., "Your RDI is 42.6 events per hour. Watch for heart disease.");`,
+      `- a general statement that applies to anyone (e.g., "Sleep is important for heart health.").`,
+      ``,
+      `The **primary conclusion** is the future risk the response names first. Evaluate only the reasoning the response states; do not supply reasoning it leaves out.`,
+    ),
+    example: lines(
+      `**Patient:** a 73-year-old man.`,
+      ``,
+      `- **Sleep panel:** Sleep efficiency (68.0%), WASO (127.0 min), RDI (42.6 events per hour), AHI (14.0 events per hour), Nadir SpO₂ (91.0%).`,
+      `- **Prior medical history** includes Essential hypertension, Hyperlipidemia and Chronic renal failure [CKD].`,
+      ``,
+      `All five responses name **Ischemic Heart Disease** as the primary conclusion.`,
+      ``,
+      `**Response X**`,
+      ``,
+      `- Evidence: fragmented sleep (Sleep efficiency 68.0%; WASO 127.0 min).`,
+      `- Inference: a cited community study in which more wakefulness after sleep onset was associated with later cardiovascular events.`,
+      `- Conclusion: this fragmented sleep "is associated with a higher risk" of Ischemic Heart Disease.`,
+      ``,
+      `X also acknowledges evidence pointing the other way: the mild AHI (14.0 events per hour) does not by itself add to that risk. It suggests a blood-pressure and cholesterol review "because your prior Essential hypertension and Hyperlipidemia raise the same risk". Every conclusion and next step is supported by sound reasoning: **Very Justifiable (5)**.`,
+      ``,
+      `**Response Y** gives the same reasoning but says the fragmented sleep "clearly raises" the risk. That is somewhat firmer than an association allows, but the conclusion itself does not change: **Justifiable (4)**.`,
+      ``,
+      `**Response Z** supports the primary conclusion as X does, but also recommends "a kidney function test" and states no evidence for it. Prior medical history lists Chronic renal failure [CKD], but the response never mentions it, and the rater must not supply that link. A secondary next step is not supported: **Neutral (3)**.`,
+      ``,
+      `**Response W** states the same evidence (Sleep efficiency 68.0%) but links it to heart disease through a cited study of all-cause mortality, which is a different outcome. The inference for the primary conclusion does not hold: **Unjustifiable (2)**.`,
+      ``,
+      `**Response V** states that the patient's oxygen "dropped dangerously low overnight (Nadir SpO₂ 91.0%)" and concludes from this that his heart disease risk is high. A nadir of 91.0% is a mild dip, so the primary conclusion rests on a misreading of the patient's data: **Very Unjustifiable (1)**.`,
+    ),
+    anchors: [
+      {
+        value: 5,
+        label: 'Very Justifiable',
+        description:
+          '**Every** conclusion and next step is supported by **sound** reasoning. Evidence that **points against** a conclusion (e.g., a normal or mild value) is **acknowledged**.',
+      },
+      {
+        value: 4,
+        label: 'Justifiable',
+        description:
+          '**Every** conclusion and next step **states its evidence and reads it correctly**, but one or two have a **minor weakness that does not change the conclusion**: the inference is left implicit, or the conclusion is stated **somewhat** more firmly than the evidence allows (e.g., "clearly raises your risk" where the cited study shows an association).',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'The **primary conclusion** is supported by sound reasoning, or has only a minor weakness as described at 4, but **at least one** secondary conclusion or next step is **not**: it states no evidence, misreads its evidence, or rests on an inference that does not hold. A response that **declines to reach any conclusion**, leaving nothing to evaluate, also scores 3.',
+      },
+      {
+        value: 2,
+        label: 'Unjustifiable',
+        description:
+          'The **primary conclusion** states its evidence, but the **inference does not hold**: an association presented as certain to occur (e.g., "you will develop"), a prediction stated far more firmly than its size allows, or a cited study of a **different condition, outcome or population**.',
+      },
+      {
+        value: 1,
+        label: 'Very Unjustifiable',
+        description:
+          "The **primary conclusion** states **no evidence**, or rests on a **misreading** of the patient's data (e.g., a value reported incorrectly, or judged against the wrong reference range).",
+      },
+    ],
+  },
+  {
+    // COMPREHENSIVENESS — v15 replaces the question. v7–v14 asked for information "beyond the known
+    // information", which measured novelty, not comprehensiveness. v15 asks for COVERAGE in the
+    // information-quality sense, collapsed to two dimensions: breadth (scope + range of sources)
+    // and depth (development + context). ⛔ v7 retired an earlier coverage framing because it
+    // rewarded chart-tour letters; the guard is that breadth is defined relative to the risk raised
+    // and a finding only counts as developed with value, meaning and context, so a chart tour is
+    // full breadth with minimal depth and caps at 3. Depth's "context" is limited to meaning and
+    // limits on purpose: relating findings to one another is Personalization's synthesis.
+    key: 'comprehensiveness',
+    label: 'Comprehensiveness',
+    question:
+      "To what extent does this response cover this patient's future disease risk in both breadth and " +
+      'depth (e.g., range of relevant findings and sources, detail and context for each risk)?',
+    howToScore: lines(
+      `**Evaluate** how fully the response accounts for the future disease risk it raises, on two dimensions: **breadth**, the range of relevant findings and sources it draws on, and **depth**, how fully it develops each finding. Rate each as full, partial or minimal using the definitions below; the 1–5 scale combines the two.`,
+      ``,
+      `A **relevant finding** is one that raises or lowers the risk of that disease. Findings fall into these domains: Breathing & oxygenation, Sleep continuity and Sleep architecture (from the Sleep panel or the sleep recording); Prior medical history; and age, sex and BMI. **Types of source** are the Patient Panel, values from the sleep recording not shown in the Sleep panel, risk predictions or estimates, and published studies.`,
+      ``,
+      `| Breadth | Meaning |`,
+      `|---|---|`,
+      `| Full | Draws on every finding strongly linked to the risk, across more than one domain, and on more than one type of source. |`,
+      `| Partial | Omits one or more strongly linked findings, or draws on a single type of source. |`,
+      `| Minimal | Rests on a single finding. |`,
+      ``,
+      `A finding is **developed** when the response gives:`,
+      ``,
+      `1. its specific value (e.g., Sleep efficiency (68.0%), not "poor sleep");`,
+      `2. its meaning: how it relates to the risk, through a mechanism or a supporting study;`,
+      `3. its context: what the measure means and the limits of what it shows (e.g., magnitude, uncertainty).`,
+      ``,
+      `| Depth | Meaning |`,
+      `|---|---|`,
+      `| Full | Every finding the response uses is developed. |`,
+      `| Partial | Some findings are developed; others are only named. |`,
+      `| Minimal | Findings are named or listed without development. |`,
+      ``,
+      `Listing many findings without developing them adds breadth, not depth. Credit development regardless of whether you agree with it.`,
+    ),
+    example: lines(
+      `**Patient:** a 73-year-old man.`,
+      ``,
+      `- **Sleep panel:** Sleep efficiency (68.0%), WASO (127.0 min), RDI (42.6 events per hour), AHI (14.0 events per hour), Nadir SpO₂ (91.0%).`,
+      `- **Prior medical history** includes Essential hypertension and Hyperlipidemia.`,
+      ``,
+      `All five responses raise **Ischemic Heart Disease** as the future risk. The findings most strongly linked to that risk are the fragmented sleep (Sleep efficiency, WASO), the breathing disturbance (RDI), and Essential hypertension and Hyperlipidemia.`,
+      ``,
+      `**Response X**`,
+      ``,
+      `- **Breadth:** it draws on all three domains (Sleep continuity, Breathing & oxygenation, Prior medical history) and on three types of source: the Patient Panel, the sleep recording (26 awakenings, not shown in the Sleep panel) and a cited cohort study.`,
+      `- **Depth:** it develops each finding.`,
+      `  - The fragmented sleep (Sleep efficiency 68.0%; WASO 127.0 min) is linked to Ischemic Heart Disease through the cohort study, in which wakefulness after sleep onset was associated with later cardiovascular events.`,
+      `  - The breathing disturbance (RDI 42.6 events per hour) is linked through recurrent arousals and surges in blood pressure, and qualified by the mild AHI (14.0 events per hour) and the modest Nadir SpO₂ (91.0%).`,
+      `  - Essential hypertension and Hyperlipidemia are presented as established risk factors for Ischemic Heart Disease.`,
+      ``,
+      `Breadth and depth are both full: **Very Comprehensive (5)**.`,
+      ``,
+      `**Response Y** draws on the same findings and sources. It develops the fragmented sleep as X does, but mentions the RDI (42.6 events per hour), Essential hypertension and Hyperlipidemia only in passing ("these are also worth noting"). Breadth is full; depth is partial: **Comprehensive (4)**.`,
+      ``,
+      `**Response Z** develops the fragmented sleep as fully as X (value, cohort study, context) but rests on that single finding, omitting the RDI, Essential hypertension and Hyperlipidemia. Depth is full; breadth is minimal: **Neutral (3)**. A response that instead listed every strongly linked finding without developing any of them would also score **Neutral (3)**.`,
+      ``,
+      `**Response W** rests on a single finding, the RDI (42.6 events per hour), and states that frequent breathing disturbance is "linked to heart disease" without a mechanism, study or context. Breadth is minimal; depth is partial: **Not Comprehensive (2)**.`,
+      ``,
+      `**Response V** attributes the risk to "your poor sleep", with no value, link or context. Both dimensions are minimal: **Not Comprehensive At All (1)**.`,
+    ),
+    anchors: [
+      {
+        value: 5,
+        label: 'Very Comprehensive',
+        description:
+          'Draws on **every** finding strongly linked to the risk, across more than one domain and more than one type of source, and **develops each** of them. (Breadth full; depth full.)',
+      },
+      {
+        value: 4,
+        label: 'Comprehensive',
+        description:
+          'Covers every strongly linked finding but develops **only some**; **or** develops every finding it uses but **omits** one or more strongly linked findings, or draws on a single type of source. (One dimension full, the other partial.)',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'Develops a **single** finding fully; **or** lists every strongly linked finding **without developing** any; **or** covers and develops the findings only in part. (One full and the other minimal, or both partial.)',
+      },
+      {
+        value: 2,
+        label: 'Not Comprehensive',
+        description:
+          'Rests on a **single** finding and develops it **only in part**; **or** names several findings, omitting some that are strongly linked, **without developing** any. (One minimal, the other partial.)',
+      },
+      {
+        value: 1,
+        label: 'Not Comprehensive At All',
+        description: 'Rests on a **single** finding, **named without development**. (Both minimal.)',
+      },
+    ],
+  },
+  {
+    // PERSONALIZATION — v15 defines the stem's terms: health aspects (areas of present health;
+    // demographics are details, not aspects; the risk raised is not an aspect, or every response
+    // would count as sleep + cardiovascular), synthesis (relating two or more aspects), and
+    // patient-specific vs generic (the transferability test). 4 vs 5 is now one observable
+    // difference: synthesis of two or more aspects carried into the recommendations.
+    key: 'personalization',
+    label: 'Personalization',
+    question:
+      'To what extent does this response personalize its synthesis of different health aspects (e.g., lifestyle, cardiovascular) to this patient?',
+    howToScore: lines(
+      `**Evaluate** whether the response's account of the patient's future health is **specific to this patient** or **generic**. Evaluate both the **analysis** (the explanation of the risk) and the **recommendations** (what the patient is advised to watch for, raise or do).`,
+      ``,
+      `- **Health aspects** are areas of the patient's present health that the response draws on, such as sleep, cardiovascular, metabolic, kidney and mental health, and lifestyle (e.g., smoking, physical activity). The future risk the response raises is not itself an aspect.`,
+      `- **Synthesis** means relating two or more health aspects to each other, by stating how they combine or interact in this patient (e.g., fragmented sleep compounding existing Essential hypertension). Discussing aspects in separate, unconnected passages is not synthesis.`,
+      `- A statement is **patient-specific** when it rests on this patient's own details (a value from the Sleep panel or the sleep recording, a condition in Prior medical history, or their age, sex or BMI) and would not hold unchanged for a different patient. A statement is **generic** when it could be moved, unchanged, into a response for another patient.`,
+      ``,
+      `Citing a value without relating it to the risk or to a recommendation does not make a statement patient-specific.`,
+    ),
+    example: lines(
+      `**Patient:** a 73-year-old man.`,
+      ``,
+      `- **Sleep panel:** Sleep efficiency (68.0%), WASO (127.0 min), RDI (42.6 events per hour), AHI (14.0 events per hour).`,
+      `- **Prior medical history** includes Essential hypertension, Hyperlipidemia and Tobacco use disorder.`,
+      ``,
+      `All five responses raise **Ischemic Heart Disease** as the future risk.`,
+      ``,
+      `**Response X**`,
+      ``,
+      `- **Analysis:** it synthesizes three health aspects through his own details: sleep (Sleep efficiency 68.0%; WASO 127.0 min), cardiovascular and metabolic (Essential hypertension; Hyperlipidemia), and lifestyle (Tobacco use disorder). It explains that his fragmented sleep adds to the strain his existing hypertension and cholesterol already place on the coronary arteries, and that smoking compounds both.`,
+      `- **Recommendations:** they follow from that synthesis: a blood-pressure and cholesterol review given the Essential hypertension and Hyperlipidemia; smoking-cessation support given the Tobacco use disorder; and reporting his frequent night-time awakenings (26 per night, from the sleep recording).`,
+      ``,
+      `**Highly Personalized (5)**.`,
+      ``,
+      `**Response Y** relates only his sleep findings (Sleep efficiency 68.0%; WASO 127.0 min; RDI 42.6 events per hour) to the risk, so the analysis draws on a single aspect. Its recommendation is tied to those findings: "mention your frequent night-time breathing disturbance (RDI 42.6 events per hour) at your next appointment": **Personalized (4)**.`,
+      ``,
+      `**Response Z** gives X's analysis but closes with "eat a balanced diet, exercise regularly, and see your doctor for routine check-ups". The analysis is patient-specific; the recommendations are generic: **Neutral (3)**.`,
+      ``,
+      `**Response W** opens with "your AHI is 14.0 events per hour and your Sleep efficiency is 68.0%", follows with a general passage on preventing heart disease in older adults that never refers back to those values, and closes with the same generic advice as Z. The values are related to neither the risk nor the recommendations: **Not Personalized (2)**.`,
+      ``,
+      `**Response V** states only that "sleep problems are linked to heart disease; eat well, stay active and see your doctor". No detail of this patient appears: **Not Personalized At All (1)**.`,
+    ),
+    anchors: [
+      {
+        value: 5,
+        label: 'Highly Personalized',
+        description:
+          'The analysis **synthesizes two or more** health aspects through this patient\'s own details, and the recommendations **follow from that synthesis**, each tied to the details it addresses.',
+      },
+      {
+        value: 4,
+        label: 'Personalized',
+        description:
+          'The analysis and the recommendations are **both** patient-specific, but **either** the analysis draws on **only one** health aspect (no synthesis), **or** it synthesizes aspects while **only some** recommendations are tied to them and the rest are generic.',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          '**Either** the analysis **or** the recommendations are patient-specific, **not both**; the other is generic.',
+      },
+      {
+        value: 2,
+        label: 'Not Personalized',
+        description:
+          "**Cites** this patient's details (e.g., age, isolated sleep values) but relates them to **neither** the risk **nor** the recommendations. The content would apply equally to a broad population with similar values.",
+      },
+      {
+        value: 1,
+        label: 'Not Personalized At All',
+        description:
+          'Contains **no** patient-specific statement. One-size-fits-all content of the kind found in a general health article.',
+      },
+    ],
+  },
+  {
+    // USEFULNESS — v15 replaces SensorFM's verbatim stem ("a useful summary to a healthcare
+    // provider"): the response is written to the patient and the rater IS the clinician, so the
+    // stem now names the clinical task, planning follow-up care. ⛔ This ends direct comparability
+    // with SensorFM ED.1 [Context]; the labels stay SensorFM's. Two dimensions: decision value of
+    // the analysis (level of concern + focus for follow-up, distinct from Comprehensiveness, which
+    // credits developing findings rather than ranking them) and actionability (specific step,
+    // with timing). Concern stated in words earns the same credit as a number: only one arm
+    // states risk numerically, so the definition says so and the example uses words only.
+    key: 'usefulness',
+    label: 'Usefulness',
+    question:
+      "To what extent is this response useful to a clinician planning follow-up care for this patient's " +
+      'future disease risk (e.g., the level of concern the analysis establishes, specific follow-up steps)?',
+    howToScore: lines(
+      `**Evaluate** the response on two dimensions:`,
+      ``,
+      `- **decision value of the analysis**: whether the analysis tells a clinician how much concern the risk warrants, and which of the patient's findings or conditions follow-up should focus on;`,
+      `- **actionability**: whether the response gives a follow-up step a clinician could carry out or order, and states when.`,
+      ``,
+      `Rate each as full, partial or minimal using the definitions below; the 1–5 scale combines the two.`,
+      ``,
+      `| Decision value | Meaning |`,
+      `|---|---|`,
+      `| Full | The analysis states the **level of concern** the risk warrants (its magnitude, likelihood or urgency) **and** singles out the **findings or conditions** that follow-up should focus on. |`,
+      `| Partial | The analysis does **one** of these but not the other. |`,
+      `| Minimal | The analysis describes findings without indicating how much concern they warrant or which should be the focus of follow-up. |`,
+      ``,
+      `A level of concern stated in words (e.g., "mild", "substantial", "warrants prompt attention") earns the same credit as one stated as a number (e.g., "about twice as likely"). Presenting every finding as equally "worth keeping in mind" does not single out a focus.`,
+      ``,
+      `| Actionability | Meaning |`,
+      `|---|---|`,
+      `| Full | At least one **specific** follow-up step (a named test, measurement or referral, or a named symptom to ask about) **with a time frame** (e.g., "at your next routine appointment") **or a trigger** (e.g., "promptly if chest discomfort develops on exertion"). |`,
+      `| Partial | Specific follow-up steps with no time frame or trigger, **or** steps that point only to an area (e.g., "have your heart health checked"). |`,
+      `| Minimal | No follow-up step, or only advice that gives a clinician nothing to carry out (e.g., "discuss these results with your doctor", "keep healthy habits"). |`,
+    ),
+    example: lines(
+      `**Patient:** a 73-year-old man.`,
+      ``,
+      `- **Sleep panel:** Sleep efficiency (68.0%), WASO (127.0 min), RDI (42.6 events per hour), AHI (14.0 events per hour).`,
+      `- **Prior medical history** includes Essential hypertension and Hyperlipidemia.`,
+      ``,
+      `All five responses raise **Ischemic Heart Disease** as the future risk.`,
+      ``,
+      `**Response X**`,
+      ``,
+      `- **Analysis:** it describes the concern as "substantial enough to warrant active attention, though not urgent". It singles out the fragmented sleep (Sleep efficiency 68.0%; WASO 127.0 min) and the existing Essential hypertension and Hyperlipidemia as what follow-up should focus on, and notes that the mild AHI (14.0 events per hour) is a lesser concern.`,
+      `- **Follow-up steps:** a blood-pressure and lipid review "at your next routine appointment", and asking about chest discomfort or breathlessness on exertion, with assessment "promptly if these develop".`,
+      ``,
+      `Decision value and actionability are both full: **Very Useful (5)**.`,
+      ``,
+      `**Response Y** has the same analysis and recommends a blood-pressure and lipid review, but does not say when. Decision value is full; actionability is partial: **Useful (4)**.`,
+      ``,
+      `**Response Z** has the same analysis but proposes no follow-up step. Decision value is full; actionability is minimal: **Neutral (3)**.`,
+      ``,
+      `**Response W** states that "this is a significant concern", but presents the fragmented sleep, the RDI (42.6 events per hour), Essential hypertension and Hyperlipidemia as all "worth keeping in mind", without singling out a focus, and closes with "discuss these results with your doctor". Decision value is partial; actionability is minimal: **Useless (2)**.`,
+      ``,
+      `**Response V** lists the same values, says only that they "may be relevant to your heart", and closes with "keep up healthy habits". Both dimensions are minimal: **Very Useless (1)**.`,
+    ),
+    anchors: [
+      {
+        value: 5,
+        label: 'Very Useful',
+        description:
+          'The analysis conveys **how much concern** the risk warrants and **what follow-up should focus on**, and the response gives at least one **specific, timed** follow-up step. (Decision value full; actionability full.)',
+      },
+      {
+        value: 4,
+        label: 'Useful',
+        description:
+          'One dimension is complete and the other only in part. For example, the analysis conveys the level of concern and the focus, but the follow-up steps lack timing or point only to an area; **or** the follow-up step is specific and timed, but the analysis conveys only the level of concern, or only the focus. (One full, the other partial.)',
+      },
+      {
+        value: 3,
+        label: 'Neutral',
+        description:
+          'For example, the analysis is complete but **no follow-up step** is given; **or** a specific, timed step follows an analysis that conveys **neither** the level of concern nor the focus; **or** both dimensions are only partly met. (One full and the other minimal, or both partial.)',
+      },
+      {
+        value: 2,
+        label: 'Useless',
+        description:
+          'For example, the analysis conveys only the level of concern, or only the focus, and **no follow-up step** is given; **or** the analysis conveys neither, and the follow-up steps lack timing or point only to an area. (One minimal, the other partial.)',
+      },
+      {
+        value: 1,
+        label: 'Very Useless',
+        description:
+          'The analysis conveys **neither** the level of concern nor a focus for follow-up, and **no** follow-up step a clinician could carry out is given. (Both minimal.)',
+      },
+    ],
+  },
 ]

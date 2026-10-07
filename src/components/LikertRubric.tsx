@@ -4,6 +4,7 @@ import type { RubricAnchor } from '@/lib/rubric-config'
 import { likertKey } from '@/lib/types'
 import { AxisHelp } from '@/components/AxisHelp'
 import { InlineEmphasis } from '@/components/InlineEmphasis'
+import { RubricText } from '@/components/RubricText'
 import { cn } from '@/lib/utils'
 import type {
   RubricState,
@@ -26,6 +27,14 @@ interface DimColor {
   selected: string // applied to the chosen row
   selectedText: string
 }
+// Rubric v15 guidance carries tables and five-response worked examples: the default 20rem popover
+// cannot hold them. Widen to the viewport on small screens and scroll within the space Radix reports
+// as available, so a tall panel never runs off-screen.
+const SCALE_HELP_CLASS =
+  'w-[min(30rem,calc(100vw-2rem))] max-h-[var(--radix-popover-content-available-height)] overflow-y-auto'
+const SCORING_HELP_CLASS =
+  'w-[min(40rem,calc(100vw-2rem))] max-h-[var(--radix-popover-content-available-height)] overflow-y-auto'
+
 const DIM_COLORS: Record<RubricDimension, DimColor> = {
   // Justifiability (v14: replaces Accuracy, whose blue it inherits along with its leading slot).
   justifiability: {
@@ -160,6 +169,7 @@ export function LikertDimensions({
               <AxisHelp
                 label={dim.label}
                 cta="What 1–5 mean here"
+                contentClassName={SCALE_HELP_CLASS}
                 text={
                   <dl className="space-y-2">
                     {dim.anchors.map((a) => (
@@ -209,21 +219,18 @@ export function LikertDimensions({
               <AxisHelp
                 label={dim.label}
                 cta="How to score · example"
+                contentClassName={SCORING_HELP_CLASS}
                 text={
-                  <div className="space-y-2 text-[13px] leading-snug">
-                    <p>
-                      <span className="font-semibold">How to score it: </span>
-                      <span className="text-muted-foreground">
-                        <InlineEmphasis text={dim.howToScore} />
-                      </span>
-                    </p>
+                  <div className="space-y-3 text-[13px] leading-snug">
+                    <section>
+                      <p className="mb-1 font-semibold">How to score it</p>
+                      <RubricText text={dim.howToScore} className="text-muted-foreground" />
+                    </section>
                     {dim.example && (
-                      <p>
-                        <span className="font-semibold">Example: </span>
-                        <span className="text-muted-foreground">
-                          <InlineEmphasis text={dim.example} />
-                        </span>
-                      </p>
+                      <section>
+                        <p className="mb-1 font-semibold">Example</p>
+                        <RubricText text={dim.example} className="text-muted-foreground" />
+                      </section>
                     )}
                   </div>
                 }
