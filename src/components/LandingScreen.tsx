@@ -9,7 +9,7 @@ import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { armRequiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
-import { DEMO_CASES, BLOCK, BLOCK_SIZE, TOTAL_BLOCKS } from '@/data/demo-cases'
+import { DEMO_CASES, BLOCK, BLOCK_SIZE, TOTAL_BLOCKS, MUST_CHOOSE_BLOCK } from '@/data/demo-cases'
 import { blockProgress, restoreFromExport } from '@/lib/storage'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -264,6 +264,9 @@ export function LandingScreen({
               )}
             </div>
 
+            {/* A multi-block batch starts from a block button above, never as one 100-case run. */}
+            {!MUST_CHOOSE_BLOCK && (
+            <div className="flex flex-wrap items-center gap-3">
             <Button size="lg" className="w-full sm:w-auto" onClick={onBegin}>
               {/* The label has to tell the truth about what the button does. With the
                   lockup now acting as a home button, a rater can be HERE mid-round, and
@@ -278,6 +281,23 @@ export function LandingScreen({
                       ? `Begin block ${BLOCK}`
                       : 'Begin evaluation'}
             </Button>
+            {BLOCK > 0 && TOTAL_BLOCKS > 1 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => {
+                  const u = new URL(window.location.href)
+                  u.searchParams.delete('block')
+                  window.location.href = u.toString()
+                }}
+              >
+                Choose a different block
+              </Button>
+            )}
+            </div>
+            )}
           </CardContent>
         </Card>
       </main>

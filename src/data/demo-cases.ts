@@ -48,6 +48,11 @@ if (requested > 0 && BLOCK === 0 && import.meta.env.VITE_APP_MODE !== 'clinician
 }
 const sliced = BLOCK > 0 ? ALL.slice((BLOCK - 1) * BLOCK_SIZE, BLOCK * BLOCK_SIZE) : ALL
 
+// A batch larger than one block is only ever scored a block at a time (Chan, 2026-10-06): without
+// ?block= the app stays on the landing screen, where the block buttons are the only way in. A
+// session therefore never holds more than BLOCK_SIZE cases, so the per-case dots always fit.
+export const MUST_CHOOSE_BLOCK = TOTAL_BLOCKS > 1 && BLOCK === 0
+
 export const DEMO_CASES = CASE_LIMIT > 0 ? sliced.slice(0, CASE_LIMIT) : sliced
 
 // Which letter set is loaded, and which slice of it. Both go into the storage key: case_ids
