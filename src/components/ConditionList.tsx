@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import phecodeNames from '@/data/phecode-names.json'
 
 interface Props {
@@ -29,12 +30,16 @@ export function ConditionList({ conditions, emptyLabel }: Props) {
     return <p className="text-sm text-muted-foreground">{emptyLabel}</p>
   }
   return (
+    // The separator sits OUTSIDE each name's no-wrap span (2026-10-06): with " · " inside it, the
+    // spans touched with no break opportunity between them, so a long history became one line that
+    // the panel's overflow-hidden cut off mid-name. Names stay whole from `sm` up; on a phone a
+    // single long name may wrap rather than overflow.
     <p className="text-sm leading-relaxed text-foreground">
       {conditions.map((c, i) => (
-        <span key={c} className="whitespace-nowrap">
-          {displayName(c)}
+        <Fragment key={c}>
+          <span className="sm:whitespace-nowrap">{displayName(c)}</span>
           {i < conditions.length - 1 && <span className="text-muted-foreground/70"> · </span>}
-        </span>
+        </Fragment>
       ))}
     </p>
   )
