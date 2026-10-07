@@ -1,3 +1,31 @@
+# Rubric v15 — source of truth and validation
+
+**v15 (2026-10-07, Chan)** — a wording pass before the clinician round, so raters score from the
+definitions rather than their own priors. `rubric_version` **v15-20261007**, SCHEMA_VERSION **27**.
+Keys are unchanged; **Relevance moves to the first slot**. Source of truth:
+`src/lib/rubric-config-disease.ts`. The rater Google Doc still holds an older version.
+
+| # | Criterion | Stored key | Change |
+|---|---|---|---|
+| 1 | **Relevance** | `relevance` | Question unchanged. "Clinically relevant information" defined (sleep findings, medical history, supporting studies, connected to the risk raised); precision and priority only — omission moved to Comprehensiveness. |
+| 2 | **Justifiability** | `justifiability` | Question unchanged. Reasoning = evidence, inference, conclusion; sound = all three hold; risk predictions count as evidence. |
+| 3 | **Comprehensiveness** | `comprehensiveness` | ⛔ **New question**: coverage of the future disease risk in breadth and depth. Full/Partial/Minimal per dimension, combined into 1–5. |
+| 4 | **Personalization** | `personalization` | Question unchanged. Health aspect, synthesis and patient-specific defined; 5 = synthesis carried into the recommendations. |
+| 5 | **Usefulness** | `usefulness` | ⛔ **New question**: useful to a clinician planning follow-up care. Decision value of the analysis × actionability (with timing). Ends verbatim comparability with SensorFM ED.1. |
+
+**Across all five:** no description defines a scale with its own word; How to score and the
+examples render as structured text (lists, Full/Partial/Minimal tables) via `RubricText`; every
+example uses HSP_v7_000 values in parentheses and one constructed response per score. No example
+features a risk prediction (one arm only — an exemplar either way would steer raters).
+
+**Watch next round:**
+- Comprehensiveness vs Usefulness: Comprehensiveness credits developing findings, Usefulness credits
+  ranking them; r > 0.7 would mean raters are scoring one thing.
+- HSP_v7_000 is the worked-example patient: keep it out of the clinician batch.
+- The Future risk panel still says "This is what the responses are rated against"; no v15 axis is.
+
+---
+
 # Rubric v13 — source of truth and validation
 
 **v13 (2026-09-29, Chan)** — the fifth criterion is **Relevance**, replacing Trustworthiness.

@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react'
 import { Info } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
 interface Props {
   label: string
   text: ReactNode
   /** Visible call to action beside the icon. Omit for an icon-only toggletip. */
   cta?: string
+  /** Overrides for the popover panel, e.g. a wider, scrollable panel for long guidance. */
+  contentClassName?: string
 }
 
 // Per-axis help. A bare info icon announces that something exists but not what, so a rater
@@ -17,7 +20,7 @@ interface Props {
 // Implemented as a click/tap Popover toggletip rather than a
 // hover Tooltip, because Radix Tooltip does not open on touch and the audience
 // may use iPads.
-export function AxisHelp({ label, text, cta }: Props) {
+export function AxisHelp({ label, text, cta, contentClassName }: Props) {
   return (
     <Popover>
       <PopoverTrigger
@@ -29,7 +32,11 @@ export function AxisHelp({ label, text, cta }: Props) {
           <span className="text-xs underline decoration-dotted underline-offset-2">{cta}</span>
         ) : null}
       </PopoverTrigger>
-      <PopoverContent side="top" align="start" className="w-80 text-sm leading-relaxed">
+      <PopoverContent
+        side="top"
+        align="start"
+        className={cn('w-80 text-sm leading-relaxed', contentClassName)}
+      >
         {text}
       </PopoverContent>
     </Popover>
