@@ -1,0 +1,25 @@
+batch,case_id,case_position,response_label,arm,arm_name,query_id,response_sha
+v66w3_r8_parens,HSP_v7_000,0,A,d3c5e9,,Based on my overnight sl,fc25538e
+v66w3_r8_parens,HSP_v7_000,0,B,10d9ac,,Based on my overnight sl,2c97de72
+v66w3_r8_parens,HSP_v7_000,0,C,ca34de,,Based on my overnight sl,f17f8eac
+v66w3_r8_parens,HSP_v7_001,1,A,ca34de,,Based on my overnight sl,4388bdba
+v66w3_r8_parens,HSP_v7_001,1,B,d3c5e9,,Based on my overnight sl,bffa1bc1
+v66w3_r8_parens,HSP_v7_001,1,C,10d9ac,,Based on my overnight sl,60c6ab73
+v66w3_r8_parens,HSP_v7_023,2,A,10d9ac,,Based on my overnight sl,d57a790c
+v66w3_r8_parens,HSP_v7_023,2,B,ca34de,,Based on my overnight sl,daa4b76d
+v66w3_r8_parens,HSP_v7_023,2,C,d3c5e9,,Based on my overnight sl,f44609ad
+v66w3_r8_parens,HSP_v7_053,3,A,d3c5e9,,Based on my overnight sl,75bb7a97
+v66w3_r8_parens,HSP_v7_053,3,B,ca34de,,Based on my overnight sl,fab130b9
+v66w3_r8_parens,HSP_v7_053,3,C,10d9ac,,Based on my overnight sl,40217ec1
+v66w3_r8_parens,HSP_v7_054,4,A,ca34de,,Based on my overnight sl,58e30adc
+v66w3_r8_parens,HSP_v7_054,4,B,10d9ac,,Based on my overnight sl,892a1f55
+v66w3_r8_parens,HSP_v7_054,4,C,d3c5e9,,Based on my overnight sl,dda58121
+v66w3_r8_parens,HSP_v7_079,5,A,10d9ac,,Based on my overnight sl,9093eb95
+v66w3_r8_parens,HSP_v7_079,5,B,ca34de,,Based on my overnight sl,5bbedba9
+v66w3_r8_parens,HSP_v7_079,5,C,d3c5e9,,Based on my overnight sl,8dd62815
+v66w3_r8_parens,HSP_v7_085,6,A,d3c5e9,,Based on my overnight sl,1d7a8f0f
+v66w3_r8_parens,HSP_v7_085,6,B,10d9ac,,Based on my overnight sl,5fc18b36
+v66w3_r8_parens,HSP_v7_085,6,C,ca34de,,Based on my overnight sl,a797a808
+v66w3_r8_parens,HSP_v7_092,7,A,10d9ac,,Based on my overnight sl,68e79d13
+v66w3_r8_parens,HSP_v7_092,7,B,d3c5e9,,Based on my overnight sl,862c4bd8
+v66w3_r8_parens,HSP_v7_092,7,C,ca34de,,Based on my overnight sl,2d58c43e

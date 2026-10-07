@@ -42,13 +42,13 @@ join public.batch_response br
   and br.response_label = r.response_label
 join public.rater ra
   on ra.id = r.rater_id
-where r.batch          = 'v66w3_r8'   -- v611_r10 for the earlier round
+where r.batch          = 'v66w3_r8_parens'   -- Zitao's round: 'v66w3_r8'; earlier: 'v611_r10'
   -- ⚠️ ZONGZHE'S FIRST ROUND WAS SCORED UNDER 'v10-20260918'. Those rows are still valid and
   -- still join (the letters did not change, so response_sha is stable) — they are simply in a
   -- different rubric partition. Switch the pin to read them; never pool the two on
   -- trustworthiness, whose howToScore changed in v11. v13 replaces that axis with `relevance`:
   -- never pool v13 with v12 on the fifth dimension.
-  and r.rubric_version = 'v13-20260929'  -- ALWAYS pin: past renames crossed over (v12-20260918 for v611_r10)
+  and r.rubric_version = 'v15-20261007'  -- ALWAYS pin: past renames crossed over (Zitao's v66w3_r8 round: v14-20261006)
   -- ⚠️ SIGN-UP IS OPEN (2026-09-17): anyone reaching the public URL can create an
   -- account, and their rows are indistinguishable from a recruited clinician's. Before
   -- analysis, restrict to the raters you actually recruited — uncomment and fill in:
