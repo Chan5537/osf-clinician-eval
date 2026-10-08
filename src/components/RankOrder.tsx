@@ -35,13 +35,19 @@ import type { RubricState, RubricAction, ResponseEntry, RankValue } from '@/lib/
 // BLINDING: no system, arm, architecture, prediction, "ground truth" or "oracle" wording below.
 
 // 1 = best. Labels carry both the ordinal and a plain word: "1st" alone is ambiguous about
-// direction to a rater meeting the question for the first time.
-const PLACES: { value: Exclude<RankValue, null>; short: string; word: string }[] = [
-  { value: 1, short: '1st', word: 'Best' },
-  { value: 2, short: '2nd', word: 'Middle' },
-  { value: 3, short: '3rd', word: 'Worst' },
-]
+// direction to a rater meeting the question for the first time. The word sits on the two ends only
+// (computed below), so a 2-response batch reads Best/Worst rather than Best/Middle.
+const ORDINALS = ['1st', '2nd', '3rd'] as const
 
+// PLACE-FIRST LAYOUT (Sirui, 2026-10-08): one row per place, and the rater picks the response that
+// fills it ("given a rank, select the response"), instead of picking a place for each response.
+// Raters think "which is best?", not "where does A go?". ONLY THE VIEW IS INVERTED: the state is
+// still one place per response (`rank[label]`), written through the same SET_RANK action, so the
+// stored rows, export, server completion trigger and analysis are all unchanged.
+//
+// Choosing a response that already holds another place MOVES it here, and whichever response held
+// this place takes the one it gave up (SET_RANK's swap). A response can therefore never sit in two
+// rows, and a tie cannot be entered.
 export function RankOrder({
   responses,
   state,
@@ -52,8 +58,13 @@ export function RankOrder({
   dispatch: Dispatch<RubricAction>
 }) {
   const complete = rankComplete(state, responses)
-  // A 2-response batch degrades to Best/Worst rather than showing a dead 3rd place.
-  const places = PLACES.slice(0, responses.length)
+  const n = responses.length
+  const places = ORDINALS.slice(0, n).map((short, i) => ({
+    value: (i + 1) as Exclude<RankValue, null>,
+    short,
+    word: i === 0 ? 'Best' : i === n - 1 ? 'Worst' : null,
+  }))
+  const shortOf = (v: RankValue) => (v ? ORDINALS[v - 1] : null)
 
   const ordered = responses
     .filter((r) => rankOf(state, r.label) !== null)
@@ -79,57 +90,77 @@ export function RankOrder({
         </div>
 
         <p className="text-sm font-medium leading-snug text-foreground">
-          Taking everything together, rank these {responses.length} responses from best to worst.
+          Taking everything together, rank these {n} responses from best to worst.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          For each place, select the response that belongs there.
         </p>
       </div>
 
       <ul className="mt-3 space-y-1.5">
-        {responses.map((r) => {
-          const current = rankOf(state, r.label)
+        {places.map((p) => {
+          const holder = responses.find((r) => rankOf(state, r.label) === p.value)
           return (
             <li
-              key={r.label}
-              className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 rounded-lg border bg-card px-3 py-2"
+              key={p.value}
+              className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border bg-card px-3 py-2"
             >
-              {/* Same avatar chip + "Response X" phrasing as FocusReview's tab bar, so a letter
-                  reads identically in both places. */}
-              <span className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    'flex size-6 items-center justify-center rounded-full text-xs font-semibold',
-                    AVATAR_STYLES[r.label],
-                  )}
-                  aria-hidden="true"
-                >
-                  {r.label}
-                </span>
-                <span className="text-sm font-semibold">Response {r.label}</span>
+              {/* The place label: ordinal large, the direction word beneath it. Fixed width so the
+                  response buttons line up in a column across the rows. */}
+              <span className="flex w-16 shrink-0 flex-col leading-tight">
+                <span className="text-base font-bold tabular-nums">{p.short}</span>
+                {p.word && <span className="text-xs text-muted-foreground">{p.word}</span>}
               </span>
 
               <div
                 role="radiogroup"
-                aria-label={`Place for Response ${r.label}`}
-                className="flex items-center gap-1"
+                aria-label={`${p.short} place${p.word ? ` (${p.word.toLowerCase()})` : ''}`}
+                className="flex flex-wrap items-center gap-1.5"
               >
-                {places.map((p) => {
-                  const selected = current === p.value
+                {responses.map((r) => {
+                  const selected = holder?.label === r.label
+                  // Where this response sits now, if somewhere else — shown on the button so a
+                  // rater can see that choosing it here will move it.
+                  const elsewhere = !selected ? shortOf(rankOf(state, r.label)) : null
                   return (
                     <button
-                      key={p.value}
+                      key={r.label}
                       type="button"
                       role="radio"
                       aria-checked={selected}
+                      title={
+                        elsewhere
+                          ? `Response ${r.label} is ranked ${elsewhere} — choose it to move it here`
+                          : undefined
+                      }
                       onClick={() => dispatch({ type: 'SET_RANK', label: r.label, value: p.value })}
                       className={cn(
-                        'cursor-pointer rounded-md border px-3 py-1.5 text-sm transition-colors',
+                        // Fixed width, so each response stays in the same column on every row whatever its
+                        // "· 2nd" hint adds; a grid of aligned choices is what makes the rows scannable.
+                        'flex w-44 cursor-pointer items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
                         selected
                           ? 'border-transparent bg-foreground font-semibold text-background shadow-sm'
-                          : 'border-border text-muted-foreground hover:bg-muted/60',
+                          : elsewhere
+                            ? 'border-dashed border-border text-muted-foreground/70 hover:bg-muted/60'
+                            : 'border-border text-foreground hover:bg-muted/60',
                       )}
                     >
-                      <span className="tabular-nums">{p.short}</span>
-                      <span className="ml-1.5 hidden font-normal sm:inline">{p.word}</span>
+                      {/* Same avatar chip + "Response X" phrasing as FocusReview's tab bar, so a
+                          letter reads identically in both places. */}
+                      <span
+                        className={cn(
+                          'flex size-5 items-center justify-center rounded-full text-xs font-semibold',
+                          AVATAR_STYLES[r.label],
+                        )}
+                        aria-hidden="true"
+                      >
+                        {r.label}
+                      </span>
+                      <span>Response {r.label}</span>
+                      {elsewhere && (
+                        <span className="ml-auto text-xs font-normal tabular-nums">{elsewhere}</span>
+                      )}
                     </button>
                   )
                 })}
@@ -139,12 +170,12 @@ export function RankOrder({
         })}
       </ul>
 
-      {/* Choosing a taken place SWAPS the two responses (see the reducer's SET_RANK), so another
-          row changes without the rater touching it. Announce the resulting order, or a
-          screen-reader user is never told that the other row moved. */}
+      {/* Choosing a response held elsewhere SWAPS (see the reducer's SET_RANK), so another row
+          changes without the rater touching it. Announce the resulting order, or a screen-reader
+          user is never told that the other row moved. */}
       <p aria-live="polite" className="sr-only">
         {complete
-          ? `Ranking set: ${ordered.map((r, n) => `${n + 1}. Response ${r.label}`).join(', ')}`
+          ? `Ranking set: ${ordered.map((r, k) => `${k + 1}. Response ${r.label}`).join(', ')}`
           : 'Ranking incomplete.'}
       </p>
     </section>
