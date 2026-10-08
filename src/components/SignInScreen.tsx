@@ -18,7 +18,7 @@ interface Props {
   onSignInWithPassword?: (email: string, password: string) => Promise<void>
 }
 
-// Sign-in gate. No password: the rater enters their email and gets a one-time link.
+// Sign-in gate. No password: the rater enters their email and gets a one-time code.
 //
 // OPEN SIGNUP (owner, 2026-09-17): no roster, no invitations. A clinician who reaches
 // the site enrols themselves, and a mistyped address cannot lock anyone out.
@@ -64,7 +64,7 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
       setCooldown(res?.throttledFor ?? 30)
       setAlreadySent(Boolean(res?.throttledFor))
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not send the link.')
+      setError(err instanceof Error ? err.message : 'Could not send the code.')
       // Stay on the form so the address is still there to correct or retry.
       setSent(false)
     } finally {
@@ -211,7 +211,7 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
                     Sign in to begin
                   </h1>
                   <p className="text-sm leading-relaxed text-muted-foreground">
-                    Enter your email address and we will send you a sign-in link. There is no
+                    Enter your email address and we will email you a sign-in code. There is no
                     password to remember, and no account to set up — the same address works
                     every time you come back.
                   </p>
@@ -275,7 +275,7 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
                       : 'Sending…'
                     : usePassword
                       ? 'Sign in'
-                      : 'Email me a sign-in link'}
+                      : 'Email me a sign-in code'}
                 </Button>
 
                 {ALLOW_PASSWORD_SIGNIN && onSignInWithPassword && (
@@ -288,7 +288,7 @@ export function SignInScreen({ onSignIn, onVerifyCode, onBack, onSignInWithPassw
                     className="w-full cursor-pointer text-center text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
                   >
                     {usePassword
-                      ? 'Use an email link instead'
+                      ? 'Use an email code instead'
                       : 'Sign in with a password instead'}
                   </button>
                 )}
