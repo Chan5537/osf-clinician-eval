@@ -74,10 +74,11 @@ export function LandingScreen({
             <div className="space-y-2">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 For each response you will rate <strong>{itemsPerResponse} quality scales</strong>{' '}
-                from <strong>1 to 5</strong>. These are judgement calls — pick the score that
-                matches your impression. At the end of each case you will also{' '}
-                <strong>rank the {nResponses} responses from best to worst</strong>. The whole study
-                takes about <strong>15–20 minutes</strong>.
+                from <strong>1 to 5</strong>. Every scale has a definition of each score and a
+                worked example, one click away. At the end of each case you will also{' '}
+                <strong>rank the {nResponses} responses from best to worst</strong>. Each case takes
+                roughly <strong>4–7 minutes</strong> once you are familiar with the scales, and you
+                can stop and resume at any point.
               </p>
             </div>
 
@@ -86,10 +87,11 @@ export function LandingScreen({
                 What each case shows
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Alongside the patient's question you have a <strong>Sleep panel</strong> (the
-                measurements from their overnight study), their <strong>Prior medical
-                history</strong>, and the <strong>Patient group</strong> — what brought them in.
-                It is all open by default, and worth a look before the responses.
+                Alongside the patient's question you have the <strong>Patient Panel</strong>: the{' '}
+                <strong>Sleep panel</strong> (the scored results of their overnight study), their{' '}
+                <strong>Prior medical history</strong>, their <strong>Future risk</strong> (what
+                they went on to develop), and <strong>Supplementary information</strong>. Please
+                look through it before reading the responses.
               </p>
             </div>
 
@@ -176,8 +178,8 @@ export function LandingScreen({
               <div className="space-y-2">
                 <Label>Choose a block</Label>
                 <p className="text-xs text-muted-foreground">
-                  The batch is split into blocks of {BLOCK_SIZE} cases. Each block is scored and
-                  downloaded on its own; you can do them in any order, on any day.
+                  The batch is split into blocks of {BLOCK_SIZE} cases. Each block is scored on its
+                  own; you can do them in any order, on any day.
                 </p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {blocks.map((b) => (
