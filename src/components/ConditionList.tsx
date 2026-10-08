@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import phecodeNames from '@/data/phecode-names.json'
+import { groupByCategory } from '@/lib/case-context'
 
 interface Props {
   conditions: string[]
@@ -19,28 +20,53 @@ function displayName(name: string): string {
   return NAME_BY_CODE[m[1]] ?? `Code ${m[1]}`
 }
 
-// One wrapped row of condition names. Until 2026-08-28 this grouped conditions under organ-system
-// headings (MENTAL DISORDERS / MUSCULOSKELETAL / ...) — and clinician feedback showed exactly the
-// failure that invites: raters read the history taxonomy as a diagnostic worksheet and derived
-// their own prediction from it. Flat names state what is on record without ranking or organising
-// it into an argument. The category grouping survives where it IS the point: the outcome panel
-// (FutureRiskGrid).
+// Grouped by organ-system category (RESTORED 2026-10-08, owner, after Zongzhe's internal-round
+// feedback: "grouped by disease category for easier searching/better readability"). The median
+// gap60 patient carries 9 conditions and 44/100 carry more than 10 (max 65), which a single
+// flat row made hard to search.
+//
+// HISTORY, because this reverses ea44efa (2026-08-28), which flattened the list after raters read
+// the grouped taxonomy as a diagnostic worksheet and judged the letters against their own
+// prediction instead of the recorded outcome. That concern was tied to the outcome-keyed rubric of
+// the time. Rubric v15 evaluates reasoning "regardless of whether the risk later developed" and
+// asks raters to know which history conditions are most strongly linked to a risk, which grouping
+// makes easier. If raters again start scoring against their own call, revisit this first.
+//
+// Layout: category on the left with its count, the names as one wrapped row on the right. One
+// name per line (the pre-ea44efa layout) ran to 27 lines for a single category on HSP_v7_014.
+// Categories follow CATEGORY_ORDER, the same in every case, so a rater looking for, e.g.,
+// circulatory history finds it in the same place each time. Names resolve BEFORE grouping, so a
+// leaked pc_ token is filed under its real category.
 export function ConditionList({ conditions, emptyLabel }: Props) {
   if (conditions.length === 0) {
     return <p className="text-sm text-muted-foreground">{emptyLabel}</p>
   }
+  const groups = groupByCategory(conditions.map(displayName))
   return (
-    // The separator sits OUTSIDE each name's no-wrap span (2026-10-06): with " · " inside it, the
-    // spans touched with no break opportunity between them, so a long history became one line that
-    // the panel's overflow-hidden cut off mid-name. Names stay whole from `sm` up; on a phone a
-    // single long name may wrap rather than overflow.
-    <p className="text-sm leading-relaxed text-foreground">
-      {conditions.map((c, i) => (
-        <Fragment key={c}>
-          <span className="sm:whitespace-nowrap">{displayName(c)}</span>
-          {i < conditions.length - 1 && <span className="text-muted-foreground/70"> · </span>}
-        </Fragment>
+    <dl className="divide-y divide-border/60">
+      {groups.map((g) => (
+        <div
+          key={g.category}
+          className="grid grid-cols-1 gap-x-4 gap-y-1 py-2 first:pt-0 last:pb-0 sm:grid-cols-[12rem_1fr]"
+        >
+          <dt className="flex items-baseline gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:pt-0.5">
+            {g.category}
+            <span className="font-normal normal-case tabular-nums text-muted-foreground/80">
+              ({g.conditions.length})
+            </span>
+          </dt>
+          <dd className="text-sm leading-relaxed text-foreground">
+            {g.conditions.map((c, i) => (
+              <Fragment key={c}>
+                <span className="sm:whitespace-nowrap">{c}</span>
+                {i < g.conditions.length - 1 && (
+                  <span className="text-muted-foreground/70"> · </span>
+                )}
+              </Fragment>
+            ))}
+          </dd>
+        </div>
       ))}
-    </p>
+    </dl>
   )
 }
