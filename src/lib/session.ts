@@ -100,7 +100,10 @@ import { advance, touch, park, resume } from './timing'
 // v27 = rubric v15 (2026-10-07, Chan): Comprehensiveness and Usefulness get new questions on their
 //       existing keys, the other three axes are re-anchored, and Relevance moves to the first slot.
 //       A v26 session holds answers to questions no longer asked, so it is discarded rather than resumed.
-export const SCHEMA_VERSION = 27
+// v28 = rubric v15-20261008 (2026-10-08, Chan): v15's definitions loosened (open example lists, no
+//       "X is not Y" clauses) and risk predictions added to two questions' e.g. lists. A v27 session was
+//       answered under the narrower wording, so it is discarded rather than resumed.
+export const SCHEMA_VERSION = 28
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
 

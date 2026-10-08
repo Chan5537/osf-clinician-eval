@@ -1,7 +1,9 @@
 # Rubric v15 — source of truth and validation
 
 **v15 (2026-10-07, Chan)** — a wording pass before the clinician round, so raters score from the
-definitions rather than their own priors. `rubric_version` **v15-20261007**, SCHEMA_VERSION **27**.
+definitions rather than their own priors. `rubric_version` **v15-20261008**, SCHEMA_VERSION **28**
+(first live as v15-20261007 / 27; the 20261008 stamp loosens the definitions: open example lists,
+no "X is not Y" clauses, and risk predictions in the Relevance and Justifiability e.g. lists).
 Keys are unchanged; **Relevance moves to the first slot**. Source of truth:
 `src/lib/rubric-config-disease.ts`. The rater Google Doc still holds an older version.
 

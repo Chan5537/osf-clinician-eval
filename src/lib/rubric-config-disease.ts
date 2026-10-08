@@ -21,6 +21,12 @@
 //      SensorFM's "useful summary to a healthcare provider"); decision value x actionability.
 //    ⛔ v15 is NOT comparable with v14 on Comprehensiveness or Usefulness (different questions), and
 //       the other three changed their anchors: filter on rubric_version, never pool.
+//    v15-20261008 (Chan, same day): definitions LOOSENED. Closed category lists became open
+//       examples ("such as", "e.g."), "every"/"each" requirements were relaxed, and every
+//       "X is not Y" clause was removed (they narrowed the scope raters would credit). Risk
+//       predictions join the e.g. list of the Relevance and Justifiability questions, and
+//       Relevance now credits information on monitoring or managing the risk. Live briefly as
+//       v15-20261007; pin rubric_version and do not pool the two stamps.
 //
 // v14 (2026-10-06, Chan; agreed with Zitao after Prof. Yang's critique of Accuracy): ACCURACY ->
 //    JUSTIFIABILITY (key `justifiability`), the first axis. SensorFM ED.1 [Justifiability] in the house
@@ -233,7 +239,7 @@ import type { RubricDimensionDef } from './rubric-config'
 
 // Stamped into every export row (rubric_version column) so a CSV identifies which wording —
 // and which key vocabulary — produced it. Bump alongside SCHEMA_VERSION when axes change.
-export const RUBRIC_VERSION = 'v15-20261007'
+export const RUBRIC_VERSION = 'v15-20261008'
 
 // Guidance strings are written one line per array element and joined with '\n', so the block
 // structure RubricText reads (blank line = new block; "- " list; "|" table) stays visible here.
@@ -250,22 +256,22 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     label: 'Relevance',
     question:
       "To what extent does this response identify and prioritize the most clinically relevant " +
-      "information (e.g., sleep findings, medical history, supporting studies) for this patient's " +
-      'future disease risk?',
+      "information (e.g., sleep findings, medical history, risk predictions, supporting studies) for this " +
+      "patient's future disease risk?",
     howToScore: lines(
-      `**Evaluate** whether the response **identifies** the most clinically relevant information for the future disease risk it raises, and **prioritizes** it.`,
+      `**Evaluate** whether the response **identifies** the most clinically relevant information for the future disease risk(s) it raises, and **prioritizes** it.`,
       ``,
-      `Information is **clinically relevant** when it is one of the following, and the response connects it to the risk it raises:`,
+      `Information is **clinically relevant** when the response connects it to a disease risk it raises and it bears on that risk: it indicates, raises or lowers the risk, estimates its size, helps explain it, or addresses how to monitor or manage it. Examples include:`,
       ``,
-      `- **Sleep findings**: a value or pattern from the sleep study that raises or lowers the risk of that disease (e.g., Sleep efficiency or RDI for heart disease).`,
-      `- **Medical history**: a condition in Prior medical history, or the patient's age, sex or BMI, that raises or lowers the risk of that disease (e.g., Essential hypertension for heart disease).`,
-      `- **Supporting studies**: a cited study of the link between such findings or conditions and that disease.`,
+      `- **Sleep findings** (e.g., Sleep efficiency or RDI for heart disease)`,
+      `- **Medical history and demographics** (e.g., Essential hypertension, age)`,
+      `- **Risk predictions or estimates** (e.g., "about twice as likely as comparable patients")`,
+      `- **Supporting studies** linking the patient's findings to that disease`,
+      `- **Other measurements**, such as values from the sleep recording or estimated values`,
       ``,
-      `Information that is none of these is **irrelevant**, however accurate (e.g., a Prior medical history condition unrelated to that disease, or a sleep value the response never connects to it).`,
+      `Information that bears on none of the risks the response raises is **irrelevant**, however accurate.`,
       ``,
-      `**Identifying** means selecting the information most strongly linked to the risk. **Prioritizing** means presenting that information first and giving it the most space.`,
-      ``,
-      `Recommendations (what the patient should watch for or do) are not counted on this scale. This scale does not judge whether every relevant finding is included. Ignore the reference list.`,
+      `**Identifying** means selecting the information most strongly linked to the risk. **Prioritizing** means presenting that information first and giving it the most space. Ignore the reference list.`,
     ),
     example: lines(
       `**Patient:** a 73-year-old man.`,
@@ -314,7 +320,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 1,
         label: 'Not Relevant At All',
         description:
-          '**None** of the information is clinically relevant: the response connects **no** sleep finding, medical history condition or study to the risk it raises, or raises no future disease risk at all.',
+          '**None** of the information is clinically relevant: the response connects **nothing** it presents to the risk it raises, or raises no future disease risk at all.',
       },
     ],
   },
@@ -330,28 +336,23 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     question:
       "To what extent are this response's conclusions about future disease risk, and its suggested " +
       'next steps, clinically justified by reasoning from the available evidence (e.g., sleep findings, ' +
-      'medical history, supporting studies)?',
+      'medical history, risk predictions, supporting studies)?',
     howToScore: lines(
-      `**Evaluate** the **reasoning** the response states for each conclusion about future disease risk and each suggested next step, **not whether** the risk later developed.`,
+      `**Evaluate** the **reasoning** the response states for each conclusion about future disease risk and each suggested next step, regardless of whether the risk later developed.`,
       ``,
       `Reasoning has three components:`,
       ``,
-      `- **Evidence**: the information a conclusion rests on. This can be a sleep finding, a condition in Prior medical history, the patient's age or sex, a risk prediction the response reports, or a cited study's result.`,
-      `- **Inference**: the stated link from the evidence to the conclusion, i.e. why the evidence makes the risk more or less likely, or why the next step addresses the risk (e.g., a study showing the association, or an established clinical mechanism).`,
+      `- **Evidence**: the information a conclusion rests on, such as a sleep finding, a condition in Prior medical history, the patient's age or sex, a risk prediction the response reports, or a cited study's result.`,
+      `- **Inference**: the stated link from the evidence to the conclusion, i.e. why the evidence makes the risk more or less likely, or why the next step addresses the risk (e.g., a supporting study, an established mechanism, or clinical guidance).`,
       `- **Conclusion**: the future risk raised or the next step suggested, together with how firmly it is stated (e.g., "may", "is associated with", "will").`,
       ``,
-      `Reasoning is **sound** when all three hold:`,
+      `Reasoning is **sound** when:`,
       ``,
       `1. the evidence is stated and read correctly;`,
-      `2. the inference is stated and holds (a cited study concerns the same condition or outcome as the claim it supports);`,
+      `2. the inference is stated and holds (e.g., a cited study concerns the same or a closely related condition or outcome as the claim it supports);`,
       `3. the conclusion is stated no more firmly than the evidence allows.`,
       ``,
-      `These are **not reasoning**:`,
-      ``,
-      `- a finding placed next to a conclusion with no stated link (e.g., "Your RDI is 42.6 events per hour. Watch for heart disease.");`,
-      `- a general statement that applies to anyone (e.g., "Sleep is important for heart health.").`,
-      ``,
-      `The **primary conclusion** is the future risk the response names first. Evaluate only the reasoning the response states; do not supply reasoning it leaves out.`,
+      `The **primary conclusion** is the future risk the response names first. Evaluate the reasoning as the response states it.`,
     ),
     example: lines(
       `**Patient:** a 73-year-old man.`,
@@ -371,7 +372,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       ``,
       `**Response Y** gives the same reasoning but says the fragmented sleep "clearly raises" the risk. That is somewhat firmer than an association allows, but the conclusion itself does not change: **Justifiable (4)**.`,
       ``,
-      `**Response Z** supports the primary conclusion as X does, but also recommends "a kidney function test" and states no evidence for it. Prior medical history lists Chronic renal failure [CKD], but the response never mentions it, and the rater must not supply that link. A secondary next step is not supported: **Neutral (3)**.`,
+      `**Response Z** supports the primary conclusion as X does, but also recommends "a kidney function test" and states no evidence for it. Prior medical history lists Chronic renal failure [CKD], but the response never mentions it, and the rater evaluates only the reasoning the response states. A secondary next step is not supported: **Neutral (3)**.`,
       ``,
       `**Response W** states the same evidence (Sleep efficiency 68.0%) but links it to heart disease through a cited study of all-cause mortality, which is a different outcome. The inference for the primary conclusion does not hold: **Unjustifiable (2)**.`,
       ``,
@@ -382,7 +383,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Very Justifiable',
         description:
-          '**Every** conclusion and next step is supported by **sound** reasoning. Evidence that **points against** a conclusion (e.g., a normal or mild value) is **acknowledged**.',
+          '**Every** conclusion and next step is supported by **sound** reasoning, and evidence that **points against** a conclusion (e.g., a normal or mild value) is **acknowledged** where present.',
       },
       {
         value: 4,
@@ -400,7 +401,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 2,
         label: 'Unjustifiable',
         description:
-          'The **primary conclusion** states its evidence, but the **inference does not hold**: an association presented as certain to occur (e.g., "you will develop"), a prediction stated far more firmly than its size allows, or a cited study of a **different condition, outcome or population**.',
+          'The **primary conclusion** states its evidence, but the **inference does not hold**: an association presented as certain to occur (e.g., "you will develop"), a prediction stated far more firmly than its size allows, or a cited study whose condition, outcome or population does **not reasonably correspond** to the claim.',
       },
       {
         value: 1,
@@ -425,29 +426,25 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       "To what extent does this response cover this patient's future disease risk in both breadth and " +
       'depth (e.g., range of relevant findings and sources, detail and context for each risk)?',
     howToScore: lines(
-      `**Evaluate** how fully the response accounts for the future disease risk it raises, on two dimensions: **breadth**, the range of relevant findings and sources it draws on, and **depth**, how fully it develops each finding. Rate each as full, partial or minimal using the definitions below; the 1–5 scale combines the two.`,
+      `**Evaluate** how fully the response accounts for the future disease risk it raises, on two dimensions: **breadth**, the range of relevant findings and sources it draws on, and **depth**, how fully it develops each finding. Rate each as full, partial or minimal; the 1–5 scale combines the two.`,
       ``,
-      `A **relevant finding** is one that raises or lowers the risk of that disease. Findings fall into these domains: Breathing & oxygenation, Sleep continuity and Sleep architecture (from the Sleep panel or the sleep recording); Prior medical history; and age, sex and BMI. **Types of source** are the Patient Panel, values from the sleep recording not shown in the Sleep panel, risk predictions or estimates, and published studies.`,
+      `A **relevant finding** is one that raises or lowers the risk of that disease. Findings span domains such as Breathing & oxygenation, Sleep continuity, Sleep architecture, Prior medical history, medications or lab values, and age, sex and BMI. Sources include the Patient Panel, values from the sleep recording, risk predictions or estimates, and published studies.`,
       ``,
       `| Breadth | Meaning |`,
       `|---|---|`,
-      `| Full | Draws on every finding strongly linked to the risk, across more than one domain, and on more than one type of source. |`,
-      `| Partial | Omits one or more strongly linked findings, or draws on a single type of source. |`,
+      `| Full | Draws on the findings most strongly linked to the risk, across more than one domain and more than one type of source. |`,
+      `| Partial | Leaves out one or more of the most strongly linked findings, or draws on a single type of source. |`,
       `| Minimal | Rests on a single finding. |`,
       ``,
-      `A finding is **developed** when the response gives:`,
-      ``,
-      `1. its specific value (e.g., Sleep efficiency (68.0%), not "poor sleep");`,
-      `2. its meaning: how it relates to the risk, through a mechanism or a supporting study;`,
-      `3. its context: what the measure means and the limits of what it shows (e.g., magnitude, uncertainty).`,
+      `A finding is **developed** when the response goes beyond naming it, typically by giving its specific value, how it relates to the risk (e.g., through a mechanism or a supporting study), and its context (e.g., what the measure means, its magnitude or its limits).`,
       ``,
       `| Depth | Meaning |`,
       `|---|---|`,
-      `| Full | Every finding the response uses is developed. |`,
+      `| Full | The findings the response relies on are developed. |`,
       `| Partial | Some findings are developed; others are only named. |`,
       `| Minimal | Findings are named or listed without development. |`,
       ``,
-      `Listing many findings without developing them adds breadth, not depth. Credit development regardless of whether you agree with it.`,
+      `Breadth and depth are rated separately: listing many findings counts toward breadth, and developing them counts toward depth. Credit development regardless of whether you agree with it.`,
     ),
     example: lines(
       `**Patient:** a 73-year-old man.`,
@@ -469,7 +466,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       ``,
       `**Response Y** draws on the same findings and sources. It develops the fragmented sleep as X does, but mentions the RDI (42.6 events per hour), Essential hypertension and Hyperlipidemia only in passing ("these are also worth noting"). Breadth is full; depth is partial: **Comprehensive (4)**.`,
       ``,
-      `**Response Z** develops the fragmented sleep as fully as X (value, cohort study, context) but rests on that single finding, omitting the RDI, Essential hypertension and Hyperlipidemia. Depth is full; breadth is minimal: **Neutral (3)**. A response that instead listed every strongly linked finding without developing any of them would also score **Neutral (3)**.`,
+      `**Response Z** develops the fragmented sleep as fully as X (value, cohort study, context) but rests on that single finding, omitting the RDI, Essential hypertension and Hyperlipidemia. Depth is full; breadth is minimal: **Neutral (3)**. A response that instead listed the strongly linked findings without developing any of them would also score **Neutral (3)**.`,
       ``,
       `**Response W** rests on a single finding, the RDI (42.6 events per hour), and states that frequent breathing disturbance is "linked to heart disease" without a mechanism, study or context. Breadth is minimal; depth is partial: **Not Comprehensive (2)**.`,
       ``,
@@ -480,19 +477,19 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Very Comprehensive',
         description:
-          'Draws on **every** finding strongly linked to the risk, across more than one domain and more than one type of source, and **develops each** of them. (Breadth full; depth full.)',
+          'Draws on the findings **most strongly linked** to the risk, across more than one domain and more than one type of source, and **develops** them. (Breadth full; depth full.)',
       },
       {
         value: 4,
         label: 'Comprehensive',
         description:
-          'Covers every strongly linked finding but develops **only some**; **or** develops every finding it uses but **omits** one or more strongly linked findings, or draws on a single type of source. (One dimension full, the other partial.)',
+          'Covers the most strongly linked findings but develops **only some**; **or** develops the findings it uses but **leaves out** one or more strongly linked findings, or draws on a single type of source. (One dimension full, the other partial.)',
       },
       {
         value: 3,
         label: 'Neutral',
         description:
-          'Develops a **single** finding fully; **or** lists every strongly linked finding **without developing** any; **or** covers and develops the findings only in part. (One full and the other minimal, or both partial.)',
+          'Develops a **single** finding fully; **or** lists the strongly linked findings **without developing** any; **or** covers and develops the findings only in part. (One full and the other minimal, or both partial.)',
       },
       {
         value: 2,
@@ -520,11 +517,9 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
     howToScore: lines(
       `**Evaluate** whether the response's account of the patient's future health is **specific to this patient** or **generic**. Evaluate both the **analysis** (the explanation of the risk) and the **recommendations** (what the patient is advised to watch for, raise or do).`,
       ``,
-      `- **Health aspects** are areas of the patient's present health that the response draws on, such as sleep, cardiovascular, metabolic, kidney and mental health, and lifestyle (e.g., smoking, physical activity). The future risk the response raises is not itself an aspect.`,
-      `- **Synthesis** means relating two or more health aspects to each other, by stating how they combine or interact in this patient (e.g., fragmented sleep compounding existing Essential hypertension). Discussing aspects in separate, unconnected passages is not synthesis.`,
-      `- A statement is **patient-specific** when it rests on this patient's own details (a value from the Sleep panel or the sleep recording, a condition in Prior medical history, or their age, sex or BMI) and would not hold unchanged for a different patient. A statement is **generic** when it could be moved, unchanged, into a response for another patient.`,
-      ``,
-      `Citing a value without relating it to the risk or to a recommendation does not make a statement patient-specific.`,
+      `- **Health aspects** are areas of the patient's present health that the response draws on, such as sleep, cardiovascular, metabolic, kidney and mental health, and lifestyle (e.g., smoking, physical activity).`,
+      `- **Synthesis** means relating two or more health aspects to each other by stating how they combine or interact in this patient (e.g., fragmented sleep compounding existing Essential hypertension).`,
+      `- A statement is **patient-specific** when it draws on this patient's own details (e.g., a value from the Sleep panel or the sleep recording, a condition in Prior medical history, a medication, or their age, sex or BMI) and is tailored to them. A statement is **generic** when it could be moved, unchanged, into a response for another patient.`,
     ),
     example: lines(
       `**Patient:** a 73-year-old man.`,
@@ -554,7 +549,7 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
         value: 5,
         label: 'Highly Personalized',
         description:
-          'The analysis **synthesizes two or more** health aspects through this patient\'s own details, and the recommendations **follow from that synthesis**, each tied to the details it addresses.',
+          'The analysis **synthesizes two or more** health aspects through this patient\'s own details, and the recommendations **follow from that synthesis** and are tied to the details they address.',
       },
       {
         value: 4,
@@ -610,11 +605,11 @@ export const RUBRIC_DIMENSIONS_DISEASE: RubricDimensionDef[] = [
       `| Partial | The analysis does **one** of these but not the other. |`,
       `| Minimal | The analysis describes findings without indicating how much concern they warrant or which should be the focus of follow-up. |`,
       ``,
-      `A level of concern stated in words (e.g., "mild", "substantial", "warrants prompt attention") earns the same credit as one stated as a number (e.g., "about twice as likely"). Presenting every finding as equally "worth keeping in mind" does not single out a focus.`,
+      `A level of concern stated in words (e.g., "mild", "substantial", "warrants prompt attention") earns the same credit as one stated as a number (e.g., "about twice as likely").`,
       ``,
       `| Actionability | Meaning |`,
       `|---|---|`,
-      `| Full | At least one **specific** follow-up step (a named test, measurement or referral, or a named symptom to ask about) **with a time frame** (e.g., "at your next routine appointment") **or a trigger** (e.g., "promptly if chest discomfort develops on exertion"). |`,
+      `| Full | At least one **specific** follow-up step (e.g., a named test, measurement, referral, medication review, or symptom to monitor) **with a time frame** (e.g., "at your next routine appointment") **or a trigger** (e.g., "promptly if chest discomfort develops on exertion"). |`,
       `| Partial | Specific follow-up steps with no time frame or trigger, **or** steps that point only to an area (e.g., "have your heart health checked"). |`,
       `| Minimal | No follow-up step, or only advice that gives a clinician nothing to carry out (e.g., "discuss these results with your doctor", "keep healthy habits"). |`,
     ),
