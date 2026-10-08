@@ -48,7 +48,7 @@ where r.batch          = 'v66w3_r8_parens'   -- Zitao's round: 'v66w3_r8'; earli
   -- different rubric partition. Switch the pin to read them; never pool the two on
   -- trustworthiness, whose howToScore changed in v11. v13 replaces that axis with `relevance`:
   -- never pool v13 with v12 on the fifth dimension.
-  and r.rubric_version = 'v15-20261007'  -- ALWAYS pin: past renames crossed over (Zitao's v66w3_r8 round: v14-20261006)
+  and r.rubric_version = 'v15-20261008'  -- ALWAYS pin. v15-20261007 = pre-loosening wording; Zitao's v66w3_r8 round = v14-20261006
   -- ⚠️ SIGN-UP IS OPEN (2026-09-17): anyone reaching the public URL can create an
   -- account, and their rows are indistinguishable from a recruited clinician's. Before
   -- analysis, restrict to the raters you actually recruited — uncomment and fill in:
