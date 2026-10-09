@@ -5,8 +5,8 @@
 // (1st rater = clinician_1, ...). Clients cannot write rater.slot at all. The `?slot=N` in the URL
 // is only a routing cache: after sign-in the app redirects to the slot the account holds, so the
 // module-level SLOT / BLOCK gating in demo-cases.ts serves the right blocks. A `?slot` in a link
-// is never honoured as a claim — except for researchers, who are never allocated and use it to
-// preview a slot.
+// is never honoured as a claim. Researchers are never allocated: they preview the URL's slot, or
+// clinician_1 on the plain link.
 
 import { supabase, SUPABASE_ENABLED } from './supabase'
 import { SLOT, SLOT_BLOCKS, BLOCK } from '@/data/demo-cases'
@@ -29,7 +29,15 @@ export async function syncSlot(raterId: string): Promise<SlotResult> {
     if (error || !data) return { kind: 'failed' }
 
     let held: number | null = typeof data.slot === 'number' ? data.slot : null
-    if (data.is_researcher && held === null) return { kind: 'ok' } // preview via ?slot=N
+    // Researchers are never allocated. They preview a slot instead: the ?slot=N in the URL, or
+    // clinician_1 when the plain link carries none (2026-10-09, so the team needs no special link).
+    if (data.is_researcher && held === null) {
+      if (SLOT > 0) return { kind: 'ok' }
+      const u = new URL(window.location.href)
+      u.searchParams.set('slot', '1')
+      if (BLOCK > 0 && !(SLOT_BLOCKS[1] ?? []).includes(BLOCK)) u.searchParams.delete('block')
+      return { kind: 'redirect', url: u.toString() }
+    }
 
     if (held === null) {
       const claim = await supabase.rpc('claim_slot')
