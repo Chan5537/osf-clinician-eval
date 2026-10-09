@@ -18,6 +18,7 @@
 -- ---------------------------------------------------------------------------
 select
   coalesce(ra.display_name, split_part(ra.email, '@', 1)) as reviewer,
+  ra.slot                         as rater_slot, -- 1-5: which 3 blocks this rater was assigned (009_rater_slot.sql)
   r.case_id,
   br.query_id,
   r.response_label,                          -- the blinded letter the clinician saw
@@ -42,7 +43,7 @@ join public.batch_response br
   and br.response_label = r.response_label
 join public.rater ra
   on ra.id = r.rater_id
-where r.batch          = 'v66w3_full100_parens'   -- clinician round (100 patients). Internal round: 'v66w3_r8_parens'; Zitao's: 'v66w3_r8'; earlier: 'v611_r10'
+where r.batch          = 'v66w3_full100_5x20'     -- clinician round (100 patients, 5 slots x 3 blocks of 20). Superseded preview: 'v66w3_full100_parens'; internal round: 'v66w3_r8_parens'; Zitao's: 'v66w3_r8'; earlier: 'v611_r10'
   -- ⚠️ ZONGZHE'S FIRST ROUND WAS SCORED UNDER 'v10-20260918'. Those rows are still valid and
   -- still join (the letters did not change, so response_sha is stable) — they are simply in a
   -- different rubric partition. Switch the pin to read them; never pool the two on
