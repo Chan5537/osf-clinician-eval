@@ -1,6 +1,6 @@
 -- Round status: run in the Supabase SQL editor at any point during the round.
 --
--- Clinician round v66w3_full100_5x20: 5 slots, each rating 3 blocks of 20 cases.
+-- Clinician round v66w3_full100_5x20: 5 slots (= the sheet's clinician_1..5), each rating 3 blocks of 20.
 -- A slotted rater is complete at 60 cases = 180 responses (x 5 Likert dimensions).
 select 'batch_responses' as metric,
        (select count(*)::text from public.batch_response
@@ -27,6 +27,11 @@ select ra.email,
   left join public.rating r on r.rater_id = ra.id and r.batch = 'v66w3_full100_5x20'
  group by ra.id, ra.email, ra.slot
  order by ra.slot nulls last, ra.email;
+
+-- Who holds which of Zitao's columns (the server allocates them, 010). counts_toward_fill = false for
+-- a holder who never rated within 48 h: their slot goes to the next newcomer. Release a stray/dropout:
+--   update public.rater set active = false where email = '...';
+select * from public.slot_allocation;
 
 -- Completion notifications: a row means the trigger fired; sent_at means mail went out.
 select email, completed_at, sent_at, attempts, last_error
