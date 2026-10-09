@@ -28,9 +28,11 @@ const CASE_LIMIT = Number(import.meta.env.VITE_CASE_LIMIT) || 0
 // areas every 5 ids), and each clinician is assigned 3 blocks — see SLOT_BLOCKS.
 export const BLOCK_SIZE = 20
 
-// RATER SLOTS (2026-10-08). Each clinician gets a personal link carrying `?slot=N` (1..5). The
-// slot decides which 3 blocks they score, following Zitao's assignment sheet ("OSF - Clinical
-// Evaluation Splitting"): block k is rated by slots k, k+1, k+2 (mod 5). Every block therefore has
+// RATER SLOTS (2026-10-08). Each clinician holds a slot (1..5) that decides which 3 blocks they
+// score, following Zitao's assignment sheet ("OSF - Clinical Evaluation Splitting"): slot N is the
+// sheet's clinician_N, and block k is rated by slots k, k+1, k+2 (mod 5). Since 2026-10-09 the
+// SERVER allocates the slot at first sign-in (migration 010, lib/slot.ts) and the app redirects to
+// `?slot=N`, so the URL here is only a routing cache. Every block therefore has
 // exactly 3 raters, every slot exactly 3 blocks (60 cases), and every pair of slots shares 1 or 2
 // blocks — the overlap the reliability analysis needs.
 //
@@ -54,8 +56,8 @@ function intParam(name: string): number {
   }
 }
 
-// The slot named in the URL. 0 = none (or invalid). The server copy on rater.slot is authoritative
-// once claimed; App reconciles the two after sign-in (see lib/slot.ts).
+// The slot named in the URL. 0 = none (or invalid). rater.slot on the server is authoritative;
+// App redirects here to it after sign-in (see lib/slot.ts).
 const requestedSlot = intParam('slot')
 export const SLOT = requestedSlot >= 1 && requestedSlot <= N_SLOTS ? requestedSlot : 0
 

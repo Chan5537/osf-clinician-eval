@@ -154,19 +154,22 @@ function App() {
     }
   }, [session, raterId])
 
-  // Rater slot (which 3 blocks this clinician scores). Checked once per sign-in: claims the slot from
-  // the personal link onto rater.slot the first time, and afterwards sends a rater who arrived on
-  // the wrong link back to their own blocks. 'none' = signed in with no slot anywhere.
-  const [slotMissing, setSlotMissing] = useState(false)
+  // Rater slot (which 3 blocks this clinician scores). Synced once per sign-in: the server allocates
+  // one on the first sign-in (lib/slot.ts, migration 010), and a rater whose URL does not carry
+  // their slot is redirected to it. 'failed' = could not read or allocate; the rater gets Retry.
+  const [slotState, setSlotState] = useState<'pending' | 'ok' | 'failed'>('pending')
+  const [slotAttempt, setSlotAttempt] = useState(0)
   const slotChecked = useRef<string | null>(null)
   useEffect(() => {
-    if (!SUPABASE_ENABLED || !raterId || slotChecked.current === raterId) return
-    slotChecked.current = raterId
+    const key = `${raterId}#${slotAttempt}`
+    if (!SUPABASE_ENABLED || !raterId || slotChecked.current === key) return
+    slotChecked.current = key
+    setSlotState('pending')
     void syncSlot(raterId).then((r) => {
       if (r.kind === 'redirect') window.location.replace(r.url)
-      else setSlotMissing(r.kind === 'none')
+      else setSlotState(r.kind === 'failed' ? 'failed' : 'ok')
     })
-  }, [raterId])
+  }, [raterId, slotAttempt])
 
   // Pull this rater's server session exactly once per sign-in, and let
   // reconcile() decide which side the round continues from.
@@ -273,17 +276,19 @@ function App() {
     )
   }
 
-  // Signed in, but neither the link nor the account names a slot. In the clinician build that is
-  // a dead end on purpose: scoring without a slot would put this rater's answers on blocks nobody
-  // assigned them. The dev build carries on (all blocks) so the app stays testable without one.
-  if (slotMissing && !IS_DEV_BUILD) {
+  // Signed in, but the slot could not be read or allocated (network, or the server refused). Never
+  // guess one: scoring without a slot would put answers on blocks nobody assigned, and the server
+  // would refuse them anyway (rating_allowed, migration 010).
+  if (SUPABASE_ENABLED && raterId && slotState === 'failed') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-muted/30 px-4">
         <p className="max-w-md text-center text-sm leading-relaxed text-muted-foreground">
-          Please open this study from the <strong>personal link</strong> in your invitation
-          email. It tells us which cases are yours. If you cannot find it, please contact the
-          study team.
+          We couldn't load the cases assigned to you. Please check your connection and try again.
+          If this keeps happening, please contact the study team.
         </p>
+        <Button type="button" onClick={() => setSlotAttempt((n) => n + 1)}>
+          Try again
+        </Button>
       </div>
     )
   }
@@ -294,6 +299,7 @@ function App() {
       <LandingScreen
         signedInAs={auth.email}
         requiresSignIn={SUPABASE_ENABLED}
+        slotPending={SUPABASE_ENABLED && !!raterId && slotState === 'pending'}
         submitted={session.cases.filter((c) => c.submitted).length}
         onSignOut={() => {
           // Drain first: anything still queued belongs to THIS rater, and after sign-out
