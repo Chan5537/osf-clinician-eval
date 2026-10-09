@@ -9,7 +9,16 @@ import { IS_DEV_BUILD } from '@/lib/app-mode'
 import { armRequiredCount } from '@/lib/reducer'
 import { RUBRIC_DIMENSIONS } from '@/lib/rubric-config'
 import { GUIDELINE_DOC_URL, LIKERT_RUBRIC_DOC_URL } from '@/lib/links'
-import { DEMO_CASES, BLOCK, BLOCK_SIZE, TOTAL_BLOCKS, MUST_CHOOSE_BLOCK } from '@/data/demo-cases'
+import {
+  DEMO_CASES,
+  BLOCK,
+  BLOCK_SIZE,
+  TOTAL_BLOCKS,
+  MUST_CHOOSE_BLOCK,
+  SLOT,
+  ASSIGNED_BLOCKS,
+  ASSIGNED_CASE_COUNT,
+} from '@/data/demo-cases'
 import { blockProgress, restoreFromExport } from '@/lib/storage'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -40,7 +49,14 @@ export function LandingScreen({
   submitted,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
-  const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
+  // Only this rater's blocks (all of them when no slot is named, which only the dev build allows).
+  const [blocks] = useState(() =>
+    blockProgress(DEMO_CASES.length).filter((b) =>
+      ASSIGNED_BLOCKS.includes(b.block),
+    ),
+  )
+  // The clinician build needs the slot from the personal link before it can offer any block.
+  const needsPersonalLink = !IS_DEV_BUILD && SLOT === 0 && TOTAL_BLOCKS > 1
   const total = DEMO_CASES.length
   // How far in they already are, so the primary button can say so.
   const submittedCount = submitted ?? 0
@@ -63,7 +79,13 @@ export function LandingScreen({
               </h1>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Thank you for taking part. You will review{' '}
-                <strong>{total} cases</strong>. For each, you will see a case summary, a
+                <strong>{ASSIGNED_CASE_COUNT} cases</strong>
+                {TOTAL_BLOCKS > 1 && ASSIGNED_BLOCKS.length > 1 && (
+                  <>
+                    {' '}in <strong>{ASSIGNED_BLOCKS.length} blocks of {BLOCK_SIZE}</strong>
+                  </>
+                )}
+                . For each, you will see a case summary, a
                 clinical query, and <strong>{nResponses} responses (Response {responseLetters})</strong>.
                 You review and rate them <strong>one at a time</strong>, with the rating scales
                 right beside the response; a side-by-side reading view is one click away whenever
@@ -174,14 +196,22 @@ export function LandingScreen({
                 in blocks of BLOCK_SIZE. Whoever arrives without ?block= picks one here, and
                 sees what this browser already holds for each — so "where was I" is answerable
                 before committing to a block. */}
-            {TOTAL_BLOCKS > 1 && BLOCK === 0 && (
+            {needsPersonalLink && BLOCK === 0 && (
+              <p className="rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                Please open this study from the <strong>personal link</strong> in your invitation
+                email. It tells us which cases are yours.
+              </p>
+            )}
+            {TOTAL_BLOCKS > 1 && BLOCK === 0 && !needsPersonalLink && (
               <div className="space-y-2">
                 <Label>Choose a block</Label>
                 <p className="text-xs text-muted-foreground">
-                  The batch is split into blocks of {BLOCK_SIZE} cases. Each block is scored on its
+                  Your cases are split into blocks of {BLOCK_SIZE}. Each block is scored on its
                   own; you can do them in any order, on any day.
                 </p>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div
+                  className={`grid grid-cols-2 gap-2 ${blocks.length <= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-5'}`}
+                >
                   {blocks.map((b) => (
                     <Button
                       key={b.block}

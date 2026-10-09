@@ -12,7 +12,7 @@ interface Props {
 // A submitted case reads darker; the current one has a ring. aria-labels say "Case 1/2/3" — never
 // echo query_id (design blinding).
 // Restored as the only navigator 2026-10-06 (Chan: the bar + jump field that replaced it above 25
-// cases was unintuitive). A multi-block batch is now always served a block of 25 at a time
+// cases was unintuitive). A multi-block batch is now always served one block (BLOCK_SIZE = 20) at a time
 // (MUST_CHOOSE_BLOCK in data/demo-cases.ts), so the dot row never outgrows the header.
 export function ProgressIndicator({ current, total, submitted, onGoto }: Props) {
   return (

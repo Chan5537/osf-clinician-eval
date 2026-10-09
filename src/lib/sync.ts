@@ -16,7 +16,7 @@
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
 import { RUBRIC_VERSION } from './rubric-config'
-import { BATCH } from '@/data/demo-cases'
+import { BATCH, SESSION_BATCH, DEMO_CASES } from '@/data/demo-cases'
 import { supabase, SUPABASE_ENABLED } from './supabase'
 import { sanitizeSession } from './storage'
 import { ratingRowsForCase, type RatingRow } from './sync-rows'
@@ -53,7 +53,20 @@ function setStatus(next: SyncStatus): void {
 // ----------------------------------------------------------------- queue ----
 
 type Op =
-  | { id: string; kind: 'session'; raterId: string; session: SessionState; rev: number }
+  // `key` = the session_state.batch the op was queued under (SESSION_BATCH, i.e. batch::block).
+  // Captured at enqueue time because the queue is shared by every block of a batch and outlives a
+  // page load: an op queued in block 1 can drain after the rater has moved to block 2, and must
+  // still land on block 1's row. `caseIds` travels into the stored blob so a restore can match
+  // answers to cases by id instead of by position. Both optional: ops queued by an older build.
+  | {
+      id: string
+      kind: 'session'
+      raterId: string
+      session: SessionState
+      rev: number
+      key?: string
+      caseIds?: string[]
+    }
   | { id: string; kind: 'ratings'; raterId: string; rows: RatingRow[] }
 
 const QUEUE_KEY = `clinician-eval-syncq::${BATCH || 'all'}`
@@ -101,7 +114,10 @@ function enqueue(op: Op): void {
   // Session ops are whole-state upserts, so only the newest can matter: collapse
   // rather than accumulate. This is what keeps the queue bounded during a long
   // offline stretch.
-  if (op.kind === 'session') queue = queue.filter((o) => o.kind !== 'session')
+  // Collapse only within the same block's row — a pending block-1 save is not superseded by a
+  // block-2 one.
+  if (op.kind === 'session')
+    queue = queue.filter((o) => o.kind !== 'session' || (o.key ?? BATCH) !== (op.key ?? BATCH))
   queue.push(op)
   if (queue.length > MAX_OPS) {
     // Trim in place. Reassigning `queue` here would swap the array out from under an
@@ -128,10 +144,10 @@ async function runOp(op: Op): Promise<void> {
     const { error } = await supabase.from('session_state').upsert(
       {
         rater_id: op.raterId,
-        batch: BATCH,
+        batch: op.key ?? BATCH,
         schema_version: SCHEMA_VERSION,
         rubric_version: RUBRIC_VERSION,
-        state: op.session as unknown as Record<string, unknown>,
+        state: { ...op.session, caseIds: op.caseIds } as unknown as Record<string, unknown>,
         client_rev: op.rev,
       },
       { onConflict: 'rater_id,batch' },
@@ -235,6 +251,19 @@ function failWith(err: unknown): void {
 
 let sessionTimer: number | null = null
 
+/** A whole-session op, stamped with THIS block's row key and case list (see the Op type). */
+function sessionOp(raterId: string, session: SessionState, rev: number): Op {
+  return {
+    id: `s-${Date.now()}`,
+    kind: 'session',
+    raterId,
+    session,
+    rev,
+    key: SESSION_BATCH,
+    caseIds: DEMO_CASES.map((c) => c.case_id),
+  }
+}
+
 /** Debounced whole-session mirror. Safe to call on every state change. */
 export function queueSessionSync(raterId: string, session: SessionState, rev: number): void {
   if (!SUPABASE_ENABLED || !raterId) return
@@ -243,7 +272,7 @@ export function queueSessionSync(raterId: string, session: SessionState, rev: nu
   // round-trip per keystroke is not. Worst case a closed tab leaves 2s of state
   // un-mirrored — and localStorage still has it, so nothing is lost, only unsent.
   sessionTimer = window.setTimeout(() => {
-    enqueue({ id: `s-${Date.now()}`, kind: 'session', raterId, session, rev })
+    enqueue(sessionOp(raterId, session, rev))
   }, 2000)
 }
 
@@ -262,7 +291,7 @@ export function queueCaseSubmit(
   // Submitting also moves currentCaseIndex, so mirror the session immediately
   // rather than waiting out the debounce.
   if (sessionTimer) window.clearTimeout(sessionTimer)
-  enqueue({ id: `s-${Date.now()}`, kind: 'session', raterId, session, rev })
+  enqueue(sessionOp(raterId, session, rev))
 }
 
 /**
@@ -283,7 +312,7 @@ export async function resetServerSession(raterId: string): Promise<void> {
   persistQueue()
   if (sessionTimer) window.clearTimeout(sessionTimer)
   try {
-    await supabase.from('session_state').delete().eq('rater_id', raterId).eq('batch', BATCH)
+    await supabase.from('session_state').delete().eq('rater_id', raterId).eq('batch', SESSION_BATCH)
   } catch {
     /* best effort: the local clear still happened, and the caller reloads */
   }
@@ -376,7 +405,7 @@ export async function hydrate(raterId: string): Promise<ServerSession | null> {
       .from('session_state')
       .select('state, client_rev, updated_at, schema_version, rubric_version')
       .eq('rater_id', raterId)
-      .eq('batch', BATCH)
+      .eq('batch', SESSION_BATCH)
       .maybeSingle()
     if (error || !data) return null
     if (data.schema_version !== SCHEMA_VERSION || data.rubric_version !== RUBRIC_VERSION) {

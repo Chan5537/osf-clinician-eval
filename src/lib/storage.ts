@@ -215,8 +215,19 @@ function readRev(): number {
 export function sanitizeSession(s: SessionState): SessionState {
   const fresh = initialSessionState()
   const byId = new Map<string, CaseRubric>()
-  if (Array.isArray(s.cases)) {
-    // Positional: a stored session's cases[] is parallel to the DEMO_CASES it was
+  // Server blobs written since 2026-10-08 carry the case_id list they were written against
+  // (sync.ts runOp), so answers are matched to cases BY ID and can never land on another case.
+  const caseIds = (s as SessionState & { caseIds?: unknown }).caseIds
+  if (Array.isArray(s.cases) && Array.isArray(caseIds)) {
+    caseIds.forEach((cid, i) => {
+      const c = s.cases[i]
+      if (typeof cid === 'string' && c) byId.set(cid, c)
+    })
+    // Not one case in common: the blob belongs to another block. Keeping its view and case index
+    // would drop the rater mid-block with nothing answered, so treat it as no session at all.
+    if (!DEMO_CASES.some((dc) => byId.has(dc.case_id))) return fresh
+  } else if (Array.isArray(s.cases)) {
+    // Older blob: positional. A stored session's cases[] is parallel to the DEMO_CASES it was
     // written against. We cannot know that older list, so index against the current
     // one — the same assumption load() makes on the pre-2026-09-02 envelope path.
     DEMO_CASES.forEach((dc, i) => {

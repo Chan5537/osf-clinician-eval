@@ -1,6 +1,15 @@
 import { useReducer, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { DEMO_CASES, BLOCK, TOTAL_BLOCKS, BLOCK_SIZE, MUST_CHOOSE_BLOCK } from '@/data/demo-cases'
+import {
+  DEMO_CASES,
+  BLOCK,
+  TOTAL_BLOCKS,
+  BLOCK_SIZE,
+  MUST_CHOOSE_BLOCK,
+  SLOT,
+  SLOT_BLOCKS,
+} from '@/data/demo-cases'
+import { syncSlot } from '@/lib/slot'
 import {
   sessionReducer,
   initialSessionState,
@@ -145,6 +154,20 @@ function App() {
     }
   }, [session, raterId])
 
+  // Rater slot (which 3 blocks this clinician scores). Checked once per sign-in: claims the slot from
+  // the personal link onto rater.slot the first time, and afterwards sends a rater who arrived on
+  // the wrong link back to their own blocks. 'none' = signed in with no slot anywhere.
+  const [slotMissing, setSlotMissing] = useState(false)
+  const slotChecked = useRef<string | null>(null)
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !raterId || slotChecked.current === raterId) return
+    slotChecked.current = raterId
+    void syncSlot(raterId).then((r) => {
+      if (r.kind === 'redirect') window.location.replace(r.url)
+      else setSlotMissing(r.kind === 'none')
+    })
+  }, [raterId])
+
   // Pull this rater's server session exactly once per sign-in, and let
   // reconcile() decide which side the round continues from.
   const hydrated = useRef<string | null>(null)
@@ -247,6 +270,21 @@ function App() {
         // is unreachable in the deployed site even before dead-code elimination.
         onSignInWithPassword={ALLOW_PASSWORD_SIGNIN ? auth.signInWithPassword : undefined}
       />
+    )
+  }
+
+  // Signed in, but neither the link nor the account names a slot. In the clinician build that is
+  // a dead end on purpose: scoring without a slot would put this rater's answers on blocks nobody
+  // assigned them. The dev build carries on (all blocks) so the app stays testable without one.
+  if (slotMissing && !IS_DEV_BUILD) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+        <p className="max-w-md text-center text-sm leading-relaxed text-muted-foreground">
+          Please open this study from the <strong>personal link</strong> in your invitation
+          email. It tells us which cases are yours. If you cannot find it, please contact the
+          study team.
+        </p>
+      </div>
     )
   }
 
@@ -444,7 +482,9 @@ function App() {
                 className="hidden shrink-0 rounded-md border bg-muted px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-flex"
                 title={`Cases ${(BLOCK - 1) * BLOCK_SIZE + 1}-${(BLOCK - 1) * BLOCK_SIZE + DEMO_CASES.length} of the batch`}
               >
-                Block {BLOCK}/{TOTAL_BLOCKS}
+                {SLOT > 0
+                  ? `Block ${BLOCK} · ${(SLOT_BLOCKS[SLOT] ?? []).indexOf(BLOCK) + 1} of ${(SLOT_BLOCKS[SLOT] ?? []).length}`
+                  : `Block ${BLOCK}/${TOTAL_BLOCKS}`}
               </span>
             )}
             {/* Download at ANY time, in either format (2026-09-02 / -09-03). It used to live
