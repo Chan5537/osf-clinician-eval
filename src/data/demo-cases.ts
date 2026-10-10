@@ -23,29 +23,12 @@ const CASE_LIMIT = Number(import.meta.env.VITE_CASE_LIMIT) || 0
 // case_id order. Blocks are free on the analysis side — the decoder joins on case_id, so
 // scores from different blocks pool without any extra bookkeeping.
 //
-// 2026-10-08 (Prof. Yang): 5 clinicians, each patient rated by 3, each clinician rates 60. So the
-// 100 cases are 5 blocks of 20 (each block = 4 patients per area, because gap60 cycles the five
-// areas every 5 ids), and each clinician is assigned 3 blocks — see SLOT_BLOCKS.
+// 2026-10-09 (Prof. Yang): 60 patients (12 per area), and EVERY clinician rates all of them — fully
+// crossed, for however many clinicians are found. So 3 blocks of 20, each 4 patients per area
+// (gap60 cycles the five areas every 5 ids). This replaced, before any clinician rated, the 2026-10-08
+// design of 100 patients with each clinician scoring 3 of 5 blocks (per-rater slots, migrations
+// 009/010; 011 retires them).
 export const BLOCK_SIZE = 20
-
-// RATER SLOTS (2026-10-08). Each clinician holds a slot (1..5) that decides which 3 blocks they
-// score, following Zitao's assignment sheet ("OSF - Clinical Evaluation Splitting"): slot N is the
-// sheet's clinician_N, and block k is rated by slots k, k+1, k+2 (mod 5). Since 2026-10-09 the
-// SERVER allocates the slot at first sign-in (migration 010, lib/slot.ts) and the app redirects to
-// `?slot=N`, so the URL here is only a routing cache. Every block therefore has
-// exactly 3 raters, every slot exactly 3 blocks (60 cases), and every pair of slots shares 1 or 2
-// blocks — the overlap the reliability analysis needs.
-//
-// ⚠️ MIRRORED IN SQL: supabase/migrations/009_rater_slot.sql (public.slot_covers_case) computes the
-// same rotation for the completion trigger. Change both or neither.
-export const N_SLOTS = 5
-export const SLOT_BLOCKS: Record<number, number[]> = {
-  1: [1, 4, 5],
-  2: [1, 2, 5],
-  3: [1, 2, 3],
-  4: [2, 3, 4],
-  5: [3, 4, 5],
-}
 
 function intParam(name: string): number {
   try {
@@ -56,11 +39,6 @@ function intParam(name: string): number {
   }
 }
 
-// The slot named in the URL. 0 = none (or invalid). rater.slot on the server is authoritative;
-// App redirects here to it after sign-in (see lib/slot.ts).
-const requestedSlot = intParam('slot')
-export const SLOT = requestedSlot >= 1 && requestedSlot <= N_SLOTS ? requestedSlot : 0
-
 const ALL = raw as DemoCase[]
 export const TOTAL_BLOCKS = Math.ceil(ALL.length / BLOCK_SIZE)
 // Out-of-range block -> the whole batch, never an empty case set: DEMO_CASES[i] is read
@@ -68,15 +46,11 @@ export const TOTAL_BLOCKS = Math.ceil(ALL.length / BLOCK_SIZE)
 // visibly different from a block (no Block chip in the header), so a mistyped URL
 // announces itself instead of silently handing out someone else's slice.
 const requested = intParam('block')
-// A block outside this slot's assignment is refused exactly like an out-of-range one: the landing
-// screen's picker (which only offers the slot's own blocks) is the way back in.
-const inSlot = (b: number) => SLOT === 0 || (SLOT_BLOCKS[SLOT] ?? []).includes(b)
-export const BLOCK =
-  requested > 0 && requested <= TOTAL_BLOCKS && inSlot(requested) ? requested : 0
+export const BLOCK = requested > 0 && requested <= TOTAL_BLOCKS ? requested : 0
 if (requested > 0 && BLOCK === 0 && import.meta.env.VITE_APP_MODE !== 'clinician') {
   // Dev only: a console message is developer instrumentation, and the visible
   // absence of the Block chip already announces the fallback to everyone else.
-  console.warn(`block=${requested} is out of range (1-${TOTAL_BLOCKS}) or not in slot ${SLOT}`)
+  console.warn(`block=${requested} is out of range (1-${TOTAL_BLOCKS}); serving the whole batch`)
 }
 const sliced = BLOCK > 0 ? ALL.slice((BLOCK - 1) * BLOCK_SIZE, BLOCK * BLOCK_SIZE) : ALL
 
@@ -87,12 +61,8 @@ export const MUST_CHOOSE_BLOCK = TOTAL_BLOCKS > 1 && BLOCK === 0
 
 export const DEMO_CASES = CASE_LIMIT > 0 ? sliced.slice(0, CASE_LIMIT) : sliced
 
-// What this rater is assigned: their slot's blocks, or every block when no slot is named (dev).
-export const ASSIGNED_BLOCKS: number[] =
-  SLOT > 0 ? (SLOT_BLOCKS[SLOT] ?? []) : Array.from({ length: TOTAL_BLOCKS }, (_, i) => i + 1)
-export const ASSIGNED_CASE_COUNT = ALL.filter((_, i) =>
-  ASSIGNED_BLOCKS.includes(Math.floor(i / BLOCK_SIZE) + 1),
-).length
+// Every rater scores the whole batch (one block at a time).
+export const TOTAL_CASES = ALL.length
 
 // Which letter set is loaded, and which slice of it. Both go into the storage key: case_ids
 // restart at HSP_v7_000 in every batch, so a stored answer is only meaningful next to the

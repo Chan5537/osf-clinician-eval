@@ -15,10 +15,7 @@ import {
   BLOCK_SIZE,
   TOTAL_BLOCKS,
   MUST_CHOOSE_BLOCK,
-  SLOT,
-  SLOT_BLOCKS,
-  ASSIGNED_BLOCKS,
-  ASSIGNED_CASE_COUNT,
+  TOTAL_CASES,
 } from '@/data/demo-cases'
 import { blockProgress, restoreFromExport } from '@/lib/storage'
 import { useRef, useState } from 'react'
@@ -35,8 +32,6 @@ interface Props {
   requiresSignIn?: boolean
   /** Cases already submitted, so the button can read "Continue" rather than "Begin". */
   submitted?: number
-  /** Signed in, and the server is still allocating / reading this rater's slot. */
-  slotPending?: boolean
 }
 
 // Opening screen: task explanation + axis overview (labels imported from
@@ -50,21 +45,9 @@ export function LandingScreen({
   onSignOut,
   requiresSignIn = false,
   submitted,
-  slotPending = false,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
-  // Only this rater's blocks (all of them when no slot is named, which only the dev build allows).
-  const [blocks] = useState(() =>
-    blockProgress(DEMO_CASES.length).filter((b) =>
-      ASSIGNED_BLOCKS.includes(b.block),
-    ),
-  )
-  // The clinician build offers blocks only once the server has given this rater a slot (lib/slot.ts):
-  // signed out, the way in is signing in; signed in, the redirect to their slot is on its way.
-  const needsSlot = !IS_DEV_BUILD && SLOT === 0 && TOTAL_BLOCKS > 1
-  // Before the slot is known every clinician's share is the same size (3 blocks), so say that.
-  const shownBlocks = needsSlot ? (SLOT_BLOCKS[1] ?? []).length : ASSIGNED_BLOCKS.length
-  const shownCases = needsSlot ? shownBlocks * BLOCK_SIZE : ASSIGNED_CASE_COUNT
+  const [blocks] = useState(() => blockProgress(DEMO_CASES.length))
   const total = DEMO_CASES.length
   // How far in they already are, so the primary button can say so.
   const submittedCount = submitted ?? 0
@@ -87,10 +70,10 @@ export function LandingScreen({
               </h1>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Thank you for taking part. You will review{' '}
-                <strong>{shownCases} cases</strong>
-                {TOTAL_BLOCKS > 1 && shownBlocks > 1 && (
+                <strong>{TOTAL_CASES} cases</strong>
+                {TOTAL_BLOCKS > 1 && (
                   <>
-                    {' '}in <strong>{shownBlocks} blocks of {BLOCK_SIZE}</strong>
+                    {' '}in <strong>{TOTAL_BLOCKS} blocks of {BLOCK_SIZE}</strong>
                   </>
                 )}
                 . For each, you will see a case summary, a
@@ -204,31 +187,15 @@ export function LandingScreen({
                 in blocks of BLOCK_SIZE. Whoever arrives without ?block= picks one here, and
                 sees what this browser already holds for each — so "where was I" is answerable
                 before committing to a block. */}
-            {needsSlot && BLOCK === 0 && (
-              <div className="space-y-3 rounded-md border bg-muted/40 px-3 py-3">
-                {signedInAs || slotPending ? (
-                  <p className="text-sm text-muted-foreground">Loading the cases assigned to you…</p>
-                ) : (
-                  <>
-                    <p className="text-sm text-muted-foreground">
-                      Each reviewer is assigned their own set of cases. Sign in to see yours.
-                    </p>
-                    <Button type="button" onClick={onBegin}>
-                      Sign in to see your cases
-                    </Button>
-                  </>
-                )}
-              </div>
-            )}
-            {TOTAL_BLOCKS > 1 && BLOCK === 0 && !needsSlot && (
+            {TOTAL_BLOCKS > 1 && BLOCK === 0 && (
               <div className="space-y-2">
                 <Label>Choose a block</Label>
                 <p className="text-xs text-muted-foreground">
-                  Your cases are split into blocks of {BLOCK_SIZE}. Each block is scored on its
+                  The cases are split into blocks of {BLOCK_SIZE}. Each block is scored on its
                   own; you can do them in any order, on any day.
                 </p>
                 <div
-                  className={`grid grid-cols-2 gap-2 ${blocks.length <= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-5'}`}
+                  className={`grid grid-cols-2 gap-2 ${blocks.length <= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-4'}`}
                 >
                   {blocks.map((b) => (
                     <Button
