@@ -1,15 +1,6 @@
 import { useReducer, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
-import {
-  DEMO_CASES,
-  BLOCK,
-  TOTAL_BLOCKS,
-  BLOCK_SIZE,
-  MUST_CHOOSE_BLOCK,
-  SLOT,
-  SLOT_BLOCKS,
-} from '@/data/demo-cases'
-import { syncSlot } from '@/lib/slot'
+import { DEMO_CASES, BLOCK, TOTAL_BLOCKS, BLOCK_SIZE, MUST_CHOOSE_BLOCK } from '@/data/demo-cases'
 import {
   sessionReducer,
   initialSessionState,
@@ -154,23 +145,6 @@ function App() {
     }
   }, [session, raterId])
 
-  // Rater slot (which 3 blocks this clinician scores). Synced once per sign-in: the server allocates
-  // one on the first sign-in (lib/slot.ts, migration 010), and a rater whose URL does not carry
-  // their slot is redirected to it. 'failed' = could not read or allocate; the rater gets Retry.
-  const [slotState, setSlotState] = useState<'pending' | 'ok' | 'failed'>('pending')
-  const [slotAttempt, setSlotAttempt] = useState(0)
-  const slotChecked = useRef<string | null>(null)
-  useEffect(() => {
-    const key = `${raterId}#${slotAttempt}`
-    if (!SUPABASE_ENABLED || !raterId || slotChecked.current === key) return
-    slotChecked.current = key
-    setSlotState('pending')
-    void syncSlot(raterId).then((r) => {
-      if (r.kind === 'redirect') window.location.replace(r.url)
-      else setSlotState(r.kind === 'failed' ? 'failed' : 'ok')
-    })
-  }, [raterId, slotAttempt])
-
   // Pull this rater's server session exactly once per sign-in, and let
   // reconcile() decide which side the round continues from.
   const hydrated = useRef<string | null>(null)
@@ -276,30 +250,12 @@ function App() {
     )
   }
 
-  // Signed in, but the slot could not be read or allocated (network, or the server refused). Never
-  // guess one: scoring without a slot would put answers on blocks nobody assigned, and the server
-  // would refuse them anyway (rating_allowed, migration 010).
-  if (SUPABASE_ENABLED && raterId && slotState === 'failed') {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-muted/30 px-4">
-        <p className="max-w-md text-center text-sm leading-relaxed text-muted-foreground">
-          We couldn't load the cases assigned to you. Please check your connection and try again.
-          If this keeps happening, please contact the study team.
-        </p>
-        <Button type="button" onClick={() => setSlotAttempt((n) => n + 1)}>
-          Try again
-        </Button>
-      </div>
-    )
-  }
-
   // No block chosen in a multi-block batch: the landing screen, whatever view was stored.
   if (session.view === 'landing' || MUST_CHOOSE_BLOCK) {
     return (
       <LandingScreen
         signedInAs={auth.email}
         requiresSignIn={SUPABASE_ENABLED}
-        slotPending={SUPABASE_ENABLED && !!raterId && slotState === 'pending'}
         submitted={session.cases.filter((c) => c.submitted).length}
         onSignOut={() => {
           // Drain first: anything still queued belongs to THIS rater, and after sign-out
@@ -488,9 +444,7 @@ function App() {
                 className="hidden shrink-0 rounded-md border bg-muted px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-flex"
                 title={`Cases ${(BLOCK - 1) * BLOCK_SIZE + 1}-${(BLOCK - 1) * BLOCK_SIZE + DEMO_CASES.length} of the batch`}
               >
-                {SLOT > 0
-                  ? `Block ${BLOCK} · ${(SLOT_BLOCKS[SLOT] ?? []).indexOf(BLOCK) + 1} of ${(SLOT_BLOCKS[SLOT] ?? []).length}`
-                  : `Block ${BLOCK}/${TOTAL_BLOCKS}`}
+                Block {BLOCK}/{TOTAL_BLOCKS}
               </span>
             )}
             {/* Download at ANY time, in either format (2026-09-02 / -09-03). It used to live

@@ -1,37 +1,31 @@
--- PREFLIGHT: run BEFORE the round opens (clinician batch v66w3_full100_5x20, slots allocated by 010).
+-- PREFLIGHT: run BEFORE the round opens (clinician batch v66w3_60: 60 cases, every rater rates all of them).
 -- Everything here must be true or the round is not running the real thing.
 
 select 'batch_response rows'      as check,
        count(*)::text             as actual,
-       '300'                      as expected,
-       case when count(*) = 300 then 'OK' else 'FIX: python3 scripts/data/seed_batch.py' end as verdict
-  from public.batch_response where batch = 'v66w3_full100_5x20'
+       '180'                      as expected,
+       case when count(*) = 180 then 'OK' else 'FIX: python3 scripts/data/seed_batch.py' end as verdict
+  from public.batch_response where batch = 'v66w3_60'
 union all
 select 'cases in batch',
-       count(distinct case_id)::text, '100',
-       case when count(distinct case_id) = 100 then 'OK' else 'FIX: seed_batch.py' end
-  from public.batch_response where batch = 'v66w3_full100_5x20'
-union all
-select 'slot column + rotation (009)',
-       count(*)::text, '300',
-       case when count(*) = 300 then 'OK' else 'FIX: run 009_rater_slot.sql' end
-  from generate_series(1, 5) s, generate_series(0, 99) p
- where public.slot_covers_case(s, p)
+       count(distinct case_id)::text, '60',
+       case when count(distinct case_id) = 60 then 'OK' else 'FIX: seed_batch.py' end
+  from public.batch_response where batch = 'v66w3_60'
 union all
 select 'leftover test ratings',
        count(*)::text, '0',
        case when count(*) = 0 then 'OK' else 'FIX: scripts/checks/reset_round.sql' end
-  from public.rating where batch = 'v66w3_full100_5x20'
+  from public.rating where batch = 'v66w3_60'
 union all
 select 'leftover sessions',
        count(*)::text, '0',
        case when count(*) = 0 then 'OK' else 'FIX: reset_round.sql' end
-  from public.session_state where batch like 'v66w3_full100_5x20%'
+  from public.session_state where batch like 'v66w3_60%'
 union all
 select 'leftover notifications',
        count(*)::text, '0',
        case when count(*) = 0 then 'OK' else 'FIX: reset_round.sql' end
-  from public.notification_outbox where batch = 'v66w3_full100_5x20'
+  from public.notification_outbox where batch = 'v66w3_60'
 union all
 select 'RLS enabled on all 4',
        count(*)::text, '4',
@@ -45,13 +39,13 @@ select 'completion triggers (007)',
        case when count(*) = 2 then 'OK' else 'FIX: run 007_completion_statement_trigger.sql' end
   from pg_trigger where tgname in ('rating_completion_notify_ins', 'rating_completion_notify_upd')
 union all
-select 'auto-allocation (010)',
+select 'every rater rates every case (011)',
        count(*)::text, '1',
-       case when count(*) = 1 then 'OK' else 'FIX: run 010_auto_allocate.sql' end
-  from pg_proc where proname = 'claim_slot'
+       case when count(*) = 1 then 'OK' else 'FIX: run 011_all_raters_all_cases.sql' end
+  from pg_views where viewname = 'rater_progress'
 union all
--- Before the link goes out, every existing account is the team's: flag each as a researcher, or it
--- will be allocated a slot. Lists who is left:  select email from public.rater where not is_researcher;
+-- Before the link goes out, every existing account is the team's: flag each as a researcher, or its
+-- answers count as a clinician's. Lists who is left:  select email from public.rater where not is_researcher;
 select 'team accounts are researchers',
        count(*)::text, '0',
        case when count(*) = 0 then 'OK'
