@@ -17,9 +17,11 @@ WHY THE SERVICE ROLE KEY
 ⚠️ NEVER put the service-role key in .env, a Vite variable, or the bundle. It is
    a full-database credential. Export it in your shell for the length of this run.
 
-Rows are built from the SAME source as supabase/<batch>_arm_key.csv, and the
-script refuses to run if the two disagree — so the committed CSV and the database
-can never quietly diverge.
+The letters come from the bundle; the arm comes from the LOCAL (gitignored)
+supabase/<batch>_arm_key.csv, because the committed bundle carries no `arm` (this
+repo is public; see freeze_arm_key.py). The script refuses to run unless every
+letter's fingerprint matches the key — so the key and the database can never
+quietly diverge.
 """
 from __future__ import annotations
 
@@ -48,8 +50,8 @@ def build_rows(cases: list[dict]) -> list[dict]:
                 "batch": case.get("batch", ""),
                 "case_id": case["case_id"],
                 "response_label": resp["label"],
-                "arm": resp["arm"],
-                "arm_name": None,  # filled from the committed key below
+                "arm": resp.get("arm"),  # None in a stripped bundle; filled from the key below
+                "arm_name": None,  # filled from the local key below
                 "query_id": case.get("query_id"),
                 "case_position": pos,
                 "response_sha": text_fingerprint(resp["markdown"]),
@@ -59,12 +61,12 @@ def build_rows(cases: list[dict]) -> list[dict]:
 
 
 def apply_committed_legend(rows: list[dict], batch: str) -> None:
-    """Take arm_name from the committed key, and assert the key still agrees."""
+    """Take arm and arm_name from the local key, and assert the key still agrees."""
     key_path = KEY_DIR / f"{batch}_arm_key.csv"
     if not key_path.exists():
         raise SystemExit(
-            f"missing {key_path}. Run scripts/data/freeze_arm_key.py first — the "
-            f"committed key is what makes this seed reproducible."
+            f"missing {key_path}. It is gitignored, so it exists only on the machine that "
+            f"ran scripts/data/freeze_arm_key.py (backup: osf-human-eval/results/clinician_batches/)."
         )
     with key_path.open(newline="") as fh:
         key = {(r["case_id"], r["response_label"]): r for r in csv.DictReader(fh)}
@@ -76,22 +78,23 @@ def apply_committed_legend(rows: list[dict], batch: str) -> None:
         if krow is None:
             drift.append(f"{k}: absent from the committed key")
             continue
-        if krow["arm"] != row["arm"] or krow["response_sha"] != row["response_sha"]:
-            drift.append(
-                f"{k}: key=({krow['arm']},{krow['response_sha']}) "
-                f"bundle=({row['arm']},{row['response_sha']})"
-            )
+        if krow["response_sha"] != row["response_sha"]:
+            drift.append(f"{k}: letter fingerprint key={krow['response_sha']} "
+                         f"bundle={row['response_sha']}")
+        elif row["arm"] is not None and krow["arm"] != row["arm"]:
+            drift.append(f"{k}: arm differs between key and an unstripped bundle")
+        row["arm"] = krow["arm"]
         row["arm_name"] = krow.get("arm_name") or None
 
     if drift:
-        print("REFUSING TO SEED — the bundle no longer matches the committed arm key:",
+        print("REFUSING TO SEED — the bundle no longer matches the local arm key:",
               file=sys.stderr)
         for d in drift[:10]:
             print("   ", d, file=sys.stderr)
         raise SystemExit(1)
 
     if any(r["arm_name"] is None for r in rows):
-        print("⚠️  arm_name is blank in the committed key. Seeding anyway (arm is still "
+        print("⚠️  arm_name is blank in the local key. Seeding anyway (arm is still "
               "recorded), but resolve the legend and re-run before analysis.")
 
 

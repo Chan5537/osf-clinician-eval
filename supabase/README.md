@@ -8,9 +8,9 @@ Everything the backend needs, in the order it must happen.
 |---|---|
 | `migrations/001_init.sql` | Schema: `rater`, `batch_response`, `session_state`, `rating` |
 | `migrations/002_rls.sql` | Row level security. **The only security boundary** |
-| `<batch>_arm_key.csv` | The frozen un-blinding key (committed on purpose) |
+| `<batch>_arm_key.csv` | The frozen un-blinding key. **Local only, gitignored: this repo is public** |
 | `extract.sql` | Analysis-ready tidy CSV + three audit queries |
-| `../scripts/data/freeze_arm_key.py` | Regenerates/verifies the arm key |
+| `../scripts/data/freeze_arm_key.py` | Writes/verifies the arm key and strips `arm` from the bundle |
 | `../scripts/data/seed_batch.py` | Loads the arm key into `batch_response` |
 
 ## Setup, in order
@@ -75,8 +75,12 @@ python3 scripts/data/seed_batch.py            # 30 rows for v611_r10
 python3 scripts/data/seed_batch.py --verify   # confirm the DB matches the bundle
 ```
 
-`seed_batch.py` refuses to run if the bundle and the committed arm key disagree, so a
-regenerated batch cannot quietly overwrite the key.
+`seed_batch.py` refuses to run if the bundle's letters and the local arm key disagree, so
+a regenerated batch cannot quietly overwrite the key.
+
+⚠️ The key CSV and the bundle's `arm` field never go into git (purged from history
+2026-10-17). Order for a new batch: export → `freeze_arm_key.py` (writes the key, strips
+`arm`) → commit the bundle → seed. The deploy workflow fails if either leaks back in.
 
 ### 5. App environment
 

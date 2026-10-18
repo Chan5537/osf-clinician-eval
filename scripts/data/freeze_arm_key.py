@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the un-blinding key of a UI batch into a committed CSV.
+"""Freeze the un-blinding key of a UI batch into a LOCAL CSV, then strip it from the bundle.
 
 WHY THIS EXISTS
 ---------------
@@ -13,14 +13,20 @@ DESTROYS ATTRIBUTION for every score already collected.
 `export.ts` has claimed since 2026-09-02 that a `<batch>_arm_key.csv` and a
 `decode_review_csv.py` exist. They never did. This writes the first of them.
 
-Run it BEFORE a round opens, commit the output, and tag the data commit.
+Run it on a FRESH export (the exporter writes `arm` into the bundle), BEFORE a
+round opens and BEFORE committing the bundle:
 
-    python3 scripts/data/freeze_arm_key.py         # writes supabase/<batch>_arm_key.csv
+    python3 scripts/data/freeze_arm_key.py         # writes supabase/<batch>_arm_key.csv, strips `arm`
     python3 scripts/data/freeze_arm_key.py --check # verify the key still matches the bundle
 
-`--check` exits non-zero on drift, so it can gate CI: it is the tripwire that
-turns "the batch was regenerated mid-round" from silent corruption into a
-build failure.
+THIS REPO IS PUBLIC. The key CSV is gitignored and must never be committed, and
+the committed bundle must carry no `arm` (2026-10-17: both were purged from
+history after the arm keys were found in the public repo). Keep a copy of the
+key with the private batch legend in osf-human-eval/results/clinician_batches/.
+
+`--check` exits non-zero on drift: it is the tripwire that turns "the batch was
+regenerated mid-round" from silent corruption into a loud failure. It verifies
+every letter's fingerprint, and the arm too if the bundle still carries one.
 
 THE LEGEND (verified 2026-09-04, do not re-derive by guessing)
 -------------------------------------------------------------
@@ -80,11 +86,36 @@ def text_fingerprint(text: str) -> str:
     return format(h, "08x")
 
 
+def json_layout(raw: str, data) -> tuple:
+    """The (indent, ensure_ascii, tail) that reproduces `raw` byte for byte.
+
+    Stripping must not reformat the bundle: the exporters write indent=1 or 2,
+    with or without ensure_ascii, and a reformatted 900 KB file buries the diff.
+    """
+    for indent in (2, 1, None, 4):
+        for ascii_ in (True, False):
+            for tail in ("", "\n"):
+                if json.dumps(data, indent=indent, ensure_ascii=ascii_) + tail == raw:
+                    return indent, ascii_, tail
+    raise SystemExit("bundle layout not recognised; refusing to rewrite it")
+
+
+def strip_arms(path: Path, raw: str, cases: list[dict]) -> int:
+    indent, ascii_, tail = json_layout(raw, cases)
+    removed = 0
+    for case in cases:
+        for resp in case["responses"]:
+            if resp.pop("arm", None) is not None:
+                removed += 1
+    path.write_text(json.dumps(cases, indent=indent, ensure_ascii=ascii_) + tail)
+    return removed
+
+
 def build_rows(cases: list[dict], legend: dict[str, str]) -> list[dict]:
     rows: list[dict] = []
     for pos, case in enumerate(cases):
         for resp in case["responses"]:
-            arm = resp["arm"]
+            arm = resp.get("arm", "")
             rows.append({
                 "batch": case.get("batch", ""),
                 "case_id": case["case_id"],
@@ -123,7 +154,8 @@ def main() -> int:
 
     if not args.bundle.exists():
         raise SystemExit(f"bundle not found: {args.bundle}")
-    cases = json.loads(args.bundle.read_text())
+    raw = args.bundle.read_text()
+    cases = json.loads(raw)
     if not cases:
         raise SystemExit("bundle holds no cases")
 
@@ -144,18 +176,27 @@ def main() -> int:
         with out_path.open(newline="") as fh:
             existing = list(csv.DictReader(fh))
         # Compare only the identity+integrity columns; arm_name may be filled in later.
+        # A stripped bundle carries no arm, so then only the letter fingerprints can be checked.
+        has_arm = all(r["arm"] for r in rows)
         key = lambda r: (r["batch"], r["case_id"], r["response_label"])
-        cmp = lambda r: (r["arm"], r["response_sha"])
+        cmp = (lambda r: (r["arm"], r["response_sha"])) if has_arm else (lambda r: r["response_sha"])
         now = {key(r): cmp({k: str(v) for k, v in r.items()}) for r in rows}
         was = {key(r): cmp(r) for r in existing}
         if now == was:
-            print(f"OK: {out_path.name} still matches the bundle ({len(rows)} rows)")
+            what = "arms + fingerprints" if has_arm else "fingerprints (bundle is stripped)"
+            print(f"OK: {out_path.name} still matches the bundle on {what} ({len(rows)} rows)")
             return 0
         print(f"DRIFT: {out_path.name} no longer matches the bundle.", file=sys.stderr)
         for k in sorted(set(now) | set(was)):
             if now.get(k) != was.get(k):
                 print(f"  {k}: frozen={was.get(k)} bundle={now.get(k)}", file=sys.stderr)
         return 1
+
+    if not all(r["arm"] for r in rows):
+        raise SystemExit(
+            "bundle carries no `arm` (already stripped), so there is nothing to freeze. "
+            "Re-export the batch, or use --check against the existing key."
+        )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", newline="") as fh:
@@ -164,8 +205,10 @@ def main() -> int:
         w.writerows(rows)
 
     named = sum(1 for r in rows if r["arm_name"])
-    print(f"wrote {len(rows)} rows -> {out_path}")
-    print(f"  batch={batch}  cases={len(cases)}  arms={sorted({r['arm'] for r in rows})}")
+    print(f"wrote {len(rows)} rows -> {out_path}  (gitignored; keep it off the public repo)")
+    print(f"  batch={batch}  cases={len(cases)}  distinct arms={len({r['arm'] for r in rows})}")
+    stripped = strip_arms(args.bundle, raw, cases)
+    print(f"  stripped {stripped} arm value(s) from {args.bundle.name}; it is now safe to commit")
     if not named:
         print("  ⚠️  arm_name is BLANK. Confirm the legend with whoever generated this batch,")
         print("      then re-run with --legend A=BASE,B=OURS,C=TRUTH (or the true mapping).")

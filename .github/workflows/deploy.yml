@@ -21,6 +21,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Guard — the public repo must not carry the arm key
+        # The bundle is stripped by freeze_arm_key.py and the key CSV is gitignored.
+        # Both were purged from history on 2026-10-17; this keeps them out.
+        run: |
+          if grep -q '"arm"' src/data/demo-cases.generated.json; then
+            echo "::error::committed bundle carries arm — run scripts/data/freeze_arm_key.py"
+            exit 1
+          fi
+          if git ls-files | grep -q '_arm_key\.csv$'; then
+            echo "::error::an arm-key CSV is committed — remove it from git"
+            exit 1
+          fi
+          echo "OK: no arm key in the repo"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

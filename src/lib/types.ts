@@ -31,7 +31,7 @@ export interface RubricAtom {
 export interface ResponseEntry {
   label: ResponseLabel // blinded display letter (A/B/C)
   markdown: string // the rendered patient-facing letter
-  arm: ArmId // source arm — unblinding key, never surfaced in the UI
+  arm?: ArmId // source arm — unblinding key; stripped from the committed bundle, lives in the local supabase/<batch>_arm_key.csv
   atoms: RubricAtom[] // present in the data; ignored since v6 (Likert-only rubric)
 }
 

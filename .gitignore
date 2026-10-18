@@ -34,3 +34,7 @@ __pycache__/
 
 # Temporary side-by-side comparison configs (scratchpad paths, never deployed)
 vite.compare-*.config.ts
+
+# Un-blinding keys stay on the operator's machine: this repo is PUBLIC.
+# freeze_arm_key.py writes them here and strips `arm` from the committed bundle.
+supabase/*_arm_key.csv
