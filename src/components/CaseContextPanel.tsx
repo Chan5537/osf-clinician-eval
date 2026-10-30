@@ -234,7 +234,11 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
           the material it should be read against was behind two collapsed headers — a closed
           section reads as an empty one. Supplementary stays collapsed: its absence was the
           confusion, not its contents, and opening all three buries the responses below the fold. */}
-      <Accordion type="multiple" defaultValue={['sleep-indices', 'medical-history', 'future-risk']}>
+      {/* ⚠️ SUPERSEDED 2026-10-29 (Zitao): only Future risk starts OPEN; Sleep panel, Prior medical
+          history and Supplementary start collapsed, to save the rater's attention and time. The
+          Show/Hide chip (see SectionHeader) is what keeps a closed section from reading as empty.
+          Resets per patient: App remounts <main key={i}> on every case. */}
+      <Accordion type="multiple" defaultValue={['future-risk']}>
         {/* ⚠️ SUPERSEDED 2026-09-18 — the recorded outcome is BACK in this panel, below Prior
             medical history (see the Future risk item further down). The 2026-09-03 reasoning kept
             here for the record: it was moved out to the pinned FutureRiskStrip so it would not
@@ -302,9 +306,9 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
             />
           </AccordionTrigger>
           <AccordionContent>
+            {/* One sentence (Zitao 2026-10-29: cut rater reading time outside the responses). */}
             <p className="mb-2.5 text-xs text-muted-foreground">
-              What this patient actually went on to develop in the six years after the study —
-              new onset, not present at the time. This is what the responses are rated against.
+              New conditions this patient developed within six years of the study.
             </p>
             {outcomeGroups.length > 0 ? (
               <div className="space-y-2 text-sm">
@@ -362,60 +366,37 @@ export function CaseContextPanel({ caseId, demographics, ehrHistory }: Props) {
               />
             </AccordionTrigger>
             <AccordionContent>
-              <p className="mb-2.5 text-xs text-muted-foreground">
-                Estimated from the sleep recording — not measured laboratory values, and mostly
-                absent from these patients&rsquo; records.{' '}
-                <span className="font-medium text-foreground">
-                  This is not a check on the responses
-                </span>{' '}
-                — judge them on the reasoning they give.
+              {/* Condensed 2026-10-29 (Zitao): one sentence of framing + one line of data, down
+                  from a paragraph and two labelled sub-blocks. Both safeguards survive the cut:
+                  "estimated" stays on the HbA1c value and the not-a-check clause stays here. */}
+              <p className="mb-2 text-xs text-muted-foreground">
+                Estimated from the sleep recording, not measured, and{' '}
+                <span className="font-medium text-foreground">not a check on the responses</span>.
               </p>
-              <div className="space-y-3 text-sm">
-                <div>
-                  <p className="mb-1.5">
-                    <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
-                      Medication
-                    </span>
-                  </p>
-                  {medications.length > 0 ? (
-                    <ul className="flex flex-wrap gap-1.5">
-                      {medications.map((m) => (
-                        <li
-                          key={m}
-                          className="inline-flex items-center rounded-md border bg-muted px-2 py-0.5 text-sm capitalize text-foreground"
-                        >
-                          {m}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted-foreground">
-                      No prescription on record in the 30 days before the study.
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <p className="mb-1.5">
-                    <span className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
-                      Lab test (HbA1c)
-                    </span>
-                  </p>
-                  {hba1c ? (
-                    <p className="text-foreground">
-                      {hba1c.value}
-                      {' %'}
-                      {/* "(estimated)" rides the VALUE, not just the section tag: a figure read in
-                          isolation must still carry its own standing. */}
-                      {hba1c.estimated === false ? '' : ' (estimated)'}
-                      {hba1c.abnormal ? ' — outside the reference range' : ''}
-                    </p>
-                  ) : (
-                    <p className="text-muted-foreground">
-                      No HbA1c on record in the 90 days around the study.
-                    </p>
-                  )}
-                </div>
-              </div>
+              <p className="text-sm text-foreground">
+                <span className="font-medium text-amber-700 dark:text-amber-300">Medication:</span>{' '}
+                {medications.length > 0 ? (
+                  <span className="capitalize">{medications.join(', ')}</span>
+                ) : (
+                  <span className="text-muted-foreground">none in the 30 days before the study</span>
+                )}
+                <span className="px-2 text-muted-foreground" aria-hidden="true">
+                  ·
+                </span>
+                <span className="font-medium text-amber-700 dark:text-amber-300">HbA1c:</span>{' '}
+                {hba1c ? (
+                  <>
+                    {hba1c.value}
+                    {' %'}
+                    {/* "(estimated)" rides the VALUE, not just the section tag: a figure read in
+                        isolation must still carry its own standing. */}
+                    {hba1c.estimated === false ? '' : ' (estimated)'}
+                    {hba1c.abnormal ? ', outside the reference range' : ''}
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">none within 90 days of the study</span>
+                )}
+              </p>
             </AccordionContent>
           </AccordionItem>
 

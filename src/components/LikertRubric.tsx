@@ -215,24 +215,33 @@ export function LikertDimensions({
                 sit under "How to score" in the same toggletip, so the scoring page stays as
                 dense as it was. Every example quotes a real letter of the LOADED batch
                 (2026-08-25 rule); if the batch is replaced, the examples must be rewritten. */}
+            {/* SPLIT 2026-10-29 (Zitao + Chan): "How to score" and "Scoring example" are now two
+                toggletips. Behind one combined CTA, raters could take the long worked example as
+                required reading. "How to score" stays because it aligns raters with different
+                priors on what each axis means (Prof. Yang); the example is optional illustration. */}
             {dim.howToScore && (
               <AxisHelp
                 label={dim.label}
-                cta="How to score · example"
+                cta="How to score"
                 contentClassName={SCORING_HELP_CLASS}
                 text={
-                  <div className="space-y-3 text-[13px] leading-snug">
-                    <section>
-                      <p className="mb-1 font-semibold">How to score it</p>
-                      <RubricText text={dim.howToScore} className="text-muted-foreground" />
-                    </section>
-                    {dim.example && (
-                      <section>
-                        <p className="mb-1 font-semibold">Example</p>
-                        <RubricText text={dim.example} className="text-muted-foreground" />
-                      </section>
-                    )}
-                  </div>
+                  <RubricText
+                    text={dim.howToScore}
+                    className="text-[13px] leading-snug text-muted-foreground"
+                  />
+                }
+              />
+            )}
+            {dim.example && (
+              <AxisHelp
+                label={dim.label}
+                cta="Scoring example"
+                contentClassName={SCORING_HELP_CLASS}
+                text={
+                  <RubricText
+                    text={dim.example}
+                    className="text-[13px] leading-snug text-muted-foreground"
+                  />
                 }
               />
             )}

@@ -89,11 +89,10 @@ export function RankOrder({
           ) : null}
         </div>
 
+        {/* One sentence (Zitao 2026-10-29); the "for each place, select…" line was dropped as
+            the 1st/2nd/3rd rows below already show how to answer. */}
         <p className="text-sm font-medium leading-snug text-foreground">
           Taking everything together, rank these {n} responses from best to worst.
-        </p>
-        <p className="text-xs text-muted-foreground">
-          For each place, select the response that belongs there.
         </p>
       </div>
 
