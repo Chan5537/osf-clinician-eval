@@ -78,6 +78,12 @@ function rankValueCell(v: RankValue): string | number {
   return '' // null / unranked
 }
 
+// ⛔ COMMENTS ARE NEVER ROWS OF buildRows. sync-rows.ts maps buildRows() straight into
+// public.rating, whose completion trigger counts distinct dimensions per response: one optional
+// comment "dimension" there would raise the bar every rater must clear and silently stop the
+// completion emails. Comments have their own builder (buildCommentRows, below), their own table
+// (public.rating_comment) and ride the JSON export only — the CSV columns above are unchanged so
+// every analysis script that reads them is too.
 export function buildRows(session: SessionState): ReviewRow[] {
   const rows: ReviewRow[] = []
   session.cases.forEach((c, i) => {
@@ -154,6 +160,45 @@ export function buildRows(session: SessionState): ReviewRow[] {
   return rows
 }
 
+/**
+ * The optional free-text comments (2026-11-03), one row per NON-BLANK comment of a touched case.
+ * scope 'likert' = about one response's scores (target = its letter, response_sha = that letter's
+ * fingerprint); scope 'rank' = about the case's ranking (target 'case', no sha). No arm column, for
+ * the same reason as buildRows.
+ */
+export function buildCommentRows(session: SessionState): ReviewRow[] {
+  const rows: ReviewRow[] = []
+  session.cases.forEach((c, i) => {
+    const dc = DEMO_CASES[i]
+    if (!dc) return
+    const cm = c.state.comments
+    const base = {
+      reviewer: session.reviewer,
+      case_id: dc.case_id,
+      query_id: dc.query_id,
+      batch: dc.batch ?? '',
+      submitted_at: c.submittedAt,
+      rubric_version: RUBRIC_VERSION,
+    }
+    for (const r of dc.responses) {
+      const text = (cm?.likert?.[r.label] ?? '').trim()
+      if (!text) continue
+      rows.push({
+        ...base,
+        scope: 'likert',
+        target: r.label,
+        response_sha: textFingerprint(r.markdown),
+        comment: text,
+      })
+    }
+    const rankText = (cm?.rank ?? '').trim()
+    if (rankText) {
+      rows.push({ ...base, scope: 'rank', target: 'case', response_sha: null, comment: rankText })
+    }
+  })
+  return rows
+}
+
 export function toJSON(session: SessionState): string {
   return JSON.stringify(
     {
@@ -161,6 +206,8 @@ export function toJSON(session: SessionState): string {
       exported_at: new Date().toISOString(),
       reviewer: session.reviewer,
       reviews: buildRows(session),
+      // Read back by storage.restoreFromExport; absent in files exported before 2026-11-03.
+      comments: buildCommentRows(session),
     },
     null,
     2,

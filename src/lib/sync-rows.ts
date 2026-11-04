@@ -11,7 +11,8 @@
 
 import type { SessionState } from './session'
 import { SCHEMA_VERSION } from './session'
-import { buildRows } from './export'
+import { buildRows, textFingerprint } from './export'
+import { RUBRIC_VERSION } from './rubric-config'
 import { DEMO_CASES } from '@/data/demo-cases'
 
 /** One row of public.rating. Column names match supabase/migrations/001_init.sql. */
@@ -82,4 +83,65 @@ export function ratingRowsForCase(
 /** Every touched case's rows — used to backfill a session that predates the backend. */
 export function allRatingRows(session: SessionState, raterId: string): RatingRow[] {
   return DEMO_CASES.flatMap((_, i) => ratingRowsForCase(session, i, raterId))
+}
+
+// ------------------------------------------------------------- comments ----
+
+/**
+ * One row of public.rating_comment (supabase/migrations/012_rating_comment.sql).
+ * ⚠️ No `response_label`: that column is GENERATED from `target` on the server, and PostgREST
+ * rejects a write to a generated column.
+ */
+export interface CommentRow {
+  rater_id: string
+  batch: string
+  case_id: string
+  scope: 'likert' | 'rank'
+  target: string // 'A' | 'B' | 'C' for likert, 'case' for rank
+  comment: string // trimmed; '' = no comment (or a cleared one)
+  rubric_version: string
+  schema_version: number
+  response_sha: string | null // the letter commented on; null for the ranking comment
+  submitted_at: string | null
+}
+
+/**
+ * The comment rows for a single SUBMITTED case — [] otherwise. Comments on a case not yet submitted
+ * travel inside the session_state blob and land here at submit, alongside the ratings.
+ *
+ * Emits EVERY target (one per response + the ranking), blank ones included. That makes each write
+ * a complete, idempotent picture of the case: a comment the rater cleared is overwritten with ''
+ * rather than lingering, with no delete path needed. The extract filters out blanks.
+ */
+export function commentRowsForCase(
+  session: SessionState,
+  caseIndex: number,
+  raterId: string,
+): CommentRow[] {
+  const demoCase = DEMO_CASES[caseIndex]
+  const c = session.cases[caseIndex]
+  if (!demoCase || !c || !c.submitted) return []
+  const base = {
+    rater_id: raterId,
+    batch: String(demoCase.batch ?? ''),
+    case_id: demoCase.case_id,
+    rubric_version: RUBRIC_VERSION,
+    schema_version: SCHEMA_VERSION,
+    submitted_at: strOrNull(c.submittedAt),
+  }
+  const rows: CommentRow[] = demoCase.responses.map((r) => ({
+    ...base,
+    scope: 'likert',
+    target: r.label,
+    comment: (c.state.comments?.likert?.[r.label] ?? '').trim(),
+    response_sha: textFingerprint(r.markdown),
+  }))
+  rows.push({
+    ...base,
+    scope: 'rank',
+    target: 'case',
+    comment: (c.state.comments?.rank ?? '').trim(),
+    response_sha: null,
+  })
+  return rows
 }
