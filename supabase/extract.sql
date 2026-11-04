@@ -109,3 +109,55 @@ order by reviewer, br.case_position, r.response_label, r.dimension;
 --  where br.batch = 'v611_r10'
 --  group by 1, 2
 --  order by 1, 2;
+
+
+-- ===========================================================================
+-- COMMENTS EXTRACT (2026-11-03) — the optional free-text comments, ready for the supplement.
+--
+-- Source: public.rating_comment (migrations/012). One row per NON-BLANK comment:
+--   scope 'likert' — about one response's five scores; `arm` + `scores` describe that response
+--   scope 'rank'   — about the case's overall ranking; `ranking_decoded` shows the order given
+-- `letter_key` decodes any "Response B" a clinician wrote inside the free text.
+--
+-- Same pins as the main extract (batch, rubric_version, recruited emails) plus the response_sha
+-- tripwire for likert comments. ⚠️ Free text: screen for patient-identifying detail before quoting.
+-- ===========================================================================
+-- select
+--   coalesce(ra.display_name, split_part(ra.email, '@', 1))          as reviewer,
+--   c.case_id,
+--   (select min(b.case_position) from public.batch_response b
+--     where b.batch = c.batch and b.case_id = c.case_id)               as case_position,
+--   c.scope,
+--   c.target,
+--   coalesce(br.arm_name, br.arm)                                      as arm,  -- likert only
+--   (select string_agg(b.response_label || '=' || coalesce(b.arm_name, b.arm), '; '
+--                      order by b.response_label)
+--      from public.batch_response b
+--     where b.batch = c.batch and b.case_id = c.case_id)               as letter_key,
+--   (select string_agg(rt.response_label || '(' || coalesce(b.arm_name, b.arm) || ')', ' > '
+--                      order by rt.value)
+--      from public.rating rt
+--      join public.batch_response b
+--        on b.batch = rt.batch and b.case_id = rt.case_id and b.response_label = rt.response_label
+--     where rt.rater_id = c.rater_id and rt.batch = c.batch and rt.case_id = c.case_id
+--       and rt.rubric_version = c.rubric_version
+--       and rt.dimension = 'rank_overall' and rt.value is not null)   as ranking_decoded,
+--   (select string_agg(rt.dimension || '=' || rt.value, '; ' order by rt.dimension)
+--      from public.rating rt
+--     where c.scope = 'likert'
+--       and rt.rater_id = c.rater_id and rt.batch = c.batch and rt.case_id = c.case_id
+--       and rt.response_label = c.response_label and rt.rubric_version = c.rubric_version
+--       and rt.dimension <> 'rank_overall')                            as scores,
+--   c.comment,
+--   c.submitted_at,
+--   c.updated_at                                                       -- later than submitted_at = added afterwards
+-- from public.rating_comment c
+-- join public.rater ra on ra.id = c.rater_id
+-- left join public.batch_response br
+--   on  br.batch = c.batch and br.case_id = c.case_id and br.response_label = c.response_label
+-- where c.batch          = 'v66w3_60'
+--   and c.rubric_version = 'v15-20261008'
+--   -- and ra.email in ('clinician1@example.org', 'clinician2@example.org')
+--   and btrim(c.comment) <> ''
+--   and (c.scope = 'rank' or c.response_sha = br.response_sha)   -- integrity tripwire (likert)
+-- order by reviewer, case_position, c.scope, c.target;
