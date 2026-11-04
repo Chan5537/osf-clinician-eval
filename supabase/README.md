@@ -8,6 +8,7 @@ Everything the backend needs, in the order it must happen.
 |---|---|
 | `migrations/001_init.sql` | Schema: `rater`, `batch_response`, `session_state`, `rating` |
 | `migrations/002_rls.sql` | Row level security. **The only security boundary** |
+| `migrations/012_rating_comment.sql` | Optional clinician comments (`rating_comment`). **Apply before deploying the app build that writes them**; idempotent (`pbcopy < supabase/migrations/012_rating_comment.sql`) |
 | `<batch>_arm_key.csv` | The frozen un-blinding key. **Local only, gitignored: this repo is public** |
 | `extract.sql` | Analysis-ready tidy CSV + three audit queries |
 | `../scripts/data/freeze_arm_key.py` | Writes/verifies the arm key and strips `arm` from the bundle |

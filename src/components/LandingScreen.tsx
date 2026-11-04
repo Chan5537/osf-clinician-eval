@@ -93,6 +93,13 @@ export function LandingScreen({
                 roughly <strong>4–7 minutes</strong> once you are familiar with the scales, and you
                 can stop and resume at any point.
               </p>
+              {/* 2026-11-03: the optional comment boxes. Says they are optional and can be added to
+                  an already-submitted case, so a rater who has finished knows they can go back. */}
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Each response and the ranking also have an <strong>optional comment box</strong> if
+                you want to explain a score or suggest what a better response would say. You can
+                add or edit a comment at any time, including on cases you have already submitted.
+              </p>
             </div>
 
             <div className="space-y-1.5">

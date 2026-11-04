@@ -8,7 +8,7 @@ import type {
   ResponseEntry,
   RankValue,
 } from './types'
-import { likertKey } from './types'
+import { likertKey, COMMENT_MAX_CHARS } from './types'
 import { RUBRIC_DIMENSIONS } from './rubric-config'
 
 // LIKERT + RANK rubric state machine (v10). Each case's rubric holds TWO maps:
@@ -17,6 +17,8 @@ import { RUBRIC_DIMENSIONS } from './rubric-config'
 //            fixed RUBRIC_DIMENSIONS. Every cell is required for submission.
 //   rank   — the case-level comparative question (v10): one place (1=best … 3=worst) per response
 //            label, forced strict order. Every place is required for submission.
+//   comments — OPTIONAL free text (2026-11-03): one per response (about its Likert scores) and one
+//            per case (about the ranking). NEVER required — nothing below counts them.
 //
 // The boolean atom checklist was removed from scoring in v6; the data's `atoms` are ignored.
 
@@ -29,13 +31,20 @@ export function likertKeysFor(demoCase: DemoCase): LikertKey[] {
   return keys
 }
 
+/** A blank comment set for a case: '' for every present response, '' for the ranking. */
+export function emptyComments(demoCase: DemoCase): RubricState['comments'] {
+  const likert: RubricState['comments']['likert'] = {}
+  for (const r of demoCase.responses) likert[r.label] = ''
+  return { likert, rank: '' }
+}
+
 /** Blank state for a case: every Likert cell and every rank place -> null (unanswered). */
 export function buildInitialRubricState(demoCase: DemoCase): RubricState {
   const likert: Record<LikertKey, LikertScore> = {}
   for (const key of likertKeysFor(demoCase)) likert[key] = null
   const rank: RubricState['rank'] = {}
   for (const r of demoCase.responses) rank[r.label] = null
-  return { likert, rank }
+  return { likert, rank, comments: emptyComments(demoCase) }
 }
 
 export function rubricReducer(
@@ -61,8 +70,20 @@ export function rubricReducer(
       next[action.label] = action.value
       return { ...state, rank: next }
     }
+    case 'SET_COMMENT': {
+      // Clamp here as well as in the textarea's maxLength: a pasted or restored string must not
+      // exceed what the database check (4000) and the export expect. Not trimmed — the rater is
+      // still typing; rows are trimmed when they are built (sync-rows.ts / export.ts).
+      const text = String(action.text ?? '').slice(0, COMMENT_MAX_CHARS)
+      const prev = state.comments ?? { likert: {}, rank: '' }
+      return action.scope === 'rank'
+        ? { ...state, comments: { ...prev, rank: text } }
+        : { ...state, comments: { ...prev, likert: { ...prev.likert, [action.label]: text } } }
+    }
     case 'RESET':
-      return demoCase ? buildInitialRubricState(demoCase) : { likert: {}, rank: {} }
+      return demoCase
+        ? buildInitialRubricState(demoCase)
+        : { likert: {}, rank: {}, comments: { likert: {}, rank: '' } }
     default:
       return state
   }
@@ -98,6 +119,9 @@ export function rankPickCount(state: RubricState, demoCase: DemoCase): number {
     0,
   )
 }
+
+// ⚠️ COMMENTS ARE DELIBERATELY ABSENT from pickCount / requiredCount / isComplete below. They are
+// optional; counting them would make the submit gate and the progress bar demand them.
 
 /** Number of required items answered for this case: Likert cells + rank places. */
 export function pickCount(state: RubricState, demoCase: DemoCase): number {
@@ -152,4 +176,9 @@ export function armRequiredCount(): number {
 /** True iff every Likert cell of ONE response is answered. */
 export function armComplete(state: RubricState, label: ResponseLabel): boolean {
   return armAnsweredCount(state, label) === RUBRIC_DIMENSIONS.length
+}
+
+/** True iff this response has a non-blank Likert comment (the focus tab's comment marker). */
+export function hasLikertComment(state: RubricState, label: ResponseLabel): boolean {
+  return (state.comments?.likert?.[label] ?? '').trim() !== ''
 }

@@ -8,7 +8,7 @@ import type { SessionState, CaseRubric, CaseTiming } from './session'
 import { SCHEMA_VERSION, initialSessionState, newCaseTiming } from './session'
 import { buildInitialRubricState } from './reducer'
 import type { RubricState, DemoCase, LikertScore, ResponseLabel, RankValue } from './types'
-import { RANK_DIMENSION } from './types'
+import { RANK_DIMENSION, COMMENT_MAX_CHARS } from './types'
 import { DEMO_CASES, BATCH, BLOCK_ID, BLOCK_SIZE, TOTAL_BLOCKS } from '@/data/demo-cases'
 
 // Neutral localStorage key (no brand token; visible in a screen-shared devtools session).
@@ -39,7 +39,7 @@ interface Envelope {
 function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
   const base: RubricState = buildInitialRubricState(demoCase)
   if (stored && typeof stored === 'object') {
-    const src = stored as { likert?: unknown; rank?: unknown }
+    const src = stored as { likert?: unknown; rank?: unknown; comments?: unknown }
     if (src.likert && typeof src.likert === 'object') {
       const l = src.likert as Record<string, unknown>
       for (const k of Object.keys(base.likert)) {
@@ -70,6 +70,23 @@ function sanitizeRubric(stored: unknown, demoCase: DemoCase): RubricState {
         if (taken.has(v)) base.rank[label] = null
         else taken.add(v)
       }
+    }
+    // The optional comments (2026-11-03), allowlist-rebuilt like `rank`: only strings, only for a
+    // letter this case has, clamped to the limit.
+    // ⚠️ WITHOUT THIS BRANCH EVERY COMMENT IS SILENTLY DISCARDED on reload and on server hydrate —
+    // the same trap as `rank` above. A blob written before comments existed has no `comments` key
+    // and keeps the empty defaults from buildInitialRubricState, which is why the feature needed
+    // no SCHEMA_VERSION bump.
+    if (src.comments && typeof src.comments === 'object') {
+      const cm = src.comments as { likert?: unknown; rank?: unknown }
+      if (cm.likert && typeof cm.likert === 'object') {
+        const cl = cm.likert as Record<string, unknown>
+        for (const label of Object.keys(base.comments.likert) as ResponseLabel[]) {
+          const v = cl[label]
+          if (typeof v === 'string') base.comments.likert[label] = v.slice(0, COMMENT_MAX_CHARS)
+        }
+      }
+      if (typeof cm.rank === 'string') base.comments.rank = cm.rank.slice(0, COMMENT_MAX_CHARS)
     }
   }
   return base
@@ -351,8 +368,21 @@ interface ExportRow {
  * different letters or different questions. Rows for cases outside the current block are
  * ignored (that is how a whole-batch export restores into one block).
  */
+/** Comment rows as written by lib/export.ts buildCommentRows (the JSON export's `comments`). */
+interface ExportCommentRow {
+  case_id?: string
+  scope?: string // 'likert' | 'rank'
+  target?: string // 'A' | 'B' | 'C' for likert, 'case' for rank
+  comment?: string
+}
+
 export function restoreFromExport(text: string): string {
-  let parsed: { schema_version?: number; reviewer?: string; reviews?: ExportRow[] }
+  let parsed: {
+    schema_version?: number
+    reviewer?: string
+    reviews?: ExportRow[]
+    comments?: ExportCommentRow[] // absent in exports made before 2026-11-03
+  }
   try {
     parsed = JSON.parse(text)
   } catch {
@@ -379,12 +409,26 @@ export function restoreFromExport(text: string): string {
     byCase.set(r.case_id, list)
   }
 
+  const commentsByCase = new Map<string, ExportCommentRow[]>()
+  for (const c of Array.isArray(parsed.comments) ? parsed.comments : []) {
+    if (!c?.case_id || typeof c.comment !== 'string') continue
+    const list = commentsByCase.get(c.case_id) ?? []
+    list.push(c)
+    commentsByCase.set(c.case_id, list)
+  }
+
   const fresh = initialSessionState()
   let restored = 0
   const cases: CaseRubric[] = DEMO_CASES.map((dc, i) => {
     const rowsFor = byCase.get(dc.case_id)
     if (!rowsFor || rowsFor.length === 0) return fresh.cases[i]
     const state = buildInitialRubricState(dc)
+    for (const c of commentsByCase.get(dc.case_id) ?? []) {
+      const text = (c.comment as string).slice(0, COMMENT_MAX_CHARS)
+      if (c.scope === 'rank') state.comments.rank = text
+      else if (c.scope === 'likert' && c.target && c.target in state.comments.likert)
+        state.comments.likert[c.target as ResponseLabel] = text
+    }
     let any = false
     for (const r of rowsFor) {
       if (!r.response_label || !r.dimension) continue

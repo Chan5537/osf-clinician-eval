@@ -4,6 +4,10 @@
 --    have signed in from. If you clear the browser first, the app re-hydrates from the
 --    server and puts everything back.
 
+-- Comments (migrations/012). Guarded so this still runs on a project without 012.
+do $$ begin
+  if to_regclass('public.rating_comment') is not null then delete from public.rating_comment; end if;
+end $$;
 delete from public.rating;
 delete from public.session_state;
 delete from public.notification_outbox;

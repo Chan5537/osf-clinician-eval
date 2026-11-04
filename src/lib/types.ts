@@ -123,8 +123,26 @@ export type RankValue = 1 | 2 | 3 | null
 // key (…, response_label, dimension) and the batch_response foreign key both hold unchanged.
 export const RANK_DIMENSION = 'rank_overall'
 
+// OPTIONAL FREE-TEXT COMMENTS (2026-11-03, Prof. Yang + clinician request). Two kinds:
+//   likert — one per response, explaining that response's five scores (shown under its scales);
+//   rank   — one per case, explaining the overall ranking (or what a better response would say).
+// ⛔ NEVER REQUIRED: not counted by pickCount / requiredCount / isComplete, and editing one never
+// un-submits a case (see session.ts RUBRIC). ⛔ NEVER a public.rating row: they sync to their own
+// table, public.rating_comment (migration 012) — a comment "dimension" on rating would raise the
+// completion trigger's v_dims and silently stop every completion email.
+// Added WITHOUT a SCHEMA_VERSION bump: an older stored state has no `comments`, and
+// storage.sanitizeRubric fills the empty defaults, so live raters keep their sessions.
+export const COMMENT_MAX_CHARS = 2000
+
+export interface RubricComments {
+  likert: Partial<Record<ResponseLabel, string>> // one per present response label
+  rank: string // one per case
+}
+
+export type CommentScope = 'likert' | 'rank'
+
 // The whole scoring state of one case: one LikertScore per (responseLabel, dimension), plus the
-// case-level ranking.
+// case-level ranking, plus the optional comments.
 export interface RubricState {
   likert: Record<LikertKey, LikertScore>
   // Forced strict ranking of the present responses; one place per blinded letter, no ties.
@@ -133,6 +151,8 @@ export interface RubricState {
   // silently treat a rank row as a Likert cell. The separation forces both to handle it
   // explicitly instead of doing the wrong thing quietly.
   rank: Partial<Record<ResponseLabel, RankValue>>
+  // Optional free text; '' = no comment. See RubricComments above.
+  comments: RubricComments
 }
 
 // Build the storage/state key for one (response label, Likert dimension).
@@ -145,4 +165,7 @@ export type RubricAction =
   // Assign a place to one response. The reducer enforces a strict permutation by SWAPPING with
   // whichever response currently holds that place, so a tie is unreachable rather than validated.
   | { type: 'SET_RANK'; label: ResponseLabel; value: RankValue }
+  // Set an optional comment. Unlike every other action, this does NOT re-open a submitted case.
+  | { type: 'SET_COMMENT'; scope: 'likert'; label: ResponseLabel; text: string }
+  | { type: 'SET_COMMENT'; scope: 'rank'; text: string }
   | { type: 'RESET' }

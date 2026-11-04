@@ -9,6 +9,8 @@
 //   session_state  the whole SessionState blob, debounced (resume / B6)
 //   rating         18 rows per submitted case                (collection / B8)
 //                  (3 responses x 5 Likert dimensions, + 3 rank rows for the case-level ranking)
+//   rating_comment 4 rows per submitted case (one optional comment per response + one on the
+//                  ranking), re-sent whenever a comment on a submitted case changes (2026-11-03)
 //
 // Both are UPSERTS on a natural key, so delivery is at-least-once and duplicates
 // are harmless. That is what lets the queue retry blindly with no dedup table.
@@ -19,7 +21,12 @@ import { RUBRIC_VERSION } from './rubric-config'
 import { BATCH, SESSION_BATCH, DEMO_CASES } from '@/data/demo-cases'
 import { supabase, SUPABASE_ENABLED } from './supabase'
 import { sanitizeSession } from './storage'
-import { ratingRowsForCase, type RatingRow } from './sync-rows'
+import {
+  ratingRowsForCase,
+  commentRowsForCase,
+  type RatingRow,
+  type CommentRow,
+} from './sync-rows'
 
 // ---------------------------------------------------------------- status ----
 
@@ -68,6 +75,9 @@ type Op =
       caseIds?: string[]
     }
   | { id: string; kind: 'ratings'; raterId: string; rows: RatingRow[] }
+  // One case's comment rows (sync-rows.commentRowsForCase). Whole-case upserts like a session op,
+  // so a newer one for the same `caseId` supersedes any still pending.
+  | { id: string; kind: 'comments'; raterId: string; caseId: string; rows: CommentRow[] }
 
 const QUEUE_KEY = `clinician-eval-syncq::${BATCH || 'all'}`
 const MAX_OPS = 60
@@ -118,6 +128,9 @@ function enqueue(op: Op): void {
   // block-2 one.
   if (op.kind === 'session')
     queue = queue.filter((o) => o.kind !== 'session' || (o.key ?? BATCH) !== (op.key ?? BATCH))
+  // Same for comments, per case: each op carries the case's complete comment set.
+  if (op.kind === 'comments')
+    queue = queue.filter((o) => o.kind !== 'comments' || o.caseId !== op.caseId)
   queue.push(op)
   if (queue.length > MAX_OPS) {
     // Trim in place. Reassigning `queue` here would swap the array out from under an
@@ -156,6 +169,15 @@ async function runOp(op: Op): Promise<void> {
     return
   }
 
+  if (op.kind === 'comments') {
+    if (op.rows.length === 0) return
+    const { error } = await supabase
+      .from('rating_comment')
+      .upsert(op.rows, { onConflict: 'rater_id,batch,case_id,scope,target' })
+    if (error) throw error
+    return
+  }
+
   if (op.rows.length === 0) return
   const { error } = await supabase
     .from('rating')
@@ -178,6 +200,22 @@ async function isRecoverableAuth(err: unknown): Promise<boolean> {
   return false
 }
 
+/**
+ * A comments write that can NEVER succeed by retrying: the table is missing (migration 012 not
+ * applied — 42P01 / PGRST205), a generated/unknown column (42703 / PGRST204), a check constraint
+ * (23514), or RLS refusing the row (42501). Such an op is dropped rather than retried.
+ *
+ * WHY: drain() is strictly in order and stops at the first failure, so one permanently failing
+ * comment op would block every later RATINGS op behind it — losing scores to protect optional
+ * free text. The comment is not lost by dropping the op: it is still in the session_state blob.
+ * Transient failures (network, 5xx, auth) do not match and keep the normal backoff.
+ */
+function isPermanentCommentFailure(op: Op, err: unknown): boolean {
+  if (op.kind !== 'comments') return false
+  const code = String((err as { code?: string })?.code ?? '')
+  return ['42P01', 'PGRST205', '42703', 'PGRST204', '23514', '42501'].includes(code)
+}
+
 async function drain(): Promise<void> {
   if (!SUPABASE_ENABLED || draining) return
   loadQueue()
@@ -196,11 +234,17 @@ async function drain(): Promise<void> {
       try {
         await runOp(op)
       } catch (err) {
-        if (await isRecoverableAuth(err)) {
+        if (isPermanentCommentFailure(op, err)) {
+          console.error('comment upload dropped (kept in the session blob):', err)
+        } else if (await isRecoverableAuth(err)) {
           try {
             await runOp(op)
           } catch (again) {
-            return failWith(again)
+            if (isPermanentCommentFailure(op, again)) {
+              console.error('comment upload dropped (kept in the session blob):', again)
+            } else {
+              return failWith(again)
+            }
           }
         } else {
           return failWith(err)
@@ -288,10 +332,47 @@ export function queueCaseSubmit(
   if (rows.length > 0) {
     enqueue({ id: `r-${caseIndex}-${Date.now()}`, kind: 'ratings', raterId, rows })
   }
+  // After the ratings, never before: a comment must not land for a case whose scores have not.
+  enqueueComments(raterId, session, caseIndex)
   // Submitting also moves currentCaseIndex, so mirror the session immediately
   // rather than waiting out the debounce.
   if (sessionTimer) window.clearTimeout(sessionTimer)
   enqueue(sessionOp(raterId, session, rev))
+}
+
+function enqueueComments(raterId: string, session: SessionState, caseIndex: number): void {
+  const caseId = DEMO_CASES[caseIndex]?.case_id
+  const rows = commentRowsForCase(session, caseIndex, raterId)
+  if (!caseId || rows.length === 0) return
+  enqueue({ id: `c-${caseIndex}-${Date.now()}`, kind: 'comments', raterId, caseId, rows })
+}
+
+// Pending debounced comment writes, per case. The payload is kept beside the timer so a closing
+// tab (pagehide) or a manual flush can send it at once instead of losing the last edit.
+const commentPending = new Map<number, { timer: number; raterId: string; session: SessionState }>()
+
+function flushPendingComments(): void {
+  for (const [caseIndex, p] of commentPending) {
+    window.clearTimeout(p.timer)
+    enqueueComments(p.raterId, p.session, caseIndex)
+  }
+  commentPending.clear()
+}
+
+/**
+ * A comment changed on an ALREADY-SUBMITTED case (editing a comment never un-submits, so there is
+ * no Submit to carry it). Debounced per case; the session blob is mirrored separately as usual.
+ * A case not yet submitted needs no call: its comments go up with queueCaseSubmit.
+ */
+export function queueCommentSync(raterId: string, session: SessionState, caseIndex: number): void {
+  if (!SUPABASE_ENABLED || !raterId) return
+  const pending = commentPending.get(caseIndex)
+  if (pending) window.clearTimeout(pending.timer)
+  const timer = window.setTimeout(() => {
+    commentPending.delete(caseIndex)
+    enqueueComments(raterId, session, caseIndex)
+  }, 1500)
+  commentPending.set(caseIndex, { timer, raterId, session })
 }
 
 /**
@@ -311,6 +392,8 @@ export async function resetServerSession(raterId: string): Promise<void> {
   queue = []
   persistQueue()
   if (sessionTimer) window.clearTimeout(sessionTimer)
+  for (const p of commentPending.values()) window.clearTimeout(p.timer)
+  commentPending.clear()
   try {
     await supabase.from('session_state').delete().eq('rater_id', raterId).eq('batch', SESSION_BATCH)
   } catch {
@@ -321,6 +404,7 @@ export async function resetServerSession(raterId: string): Promise<void> {
 
 /** Drain now, ignoring backoff. The Retry button and pagehide both use this. */
 export async function flushNow(): Promise<void> {
+  flushPendingComments()
   nextAttemptAt = 0
   await drain()
 }
@@ -345,7 +429,7 @@ export function debugState(): {
     pending: queue.length,
     ops: queue.map((o) => ({
       kind: o.kind,
-      ...(o.kind === 'ratings' ? { rows: o.rows.length } : {}),
+      ...(o.kind === 'ratings' || o.kind === 'comments' ? { rows: o.rows.length } : {}),
     })),
   }
 }
@@ -376,7 +460,10 @@ if (SUPABASE_ENABLED && typeof window !== 'undefined') {
   })
   // Best effort on unload. sendBeacon cannot carry the auth header, so durability
   // comes from the queue surviving in localStorage, not from this call landing.
-  window.addEventListener('pagehide', () => void drain())
+  window.addEventListener('pagehide', () => {
+    flushPendingComments() // into the persisted queue, so the next load sends it if this drain cannot
+    void drain()
+  })
   window.setInterval(() => void drain(), 30_000)
 }
 

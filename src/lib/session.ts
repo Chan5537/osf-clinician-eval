@@ -103,6 +103,11 @@ import { advance, touch, park, resume } from './timing'
 // v28 = rubric v15-20261008 (2026-10-08, Chan): v15's definitions loosened (open example lists, no
 //       "X is not Y" clauses) and risk predictions added to two questions' e.g. lists. A v27 session was
 //       answered under the narrower wording, so it is discarded rather than resumed.
+// (no bump, 2026-11-03) optional free-text COMMENTS join RubricState (`comments`). Deliberately NOT a
+//       bump: the round is live, and a bump discards every in-progress session on load and on
+//       hydrate. It is safe without one because the change is purely additive — a v28 blob with no
+//       `comments` is rebuilt by storage.sanitizeRubric with empty defaults, and no existing key
+//       changed meaning. Do NOT copy this reasoning to a change that alters a question or a key.
 export const SCHEMA_VERSION = 28
 
 export type SessionView = 'landing' | 'cycle' | 'completion'
@@ -292,8 +297,24 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
     }
     case 'RUBRIC': {
       const c = s.cases[a.caseIndex]
-      // Editing re-opens a submitted case so a later re-submit re-stamps honestly.
       const nextState = rubricReducer(c.state, a.action, DEMO_CASES[a.caseIndex])
+      // OPTIONAL COMMENTS (2026-11-03) never re-open a case. A rater who has finished must be able
+      // to go back and explain a score without the case dropping to unsubmitted (and without having
+      // to press Submit again); the comment reaches the server on its own (sync.queueCommentSync).
+      // Timing: before submit, typing is active work, so it settles and touches the clock like a
+      // pick; after submit the ledger stays frozen at the scoring time recorded by SUBMIT_CASE.
+      if (a.action.type === 'SET_COMMENT') {
+        if (c.submitted) return patchCase(s, a.caseIndex, { state: nextState })
+        const now = Date.now()
+        const commented = a.action.scope === 'likert' ? a.action.label : null
+        const retargetedC = commented ? { ...c.timing, focusedLabel: commented } : c.timing
+        const settledC = settle(retargetedC, now)
+        return patchCase(s, a.caseIndex, {
+          state: nextState,
+          timing: { ...settledC, acc: touch(settledC.acc, now) },
+        })
+      }
+      // Editing a SCORE re-opens a submitted case so a later re-submit re-stamps honestly.
       // A pick is an interaction: settle elapsed time, then restart the idle window. The Likert
       // key is `${label}__${dimension}`, so the pick itself tells us which response to credit —
       // no component needs to report focus for scoring time to be attributed correctly.
@@ -389,7 +410,8 @@ export function sessionReducer(s: SessionState, a: SessionAction): SessionState 
         })
         return {
           ...c,
-          state: { likert, rank },
+          // Comments are left as they were: autofill fabricates scores, never free text.
+          state: { likert, rank, comments: c.state.comments },
           submitted: true,
           submittedAt: a.at,
           durationSeconds: c.durationSeconds ?? 1,

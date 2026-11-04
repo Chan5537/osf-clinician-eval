@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ArmBadge } from '@/components/ArmBadge'
 import type { Dispatch } from 'react'
-import { Check, ChevronLeft, ChevronRight, Columns3 } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Columns3, MessageSquareText } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -9,8 +9,9 @@ import { Markdown } from '@/components/Markdown'
 import { LikertDimensions } from '@/components/LikertRubric'
 import { LikertRubricLink } from '@/components/RubricRefLink'
 import { RankOrder } from '@/components/RankOrder'
+import { CommentBox } from '@/components/CommentBox'
 import { AVATAR_STYLES, CARD_STYLES } from '@/components/response-colors'
-import { armAnsweredCount, armRequiredCount } from '@/lib/reducer'
+import { armAnsweredCount, armRequiredCount, hasLikertComment } from '@/lib/reducer'
 import { cn } from '@/lib/utils'
 import type { RubricState, RubricAction, ResponseEntry } from '@/lib/types'
 
@@ -115,6 +116,14 @@ export function FocusReview({ responses, state, dispatch, onCompare, onFocusResp
                 </span>
                 <span className="hidden sm:inline">Response {resp.label}</span>
                 <ArmBadge arm={resp.arm} />
+                {/* Comment marker — deliberately SEPARATE from the n/5 badge: comments are optional
+                    and are not part of completion. */}
+                {hasLikertComment(state, resp.label) && (
+                  <MessageSquareText
+                    className={cn('size-3.5', selected ? 'text-background/70' : 'text-muted-foreground')}
+                    aria-label="has a comment"
+                  />
+                )}
                 {complete ? (
                   <span className="flex size-4 items-center justify-center rounded-full bg-emerald-600 text-white">
                     <Check className="size-3" />
@@ -178,6 +187,18 @@ export function FocusReview({ responses, state, dispatch, onCompare, onFocusResp
             className={cn('overflow-y-auto rounded-xl border bg-card p-3', PANE_HEIGHT)}
           >
             <LikertDimensions label={r.label} state={state} dispatch={dispatch} />
+            {/* OPTIONAL comment on THIS response's scores (2026-11-03). At the foot of the scales it
+                explains, inside the same pane, so its scope ("Rubric — Response X") is unambiguous;
+                the pane remounts per tab, which is why CommentBox flushes its draft on unmount. */}
+            <CommentBox
+              className="mt-3"
+              label={`Comments on Response ${r.label}`}
+              placeholder="Anything behind these scores — e.g. what this response got right, missed, or got wrong."
+              value={state.comments?.likert?.[r.label] ?? ''}
+              onCommit={(text) =>
+                dispatch({ type: 'SET_COMMENT', scope: 'likert', label: r.label, text })
+              }
+            />
           </div>
         </div>
       </div>
