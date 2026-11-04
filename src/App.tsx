@@ -16,6 +16,7 @@ import {
   reconcile,
   queueSessionSync,
   queueCaseSubmit,
+  queueCommentSync,
   flushNow,
   resetServerSession,
 } from '@/lib/sync'
@@ -85,6 +86,7 @@ if (typeof window !== 'undefined') {
         const uid = data.user?.id
         if (uid) {
           await supabase.from('rating').delete().eq('rater_id', uid)
+          await supabase.from('rating_comment').delete().eq('rater_id', uid)
           await supabase.from('session_state').delete().eq('rater_id', uid)
           serverMsg = 'cleared for ' + (data.user?.email ?? uid)
         }
@@ -124,6 +126,12 @@ function App() {
   // INTERNAL: arm-reveal switch (not persisted, not exported); see lib/reveal.ts
   const [reveal, setReveal] = useState<boolean>(initialRevealFromUrl)
   const debounceRef = useRef<number | null>(null)
+  // The latest committed session, for callbacks that can fire from a stale render — notably a
+  // CommentBox flushing its draft on unmount, whose closure predates the navigation that unmounted it.
+  const sessionRef = useRef(session)
+  useEffect(() => {
+    sessionRef.current = session
+  }, [session])
   const auth = useAuth()
   const raterId = auth.raterId
   // Whether the sign-in screen is showing. Only ever set by pressing "Begin" while
@@ -333,8 +341,19 @@ function App() {
 
   // Adapter: forward the flat RubricAction into the session reducer, so the
   // rubric components keep their existing Dispatch<RubricAction> prop type.
-  const caseDispatch = (action: RubricAction) =>
-    dispatch({ type: 'RUBRIC', caseIndex: i, action })
+  //
+  // A comment on an ALREADY-SUBMITTED case is the one edit with no Submit to carry it to the server
+  // (comments never un-submit; see session.ts RUBRIC), so it is queued here on its own. Comments on
+  // a case not yet submitted go up with that case's ratings at submit.
+  const caseDispatch = (action: RubricAction) => {
+    const sessionAction: SessionAction = { type: 'RUBRIC', caseIndex: i, action }
+    dispatch(sessionAction)
+    if (action.type === 'SET_COMMENT' && raterId && sessionRef.current.cases[i]?.submitted) {
+      const next = sessionReducer(sessionRef.current, sessionAction)
+      sessionRef.current = next
+      queueCommentSync(raterId, next, i)
+    }
+  }
 
   // Jump to the scoring block. From compare mode this first switches back to focus, then scrolls
   // once the focus view has mounted (the rubric anchor does not exist in compare mode).

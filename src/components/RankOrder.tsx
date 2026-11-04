@@ -1,6 +1,7 @@
 import type { Dispatch } from 'react'
 import { Trophy } from 'lucide-react'
 import { AVATAR_STYLES } from '@/components/response-colors'
+import { CommentBox } from '@/components/CommentBox'
 import { rankOf, rankComplete } from '@/lib/reducer'
 import { cn } from '@/lib/utils'
 import type { RubricState, RubricAction, ResponseEntry, RankValue } from '@/lib/types'
@@ -168,6 +169,19 @@ export function RankOrder({
           )
         })}
       </ul>
+
+      {/* OPTIONAL comment on the ranking (2026-11-03, clinician request via Prof. Yang: "if all 3
+          responses are sub-optimal we have to choose the best of the lot without any input on what
+          could be an optimal response"). Below the places, never above: the stem above still
+          stands alone (see the header), and this box adds no instruction on how to rank. Rendered
+          in both views because RankOrder is, so the comment is the same wherever it is typed. */}
+      <CommentBox
+        className="mt-3"
+        label="Comments on your ranking"
+        placeholder="Why this order? If none of the responses was adequate, what would a better response have said?"
+        value={state.comments?.rank ?? ''}
+        onCommit={(text) => dispatch({ type: 'SET_COMMENT', scope: 'rank', text })}
+      />
 
       {/* Choosing a response held elsewhere SWAPS (see the reducer's SET_RANK), so another row
           changes without the rater touching it. Announce the resulting order, or a screen-reader
